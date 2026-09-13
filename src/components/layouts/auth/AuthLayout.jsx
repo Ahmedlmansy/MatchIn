@@ -14,18 +14,18 @@ export default function AuthLayout({
           
       <AuthSidePanel {...sidePanel} />
 
-      <main className="flex h-screen flex-col overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <div className="mx-auto flex w-full max-w-[42rem] flex-shrink-0 items-center justify-end px-12 pb-1 pt-[1.1rem]">
+      <main className="flex h-screen flex-col overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden">
+        <div className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-end px-12 pb-1 pt-[1.1rem]">
           {topRight}
         </div>
 
         {aboveCard && (
-          <div className="mx-auto w-full max-w-[42rem] flex-shrink-0 px-12 pb-[0.9rem]">
+          <div className="mx-auto w-full max-w-2xl shrink-0 px-12 pb-[0.9rem]">
             {aboveCard}
           </div>
         )}
 
-        <div className="mx-auto flex min-h-0 w-full max-w-[42rem] flex-1 flex-col px-12 pb-5">
+        <div className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col px-12 pb-5">
                 <AuthCard/>
 
         </div>
