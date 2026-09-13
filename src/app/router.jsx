@@ -1,23 +1,46 @@
-import { createBrowserRouter } from "react-router-dom"
-import { HomePage } from "@/features/auth/components/HomePage"
-import { Navbar } from "@/components/shared/Navbar"
+import AuthLayout from "@/components/layouts/auth/AuthLayout";
+import MainLayout from "@/components/layouts/auth/MainLayout";
+import LoginPage from "@/features/Auth/LoginPage/LoginPage";
+import HomePage from "@/features/HomePage/HomePage";
+import NotFoundPage from "@/features/NotFoundPage/NotFoundPage";
 
-function Layout({ children }) {
-  return (
-    <div>
-      <Navbar />
-      {children}
-    </div>
-  )
-}
+import {
+  createBrowserRouter,
+  RouterProvider,
+
+} from "react-router-dom";
+
+
+
+
+
+
 
 export const router = createBrowserRouter([
   {
+    //  guest routes
     path: "/",
     element: (
-      <Layout>
-        <HomePage />
-      </Layout>
+        <MainLayout />
+    ),
+    children: [
+      { index: true, element: <HomePage /> },
+      {
+        path: "/auth",
+        children: [
+          { path: "login", element: <LoginPage /> },
+        ],
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: (
+      <NotFoundPage />
     ),
   },
-])
+]);
+
+
+
+
