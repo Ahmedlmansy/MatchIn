@@ -51,7 +51,7 @@ export default function AuthSidePanel({
           )}
 
           {description && (
-            <p className="w-125 text-[15px] leading-5.5 text-white/80">
+            <p className="max-w-125 xl:w-125 text-[15px] leading-5.5 text-white/80">
               {description}
             </p>
           )}
