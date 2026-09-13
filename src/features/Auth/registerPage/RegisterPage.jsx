@@ -1,5 +1,8 @@
+import AuthLayout from '@/components/layouts/auth/AuthLayout';
 import React from 'react'
 
 export default function RegisterPage() {
-  return <div>RegisterPage</div>;
+  return <AuthLayout >
+    register page
+  </AuthLayout>;
 }
