@@ -25,18 +25,18 @@ export default function AuthSidePanel({
       />
 
       {/* Decorative blob */}
-      <div className="absolute -bottom-[90px] -left-[60px] h-[220px] w-[220px] rounded-full border border-white/10 bg-white/[0.06]" />
+      <div className="absolute -bottom-22.5 -left-15 h-55 w-55 rounded-full border border-white/10 bg-white/6" />
 
-      <div className="relative z-[1] flex h-full max-w-[30rem] flex-col justify-between px-12 pb-14 pt-10 text-white">
+      <div className="relative z-1 flex h-full max-w-120 flex-col justify-between px-12 pb-14 pt-10 text-white">
         {/* logo */}
         <div className="logo">
           <img src={fullLogo} />
         </div>
-        <div className="">
+        <div>
           {(badgeIcon || badgeText) && (
             <span className="mb-[1.1rem] inline-flex w-fit items-center gap-[0.45rem] rounded-full border border-white/[0.28] bg-white/[0.14] py-[0.4rem] pl-[0.6rem] pr-[0.85rem] text-[12.5px] font-semibold backdrop-blur-[6px]">
               {badgeIcon && (
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#D06B4F]">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#1f365c]">
                   {badgeIcon}
                 </span>
               )}
@@ -45,13 +45,13 @@ export default function AuthSidePanel({
           )}
 
           {title && (
-            <h1 className="mb-3 font-['DM_Sans',sans-serif] text-[32px] font-bold leading-[1.15] tracking-[-0.02em]">
+            <h1 className="mb-4 font-['DM_Sans',sans-serif] text-[42px] font-bold leading-[1.15] tracking-[-0.02em]">
               {title}
             </h1>
           )}
 
           {description && (
-            <p className="max-w-[24rem] text-[14.5px] leading-[22px] text-white/80">
+            <p className="w-125 text-[15px] leading-5.5 text-white/80">
               {description}
             </p>
           )}
