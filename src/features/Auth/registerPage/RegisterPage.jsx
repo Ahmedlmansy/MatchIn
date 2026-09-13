@@ -3,6 +3,6 @@ import React from 'react'
 
 export default function RegisterPage() {
   return <AuthLayout >
-    register page
+    register 
   </AuthLayout>;
 }
