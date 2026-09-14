@@ -1,17 +1,9 @@
 import AuthCard from "@/components/shared/auth/AuthCard";
 import AuthSidePanel from "@/components/shared/auth/Authsidepanel ";
 
-
-export default function AuthLayout({
-  sidePanel,
-  topRight,
-  aboveCard,
-  footer,
-  
-}) {
+export default function AuthLayout({ children, sidePanel, topRight, aboveCard, footer }) {
   return (
-      <div className="grid h-screen grid-cols-1 bg-[#FAF8F4] lg:grid-cols-[1.05fr_1fr]">
-          
+    <div className="grid h-screen grid-cols-1 bg-[#FAF8F4] lg:grid-cols-[1.05fr_1fr]">
       <AuthSidePanel {...sidePanel} />
 
       <main className="flex h-screen flex-col overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden">
@@ -26,8 +18,7 @@ export default function AuthLayout({
         )}
 
         <div className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col px-12 pb-5">
-                <AuthCard/>
-
+          <AuthCard children={children}/>
         </div>
 
         {footer && (
