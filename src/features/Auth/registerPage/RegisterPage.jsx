@@ -5,6 +5,7 @@ import { StepProgress } from "./components/step-progress";
 import { RegisterStep } from "./components/RegisterStep";
 import { CvUploadStep } from "./components/CvUploadStep";
 import { ProfileCompletionStep } from "./components/Profilecompletionstep";
+import { BriefcaseBusiness } from "lucide-react";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -52,6 +53,8 @@ export default function RegisterPage() {
         imageSrc:
           "https://images.unsplash.com/photo-1633114128814-11fac33f707b?fm=jpg&q=80&w=1400&auto=format&fit=crop",
         imageAlt: "A person working on a laptop",
+        badgeText: "Better Opportunities",
+        badgeIcon: <BriefcaseBusiness width={13} height={13} />,
       }}
       additional={
         <StepProgress
@@ -64,6 +67,7 @@ export default function RegisterPage() {
           currentStep={step}
         />
       }
+      cardClassName={"justify-start"}
     >
       {step <= 1 && (
         <RegisterStep
