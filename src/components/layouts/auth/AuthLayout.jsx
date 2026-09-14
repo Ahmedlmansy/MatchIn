@@ -8,6 +8,7 @@ export default function AuthLayout({
   aboveCard,
   footer,
   additional,
+  cardClassName,
   children,
 }) {
   return (
@@ -30,7 +31,10 @@ export default function AuthLayout({
         )}
 
         <div className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col px-12 pb-5">
-          <AuthCard children={children} />
+          <AuthCard
+            children={children}
+            className={cardClassName && cardClassName}
+          />
         </div>
 
         {footer && (

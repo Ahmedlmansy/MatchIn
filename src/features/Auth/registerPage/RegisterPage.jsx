@@ -1,10 +1,11 @@
 import AuthLayout from "@/components/layouts/auth/AuthLayout";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { StepProgress } from "./components/step-progress";
 import { RegisterStep } from "./components/RegisterStep";
 import { CvUploadStep } from "./components/CvUploadStep";
 import { ProfileCompletionStep } from "./components/Profilecompletionstep";
+import { BriefcaseBusiness } from "lucide-react";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -52,6 +53,8 @@ export default function RegisterPage() {
         imageSrc:
           "https://images.unsplash.com/photo-1633114128814-11fac33f707b?fm=jpg&q=80&w=1400&auto=format&fit=crop",
         imageAlt: "A person working on a laptop",
+        badgeText: "Better Opportunities",
+        badgeIcon: <BriefcaseBusiness width={13} height={13} />,
       }}
       additional={
         <StepProgress
@@ -63,6 +66,18 @@ export default function RegisterPage() {
           ]}
           currentStep={step}
         />
+      }
+      cardClassName={"justify-start"}
+      footer={
+        <p className="mx-auto w-full max-w-2xl px-6 pb-4 text-center text-[11.5px] leading-4 text-muted">
+          Already have an account?{" "}
+          <Link
+            to="/auth/login"
+            className="border-b border-border text-ink/80 hover:text-ink"
+          >
+            Sign in
+          </Link>
+        </p>
       }
     >
       {step <= 1 && (
