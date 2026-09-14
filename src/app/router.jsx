@@ -1,4 +1,3 @@
-import AuthLayout from "@/components/layouts/auth/AuthLayout";
 import MainLayout from "@/components/layouts/auth/MainLayout";
 import LoginPage from "@/features/Auth/LoginPage/LoginPage";
 import RegisterPage from "@/features/Auth/registerPage/RegisterPage";
@@ -10,12 +9,6 @@ import {
   RouterProvider,
 
 } from "react-router-dom";
-
-
-
-
-
-
 
 export const router = createBrowserRouter([
   {
