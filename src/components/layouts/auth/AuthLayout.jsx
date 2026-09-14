@@ -7,16 +7,20 @@ export default function AuthLayout({
   topRight,
   aboveCard,
   footer,
-  
+  additional,
+  children,
 }) {
   return (
-      <div className="grid h-screen grid-cols-1 bg-[#FAF8F4] lg:grid-cols-[1.05fr_1fr]">
-          
+    <div className="grid h-screen grid-cols-1 bg-[#FAF8F4] lg:grid-cols-[1.05fr_1fr]">
       <AuthSidePanel {...sidePanel} />
 
       <main className="flex h-screen flex-col overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden">
         <div className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-end px-12 pb-1 pt-[1.1rem]">
           {topRight}
+        </div>
+
+        <div className="mx-auto w-full max-w-2xl shrink-0 px-[35px] pb-5">
+          {additional}
         </div>
 
         {aboveCard && (
@@ -26,8 +30,7 @@ export default function AuthLayout({
         )}
 
         <div className="mx-auto flex min-h-0 w-full max-w-2xl flex-1 flex-col px-12 pb-5">
-                <AuthCard/>
-
+          <AuthCard children={children} />
         </div>
 
         {footer && (
