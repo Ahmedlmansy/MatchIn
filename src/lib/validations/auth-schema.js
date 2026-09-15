@@ -2,18 +2,15 @@ import { z } from "zod";
 
 export const registerSchema = z
   .object({
-    fullName: z.string().min(1, "Full name is required"),
+    fullName: z.string().min(1, "Full name is required").min(3, "Full name must be at least 3 characters"),
     email: z
       .string()
       .min(1, "Email is required")
       .email("Enter a valid email address"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
-    terms: z.literal(true, {
-      errorMap: () => ({
-        message: "You must accept the Terms and Privacy Policy",
-      }),
-    }),
+    terms: z.literal(true,  "You must accept the Terms and Privacy Policy")
+    ,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match — please check and try again.",
