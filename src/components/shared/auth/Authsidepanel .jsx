@@ -43,7 +43,7 @@ export default function AuthSidePanel({
           {(badgeIcon || badgeText) && (
             <span className="mb-[1.1rem] inline-flex w-fit items-center gap-[0.45rem] rounded-full border border-white/[0.28] bg-white/[0.14] py-[0.4rem] pl-[0.6rem] pr-[0.85rem] text-[12.5px] font-semibold backdrop-blur-[6px]">
               {badgeIcon && (
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#1f365c]">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary">
                   {badgeIcon}
                 </span>
               )}
