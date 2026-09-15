@@ -49,7 +49,7 @@ export default function RegisterPage() {
       sidePanel={{
         title: "Great companies hire great people",
         description:
-          "lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+          "Build your career with the right opportunities and take the next step toward your future.",
         imageSrc:
           "https://images.unsplash.com/photo-1633114128814-11fac33f707b?fm=jpg&q=80&w=1400&auto=format&fit=crop",
         imageAlt: "A person working on a laptop",

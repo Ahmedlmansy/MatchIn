@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence, motion } from "framer-motion";
 import { User, Mail } from "lucide-react";
 
 import { registerSchema } from "@/lib/validations/auth-schema";
@@ -17,6 +18,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PasswordInput } from "./Passwordinput";
 
+const FIELD_ORDER = ["fullName", "email", "password", "confirmPassword", "terms"];
+
 /**
  * RegisterFormView — step 1 of 4: "Create your account"
  * onSubmit(data) — validated { fullName, email, password, confirmPassword, terms }
@@ -32,6 +35,28 @@ export function RegisterFormView({ onSubmit }) {
       terms: false,
     },
   });
+
+  const { errors } = form.formState;
+  const firstErrorField = FIELD_ORDER.find((name) => errors[name]);
+
+  function SequentialFormMessage({ name }) {
+    const isActive = firstErrorField === name;
+    return (
+      <AnimatePresence mode="wait">
+        {isActive && errors[name] && (
+          <motion.div
+            key={name}
+            initial={{ opacity: 0, y: -4, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -4, height: 0 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+          >
+            <FormMessage className="text-[11px] text-error" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
 
   return (
     <div>
@@ -68,7 +93,7 @@ export function RegisterFormView({ onSubmit }) {
                     />
                   </div>
                 </FormControl>
-                <FormMessage className={"text-[11px] text-error"} />
+                <SequentialFormMessage name="fullName" />
               </FormItem>
             )}
           />
@@ -81,7 +106,7 @@ export function RegisterFormView({ onSubmit }) {
                 <FormLabel className="text-[11.5px] font-semibold text-ink/80">
                   Email address
                 </FormLabel>
-                <FormControl>
+                <FormControl >
                   <div className="relative">
                     <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                     <Input
@@ -92,7 +117,7 @@ export function RegisterFormView({ onSubmit }) {
                     />
                   </div>
                 </FormControl>
-                <FormMessage className={"text-[11px] text-error"} />
+                <SequentialFormMessage name="email" />
               </FormItem>
             )}
           />
@@ -111,7 +136,7 @@ export function RegisterFormView({ onSubmit }) {
                     {...field}
                   />
                 </FormControl>
-                <FormMessage className={"text-[11px] text-error"} />
+                <SequentialFormMessage name="password" />
               </FormItem>
             )}
           />
@@ -130,7 +155,7 @@ export function RegisterFormView({ onSubmit }) {
                     {...field}
                   />
                 </FormControl>
-                <FormMessage className={"text-[11px] text-error"} />
+                <SequentialFormMessage name="confirmPassword" />
               </FormItem>
             )}
           />
@@ -150,15 +175,15 @@ export function RegisterFormView({ onSubmit }) {
                   </FormControl>
                   <label className="text-[12.5px] text-ink/80">
                     I agree to MatchIn{" "}
-                    <a
-                      href="#"
+                    
+                    <a  href="#"
                       className="font-semibold text-primary underline-offset-2 hover:underline"
                     >
                       Terms
                     </a>{" "}
                     and{" "}
-                    <a
-                      href="#"
+                    
+                    <a  href="#"
                       className="font-semibold text-primary underline-offset-2 hover:underline"
                     >
                       Privacy Policy
@@ -166,7 +191,7 @@ export function RegisterFormView({ onSubmit }) {
                     .
                   </label>
                 </div>
-                <FormMessage className={"text-[11px] text-error"} />
+                <SequentialFormMessage name="terms" />
               </FormItem>
             )}
           />
