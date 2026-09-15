@@ -68,7 +68,7 @@ export function RegisterFormView({ onSubmit }) {
                     />
                   </div>
                 </FormControl>
-                <FormMessage />
+                <FormMessage className={"text-[11px] text-error"} />
               </FormItem>
             )}
           />
@@ -92,7 +92,7 @@ export function RegisterFormView({ onSubmit }) {
                     />
                   </div>
                 </FormControl>
-                <FormMessage />
+                <FormMessage className={"text-[11px] text-error"} />
               </FormItem>
             )}
           />
@@ -111,7 +111,7 @@ export function RegisterFormView({ onSubmit }) {
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className={"text-[11px] text-error"} />
               </FormItem>
             )}
           />
@@ -130,7 +130,7 @@ export function RegisterFormView({ onSubmit }) {
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className={"text-[11px] text-error"} />
               </FormItem>
             )}
           />
@@ -149,7 +149,7 @@ export function RegisterFormView({ onSubmit }) {
                     />
                   </FormControl>
                   <label className="text-[12.5px] text-ink/80">
-                    I agree to SkillMatch's{" "}
+                    I agree to MatchIn{" "}
                     <a
                       href="#"
                       className="font-semibold text-primary underline-offset-2 hover:underline"
@@ -166,7 +166,7 @@ export function RegisterFormView({ onSubmit }) {
                     .
                   </label>
                 </div>
-                <FormMessage />
+                <FormMessage className={"text-[11px] text-error"} />
               </FormItem>
             )}
           />
