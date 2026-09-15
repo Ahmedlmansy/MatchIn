@@ -12,7 +12,7 @@ export default function AuthLayout({
   children,
 }) {
   return (
-    <div className="grid h-screen grid-cols-1 bg-[#FAF8F4] lg:grid-cols-[1.05fr_1fr]">
+    <div className="grid h-screen grid-cols-1 bg-background lg:grid-cols-[1.05fr_1fr]">
       <AuthSidePanel {...sidePanel} />
 
       <main className="flex h-screen flex-col overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden">
@@ -20,7 +20,7 @@ export default function AuthLayout({
           {topRight}
         </div>
 
-        <div className="mx-auto w-full max-w-2xl shrink-0 px-[35px] pb-5">
+        <div className="mx-auto w-full max-w-2xl shrink-0 px-8.75 pb-5">
           {additional}
         </div>
 

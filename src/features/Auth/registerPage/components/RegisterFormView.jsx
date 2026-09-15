@@ -198,7 +198,7 @@ export function RegisterFormView({ onSubmit }) {
 
           <Button
             type="submit"
-            className="mt-1 h-[46px] w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
+            className="mt-1 h-11.5 w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
           >
             Create account
           </Button>
