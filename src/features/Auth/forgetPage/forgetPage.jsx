@@ -17,7 +17,7 @@ import {
 import { Link } from 'react-router-dom';
 
 import logoText from '@/assets/logo/Full_logo.svg';
-import logoIcon from '@/assets/icons/matchIn_logo.svg';
+import logoIcon from '@/assets/logo/MatchIn_logo.svg';
 
 // 1. Zod Schema
 const emailSchema = z
