@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import fullLogo from "@/assets/logo/Full_logo_light.svg";
 export default function AuthSidePanel({
   imageSrc,
@@ -28,11 +29,17 @@ export default function AuthSidePanel({
       <div className="absolute -bottom-22.5 -left-15 h-55 w-55 rounded-full border border-white/10 bg-white/6" />
 
       <div className="relative z-1 flex h-full max-w-120 flex-col justify-between px-12 pb-14 pt-10 text-white">
-        {/* logo */}
+        {/* logo - stays fixed in place, no animation */}
         <div className="logo">
           <img src={fullLogo} />
         </div>
-        <div>
+
+        {/* text content - slides in from left to right on page load */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.55, ease: "easeOut", delay: 0.25 }}
+        >
           {(badgeIcon || badgeText) && (
             <span className="mb-[1.1rem] inline-flex w-fit items-center gap-[0.45rem] rounded-full border border-white/[0.28] bg-white/[0.14] py-[0.4rem] pl-[0.6rem] pr-[0.85rem] text-[12.5px] font-semibold backdrop-blur-[6px]">
               {badgeIcon && (
@@ -55,7 +62,7 @@ export default function AuthSidePanel({
               {description}
             </p>
           )}
-        </div>
+        </motion.div>
       </div>
     </aside>
   );
