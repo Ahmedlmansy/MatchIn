@@ -83,7 +83,7 @@ export function OtpView({ email, onVerified, onBack, onResend }) {
                         <InputOTPSlot
                           key={i}
                           index={i}
-                          className="h-[50px] w-full flex-1 rounded-xl border-border font-[DM_Sans] text-[19px] font-bold text-ink data-[active=true]:border-primary"
+                          className="h-[50px] w-full flex-1 rounded-[8px] border-border font-[DM_Sans] text-[19px] text-primary font-semibold text-ink data-[active=true]:border-primary"
                         />
                       ))}
                     </InputOTPGroup>
@@ -116,7 +116,7 @@ export function OtpView({ email, onVerified, onBack, onResend }) {
               type="button"
               variant="outline"
               onClick={onBack}
-              className="h-[46px] rounded-xl border-border px-5 text-ink/80"
+              className="h-[46px] rounded-xl border-border px-5 hover:text-surface"
             >
               Back
             </Button>
