@@ -1,6 +1,7 @@
 import MainLayout from "@/components/layouts/auth/MainLayout";
 import LoginPage from "@/features/Auth/LoginPage/LoginPage";
 import RegisterPage from "@/features/Auth/registerPage/RegisterPage";
+import SetNewPassword from "@/features/Auth/setNewPassword/SetNewPassword";
 import HomePage from "@/features/HomePage/HomePage";
 import NotFoundPage from "@/features/NotFoundPage/NotFoundPage";
 
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
         children: [
           { path: "login", element: <LoginPage /> },
           { path: "register", element: <RegisterPage /> },
+          { path: "set-new-password", element: <SetNewPassword /> },
         ],
       },
     ],

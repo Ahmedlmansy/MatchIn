@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, CheckCircle2, Plus, Briefcase, MapPin, Clock, PenLine } from "lucide-react";
 
-import { profileSchema } from "@/lib/validations/profile-schema";
+import { profileSchema } from "@/features/Auth/schema/profile-schema";
 import {
   Form,
   FormControl,
