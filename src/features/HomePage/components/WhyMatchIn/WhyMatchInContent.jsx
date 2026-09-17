@@ -31,6 +31,7 @@ const BENEFITS = [
 ];
 
 export default function WhySkillMatchContent() {
+
   return (
     <div className="flex flex-col gap-4 lg:col-span-6">
       <motion.div
