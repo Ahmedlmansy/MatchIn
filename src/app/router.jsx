@@ -20,7 +20,7 @@ export const router = createBrowserRouter([
         children: [
           { path: "login", element: <LoginPage /> },
           { path: "register", element: <RegisterPage /> },
-          {path:"forgot-password" , element:<ForgetPage/>}
+          {path:"forgot-password" , element:<ForgetPage/>},
           { path: "set-new-password", element: <SetNewPassword /> },
         ],
       },
