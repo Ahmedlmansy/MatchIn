@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { User, Mail } from "lucide-react";
 
-import { registerSchema } from "@/lib/validations/auth-schema";
+import { registerSchema } from "@/features/Auth/schema/auth-schema";
 import {
   Form,
   FormControl,
@@ -18,7 +18,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PasswordInput } from "./Passwordinput";
 
-const FIELD_ORDER = ["fullName", "email", "password", "confirmPassword", "terms"];
+const FIELD_ORDER = [
+  "fullName",
+  "email",
+  "password",
+  "confirmPassword",
+  "terms",
+];
 
 /**
  * RegisterFormView — step 1 of 4: "Create your account"
@@ -106,7 +112,7 @@ export function RegisterFormView({ onSubmit }) {
                 <FormLabel className="text-[11.5px] font-semibold text-ink/80">
                   Email address
                 </FormLabel>
-                <FormControl >
+                <FormControl>
                   <div className="relative">
                     <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                     <Input
@@ -175,15 +181,15 @@ export function RegisterFormView({ onSubmit }) {
                   </FormControl>
                   <label className="text-[12.5px] text-ink/80">
                     I agree to MatchIn{" "}
-                    
-                    <a  href="#"
+                    <a
+                      href="#"
                       className="font-semibold text-primary underline-offset-2 hover:underline"
                     >
                       Terms
                     </a>{" "}
                     and{" "}
-                    
-                    <a  href="#"
+                    <a
+                      href="#"
                       className="font-semibold text-primary underline-offset-2 hover:underline"
                     >
                       Privacy Policy
