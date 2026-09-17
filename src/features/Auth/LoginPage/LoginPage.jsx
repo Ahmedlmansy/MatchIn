@@ -25,7 +25,7 @@ import {
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema } from "@/lib/validations/login-schema";
+import { loginSchema } from "@/features/Auth/schema/login-schema";
 import { AnimatePresence, motion } from "framer-motion";
 
 const FIELD_ORDER = ["email", "password"];
@@ -36,7 +36,6 @@ export default function LoginPage() {
     defaultValues: {
       email: "",
       password: "",
-      remember_me: false,
     },
   });
   const { errors } = form.formState;
