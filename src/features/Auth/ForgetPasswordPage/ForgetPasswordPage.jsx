@@ -26,35 +26,37 @@ const emailSchema = z
   .min(1, { message: 'Please enter a valid email address.' })
   .email({ message: 'Please enter a valid email address.' });
 
-export default function ForgetPage() {
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
+export default function ForgetPasswordPage() {
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [status, setStatus] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [isTimeout, setIsTimeout] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsTimeout(false);
-    setMessage('');
+    setMessage("");
 
     const result = emailSchema.safeParse(email);
 
     if (!result.success) {
-      const errorMsg = result.error.issues[0]?.message || 'Please enter a valid email address.';
+      const errorMsg =
+        result.error.issues[0]?.message ||
+        "Please enter a valid email address.";
       setEmailError(errorMsg);
-      return; 
+      return;
     }
 
-    setEmailError('');
+    setEmailError("");
     setStatus(true);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      setMessage('A password reset link has been sent to your email.');
+      setMessage("A password reset link has been sent to your email.");
     } catch (error) {
       setIsTimeout(true);
-      setMessage('Server connection failed. Please try again later.');
+      setMessage("Server connection failed. Please try again later.");
     } finally {
       setStatus(false);
     }
@@ -72,12 +74,18 @@ export default function ForgetPage() {
         </div>
 
         <div className="flex items-center gap-3 text-sm font-medium">
-          <button type="button" className="flex items-center gap-1 px-3 py-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition">
+          <button
+            type="button"
+            className="flex items-center gap-1 px-3 py-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition"
+          >
             English
             <span className="w-2 h-2 rounded-full bg-gray-400 inline-block ml-1"></span>
           </button>
 
-          <button type="button" className="p-1.5 text-gray-500 hover:text-gray-700">
+          <button
+            type="button"
+            className="p-1.5 text-gray-500 hover:text-gray-700"
+          >
             <HelpCircle className="w-5 h-5" />
           </button>
 
@@ -121,7 +129,8 @@ export default function ForgetPage() {
           </h1>
 
           <p className="text-sm text-gray-500 max-w-sm mb-6 leading-relaxed">
-            Enter your account's email address and we will send you a secure link to reset your password immediately.
+            Enter your account's email address and we will send you a secure
+            link to reset your password immediately.
           </p>
 
           <form
@@ -147,10 +156,12 @@ export default function ForgetPage() {
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value);
-                    if (emailError) setEmailError('');
+                    if (emailError) setEmailError("");
                   }}
                   className={`pl-9 h-11 border-gray-200 focus-visible:ring-[#1F365C] ${
-                    emailError ? 'border-red-500 focus-visible:ring-red-500' : ''
+                    emailError
+                      ? "border-red-500 focus-visible:ring-red-500"
+                      : ""
                   }`}
                 />
               </div>
@@ -191,16 +202,17 @@ export default function ForgetPage() {
             </div>
 
             <p className="text-xs text-gray-500 leading-normal">
-              Advanced protection for your professional data. Saved with highest certified digital identity security standards.
+              Advanced protection for your professional data. Saved with highest
+              certified digital identity security standards.
             </p>
           </div>
 
           {message && (
             <div
               className={`w-full mt-4 p-3 rounded-xl text-xs text-center font-medium border ${
-                message === 'A password reset link has been sent to your email.'
-                  ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                  : 'bg-[#FDF2F2] border-[#FAD2D2] text-[#E05252]'
+                message === "A password reset link has been sent to your email."
+                  ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+                  : "bg-[#FDF2F2] border-[#FAD2D2] text-[#E05252]"
               }`}
             >
               {message}
@@ -211,7 +223,7 @@ export default function ForgetPage() {
 
       <footer className="text-center text-xs text-gray-500 py-4 space-y-1 -mt-4 -mb-6">
         <p>
-          Remember your password?{' '}
+          Remember your password?{" "}
           <Link
             to="/login"
             className="text-[#D06B4F] font-semibold hover:underline"
@@ -221,7 +233,7 @@ export default function ForgetPage() {
         </p>
 
         <p>
-          Don't have an account yet?{' '}
+          Don't have an account yet?{" "}
           <Link
             to="/register"
             className="text-[#1F365C] font-semibold hover:underline"

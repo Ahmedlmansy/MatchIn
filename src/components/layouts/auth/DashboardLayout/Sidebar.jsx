@@ -8,6 +8,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
 } from "lucide-react";
+import LogoNavy from "@/assets/logo/MatchIn_logo.svg";
 import { cn } from "@/lib/utils";
 
 // Nav items are data — add/remove/reorder here, no JSX changes needed.
@@ -65,20 +66,23 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
         className={cn(
           "fixed left-0 top-0 z-50 h-screen p-4 transition-all duration-300",
           collapsed ? "w-24" : "w-72",
-          mobileOpen ? "block" : "hidden md:block"
+          mobileOpen ? "block" : "hidden md:block",
         )}
       >
         <div className="flex h-full flex-col justify-between rounded-2xl border border-border/80 bg-surface/90 p-4 shadow-sm backdrop-blur-md transition-all duration-300">
           <div>
             {/* Logo & Brand */}
-            <a href="#" className="mb-4 flex items-center gap-3 border-b border-border/50 pb-5">
+            <a
+              href="#"
+              className="mb-4 flex items-center gap-3 border-b border-border/50 pb-5"
+            >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary shadow-sm">
-                <Compass className="h-5 w-5 text-primary-foreground" />
+                <img src={LogoNavy} alt="MatchIn Logo" />
               </div>
               {!collapsed && (
                 <div className="flex flex-col">
                   <span className="font-serif text-[18px] font-bold leading-none tracking-tight text-primary">
-                    SkillMatch
+                    MatchIn
                   </span>
                   <span className="mt-1 text-[10px] font-medium tracking-wide text-muted">
                     Career Guidance
@@ -123,7 +127,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
               onClick={onToggleCollapse}
               className={cn(
                 "flex w-full items-center gap-3 rounded-xl border border-border/80 bg-background/60 px-3.5 py-2.5 text-[13px] font-semibold text-muted shadow-sm transition-all hover:bg-background hover:text-primary",
-                collapsed && "justify-center px-0"
+                collapsed && "justify-center px-0",
               )}
             >
               {collapsed ? (
