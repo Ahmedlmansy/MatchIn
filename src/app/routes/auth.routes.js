@@ -6,4 +6,5 @@ export const auth = [
           { path: "login", element: <LoginPage /> },
           { path: "register", element: <RegisterPage /> },
           { path: "set-new-password", element: <SetNewPassword /> },
+           {path:"forgot-password" , element:<ForgetPage/>},
         ]
