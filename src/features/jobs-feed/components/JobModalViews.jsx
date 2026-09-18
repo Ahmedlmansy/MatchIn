@@ -28,7 +28,7 @@ export default function JobModalViews({
     return (
       <JobApplicationModal
         job={activeJob}
-        {...form}
+        form={form}
         onClose={onClose}
         onSubmit={onSubmit}
       />

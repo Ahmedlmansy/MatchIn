@@ -179,7 +179,7 @@ export default function LoginPage() {
             <Field>
               <Button
                 type="submit"
-                className=" flex justify-center gap-2 duration-200 h-11.5 p-3.5 bg-[#1d3557] hover:bg-[#112240] rounded-[8px] text-[15px] font-semibold cursor-pointer"
+                className=" flex justify-center gap-2 duration-200 h-11.5 p-3.5 bg-primary hover:bg-primary/90 rounded-[8px] text-[15px] font-semibold cursor-pointer"
               >
                 Log In <ArrowRight width={20} className="font-bold" />
               </Button>

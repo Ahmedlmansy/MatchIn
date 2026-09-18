@@ -1,14 +1,25 @@
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  ChevronDown,
-  CircleAlert,
-  FileText,
-  Send,
-  Upload,
-  X,
-  Zap,
-} from "lucide-react";
+import { CircleAlert, FileText, Send, Upload, X, Zap } from "lucide-react";
 import Modal from "@/components/shared/Modal";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 const CVS = [
   {
@@ -23,18 +34,10 @@ const CVS = [
   },
 ];
 
-export default function JobApplicationModal({
-  job,
-  cv,
-  authorized,
-  startDate,
-  errors,
-  onCvChange,
-  onAuthorizedChange,
-  onStartDateChange,
-  onClose,
-  onSubmit,
-}) {
+export default function JobApplicationModal({ job, form, onClose, onSubmit }) {
+  const { control, formState } = form;
+  const { errors } = formState;
+
   return (
     <Modal onClose={onClose} maxWidth="max-w-[560px]">
       <div className="max-h-[90vh] overflow-y-auto scrollbar-none">
@@ -50,13 +53,16 @@ export default function JobApplicationModal({
               </span>
             </h2>
           </div>
-          <button
+          <Button
+            type="button"
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted hover:bg-background"
+            variant="ghost"
+            size="icon-sm"
+            className="rounded-lg text-muted hover:bg-background"
             title="Close"
           >
             <X className="h-5 w-5" />
-          </button>
+          </Button>
         </div>
 
         <div className="space-y-5 p-6">
@@ -83,64 +89,70 @@ export default function JobApplicationModal({
             )}
           </AnimatePresence>
 
-          <form
-            className="space-y-5"
-            onSubmit={(event) => event.preventDefault()}
-          >
-            <ApplicantDetails />
-            <ResumeField cv={cv} error={errors.cv} onChange={onCvChange} />
-            <div>
-              <label className="mb-2 block text-xs font-bold text-primary">
-                Additional Note{" "}
-                <span className="font-normal text-muted">(Optional)</span>
-              </label>
-              <textarea
-                rows={3}
-                placeholder="Add a short note for the hiring team — why are you a great fit?"
-                className="w-full resize-none rounded-xl border border-border bg-background/50 p-3 text-xs outline-none focus:border-primary"
+          <Form {...form}>
+            <form
+              id="job-application-form"
+              className="space-y-5"
+              onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <ApplicantDetails />
+              <ResumeField control={control} />
+              <div>
+                <Label className="mb-2 text-xs font-bold text-primary">
+                  Additional Note{" "}
+                  <span className="font-normal text-muted">(Optional)</span>
+                </Label>
+                <Textarea
+                  rows={3}
+                  placeholder="Add a short note for the hiring team — why are you a great fit?"
+                  className="resize-none rounded-xl border-border bg-background/50 p-3 text-xs focus-visible:border-primary focus-visible:ring-0"
+                />
+              </div>
+              <SelectField
+                control={control}
+                label="Are you legally authorized to work in this location?"
+                options={["Yes", "No", "Require Sponsorship"]}
               />
-            </div>
-            <SelectField
-              label="Are you legally authorized to work in this location?"
-              value={authorized}
-              error={errors.authorized}
-              onChange={onAuthorizedChange}
-              options={["Yes", "No", "Require Sponsorship"]}
-            />
-            <div>
-              <label className="mb-2 block text-xs font-bold text-primary">
-                Earliest Start Date <span className="text-error">*</span>
-              </label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={onStartDateChange}
-                className={`h-10 w-full rounded-xl border px-3 text-xs outline-none focus:border-primary bg-surface-white ${errors.startDate ? "border-error" : "border-border"}`}
+              <FormField
+                control={control}
+                name="startDate"
+                rules={{ required: "Please select your earliest start date." }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-bold text-primary">
+                      Earliest Start Date <span className="text-error">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        className="h-10 rounded-xl bg-surface-white px-3 text-xs focus-visible:border-primary focus-visible:ring-0"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs font-bold text-error" />
+                  </FormItem>
+                )}
               />
-              {errors.startDate && (
-                <p className="mt-1.5 text-xs font-bold text-error">
-                  {errors.startDate}
-                </p>
-              )}
-            </div>
-          </form>
+            </form>
+          </Form>
         </div>
 
         <div className="sticky bottom-0 flex items-center gap-3 rounded-b-2xl border-t border-border bg-white p-6">
-          <button
+          <Button
             type="button"
             onClick={onClose}
-            className="h-10 rounded-xl border border-border px-5 text-xs font-bold text-primary hover:bg-background"
+            variant="outline"
+            className="h-10 rounded-xl px-5 text-xs font-bold text-primary hover:bg-background"
           >
             Cancel
-          </button>
-          <button
-            type="button"
-            onClick={onSubmit}
-            className="h-10 flex-1 rounded-xl bg-primary text-xs font-bold text-white hover:bg-[#052045]"
+          </Button>
+          <Button
+            type="submit"
+            form="job-application-form"
+            className="h-10 flex-1 rounded-xl text-xs font-bold"
           >
             Submit Application
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>
@@ -171,73 +183,91 @@ function ProfileInput({ label, placeholder }) {
   return (
     <div className="h-[46.8px] rounded-xl border border-border bg-background px-3 py-2">
       <div className="-mb-2 text-[10px] text-muted">{label}</div>
-      <input
-        className="w-full text-xs font-bold text-primary outline-none"
+      <Input
+        className="h-auto border-0 bg-transparent p-0 text-[12px]! font-bold text-primary shadow-none focus-visible:ring-0"
         placeholder={placeholder}
       />
     </div>
   );
 }
 
-function ResumeField({ cv, error, onChange }) {
+function ResumeField({ control }) {
   return (
-    <div>
-      <label className="mb-2 block text-xs font-bold text-primary">
-        Select Resume (CV) <span className="text-error">*</span>
-      </label>
-      <div className="space-y-2">
-        {CVS.map((resume) => (
-          <label
-            key={resume.value}
-            className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-all ${cv === resume.value ? "border-primary bg-primary/5" : "border-border"}`}
-          >
-            <input
-              type="radio"
-              name="cv"
-              value={resume.value}
-              checked={cv === resume.value}
-              onChange={(event) => onChange(event.target.value)}
-              className="accent-primary"
-            />
-            <FileText className="text-muted" />
-            <span className="flex-1 text-xs font-bold text-primary">
-              {resume.label}
-            </span>
-            <span className="text-[11px] text-muted">{resume.meta}</span>
-          </label>
-        ))}
-        <button
-          type="button"
-          className="flex items-center gap-2 pt-1 text-xs font-bold text-primary"
-        >
-          <Upload className="h-4.5 w-4.5" /> Upload another CV
-        </button>
-      </div>
-      {error && <p className="mt-1.5 text-xs font-bold text-error">{error}</p>}
-    </div>
+    <FormField
+      control={control}
+      name="cv"
+      rules={{ required: "Please select a resume to continue." }}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className="text-xs font-bold text-primary">
+            Select Resume (CV) <span className="text-error">*</span>
+          </FormLabel>
+          <FormControl>
+            <div className="space-y-2">
+              {CVS.map((resume) => (
+                <label
+                  key={resume.value}
+                  className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3 transition-all ${field.value === resume.value ? "border-primary bg-primary/5" : "border-border"}`}
+                >
+                  <input
+                    type="radio"
+                    name={field.name}
+                    value={resume.value}
+                    checked={field.value === resume.value}
+                    onChange={field.onChange}
+                    className="accent-primary"
+                  />
+                  <FileText className="text-muted" />
+                  <span className="flex-1 text-xs font-bold text-primary">
+                    {resume.label}
+                  </span>
+                  <span className="text-[11px] text-muted">{resume.meta}</span>
+                </label>
+              ))}
+              <Button
+                type="button"
+                variant="link"
+                className="h-auto px-0 pt-1 text-xs font-bold text-primary"
+              >
+                <Upload className="h-4.5 w-4.5" /> Upload another CV
+              </Button>
+            </div>
+          </FormControl>
+          <FormMessage className="text-xs font-bold text-error" />
+        </FormItem>
+      )}
+    />
   );
 }
 
-function SelectField({ label, value, error, onChange, options }) {
+function SelectField({ control, label, options }) {
   return (
-    <div>
-      <label className="mb-2 block text-xs font-bold text-primary">
-        {label} <span className="text-error">*</span>
-      </label>
-      <div className="relative">
-        <ChevronDown className="absolute inset-e-3 top-[50%] h-4 w-4 translate-y-[-50%]" />
-        <select
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          className={`h-10 w-full appearance-none rounded-xl border bg-surface-white px-3 text-xs outline-none focus:border-primary ${error ? "border-error" : "border-border"}`}
-        >
-          <option value="">Select an answer</option>
-          {options.map((option) => (
-            <option key={option}>{option}</option>
-          ))}
-        </select>
-      </div>
-      {error && <p className="mt-1.5 text-xs font-bold text-error">{error}</p>}
-    </div>
+    <FormField
+      control={control}
+      name="authorized"
+      rules={{ required: "This field is required by the employer." }}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel className="text-xs font-bold text-primary">
+            {label} <span className="text-error">*</span>
+          </FormLabel>
+          <Select value={field.value} onValueChange={field.onChange}>
+            <FormControl>
+              <SelectTrigger className="h-10 w-full rounded-xl bg-background text-xs">
+                <SelectValue placeholder="Select an answer" />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              {options.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <FormMessage className="text-xs font-bold text-error" />
+        </FormItem>
+      )}
+    />
   );
 }

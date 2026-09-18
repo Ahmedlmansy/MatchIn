@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Loader2,
   RotateCcw,
+  Globe,
 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
@@ -64,53 +65,22 @@ export default function ForgetPasswordPage() {
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#FDFBF9] text-[#1F365C] flex flex-col justify-between p-4 md:p-6 font-sans">
-      <header className="max-w-7xl w-full mx-auto flex justify-between items-center py-2">
-        <div className="flex items-center gap-2">
-          <img
-            src={logoText}
-            alt="SkillMatch Logo"
-            className="h-9 w-auto object-contain"
-          />
-        </div>
+      <header className="flex items-center justify-between px-6 py-4 sm:px-8">
+      <Link
+        to="/auth/login"
+        className="flex items-center gap-2 text-sm font-semibold text-slate-900"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        Back to Login
+      </Link>
 
-        <div className="flex items-center gap-3 text-sm font-medium">
-          <button
-            type="button"
-            className="flex items-center gap-1 px-3 py-1.5 border border-gray-200 rounded-md hover:bg-gray-50 transition"
-          >
-            English
-            <span className="w-2 h-2 rounded-full bg-gray-400 inline-block ml-1"></span>
-          </button>
-
-          <button
-            type="button"
-            className="p-1.5 text-gray-500 hover:text-gray-700"
-          >
-            <HelpCircle className="w-5 h-5" />
-          </button>
-
-          <Link
-            to="/login"
-            className="flex items-center gap-1 text-[#1F365C] hover:underline ml-2"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Login
-          </Link>
-        </div>
-      </header>
+      <button className="flex items-center gap-1.5 text-sm text-slate-600 hover:text-slate-900">
+        <Globe className="h-4 w-4" />
+        English
+      </button>
+    </header>
 
       <main className="max-w-md w-full mx-auto my-auto py-2">
-        <div className="flex justify-between items-center text-xs mb-3 px-1 text-gray-500 font-medium">
-          <Link
-            to="/login"
-            className="text-[#D06B4F] flex items-center gap-1 hover:underline"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to Login Screen
-          </Link>
-
-          <span>256-bit SSL Secure Recovery</span>
-        </div>
 
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 flex flex-col items-center text-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100/80 text-gray-600 text-xs font-medium mb-6">
@@ -220,28 +190,6 @@ export default function ForgetPasswordPage() {
           )}
         </div>
       </main>
-
-      <footer className="text-center text-xs text-gray-500 py-4 space-y-1 -mt-4 -mb-6">
-        <p>
-          Remember your password?{" "}
-          <Link
-            to="/login"
-            className="text-[#D06B4F] font-semibold hover:underline"
-          >
-            Log In
-          </Link>
-        </p>
-
-        <p>
-          Don't have an account yet?{" "}
-          <Link
-            to="/register"
-            className="text-[#1F365C] font-semibold hover:underline"
-          >
-            Create New Account
-          </Link>
-        </p>
-      </footer>
     </div>
   );
 }

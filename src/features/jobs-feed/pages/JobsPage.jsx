@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { AnimatePresence } from "framer-motion";
 import JobCard from "@/components/shared/JobCard";
 import { JOBS } from "@/constants/jobsMock";
@@ -9,14 +10,17 @@ export default function JobsPage() {
   const [view, setView] = useState("none");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeJob, setActiveJob] = useState(JOBS[0]);
-  const [cv, setCv] = useState("");
-  const [authorized, setAuthorized] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [errors, setErrors] = useState({});
+  const form = useForm({
+    defaultValues: {
+      cv: "",
+      authorized: "",
+      startDate: "",
+    },
+  });
 
   function openApply(job) {
     setActiveJob(job);
-    setErrors({});
+    form.reset();
     setView("loading");
     setTimeout(() => setView("form"), 900);
   }
@@ -26,27 +30,9 @@ export default function JobsPage() {
   }
 
   function attemptSubmit() {
-    const nextErrors = {};
-    if (!cv) nextErrors.cv = "Please select a resume to continue.";
-    if (!authorized)
-      nextErrors.authorized = "This field is required by the employer.";
-    if (!startDate)
-      nextErrors.startDate = "Please select your earliest start date.";
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
     setView("submitting");
     setTimeout(() => setView("success"), 1500);
   }
-
-  const form = {
-    cv,
-    authorized,
-    startDate,
-    errors,
-    onCvChange: setCv,
-    onAuthorizedChange: setAuthorized,
-    onStartDateChange: setStartDate,
-  };
 
   return (
     <div className="flex min-h-screen flex-col bg-background font-sans text--primary antialiased">

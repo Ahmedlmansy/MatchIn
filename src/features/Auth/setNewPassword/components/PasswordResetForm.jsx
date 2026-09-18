@@ -117,7 +117,7 @@ export default function PasswordResetForm({
         />
         <Button
           type="submit"
-          className="h-auto w-full cursor-pointer gap-2 rounded-lg bg-slate-900 py-3 text-sm font-bold text-white hover:bg-slate-700"
+          className="h-auto w-full cursor-pointer gap-2 rounded-lg bg-primary py-3 text-sm font-bold text-white hover:bg-primary/90"
         >
           Save &amp; Set Password
           <ArrowRight className="h-3.5 w-3.5" />

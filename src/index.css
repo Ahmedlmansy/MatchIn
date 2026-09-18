@@ -3,8 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
-
 @theme {
   /*     MatchIn palette */
   --color-primary: #1f365c; /* Midnight Blue */
@@ -19,11 +17,15 @@
   --color-warning: #c88a26; /* Amber */
   --color-error: #b85450; /* Muted Red */
 
-
   --color-primary-foreground: #ffffff;
   --color-secondary-foreground: #ffffff;
   --color-accent-foreground: #222831;
   --color-success-foreground: #ffffff;
   --color-warning-foreground: #ffffff;
   --color-error-foreground: #ffffff;
+
+  --font-inter: "Inter", sans-serif;
+  --font-dm-sans: "DM Sans", sans-serif;
+  --font-alexandria: "Alexandria", sans-serif;
+  --font-tajawal: "Tajawal", sans-serif;
 }
