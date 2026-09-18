@@ -4,9 +4,6 @@ import RegisterPage from "@/features/Auth/registerPage/RegisterPage";
 import SetNewPassword from "@/features/Auth/setNewPassword/pages/SetNewPassword";
 
 
-
-
-
 export const auth = [
   { path: "login", element: <LoginPage /> },
   { path: "register", element: <RegisterPage /> },
