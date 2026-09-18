@@ -1,25 +1,35 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, ListFilter, Search } from "lucide-react";
+import { ListFilter, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function JobFilters({ open, onToggle }) {
   return (
     <div className="space-y-3 rounded-2xl border border-border bg-white p-4 shadow-sm">
       <div className="mb-0 flex flex-col gap-3 md:flex-row">
-        <div className="relative flex flex-1 items-center rounded-xl border border-border bg-background px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10">
-          <Search className="h-5 w-5 text-muted" />
-          <input
+        <div className="relative flex flex-1 items-center">
+          <Search className="absolute left-3 z-10 h-5 w-5 text-muted" />
+          <Input
             type="search"
             aria-label="Search jobs"
             placeholder="Search by job title, skill, or company..."
-            className="w-full border-none bg-transparent p-2.5 text-sm outline-none focus:ring-0"
+            className="h-11 rounded-xl border-border bg-background pl-10 pr-3 text-sm focus-visible:border-primary focus-visible:ring-primary/10"
           />
         </div>
-        <button
+        <Button
           type="button"
           onClick={onToggle}
           aria-expanded={open}
           aria-controls="filters-drawer"
-          className="flex h-11 items-center gap-2 rounded-xl border border-border bg-[rgb(234,232,228)] px-4 text-sm font-bold text-primary transition-colors hover:bg-border"
+          variant="outline"
+          className="h-11 rounded-xl border-border bg-[rgb(234,232,228)] px-4 font-bold text-primary hover:bg-border"
         >
           <ListFilter
             className={`h-4.5 w-4.5 transition-transform duration-200 ${
@@ -30,13 +40,10 @@ export default function JobFilters({ open, onToggle }) {
           <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-white">
             2
           </span>
-        </button>
-        <button
-          type="button"
-          className="rounded-xl bg-primary px-6 py-2.5 text-sm font-bold text-white hover:bg-[#052045]"
-        >
+        </Button>
+        <Button type="button" className="h-11 rounded-xl px-6 font-bold">
           Search
-        </button>
+        </Button>
       </div>
 
       <AnimatePresence initial={false}>
@@ -63,9 +70,9 @@ export default function JobFilters({ open, onToggle }) {
                 options={["Junior", "Mid-Senior", "Lead"]}
               />
               <div className="flex flex-1 items-end gap-2">
-                <button className="w-full rounded-lg bg-primary py-2 text-xs font-bold text-white">
+                <Button type="button" size="sm" className="w-full font-bold">
                   Apply Filters
-                </button>
+                </Button>
               </div>
             </div>
           </motion.div>
@@ -81,14 +88,18 @@ function FilterSelect({ label, options }) {
       <label className="mb-1 block text-xs font-bold text-secondary">
         {label}
       </label>
-      <div className="relative">
-        <ChevronDown className="absolute inset-e-3 top-[50%] h-4 w-4 translate-y-[-50%]" />
-        <select className="w-full appearance-none rounded-lg border border-border bg-background p-2 text-xs outline-none">
+      <Select defaultValue={options[0]}>
+        <SelectTrigger className="h-9 w-full rounded-lg border-border bg-background text-xs">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
           {options.map((option) => (
-            <option key={option}>{option}</option>
+            <SelectItem key={option} value={option}>
+              {option}
+            </SelectItem>
           ))}
-        </select>
-      </div>
+        </SelectContent>
+      </Select>
     </div>
   );
 }
