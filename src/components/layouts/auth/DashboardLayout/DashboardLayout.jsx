@@ -29,7 +29,7 @@ export default function DashboardLayout({ userName = "Alex Mercer", userRole = "
         <Topbar onOpenMobileSidebar={() => setMobileOpen(true)} userName={userName} userRole={userRole} />
 
         <main className="w-full min-h-screen bg-background pb-12">
-          <div className="mx-auto max-w-[1360px] px-6 pt-6">{children} <Outlet/></div>
+          <div className="mx-auto max-w-[1360px] px-6 pt-6 ">{children} <Outlet/></div>
         </main>
 
         <DashboardFooter />
