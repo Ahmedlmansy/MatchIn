@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const LOCATION_ICONS = { globe: Globe, pin: MapPin };
 
-export default function JobCard({ job, index = 0 }) {
+export default function JobCard({ job, index = 0, onApply }) {
   const LocationIcon = LOCATION_ICONS[job.locationIcon] ?? Globe;
 
   return (
@@ -90,6 +90,7 @@ export default function JobCard({ job, index = 0 }) {
             </Button>
             <Button
               size="sm"
+              onClick={() => onApply?.(job)}
               className="rounded-lg bg-primary px-4 py-1.5 font-headline-sm text-[12px] font-semibold text-primary-foreground hover:bg-primary/90"
             >
               Quick Apply
