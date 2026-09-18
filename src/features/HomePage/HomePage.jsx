@@ -7,6 +7,7 @@ import WhySkillMatchSection from './components/WhyMatchIn/WhyMatchInSection';
 import FinalCTASection from './components/FinalCTASection';
 import Header from './components/Header';
 import Footer from './components/Footer';
+// import PricingSection from './components/PricingSection';
 
 export default function HomePage() {
   return <div>
@@ -16,6 +17,7 @@ export default function HomePage() {
     <PhilosophySection/>
     <CategoriesSection />
     <WhySkillMatchSection />
+    {/* <PricingSection/> */}
     <FinalCTASection />
     <Footer/>
   </div>;

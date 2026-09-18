@@ -15,12 +15,12 @@ export default function Overview() {
       <div className="col-span-3">
         <UserDashboardHeader />
       </div>
-      <div className="col-span-2 md:col-span-3 flex flex-col gap-3">
+      <div className="lg:col-span-2 md:col-span-3 flex flex-col gap-3">
         <PipelineOverviewCard />
         <RecommendedJobsCard />
         <PrioritySkillGapsCard />
       </div>
-      <div className="col-span-1 md:col-span-3 flex flex-col gap-3">
+      <div className="lg:col-span-1 md:col-span-3 flex flex-col gap-3">
         <CompetencyRadarCard />
         <AIMentorCard />
         <RoadmapCard />

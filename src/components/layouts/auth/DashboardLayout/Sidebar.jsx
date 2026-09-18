@@ -1,36 +1,28 @@
-import {
-  Compass,
-  LayoutDashboard,
-  Bookmark,
-  ClipboardList,
-  Map,
-  Sparkles,
-  PanelLeftClose,
-  PanelLeftOpen,
-} from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
 import LogoNavy from "@/assets/logo/MatchIn_logo.svg";
+import LogoText from "@/assets/logo/logo_text.svg";
 import { cn } from "@/lib/utils";
+import { buildSidebarNav } from "@/utils/buildSidebarNav";
+import { dashboard } from "@/app/routes/dashboard.routes";
 
-// Nav items are data — add/remove/reorder here, no JSX changes needed.
-const NAV_ITEMS = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "#", active: true },
-  { label: "Explore Jobs", icon: Compass, href: "#" },
-  { label: "Saved Jobs", icon: Bookmark, href: "#" },
-  { label: "Application Tracker", icon: ClipboardList, href: "#" },
-  { label: "Mentor & Roadmap", icon: Map, href: "#" },
-];
 
-function NavItem({ icon: Icon, label, href = "#", active, collapsed }) {
+const NAV_ITEMS = buildSidebarNav(dashboard, "/dashboard");
+
+function NavItem({ icon: Icon, label, href, end, collapsed }) {
   return (
-    <a
-      href={href}
-      className={cn(
-        "group relative flex items-center gap-3 rounded-xl px-3.5 py-3 text-[13px] font-medium transition-all",
-        collapsed && "justify-center px-0",
-        active
-          ? "bg-primary font-semibold text-primary-foreground shadow-sm"
-          : "text-muted hover:bg-background hover:text-primary"
-      )}
+    <NavLink
+      to={href}
+      end={end}
+      className={({ isActive }) =>
+        cn(
+          "group relative flex items-center gap-3 rounded-xl px-3.5 py-3 text-[13px] font-medium transition-all",
+          collapsed && "justify-center px-0",
+          isActive
+            ? "bg-primary font-semibold text-primary-foreground shadow-sm"
+            : "text-muted hover:bg-background hover:text-primary",
+        )
+      }
     >
       <Icon className="h-5 w-5 shrink-0" />
       {!collapsed && <span>{label}</span>}
@@ -41,7 +33,7 @@ function NavItem({ icon: Icon, label, href = "#", active, collapsed }) {
           {label}
         </span>
       )}
-    </a>
+    </NavLink>
   );
 }
 
@@ -50,9 +42,16 @@ function NavItem({ icon: Icon, label, href = "#", active, collapsed }) {
  * ---------------------------------------------------------------------------
  * Fixed, collapsible sidebar. State (collapsed / mobile drawer) lives in
  * DashboardLayout and is passed down as props so the layout stays the single
- * source of truth for the shell's responsive behavior.
+ * source of truth for the shell's responsive behavior. Nav items themselves
+ * come from the dashboard route config (see NAV_ITEMS above), not a
+ * hand-maintained list.
  */
-export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile }) {
+export default function Sidebar({
+  collapsed,
+  onToggleCollapse,
+  mobileOpen,
+  onCloseMobile,
+}) {
   return (
     <>
       {mobileOpen && (
@@ -72,8 +71,9 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
         <div className="flex h-full flex-col justify-between rounded-2xl border border-border/80 bg-surface/90 p-4 shadow-sm backdrop-blur-md transition-all duration-300">
           <div>
             {/* Logo & Brand */}
-            <a
-              href="#"
+            <NavLink
+              to="/dashboard"
+              end
               className="mb-4 flex items-center gap-3 border-b border-border/50 pb-5"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary shadow-sm">
@@ -81,15 +81,16 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
               </div>
               {!collapsed && (
                 <div className="flex flex-col">
-                  <span className="font-serif text-[18px] font-bold leading-none tracking-tight text-primary">
-                    MatchIn
-                  </span>
-                  <span className="mt-1 text-[10px] font-medium tracking-wide text-muted">
+                  <div className="h-10 w-auto">
+                    <img src={LogoText} alt="MatchIn Logo" className=" " />
+                  </div>
+
+                  <span className="mt-1 text-[10px] font-medium tracking-wide text-muted ms-1">
                     Career Guidance
                   </span>
                 </div>
               )}
-            </a>
+            </NavLink>
 
             {/* Navigation */}
             <nav className="space-y-1.5">
@@ -99,7 +100,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                 </div>
               )}
               {NAV_ITEMS.map((item) => (
-                <NavItem key={item.label} {...item} collapsed={collapsed} />
+                <NavItem key={item.href} {...item} collapsed={collapsed} />
               ))}
             </nav>
           </div>
@@ -113,6 +114,7 @@ export default function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onClo
                 <p className="mb-3 text-[11px] text-primary-foreground/70">
                   Ask AI Mentor for instant career recommendations.
                 </p>
+                {/* TODO: point to the real AI mentor route */}
                 <a
                   href="#"
                   className="block rounded-lg bg-surface px-3 py-2 text-center text-[11px] font-bold text-primary shadow-sm transition-colors hover:bg-background"
