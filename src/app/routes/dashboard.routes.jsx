@@ -3,9 +3,9 @@ import JobsPage from "@/features/jobs-feed/pages/JobsPage";
 import NotificationsPage from "@/features/notifications/NotificationsPage";
 import Overview from "@/features/userDashboard/overview/Overview";
 import CvManagementPage from "@/features/userDashboard/CvManagementPage/CvManagementPage";
-import AiChat from "@/features/ai-chat/AiChatPage";
 import RoadmapPage from "@/features/roadmap/RoadmapPage";
 import RoadmapDetails from "@/features/roadmap/roadmapDetails/RoadmapDetails";
+import AiChat from "@/features/aiChat/AiChatPage";
 
 export const dashboard = [
   {
