@@ -38,11 +38,10 @@ export const dashboard = [
   },
   {
     path: "roadmap",
-    element: <RoadmapPage />,
     handle: { label: "Roadmap", icon: Compass, sidebar: true },
-  },
-  {
-    path: "roadmap/:roleId",
-    element: <RoadmapDetails />,
+    children: [
+      { index: true, element: <RoadmapPage /> },
+      { path: ":roleId", element: <RoadmapDetails /> },
+    ],
   },
 ];
