@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useForm } from "react-hook-form";
-import JobDetailsContent from "@/features/jobs-feed/components/jobDetailsComponents/JobDetailsContent";
-import JobDetailsModals from "@/features/jobs-feed/components/jobDetailsComponents/JobDetailsModals";
-import JobDetailsStateViews from "@/features/jobs-feed/components/jobDetailsComponents/JobDetailsStateViews";
-import JobModalViews from "@/features/jobs-feed/components/JobModalViews";
+import JobDetailsContent from "@/features/jobsFeed/components/jobDetailsComponents/JobDetailsContent";
+import JobDetailsModals from "@/features/jobsFeed/components/jobDetailsComponents/JobDetailsModals";
+import JobDetailsStateViews from "@/features/jobsFeed/components/jobDetailsComponents/JobDetailsStateViews";
+import JobModalViews from "@/features/jobsFeed/components/JobModalViews";
 
 const ACTIVE_JOB = {
   title: "Senior Frontend Developer",

@@ -9,8 +9,8 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import JobDetailsHeader from "@/features/jobs-feed/components/jobDetailsComponents/JobDetailsHeader";
-import JobDetailsSidebar from "@/features/jobs-feed/components/jobDetailsComponents/JobDetailsSidebar";
+import JobDetailsHeader from "@/features/jobsFeed/components/jobDetailsComponents/JobDetailsHeader";
+import JobDetailsSidebar from "@/features/jobsFeed/components/jobDetailsComponents/JobDetailsSidebar";
 
 const responsibilities = [
   [
