@@ -6,7 +6,7 @@ import CvManagementPage from "@/features/userDashboard/CvManagementPage/CvManage
 import AiChat from "@/features/ai-chat/AiChatPage";
 import RoadmapPage from "@/features/roadmap/RoadmapPage";
 import RoadmapDetails from "@/features/roadmap/roadmapDetails/RoadmapDetails";
-import JobDetailsPage from "@/features/jobs-feed/pages/JobsDetails";
+import JobDetailsPage from "@/features/jobsFeed/pages/JobsDetails";
 
 export const dashboard = [
   {
