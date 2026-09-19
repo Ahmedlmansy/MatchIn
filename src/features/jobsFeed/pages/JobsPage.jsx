@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import { AnimatePresence } from "framer-motion";
 import JobCard from "@/components/shared/JobCard";
 import { JOBS } from "@/constants/jobsMock";
-import JobFilters from "@/features/jobs-feed/components/JobFilters";
-import JobModalViews from "@/features/jobs-feed/components/JobModalViews";
+import JobFilters from "@/features/jobsFeed/components/JobFilters";
+import JobModalViews from "@/features/jobsFeed/components/JobModalViews";
 
 export default function JobsPage() {
   const [view, setView] = useState("none");

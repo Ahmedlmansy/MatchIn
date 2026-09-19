@@ -1,5 +1,5 @@
 import { LayoutDashboard, Compass, Bell, FileText, Bot } from "lucide-react";
-import JobsPage from "@/features/jobs-feed/pages/JobsPage";
+import JobsPage from "@/features/jobsFeed/pages/JobsPage";
 import NotificationsPage from "@/features/notifications/NotificationsPage";
 import Overview from "@/features/userDashboard/overview/Overview";
 import CvManagementPage from "@/features/userDashboard/CvManagementPage/CvManagementPage";
@@ -19,9 +19,12 @@ export const dashboard = [
     handle: { label: "Notifications", icon: Bell, sidebar: false },
   },
   {
-    path: "jobs-feed",
-    element: <JobsPage />,
+    path: "jobs",
     handle: { label: "Explore Jobs", icon: Compass, sidebar: true },
+    children: [
+      { index: true, element: <JobsPage /> },
+      { path: ":jobId", element: <JobDetailsPage /> },
+    ],
   },
   {
     path: "cv-management",

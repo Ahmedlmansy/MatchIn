@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { CircleAlert, CircleCheck, StickyNotes } from "lucide-react";
 import Modal from "@/components/shared/Modal";
 import Status from "@/components/shared/Status";
-import JobApplicationModal from "@/features/jobs-feed/components/JobApplicationModal";
+import JobApplicationModal from "@/features/jobsFeed/components/JobApplicationModal";
 
 function Spinner() {
   return (
