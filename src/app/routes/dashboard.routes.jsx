@@ -6,6 +6,7 @@ import CvManagementPage from "@/features/userDashboard/CvManagementPage/CvManage
 import AiChat from "@/features/ai-chat/AiChatPage";
 import RoadmapPage from "@/features/roadmap/RoadmapPage";
 import RoadmapDetails from "@/features/roadmap/roadmapDetails/RoadmapDetails";
+import JobDetailsPage from "@/features/jobs-feed/pages/JobsDetails";
 
 export const dashboard = [
   {
@@ -19,9 +20,12 @@ export const dashboard = [
     handle: { label: "Notifications", icon: Bell, sidebar: false },
   },
   {
-    path: "jobs-feed",
-    element: <JobsPage />,
+    path: "jobs",
     handle: { label: "Explore Jobs", icon: Compass, sidebar: true },
+    children: [
+      { index: true, element: <JobsPage /> },
+      { path: ":jobId", element: <JobDetailsPage /> },
+    ],
   },
   {
     path: "cv-management",
