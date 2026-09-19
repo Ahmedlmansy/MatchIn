@@ -1,5 +1,5 @@
+import JobDetailsSkeleton from "@/components/layouts/skeletons/JobDetailsSkeleton";
 import { Button } from "@/components/ui/button";
-import JobDetailsSkeleton from "@/components/shared/JobDetailsSkeleton";
 import { motion } from "framer-motion";
 import { ArrowLeft, CircleAlert, RotateCcw, Search } from "lucide-react";
 
