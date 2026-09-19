@@ -3,10 +3,9 @@ import JobsPage from "@/features/jobsFeed/pages/JobsPage";
 import NotificationsPage from "@/features/notifications/NotificationsPage";
 import Overview from "@/features/userDashboard/overview/Overview";
 import CvManagementPage from "@/features/userDashboard/CvManagementPage/CvManagementPage";
-import AiChat from "@/features/ai-chat/AiChatPage";
 import RoadmapPage from "@/features/roadmap/RoadmapPage";
 import RoadmapDetails from "@/features/roadmap/roadmapDetails/RoadmapDetails";
-import JobDetailsPage from "@/features/jobsFeed/pages/JobsDetails";
+import AiChat from "@/features/aiChat/AiChatPage";
 
 export const dashboard = [
   {
@@ -39,11 +38,10 @@ export const dashboard = [
   },
   {
     path: "roadmap",
-    element: <RoadmapPage />,
     handle: { label: "Roadmap", icon: Compass, sidebar: true },
-  },
-  {
-    path: "roadmap/:roleId",
-    element: <RoadmapDetails />,
+    children: [
+      { index: true, element: <RoadmapPage /> },
+      { path: ":roleId", element: <RoadmapDetails /> },
+    ],
   },
 ];
