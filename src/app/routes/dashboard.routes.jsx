@@ -1,4 +1,4 @@
-import { LayoutDashboard, Compass, Bell, FileText, Bot, Bookmark } from "lucide-react";
+import { LayoutDashboard, Compass, Bell, FileText, Bot, Bookmark, PersonStanding } from "lucide-react";
 import JobsPage from "@/features/jobsFeed/pages/JobsPage";
 import NotificationsPage from "@/features/notifications/NotificationsPage";
 import Overview from "@/features/userDashboard/overview/Overview";
@@ -8,6 +8,7 @@ import RoadmapDetails from "@/features/roadmap/roadmapDetails/RoadmapDetails";
 import AiChat from "@/features/aiChat/AiChatPage";
 import JobDetailsPage from "@/features/jobsFeed/pages/JobsDetails";
 import SavedJobsDashboard from "@/features/jobsFeed/pages/SavedJobs";
+import ProfilePage from "@/features/profileDB/ProfilePage";
 
 export const dashboard = [
   {
@@ -21,6 +22,11 @@ export const dashboard = [
     handle: { label: "Notifications", icon: Bell, sidebar: false },
   },
   {
+    path: "profile",
+    element: <ProfilePage />,
+    handle: { label: "Profile", icon: PersonStanding, sidebar: false },
+  },
+  {
     path: "jobs",
     handle: { label: "Explore Jobs", icon: Compass, sidebar: true },
     children: [
@@ -31,7 +37,7 @@ export const dashboard = [
   {
     path: "saved-jobs",
     element: <SavedJobsDashboard />,
-    handle: {label: "Saved Jobs", icon: Bookmark, sidebar: true}
+    handle: { label: "Saved Jobs", icon: Bookmark, sidebar: true },
   },
   {
     path: "cv-management",
