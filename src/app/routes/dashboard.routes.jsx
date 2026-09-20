@@ -10,6 +10,7 @@ import JobDetailsPage from "@/features/jobsFeed/pages/JobsDetails";
 import SavedJobsDashboard from "@/features/jobsFeed/pages/SavedJobs";
 import ProfilePage from "@/features/profile/ProfilePage";
 
+
 export const dashboard = [
   {
     index: true,
