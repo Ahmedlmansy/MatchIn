@@ -11,6 +11,7 @@ import OnboardingPage from "@/features/onboarding/OnboardingPage";
 import SavedJobsDashboard from "@/features/jobsFeed/pages/SavedJobs";
 import ProfilePage from "@/features/profile/ProfilePage";
 import ApplicationTracker from "@/features/applications/pages/ApplicationPage";
+import ApplicationDetails from "@/features/applications/pages/ApplicationDetail";
 
 
 export const dashboard = [
@@ -66,12 +67,15 @@ export const dashboard = [
   },
   {
     path: "applications",
-    element: <ApplicationTracker />,
     handle: {
       label: "Application Tracker",
       icon: ClipboardList,
       sidebar: true,
-    }
+    },
+    children: [
+      {index: true, element: <ApplicationTracker />},
+      {path: ":applicationId", element: <ApplicationDetails />}
+    ]
   }
 ]
    
