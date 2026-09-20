@@ -1,49 +1,34 @@
 import { useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import { ONBOARDING_STEPS } from "@/constants/onboardingSteps";
-import OnboardingCompletedSummary from "./components/OnboardingCompletedSummary";
+import ActionBanner from "@/components/shared/ActionBanner";
+
+import { ONBOARDING_STEP_FIELDS } from "@/constants/onboardingstepfields";
 import StepperHeader from "./components/StepperHeader";
-import SavingIndicator from "./components/SavingIndicator";
-import ActionBanner from "./components/ActionBanner";
-import StepPlaceholder from "./components/StepPlaceholder";
-import JobTitleStep from "./components/JobTitleStep";
-import JobTypeStep from "./components/JobTypeStep";
-import WorkStyleStep from "./components/WorkStyleStep";
-import LocationStep from "./components/LocationStep";
-import ExperienceStep from "./components/ExperienceStep";
-import CareerGoalStep from "./components/CareerGoalStep";
+import OnboardingCompletedSummary from "./components/OnboardingCompletedSummary";
+import ChipSelectStep from "./components/ChipSelectStep";
 
-const TOTAL_STEPS = ONBOARDING_STEPS.length;
+const TOTAL_STEPS = ONBOARDING_STEP_FIELDS.length;
 
-const INITIAL_FORM_DATA = ONBOARDING_STEPS.reduce(
+const INITIAL_FORM_DATA = ONBOARDING_STEP_FIELDS.reduce(
   (acc, step) => ({ ...acc, [step.field]: "" }),
   {},
 );
 
-const STEP_COMPONENTS = {
-  1: JobTitleStep,
-  2: JobTypeStep,
-  3: WorkStyleStep,
-  4: LocationStep,
-  5: ExperienceStep,
-  6: CareerGoalStep,
-};
-
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
-  const [saveState, setSaveState] = useState("idle"); // idle | saving | saved
-  const [lastSaved, setLastSaved] = useState("");
+  const [bannerStatus, setBannerStatus] = useState(null); // null | "loading" | "success" | "error"
+  const [bannerText, setBannerText] = useState("");
   const [completed, setCompleted] = useState(false);
 
   // TODO: replace with the real autosave API call
   const simulateSave = (label) => {
     if (!label) return;
-    setSaveState("saving");
+    setBannerStatus("loading");
+    setBannerText("Saving changes to server...");
     window.setTimeout(() => {
-      setSaveState("saved");
-      setLastSaved(label);
-      window.setTimeout(() => setSaveState("idle"), 2200);
+      setBannerStatus("success");
+      setBannerText(`Saved: "${label}"`);
+      window.setTimeout(() => setBannerStatus(null), 2200);
     }, 700);
   };
 
@@ -73,47 +58,24 @@ export default function OnboardingPage() {
     );
   }
 
-  const currentStepMeta = ONBOARDING_STEPS[step - 1];
-  const StepComponent = STEP_COMPONENTS[step];
+  const currentStepConfig = ONBOARDING_STEP_FIELDS[step - 1];
 
   return (
     <div className="mx-auto w-full max-w-[480px] rounded-3xl border border-border bg-surface p-6 shadow-sm">
       <StepperHeader currentStep={step} />
 
-      <SavingIndicator show={saveState === "saving"} />
+      <ActionBanner status={bannerStatus} text={bannerText} className="mb-4" />
 
-      {/* ActionBanner replaces SuccessToast — handles loading / error / success */}
-      <ActionBanner
-        status={
-          saveState === "idle"
-            ? null
-            : saveState === "saving"
-              ? "loading"
-              : "success"
-        }
-        text={saveState === "saved" ? `Saved: "${lastSaved}"` : undefined}
-        className="mb-4"
+      {/* key forces a fresh instance per step, so its internal input/error
+          state doesn't leak from one step's field into the next */}
+      <ChipSelectStep
+        key={currentStepConfig.field}
+        stepConfig={currentStepConfig}
+        value={formData[currentStepConfig.field]}
+        onContinue={handleContinue}
+        onPrevious={handlePrevious}
+        isFirstStep={step === 1}
       />
-
-      <AnimatePresence mode="wait">
-        {StepComponent ? (
-          <StepComponent
-            key={step}
-            value={formData[currentStepMeta.field]}
-            onContinue={handleContinue}
-            onPrevious={handlePrevious}
-            isFirstStep={step === 1}
-          />
-        ) : (
-          <StepPlaceholder
-            key={step}
-            label={currentStepMeta.label}
-            field={currentStepMeta.field}
-            onContinue={handleContinue}
-            onPrevious={handlePrevious}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }

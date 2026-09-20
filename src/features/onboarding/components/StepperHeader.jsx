@@ -1,7 +1,9 @@
-import { ONBOARDING_STEPS } from "@/constants/onboardingSteps";
+import { ONBOARDING_STEP_FIELDS } from "@/constants/onboardingstepfields";
 
 export default function StepperHeader({ currentStep }) {
-  const percent = Math.round((currentStep / ONBOARDING_STEPS.length) * 100);
+  const percent = Math.round(
+    (currentStep / ONBOARDING_STEP_FIELDS.length) * 100,
+  );
 
   return (
     <div className="mb-8">
@@ -11,7 +13,7 @@ export default function StepperHeader({ currentStep }) {
           Smart Account Setup
         </span>
         <span className="text-[12px] text-muted">
-          Step {currentStep} of {ONBOARDING_STEPS.length}{" "}
+          Step {currentStep} of {ONBOARDING_STEP_FIELDS.length}{" "}
           <strong className="font-bold text-primary">{percent}%</strong>
         </span>
       </div>
@@ -24,14 +26,16 @@ export default function StepperHeader({ currentStep }) {
       </div>
 
       <nav className="flex flex-wrap gap-x-4 gap-y-1.5">
-        {ONBOARDING_STEPS.map((step) => (
+        {ONBOARDING_STEP_FIELDS.map((step) => (
           <span
             key={step.number}
             className={`text-[12px] font-medium ${
-              step.number === currentStep ? "font-bold text-primary" : "text-muted"
+              step.number === currentStep
+                ? "font-bold text-primary"
+                : "text-muted"
             } ${step.number > currentStep ? "opacity-50" : ""}`}
           >
-            {step.number}. {step.label}
+            {step.number}. {step.navLabel}
           </span>
         ))}
       </nav>

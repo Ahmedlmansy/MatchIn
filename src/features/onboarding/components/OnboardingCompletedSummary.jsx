@@ -7,8 +7,6 @@ const SUMMARY_FIELDS = [
   { key: "jobType", label: "Job Type" },
   { key: "workStyle", label: "Work Style" },
   { key: "location", label: "Location" },
-  { key: "experience", label: "Experience" },
-  { key: "primaryGoal", label: "Primary Goal" },
 ];
 
 export default function OnboardingCompletedSummary({ formData, onEdit }) {
@@ -21,10 +19,7 @@ export default function OnboardingCompletedSummary({ formData, onEdit }) {
       title="You're All Set! 🎉"
       subtitle="Your AI career profile has been successfully configured. We are now calibrating jobs for you."
       secondaryButton={{ label: "Edit Choices", onClick: onEdit }}
-      primaryButton={{
-        label: "Go to Dashboard",
-        onClick: () => navigate("/dashboard"),
-      }}
+      primaryButton={{ label: "Go to Dashboard", onClick: () => navigate("/dashboard") }}
     >
       <div className="mb-5 rounded-2xl border border-border bg-background p-4 text-left">
         <div className="mb-3 flex items-center gap-2 text-[12px] font-bold text-ink">
