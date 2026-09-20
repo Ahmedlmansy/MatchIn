@@ -58,7 +58,7 @@ export default function JobCard({
       exit={{ opacity: 0, scale: 0.95 }}
       className={`bg-surface border border-border rounded-2xl p-4 sm:p-6 shadow-xs group relative ${isDimmed ? "filter grayscale-[0.4]" : ""}`}
     >
-      <div className="flex flex-col sm:flex-row items-start justify-between gap-4 mb-4">
+      <div className="flex flex-col lg:flex-row items-start justify-between gap-4 mb-4">
         <div className="flex items-start gap-3 sm:gap-4 min-w-0 w-full">
           <Checkbox
             checked={selected}
@@ -91,7 +91,7 @@ export default function JobCard({
             </div>
           </div>
         </div>
-        <div className="text-left sm:text-right shrink-0 self-end sm:self-auto">
+        <div className="text-left lg:text-right shrink-0 self-end lg:self-auto">
           <div className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
             <Check className="w-3.5 h-3.5" /> {job.fitFraction} ({job.fitScore}
             %)

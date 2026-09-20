@@ -21,7 +21,7 @@ export default function SavedJobsToolbar({ jobsCount }) {
           </Button>
         ))}
       </div>
-      <Button className="w-full sm:w-auto text-xs font-semibold text-primary border border-border bg-background px-3.5 py-2 rounded-lg">
+      <Button className="w-full lg:w-auto text-xs font-semibold text-primary border border-border bg-background px-3.5 py-2 rounded-lg">
         Sort: Best Match
       </Button>
     </div>
