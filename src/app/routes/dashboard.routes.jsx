@@ -7,6 +7,7 @@ import RoadmapPage from "@/features/roadmap/RoadmapPage";
 import AiChat from "@/features/aiChat/AiChatPage";
 import JobDetailsPage from "@/features/jobsFeed/pages/JobsDetails";
 import RoadmapDetailsPage from "@/features/roadmap/roadmapDetails/RoadmapDetailsPage";
+import OnboardingPage from "@/features/onboarding/OnboardingPage";
 
 export const dashboard = [
   {
@@ -45,4 +46,8 @@ export const dashboard = [
       { path: ":roleId", element: <RoadmapDetailsPage /> },
     ],
   },
+  {
+    path: "onboarding",
+    element: <OnboardingPage />,
+  }
 ];
