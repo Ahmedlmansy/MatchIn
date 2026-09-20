@@ -4,9 +4,10 @@ import NotificationsPage from "@/features/notifications/NotificationsPage";
 import Overview from "@/features/userDashboard/overview/Overview";
 import CvManagementPage from "@/features/userDashboard/CvManagementPage/CvManagementPage";
 import RoadmapPage from "@/features/roadmap/RoadmapPage";
-import RoadmapDetails from "@/features/roadmap/roadmapDetails/RoadmapDetails";
 import AiChat from "@/features/aiChat/AiChatPage";
 import JobDetailsPage from "@/features/jobsFeed/pages/JobsDetails";
+import RoadmapDetailsPage from "@/features/roadmap/roadmapDetails/RoadmapDetailsPage";
+import OnboardingPage from "@/features/onboarding/OnboardingPage";
 import SavedJobsDashboard from "@/features/jobsFeed/pages/SavedJobs";
 import ProfilePage from "@/features/profile/ProfilePage";
 import ApplicationTracker from "@/features/applications/pages/ApplicationPage";
@@ -56,8 +57,12 @@ export const dashboard = [
     handle: { label: "Roadmap", icon: Compass, sidebar: true },
     children: [
       { index: true, element: <RoadmapPage /> },
-      { path: ":roleId", element: <RoadmapDetails /> },
+      { path: ":roleId", element: <RoadmapDetailsPage /> },
     ],
+  },
+  {
+    path: "onboarding",
+    element: <OnboardingPage />,
   },
   {
     path: "applications",
@@ -66,6 +71,8 @@ export const dashboard = [
       label: "Application Tracker",
       icon: ClipboardList,
       sidebar: true,
-    },
-  },
-];
+    }
+  }
+]
+   
+
