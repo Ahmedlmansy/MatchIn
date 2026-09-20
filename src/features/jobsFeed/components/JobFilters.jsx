@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+
 export default function JobFilters({ open, onToggle }) {
   return (
     <div className="space-y-3 rounded-2xl border border-border bg-white p-4 shadow-sm">
