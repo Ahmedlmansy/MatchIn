@@ -1,4 +1,4 @@
-import { LayoutDashboard, Compass, Bell, FileText, Bot, Bookmark, PersonStanding } from "lucide-react";
+import { LayoutDashboard, Compass, Bell, FileText, Bot, Bookmark } from "lucide-react";
 import JobsPage from "@/features/jobsFeed/pages/JobsPage";
 import NotificationsPage from "@/features/notifications/NotificationsPage";
 import Overview from "@/features/userDashboard/overview/Overview";
@@ -9,7 +9,9 @@ import AiChat from "@/features/aiChat/AiChatPage";
 import JobDetailsPage from "@/features/jobsFeed/pages/JobsDetails";
 import SavedJobsDashboard from "@/features/jobsFeed/pages/SavedJobs";
 import ProfilePage from "@/features/profile/ProfilePage";
-
+import ApplicationTracker from "@/features/applications/pages/ApplicationPage";
+import { ClipboardList } from "lucide-react";
+import { PersonStanding } from "lucide-react";
 
 export const dashboard = [
   {
@@ -57,5 +59,14 @@ export const dashboard = [
       { index: true, element: <RoadmapPage /> },
       { path: ":roleId", element: <RoadmapDetails /> },
     ],
+  },
+  {
+    path: "applications",
+    element: <ApplicationTracker />,
+    handle: {
+      label: "Application Tracker",
+      icon: ClipboardList,
+      sidebar: true,
+    },
   },
 ];
