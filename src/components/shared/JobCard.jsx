@@ -77,29 +77,29 @@ export default function JobCard({ job, index = 0, onApply }) {
               ))}
             </div>
           </CardContent>
-
-          <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
-            <span className="font-body-sm text-[12px] text-muted">
-              {job.postedAgo}
-            </span>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-full border-border text-muted hover:text-primary"
-              >
-                <Bookmark className="h-4.5 w-4.5" />
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => onApply?.(job)}
-                className="rounded-lg bg-primary px-4 py-1.5 font-headline-sm text-[12px] font-semibold text-primary-foreground hover:bg-primary/90"
-              >
-                Quick Apply
-              </Button>
-            </div>
-          </div>
         </Link>
+
+        <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
+          <span className="font-body-sm text-[12px] text-muted">
+            {job.postedAgo}
+          </span>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              className="h-8 w-8 rounded-full border-border text-muted hover:text-primary"
+            >
+              <Bookmark className="h-4.5 w-4.5" />
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => onApply?.(job)}
+              className="rounded-lg bg-primary px-4 py-1.5 font-headline-sm text-[12px] font-semibold text-primary-foreground hover:bg-primary/90"
+            >
+              Quick Apply
+            </Button>
+          </div>
+        </div>
       </Card>
     </motion.div>
   );
