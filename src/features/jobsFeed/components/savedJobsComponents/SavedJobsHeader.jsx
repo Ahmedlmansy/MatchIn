@@ -1,6 +1,6 @@
 export default function SavedJobsHeader({ jobsCount }) {
   return (
-    <div className="bg-surface border border-border rounded-2xl p-7 mb-8 shadow-[0_2px_12px_-4px_rgba(31,54,92,0.04)] flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div className="bg-surface border border-border rounded-2xl p-5 sm:p-6 lg:p-7 mb-8 shadow-[0_2px_12px_-4px_rgba(31,54,92,0.04)] flex flex-col lg:flex-row lg:items-center justify-between gap-5 lg:gap-6">
       <div className="order-1 max-w-2xl min-w-0">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold uppercase tracking-wider text-muted mb-2">
           <span>Candidate Workspace</span>
@@ -18,7 +18,7 @@ export default function SavedJobsHeader({ jobsCount }) {
           deadline windows.
         </p>
       </div>
-      <div className="order-2 grid w-full grid-cols-3 gap-1.5 sm:gap-3 bg-background border border-border p-2.5 sm:p-3 rounded-xl md:w-auto md:min-w-85">
+      <div className="order-2 grid w-full grid-cols-3 gap-1.5 sm:gap-3 bg-background border border-border p-2.5 sm:p-3 rounded-xl lg:w-auto lg:min-w-85">
         <Stat value={jobsCount} label="Saved Roles" />
         <Stat value="5" label="High Fit" />
         <Stat value="2" label="Expiring" last />
