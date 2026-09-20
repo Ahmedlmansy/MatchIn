@@ -1,31 +1,29 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import ItemCard from "@/components/ui/ItemCard";
-import TabSaveActions from "@/features/profileDB/components/TabSaveActions";
+import TabSaveActions from "@/features/profile/components/TabSaveActions";
 
-const DEFAULT_EXPERIENCES = [
+const DEFAULT_EDUCATION = [
   {
     id: 1,
-    title: "Senior Frontend Developer",
-    company: "TechCorp Inc.",
-    type: "Full-time",
-    startDate: "January 2022",
-    endDate: "Present",
+    degree: "Bachelor of Computer Science",
+    institution: "Cairo University",
+    startYear: "2017",
+    endYear: "2021",
   },
 ];
 
-export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES }) {
-  const [experiences, setExperiences] = useState(initialExperiences);
+export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
+  const [educationList, setEducationList] = useState(initialEducation);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [editingId, setEditingId] = useState(null); 
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
-    title: "",
-    company: "",
-    type: "Full-time",
-    startDate: "",
-    endDate: "",
+    degree: "",
+    institution: "",
+    startYear: "",
+    endYear: "",
   });
 
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -35,23 +33,21 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
   const handleOpenAdd = () => {
     setEditingId(null);
     setFormData({
-      title: "",
-      company: "",
-      type: "Full-time",
-      startDate: "",
-      endDate: "",
+      degree: "",
+      institution: "",
+      startYear: "",
+      endYear: "",
     });
     setIsFormOpen(true);
   };
 
-  const handleOpenEdit = (exp) => {
-    setEditingId(exp.id);
+  const handleOpenEdit = (edu) => {
+    setEditingId(edu.id);
     setFormData({
-      title: exp.title,
-      company: exp.company,
-      type: exp.type || "Full-time",
-      startDate: exp.startDate || "",
-      endDate: exp.endDate || "",
+      degree: edu.degree || "",
+      institution: edu.institution || "",
+      startYear: edu.startYear || "",
+      endYear: edu.endYear || "",
     });
     setIsFormOpen(true);
   };
@@ -62,22 +58,22 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
   };
 
   const handleSave = () => {
-    if (!formData.title.trim()) return;
+    if (!formData.degree.trim()) return;
 
     setIsSaving(true);
     setTimeout(() => {
       if (editingId) {
-        setExperiences((prev) =>
+        setEducationList((prev) =>
           prev.map((item) =>
             item.id === editingId ? { ...item, ...formData } : item
           )
         );
       } else {
-        const newExp = {
+        const newEdu = {
           id: Date.now(),
           ...formData,
         };
-        setExperiences((prev) => [...prev, newExp]);
+        setEducationList((prev) => [...prev, newEdu]);
       }
 
       setIsSaving(false);
@@ -85,8 +81,8 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
     }, 1000);
   };
 
-  const handleOpenDelete = (exp) => {
-    setItemToDelete(exp);
+  const handleOpenDelete = (edu) => {
+    setItemToDelete(edu);
     setIsDeleteOpen(true);
   };
 
@@ -95,7 +91,7 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
 
     setIsDeleting(true);
     setTimeout(() => {
-      setExperiences((prev) => prev.filter((item) => item.id !== itemToDelete.id));
+      setEducationList((prev) => prev.filter((item) => item.id !== itemToDelete.id));
       setIsDeleting(false);
       setIsDeleteOpen(false);
       setItemToDelete(null);
@@ -105,25 +101,27 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-bold text-slate-900 tracking-tight">Work Experience</h3>
+        <h3 className="text-lg font-bold text-slate-900 tracking-tight">
+          Education & Qualifications
+        </h3>
         <button
           onClick={handleOpenAdd}
           className="inline-flex items-center gap-2 bg-[#1E325C] hover:bg-[#162545] text-white px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Experience</span>
+          <span>Add Education</span>
         </button>
       </div>
 
       <div className="space-y-4">
-        {experiences.map((exp) => (
+        {educationList.map((edu) => (
           <ItemCard
-            key={exp.id}
-            title={exp.title}
-            subtitle={`${exp.company} • ${exp.type}`}
-            date={`${exp.startDate} - ${exp.endDate}`}
-            onEdit={() => handleOpenEdit(exp)}
-            onDelete={() => handleOpenDelete(exp)}
+            key={edu.id}
+            title={edu.degree}
+            subtitle={edu.institution}
+            date={`${edu.startYear} - ${edu.endYear}`}
+            onEdit={() => handleOpenEdit(edu)}
+            onDelete={() => handleOpenDelete(edu)}
           />
         ))}
       </div>
@@ -131,7 +129,7 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
       <TabSaveActions
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={editingId ? "Edit Work Experience" : "Add Work Experience"}
+        title={editingId ? "Edit Education" : "Add Education"}
         confirmLabel="Save"
         isLoading={isSaving}
         loadingLabel="Saving..."
@@ -139,50 +137,50 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
       >
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">Title / Role *</label>
+            <label className="text-xs font-bold text-gray-700 block">Degree / Field of Study *</label>
             <input
               type="text"
-              name="title"
-              value={formData.title}
+              name="degree"
+              value={formData.degree}
               onChange={handleChange}
-              placeholder="e.g. Senior Frontend Engineer"
+              placeholder="e.g. Bachelor of Computer Science"
               className="w-full px-4 py-3 bg-[#FAF8F5] border border-gray-200/80 rounded-2xl text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#1E325C]/20 transition-all"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">Company / Institution *</label>
+            <label className="text-xs font-bold text-gray-700 block">School / Institution *</label>
             <input
               type="text"
-              name="company"
-              value={formData.company}
+              name="institution"
+              value={formData.institution}
               onChange={handleChange}
-              placeholder="e.g. TechCorp Inc."
+              placeholder="e.g. Cairo University"
               className="w-full px-4 py-3 bg-[#FAF8F5] border border-gray-200/80 rounded-2xl text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#1E325C]/20 transition-all"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700 block">Start Date</label>
+              <label className="text-xs font-bold text-gray-700 block">Start Year</label>
               <input
                 type="text"
-                name="startDate"
-                value={formData.startDate}
+                name="startYear"
+                value={formData.startYear}
                 onChange={handleChange}
-                placeholder="e.g. Jan 2022"
+                placeholder="e.g. 2017"
                 className="w-full px-4 py-3 bg-[#FAF8F5] border border-gray-200/80 rounded-2xl text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#1E325C]/20 transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700 block">End Date</label>
+              <label className="text-xs font-bold text-gray-700 block">End Year</label>
               <input
                 type="text"
-                name="endDate"
-                value={formData.endDate}
+                name="endYear"
+                value={formData.endYear}
                 onChange={handleChange}
-                placeholder="e.g. Present"
+                placeholder="e.g. 2021"
                 className="w-full px-4 py-3 bg-[#FAF8F5] border border-gray-200/80 rounded-2xl text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#1E325C]/20 transition-all"
               />
             </div>
@@ -195,8 +193,8 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
         onClose={() => setIsDeleteOpen(false)}
         description={
           itemToDelete
-            ? `Are you sure you want to delete ${itemToDelete.title} at ${itemToDelete.company}?`
-            : "Are you sure you want to delete this item?"
+            ? `Are you sure you want to delete ${itemToDelete.institution} Education?`
+            : "Are you sure you want to delete this education item?"
         }
         variant="danger"
         confirmLabel="Delete"

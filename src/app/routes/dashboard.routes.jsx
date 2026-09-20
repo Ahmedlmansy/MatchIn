@@ -8,7 +8,7 @@ import RoadmapDetails from "@/features/roadmap/roadmapDetails/RoadmapDetails";
 import AiChat from "@/features/aiChat/AiChatPage";
 import JobDetailsPage from "@/features/jobsFeed/pages/JobsDetails";
 import SavedJobsDashboard from "@/features/jobsFeed/pages/SavedJobs";
-import ProfilePage from "@/features/profileDB/ProfilePage";
+import ProfilePage from "@/features/profile/ProfilePage";
 
 export const dashboard = [
   {

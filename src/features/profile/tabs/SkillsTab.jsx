@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import ItemCard from "@/components/ui/ItemCard";
-import TabSaveActions from "@/features/profileDB/components/TabSaveActions";
+import TabSaveActions from "@/features/profile/components/TabSaveActions";
 
 const DEFAULT_SKILLS = [
   {
