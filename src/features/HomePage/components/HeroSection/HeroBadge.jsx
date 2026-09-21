@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 export default function HeroBadge() {
+  const { t } = useTranslation("common");
   return (
     <motion.div
       initial={{ opacity: 0, y: -12 }}
@@ -19,7 +21,7 @@ export default function HeroBadge() {
           <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
         </span>
         <Sparkles className="h-3.5 w-3.5 text-accent" />
-        AI-POWERED CAREER INTELLIGENCE
+        {t("home.hero.badge")}
       </Badge>
     </motion.div>
   );

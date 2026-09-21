@@ -1,12 +1,28 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { NAV_LINKS } from "@/constants/navLinks";
 import LogoNavy from "@/assets/logo/Full_logo_navy.svg";
+import { useTranslation } from "react-i18next";
 
-export default function Header() {
+export default function Header()
+{
+    const { lang } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleLanguageChange = (newLang) => {
+      const segments = location.pathname.split("/");
+
+      segments[1] = newLang;
+
+      navigate(segments.join("/"));
+    };
+
+  const { t } = useTranslation("common");
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-surface/95 backdrop-blur-md">
       <div className="mx-auto flex h-20 max-w-[1280px] items-center justify-between gap-4 px-6 md:px-10 lg:px-16">
@@ -24,10 +40,10 @@ export default function Header() {
             {NAV_LINKS.map((link) => (
               <a
                 key={link.id}
-                href={`#${link.id}`}
+                href={`${location.pathname}#${link.id}`}
                 className="font-headline-sm text-[14px] font-medium text-muted transition-colors hover:text-primary"
               >
-                {link.label}
+                {t(link.labelKey)}
               </a>
             ))}
           </nav>
@@ -35,7 +51,7 @@ export default function Header() {
 
         {/* Right side actions */}
         <div className="flex items-center gap-3">
-          <LanguageSwitcher />
+          <LanguageSwitcher language={lang} onChange={handleLanguageChange} />
 
           {/* TODO: point to the real sign-in / post-a-job routes */}
           <Button
@@ -43,7 +59,7 @@ export default function Header() {
             variant="ghost"
             className="hidden font-headline-sm text-[14px] font-medium text-muted hover:bg-transparent hover:text-primary sm:inline-flex"
           >
-            <Link to="/auth/login">Sign In</Link>
+            <Link to="/auth/login">{t("actions.apply")}</Link>
           </Button>
 
           {/* <Button
@@ -81,10 +97,10 @@ export default function Header() {
                 {NAV_LINKS.map((link) => (
                   <SheetClose asChild key={link.id}>
                     <a
-                      href={`#${link.id}`}
+                      href={`${location.pathname}#${link.id}`}
                       className="rounded-lg px-3 py-2.5 font-headline-sm text-[15px] font-medium text-ink transition-colors hover:bg-background hover:text-primary"
                     >
-                      {link.label}
+                      {t(link.labelKey)}
                     </a>
                   </SheetClose>
                 ))}
@@ -97,7 +113,7 @@ export default function Header() {
                     variant="outline"
                     className="justify-center rounded-xl border-border text-primary"
                   >
-                    <Link to="/sign-in">Sign In</Link>
+                    <Link to="/sign-in">{t("actions.signIn")}</Link>
                   </Button>
                 </SheetClose>
                 <SheetClose asChild>
@@ -105,11 +121,14 @@ export default function Header() {
                     asChild
                     className="justify-center rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
                   >
-                    <Link to="/post-a-job">Post a Job</Link>
+                    <Link to="/post-a-job">{t("actions.postJob")}</Link>
                   </Button>
                 </SheetClose>
                 <div className="mt-2 flex justify-center">
-                  <LanguageSwitcher />
+                  <LanguageSwitcher
+                    language={lang}
+                    onChange={handleLanguageChange}
+                  />
                 </div>
               </div>
             </SheetContent>

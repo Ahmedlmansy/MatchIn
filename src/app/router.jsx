@@ -3,28 +3,49 @@ import MainLayout from "@/components/layouts/auth/MainLayout";
 import HomePage from "@/features/HomePage/HomePage";
 import NotFoundPage from "@/features/NotFoundPage/NotFoundPage";
 
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { auth } from "./routes/auth.routes";
 import { dashboard } from "./routes/dashboard.routes";
+import RootRedirect from "./routes/RootRedirect";
 
 export const router = createBrowserRouter([
+  // Root redirect
   {
-    //  guest routes
     path: "/",
-    element: <MainLayout />,
+    element:<RootRedirect />,
+  },
+
+  // Language routes
+  {
+    path: "/:lang",
     children: [
-      { index: true, element: <HomePage /> },
+      // Guest routes
       {
-        path: "/auth",
-        children: [...auth],
+        element: <MainLayout />,
+        children: [
+          {
+            index: true,
+            element: <HomePage />,
+          },
+          {
+            path: "auth",
+            children: [...auth],
+          },
+        ],
+      },
+
+      // Dashboard routes
+      {
+        path: "dashboard",
+        element: (
+          <DashboardLayout userName="Alex Mercer" userRole="Senior Dev" />
+        ),
+        children: [...dashboard],
       },
     ],
   },
-  {
-    path: "/dashboard",
-    element: <DashboardLayout userName="Alex Mercer" userRole="Senior Dev" />,
-    children: [...dashboard],
-  },
+
+  // Not Found
   {
     path: "*",
     element: <NotFoundPage />,

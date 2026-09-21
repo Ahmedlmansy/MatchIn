@@ -8,10 +8,12 @@ import HeroSearchBar from "./HeroSearchBar";
 import HeroPopularSearches from "./HeroPopularSearches";
 import HeroMetrics from "./HeroMetrics";
 import { useMouseSpotlight } from "../../hooks/useMouseSpotlight";
+import { useTranslation } from "react-i18next";
 
 export default function HeroSection() {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
+  const { t } = useTranslation("common");
   const { ref: spotlightRef, handleMouseMove } = useMouseSpotlight();
 
   const handleSearch = () => {
@@ -26,12 +28,12 @@ export default function HeroSection() {
       setQuery(tag);
     }
   };
-
   return (
     <section
       ref={spotlightRef}
       onMouseMove={handleMouseMove}
       className="relative w-full overflow-hidden border-b border-border/20 bg-primary pb-16 pt-12 text-primary-foreground lg:pb-24 lg:pt-16"
+      id="home"
     >
       {/* Mouse-tracking spotlight — uses the theme's --color-accent CSS var */}
       <div
@@ -85,13 +87,13 @@ export default function HeroSection() {
           className="h-auto flex-col gap-1 p-0 text-primary-foreground/60 hover:bg-transparent hover:text-primary-foreground"
         >
           <motion.a
-            href="#latest-roles-section"
+            href="#jobs"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.7 }}
           >
             <span className="text-[11px] font-semibold uppercase tracking-widest">
-              Scroll to Explore
+              {t("home.hero.scrollToExplore")}
             </span>
             <motion.span
               animate={{ y: [0, 6, 0] }}
