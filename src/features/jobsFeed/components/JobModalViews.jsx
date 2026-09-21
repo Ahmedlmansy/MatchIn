@@ -144,7 +144,7 @@ function ApplicationSummary() {
       </div>
       <div className="flex justify-between">
         <span className="text-muted">Source:</span>
-        <span className="font-bold">SkillMatch Feed</span>
+        <span className="font-bold">MatchIn Feed</span>
       </div>
       <div className="flex justify-between">
         <span className="text-muted">Time:</span>

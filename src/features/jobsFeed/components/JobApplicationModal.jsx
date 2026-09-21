@@ -73,7 +73,7 @@ export default function JobApplicationModal({ job, form, onClose, onSubmit }) {
               <Zap className="h-4 w-4" /> Method: Internal
             </span>
             <span className="flex h-fit items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-1 text-primary">
-              <Send className="h-4 w-4" /> Source: SkillMatch Feed
+              <Send className="h-4 w-4" /> Source: MatchIn Feed
             </span>
           </div>
 

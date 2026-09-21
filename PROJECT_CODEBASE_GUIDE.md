@@ -1,4 +1,4 @@
-# MatchIn (SkillMatch) Frontend — Codebase Architecture & Developer Guide
+# MatchIn (MatchIn) Frontend — Codebase Architecture & Developer Guide
 
 > **Document Type:** Senior Frontend Architecture Guide & Codebase Audit  
 > **Status:** Baseline Documentation (Audited As-Is)  
@@ -39,7 +39,7 @@
 
 ## 1. Executive Summary & Codebase Audit Scope
 
-This document is the authoritative architectural and operational documentation for the **SkillMatch / MatchIn** frontend client.
+This document is the authoritative architectural and operational documentation for the **MatchIn / MatchIn** frontend client.
 
 ### 1.1 Scope of Inspection
 - **Total Files in Workspace:** 110 files (99 in `src/`, 11 root configuration/metadata files).

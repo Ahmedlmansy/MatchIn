@@ -22,6 +22,19 @@
     "profile": "Profile"
   },
   "home": {
+    "aiMentor": {
+      "badge": "Next-Gen Intelligence",
+      "title": "AI Career Mentor",
+      "description": "Get personalized career guidance, identify skill gaps, build a learning roadmap, and prepare for your next opportunity with AI.",
+      "chips": {
+        "mockInterviews": "Mock Interviews",
+        "resumeGapAnalysis": "Resume Gap Analysis",
+        "skillRoadmap": "Skill Roadmap",
+        "salaryBenchmarking": "Salary Benchmarking"
+      },
+      "action": "Talk to AI Mentor",
+      "availability": "Available 24/7 • Instant Feedback • Free Plan Included"
+    },
     "hero": {
       "badge": "AI-POWERED CAREER INTELLIGENCE",
       "headlinePrefix": "Your skills deserve the right",
@@ -57,9 +70,9 @@
       "remote": "Remote"
     },
     "approach": {
-      "badge": "The SkillMatch Philosophy",
+      "badge": "The MatchIn Philosophy",
       "title": "Hiring shouldn't be a game of buzzwords.",
-      "description": "SkillMatch eliminates inflated resumes and keyword-stuffed applicant pipelines. By replacing guesswork with verifiable skill telemetry, we create mutual trust and match speed for high-impact teams.",
+      "description": "MatchIn eliminates inflated resumes and keyword-stuffed applicant pipelines. By replacing guesswork with verifiable skill telemetry, we create mutual trust and match speed for high-impact teams.",
       "tiles": {
         "telemetry": { "title": "Verifiable Skill Telemetry", "description": "Deep-dive objective competency scores evaluated by graph neural benchmarks." },
         "compensation": { "title": "Upfront Compensation Parity", "description": "Guaranteed verified salary bands and clear expectations before either side commits." }
@@ -89,10 +102,10 @@
       "health-science": { "title": "Health & Science", "tags": "Clinical, BioTech" }
     },
     "benefits": {
-      "badge": "Why SkillMatch",
+      "badge": "Why MatchIn",
       "title": "Better Matches. Faster Hiring.",
       "description": "We simplify hiring for job seekers and employers with verified listings, AI-powered matching, clear workflows, and responsive support.",
-      "button": "Why SkillMatch"
+      "button": "Why MatchIn"
     },
     "benefitData": {
       "verifiedJobs": { "title": "Verified Jobs", "description": "Every role is reviewed for quality and trust." },

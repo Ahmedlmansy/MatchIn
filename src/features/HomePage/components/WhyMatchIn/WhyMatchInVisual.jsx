@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Play, ShieldCheck } from "lucide-react";
 
-export default function WhySkillMatchVisual() {
+export default function WhyMatchInVisual() {
   return (
     // pb-16 reserves room for the floating security badge below, which sits
     // partly outside the video frame — same fix as the Philosophy section.
@@ -15,7 +15,7 @@ export default function WhySkillMatchVisual() {
       >
         <div className="relative h-full w-full overflow-hidden rounded-2xl">
           <img
-            alt="SkillMatch Interactive Platform Preview"
+            alt="MatchIn Interactive Platform Preview"
             src="https://lh3.googleusercontent.com/aida/AEtjO1WS_BMXOKA3JMyz3bTf_TEbGeHTceUfCjBjIxWO-D5hy466ksy_LLFHd07zYnrU-m97f8HwckwM8kXDpUmbfmLMbPwRK124iq2uczu4wtjePDTkd2khz1MG_mL2l84ZSPCNtS_bZGOI12R85U9G-GCdOVw_JMNtVm49QAu9H9p9uqUa1PPQg6WePLOO0LGi2fe5Pyd0070XZbFyd9-1L_0GIhQZ3l5J2nGPw5l225z8hlLR8YIHPKo0eNo"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />

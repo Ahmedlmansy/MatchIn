@@ -3,7 +3,7 @@ import HeroSection from './components/HeroSection/HeroSection';
 import LatestJobsSection from './components/LatestJobsSection';
 import PhilosophySection from './components/PhilosophySection/PhilosophySection';
 import CategoriesSection from './components/CategoriesSection/CategoriesSection';
-import WhySkillMatchSection from './components/WhyMatchIn/WhyMatchInSection';
+import WhyMatchInSection from './components/WhyMatchIn/WhyMatchInSection';
 import FinalCTASection from './components/FinalCTASection';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -16,7 +16,7 @@ export default function HomePage() {
     <LatestJobsSection />
     <PhilosophySection/>
     <CategoriesSection />
-    <WhySkillMatchSection />
+    <WhyMatchInSection />
     {/* <PricingSection/> */}
     <FinalCTASection />
     <Footer/>

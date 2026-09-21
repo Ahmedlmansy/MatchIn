@@ -373,7 +373,7 @@ function SuccessMatch({
         disabled={isExpired}
         className="w-full bg-primary text-primary-foreground font-bold py-3.5 rounded-xl text-sm mb-3"
       >
-        Apply with SkillMatch Profile
+        Apply with MatchIn Profile
       </Button>
       <div className="grid grid-cols-2 gap-2 text-xs">
         <Button

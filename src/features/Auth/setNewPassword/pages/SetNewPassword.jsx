@@ -60,7 +60,7 @@ export default function SetNewPassword() {
                   </h2>
                   <p className="max-w-[320px] text-xs leading-relaxed text-slate-500">
                     Please enter a strong password and confirm it to protect
-                    your professional account on SkillMatch
+                    your professional account on MatchIn
                   </p>
                 </div>
                 <PasswordResetForm
