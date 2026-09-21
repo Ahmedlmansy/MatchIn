@@ -17,7 +17,7 @@ export const dashboard = [
   {
     index: true,
     element: <Overview />,
-    handle: { label: "Dashboard", icon: LayoutDashboard, sidebar: true },
+    handle: { label: "Dashboard", labelKey: "navigation.dashboard", icon: LayoutDashboard, sidebar: true },
   },
   {
     path: "notifications",
@@ -31,7 +31,7 @@ export const dashboard = [
   },
   {
     path: "jobs",
-    handle: { label: "Explore Jobs", icon: Compass, sidebar: true },
+    handle: { label: "Explore Jobs", labelKey: "navigation.exploreJobs", icon: Compass, sidebar: true },
     children: [
       { index: true, element: <JobsPage /> },
       { path: ":jobId", element: <JobDetailsPage /> },
@@ -40,21 +40,21 @@ export const dashboard = [
   {
     path: "saved-jobs",
     element: <SavedJobsDashboard />,
-    handle: { label: "Saved Jobs", icon: Bookmark, sidebar: true },
+    handle: { label: "Saved Jobs", labelKey: "navigation.savedJobs", icon: Bookmark, sidebar: true },
   },
   {
     path: "cv-management",
     element: <CvManagementPage />,
-    handle: { label: "Cv Management", icon: FileText, sidebar: true },
+    handle: { label: "Cv Management", labelKey: "navigation.cvManagement", icon: FileText, sidebar: true },
   },
   {
     path: "ai-chat",
     element: <AiChat />,
-    handle: { label: "AI Chat", icon: Bot, sidebar: true },
+    handle: { label: "AI Chat", labelKey: "navigation.aiChat", icon: Bot, sidebar: true },
   },
   {
     path: "roadmap",
-    handle: { label: "Roadmap", icon: Compass, sidebar: true },
+    handle: { label: "Roadmap", labelKey: "navigation.roadmap", icon: Compass, sidebar: true },
     children: [
       { index: true, element: <RoadmapPage /> },
       { path: ":roleId", element: <RoadmapDetailsPage /> },
@@ -69,10 +69,10 @@ export const dashboard = [
     element: <ApplicationTracker />,
     handle: {
       label: "Application Tracker",
+      labelKey: "navigation.applicationTracker",
       icon: ClipboardList,
       sidebar: true,
     }
   }
 ]
    
-

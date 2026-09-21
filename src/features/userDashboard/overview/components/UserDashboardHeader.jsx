@@ -4,16 +4,18 @@ import { Button } from "@/components/ui/button";
 import DashboardBreadcrumb from "./DashboardBreadcrumb";
 import { DASHBOARD_QUICK_ACTIONS } from "@/constants/dashboardQuickActions";
 import { useLocalizedPath } from "@/utils/routes";
+import { useTranslation } from "react-i18next";
 
-function getGreeting() {
+function getGreeting(t) {
   const hour = new Date().getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
+  if (hour < 12) return t("overview.greeting.morning");
+  if (hour < 18) return t("overview.greeting.afternoon");
+  return t("overview.greeting.evening");
 }
 
 export default function UserDashboardHeader({ userName = "Ahmed" }) {
   const localizedPath = useLocalizedPath();
+  const { t } = useTranslation("dashboard");
 
   return (
     <div>
@@ -27,10 +29,10 @@ export default function UserDashboardHeader({ userName = "Ahmed" }) {
         <div className="flex flex-col">
           <DashboardBreadcrumb />
           <h1 className="font-serif text-[32px] font-bold tracking-tight text-primary sm:text-[36px]">
-            {getGreeting()}, {userName}
+            {getGreeting(t)}, {userName}
           </h1>
           <p className="mt-1 text-[13px] text-muted">
-            Here&apos;s where things stand with your job search today.
+            {t("overview.subtitle")}
           </p>
         </div>
       </motion.div>
@@ -42,7 +44,7 @@ export default function UserDashboardHeader({ userName = "Ahmed" }) {
         transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         className="mb-6 flex flex-wrap items-center gap-2"
       >
-        {DASHBOARD_QUICK_ACTIONS.map(({ label, to, icon: Icon, variant }) => (
+        {DASHBOARD_QUICK_ACTIONS.map(({ key, label, to, icon: Icon, variant }) => (
           <Button
             key={label}
             asChild
@@ -58,7 +60,7 @@ export default function UserDashboardHeader({ userName = "Ahmed" }) {
               <Icon
                 className={`h-4 w-4 ${variant === "primary" ? "" : "text-muted"}`}
               />
-              {label}
+              {t(`overview.quickActions.${key}`, { defaultValue: label })}
             </Link>
           </Button>
         ))}

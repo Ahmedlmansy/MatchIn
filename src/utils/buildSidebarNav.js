@@ -4,6 +4,7 @@ export function buildSidebarNav(routes, basePath = "") {
     .filter((route) => route.handle?.sidebar)
     .map((route) => ({
       label: route.handle.label,
+      labelKey: route.handle.labelKey,
       icon: route.handle.icon,
       href: route.index ? basePath : `${basePath}/${route.path}`.replace(/\/{2,}/g, "/"),
       // "end" tells NavLink to match this path exactly (not prefixes),

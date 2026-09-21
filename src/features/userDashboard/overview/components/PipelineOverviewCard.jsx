@@ -3,8 +3,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import PipelineStatCard from "./PipelineStatCard";
 import { PIPELINE_STATS } from "@/constants/pipelineStats";
+import { useTranslation } from "react-i18next";
 
 export default function PipelineOverviewCard() {
+  const { t } = useTranslation("dashboard");
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -18,15 +20,15 @@ export default function PipelineOverviewCard() {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="font-serif text-[19px] font-bold text-primary">
-                  Application Pipeline
+                  {t("overview.pipeline.title")}
                 </h2>
                 <Badge className="gap-1.5 rounded-full border-success/25 bg-success/10 px-2 py-0.5 text-[11px] font-semibold text-success hover:bg-success/10">
                   <span className="h-1.5 w-1.5 rounded-full bg-success" />
-                  +2 this week
+                  {t("overview.pipeline.weeklyChange")}
                 </Badge>
               </div>
               <p className="mt-0.5 text-[12.5px] text-muted">
-                Real-time status across active interview loops
+                {t("overview.pipeline.description")}
               </p>
             </div>
 

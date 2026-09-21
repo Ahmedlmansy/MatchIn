@@ -14,6 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLocalizedPath } from "@/utils/routes";
+import { useTranslation } from "react-i18next";
 
 const RECOMMENDED_JOBS = [
   {
@@ -64,6 +65,7 @@ export default function RecommendedJobsCard({
   onBookmark,
 }) {
   const localizedPath = useLocalizedPath();
+  const { t } = useTranslation("dashboard");
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -77,20 +79,20 @@ export default function RecommendedJobsCard({
           <div className="mb-4 flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
             <div className="flex items-center gap-2.5">
               <h2 className="font-serif text-[18px] font-bold text-primary">
-                Recommended Opportunities
+                {t("overview.recommended.title")}
               </h2>
               <Badge
                 variant="outline"
                 className="gap-1 rounded-full border-primary/20 bg-primary/10 px-2 py-0.5 text-[10.5px] font-bold text-primary"
               >
-                AI Matched
+                {t("overview.recommended.aiMatched")}
               </Badge>
             </div>
             <Link
               to={localizedPath("/dashboard/jobs")}
               className="flex items-center gap-1 text-[13px] font-semibold text-primary transition-colors hover:underline"
             >
-              View all matches
+              {t("overview.recommended.viewAll")}
               <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -100,7 +102,7 @@ export default function RecommendedJobsCard({
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <Hourglass className="mb-2 h-7 w-7 text-muted/70 animate-pulse" />
               <p className="max-w-xs text-[13px] text-muted">
-                Still finding matches for you — recommendations improve once your CV finishes processing.
+                {t("overview.recommended.loading")}
               </p>
             </div>
           ) : (
@@ -175,7 +177,7 @@ export default function RecommendedJobsCard({
                           <span>{job.matchScore}%</span>
                         </div>
                         <span className="mt-1 text-[10px] font-medium text-muted/80">
-                          Radar alignment
+                          {t("overview.recommended.radarAlignment")}
                         </span>
                       </div>
                     </div>
@@ -203,7 +205,7 @@ export default function RecommendedJobsCard({
                             onBookmark?.(job);
                           }}
                           className="h-8 w-8 rounded-lg text-muted transition-colors hover:bg-background hover:text-primary"
-                          title="Bookmark"
+                          title={t("overview.recommended.bookmark")}
                         >
                           <Bookmark className="h-4 w-4" />
                         </Button>
@@ -217,7 +219,7 @@ export default function RecommendedJobsCard({
                           }}
                           className="h-7 rounded-lg bg-primary px-3 text-[12px] font-semibold text-primary-foreground shadow-xs transition-colors hover:bg-primary/90"
                         >
-                          Apply Now
+                          {t("overview.recommended.apply")}
                         </Button>
                       </div>
                     </div>

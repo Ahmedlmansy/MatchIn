@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocalizedPath } from "@/utils/routes";
+import { useTranslation } from "react-i18next";
 
 /**
  * @typedef {Object} SavedJobItem
@@ -26,6 +27,7 @@ export default function SavedJobsCard({
   className,
 }) {
   const localizedPath = useLocalizedPath();
+  const { t } = useTranslation("dashboard");
   const isEmpty = isPartial || jobs.length === 0;
 
   return (
@@ -37,17 +39,17 @@ export default function SavedJobsCard({
       )}
     >
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-[16px] font-bold text-primary">Saved jobs</h2>
+        <h2 className="text-[16px] font-bold text-primary">{t("overview.savedJobsCard.title")}</h2>
         <Link
           to={localizedPath("/dashboard/saved-jobs")}
           className="text-[12px] font-semibold text-primary hover:underline"
         >
-          View Saved Jobs
+          {t("overview.savedJobsCard.view")}
         </Link>
       </div>
 
       {isEmpty ? (
-        <p className="text-[12.5px] text-muted">You haven&apos;t saved any jobs yet.</p>
+        <p className="text-[12.5px] text-muted">{t("overview.savedJobsCard.empty")}</p>
       ) : (
         <div className="space-y-2">
           {jobs.map((job) => (

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocalizedPath } from "@/utils/routes";
+import { useTranslation } from "react-i18next";
 
 /**
  * @typedef {"high" | "medium"} SkillGapLevel
@@ -29,6 +30,7 @@ export default function PrioritySkillGapsCard({
   className,
 }) {
   const localizedPath = useLocalizedPath();
+  const { t } = useTranslation("dashboard");
 
   return (
     <div
@@ -39,24 +41,24 @@ export default function PrioritySkillGapsCard({
     >
       <div className="mb-1 flex items-center justify-between">
         <h2 className="text-[18px] font-bold text-primary">
-          Priority skill gaps
+          {t("overview.skillGaps.title")}
         </h2>
         <Link
           to={localizedPath("/dashboard/roadmap")}
           className="flex items-center gap-1 text-[13px] font-semibold text-primary hover:underline"
         >
-          Open Roadmap
+          {t("overview.skillGaps.openRoadmap")}
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
 
       <p className="mb-4 text-[12.5px] text-muted">
-        Ranked by impact on your target role.
+        {t("overview.skillGaps.description")}
       </p>
 
       {skills.length === 0 ? (
         <p className="text-[12.5px] text-muted">
-          No skill gaps identified yet.
+          {t("overview.skillGaps.empty")}
         </p>
       ) : (
         <div className="flex flex-wrap gap-2">

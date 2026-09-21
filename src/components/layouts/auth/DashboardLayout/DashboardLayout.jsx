@@ -23,7 +23,7 @@ export default function DashboardLayout({ userName = "Alex Mercer", userRole = "
       <div
         className={cn(
           "flex min-w-0 flex-1 flex-col transition-all duration-300",
-          collapsed ? "md:ml-24" : "md:ml-72"
+          collapsed ? "md:ms-24" : "md:ms-72"
         )}
       >
         <Topbar onOpenMobileSidebar={() => setMobileOpen(true)} userName={userName} userRole={userRole} />
