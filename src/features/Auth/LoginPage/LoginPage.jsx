@@ -27,10 +27,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/features/Auth/schema/login-schema";
 import { AnimatePresence, motion } from "framer-motion";
+import { useLocalizedPath } from "@/utils/routes";
 
 const FIELD_ORDER = ["email", "password"];
 
 export default function LoginPage() {
+  const localizedPath = useLocalizedPath();
+
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -170,7 +173,7 @@ export default function LoginPage() {
                 Remember me
               </FieldLabel>
               <Link
-                to="/auth/forgot-password"
+                to={localizedPath("/auth/forgot-password")}
                 className="flex justify-end sm:text-[13px] text-[#2563eb] hover:underline font-medium text-[11px]"
               >
                 Forgot password?

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useLocalizedPath } from "@/utils/routes";
 
 /**
  * @typedef {Object} NotificationItem
@@ -20,6 +21,8 @@ export default function NotificationsCard({
   notifications = DEFAULT_NOTIFICATIONS,
   className,
 }) {
+  const localizedPath = useLocalizedPath();
+
   return (
     <div
       className={cn(
@@ -30,7 +33,7 @@ export default function NotificationsCard({
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-[16px] font-bold text-primary">Notifications</h2>
         <Link
-          to="/notifications"
+          to={localizedPath("/dashboard/notifications")}
           className="text-[12px] font-semibold text-primary hover:underline"
         >
           View Notifications

@@ -6,5 +6,5 @@ export const DEFAULT_ROADMAP_PHASE = {
   completion: 75,
   tasksCompleted: 3,
   totalTasks: 4,
-  mentorHref: "/dashboard/mentor",
+  mentorHref: "/dashboard/ai-chat",
 };

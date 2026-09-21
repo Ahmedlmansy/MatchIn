@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_ROADMAP_PHASE } from "@/constants/roadmapPhaseMock";
+import { useLocalizedPath } from "@/utils/routes";
 
 /**
  * data shape: { phaseNumber, totalPhases, title, goal, completion,
@@ -10,6 +11,7 @@ import { DEFAULT_ROADMAP_PHASE } from "@/constants/roadmapPhaseMock";
  * The ring and the bar both read `completion` — pass any 0-100 value.
  */
 export default function RoadmapPhaseHeader({ data = DEFAULT_ROADMAP_PHASE }) {
+  const localizedPath = useLocalizedPath();
   const { phaseNumber, totalPhases, title, goal, completion, tasksCompleted, totalTasks, mentorHref } =
     data;
 
@@ -55,7 +57,7 @@ export default function RoadmapPhaseHeader({ data = DEFAULT_ROADMAP_PHASE }) {
           asChild
           className="h-10 shrink-0 gap-2 rounded-full bg-primary px-5 text-[13px] font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
         >
-          <Link to={mentorHref}>
+          <Link to={localizedPath(mentorHref)}>
             <MessageSquare className="h-4 w-4" />
             Ask Mentor
           </Link>

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useLocalizedPath } from "@/utils/routes";
 import { BarChart3, Wallet, Check, ArrowRight, MoveRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,6 +27,7 @@ const BENEFITS = [
 ];
 
 export default function PhilosophyContent() {
+  const localizedPath = useLocalizedPath();
   const { t } = useTranslation("common");
   return (
     <div className="flex flex-col gap-4 lg:col-span-6">
@@ -137,7 +139,7 @@ export default function PhilosophyContent() {
           className="group gap-1 p-0 font-headline-sm text-[14px] font-semibold text-muted hover:text-primary"
         >
           {/* TODO: point to the real methodology route */}
-          <Link to="/methodology">
+          <Link to={localizedPath("/methodology")}>
             <span>{t("home.approach.methodology")}</span>
             <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>

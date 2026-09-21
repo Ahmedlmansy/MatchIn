@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Brain, Bot, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useLocalizedPath } from "@/utils/routes";
 
 const PREVIEW_CHIPS = [
   "Mock Interviews",
@@ -12,6 +13,8 @@ const PREVIEW_CHIPS = [
 ];
 
 export default function AIMentorCard() {
+  const localizedPath = useLocalizedPath();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -59,7 +62,7 @@ export default function AIMentorCard() {
           className="group w-full gap-2 rounded-xl bg-surface px-8 py-6 font-headline-sm text-[14px] font-bold text-primary shadow-md hover:bg-background sm:w-auto"
         >
           {/* TODO: point to the real AI mentor route */}
-          <Link to="/mentor">
+          <Link to={localizedPath("/dashboard/ai-chat")}>
             <Bot className="h-5 w-5 text-secondary transition-transform group-hover:rotate-12" />
             Talk to AI Mentor
             <ArrowRight className="h-[17px] w-[17px] text-primary" />

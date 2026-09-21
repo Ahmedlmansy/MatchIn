@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocalizedPath } from "@/utils/routes";
 
 /**
  * @typedef {"high" | "medium"} SkillGapLevel
@@ -27,6 +28,8 @@ export default function PrioritySkillGapsCard({
   skills = DEFAULT_SKILLS,
   className,
 }) {
+  const localizedPath = useLocalizedPath();
+
   return (
     <div
       className={cn(
@@ -39,7 +42,7 @@ export default function PrioritySkillGapsCard({
           Priority skill gaps
         </h2>
         <Link
-          to="/roadmap"
+          to={localizedPath("/dashboard/roadmap")}
           className="flex items-center gap-1 text-[13px] font-semibold text-primary hover:underline"
         >
           Open Roadmap

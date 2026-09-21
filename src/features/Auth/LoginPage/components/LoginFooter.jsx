@@ -1,7 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { useLocalizedPath } from "@/utils/routes";
 
 export default function LoginFooter() {
+  const localizedPath = useLocalizedPath();
+
   return (
     <>
             <p className="text-[#64748b] -mt-3">
@@ -12,7 +15,7 @@ export default function LoginFooter() {
             <p className="text-[#64748b] mt-3">
               Don't have an account?{" "}
               <Link
-                to="/auth/register"
+                to={localizedPath("/auth/register")}
                 className="text-[#2563eb] font-semibold hover:underline"
               >
                 Create an account →

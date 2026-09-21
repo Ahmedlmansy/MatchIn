@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Check, SlidersHorizontal } from "lucide-react";
 import Status from "@/components/shared/Status";
+import { useLocalizedPath } from "@/utils/routes";
 
 const SUMMARY_FIELDS = [
   { key: "jobTitle", label: "Target Title" },
@@ -11,6 +12,7 @@ const SUMMARY_FIELDS = [
 
 export default function OnboardingCompletedSummary({ formData, onEdit }) {
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   return (
     <Status
@@ -19,7 +21,7 @@ export default function OnboardingCompletedSummary({ formData, onEdit }) {
       title="You're All Set! 🎉"
       subtitle="Your AI career profile has been successfully configured. We are now calibrating jobs for you."
       secondaryButton={{ label: "Edit Choices", onClick: onEdit }}
-      primaryButton={{ label: "Go to Dashboard", onClick: () => navigate("/dashboard") }}
+      primaryButton={{ label: "Go to Dashboard", onClick: () => navigate(localizedPath("/dashboard")) }}
     >
       <div className="mb-5 rounded-2xl border border-border bg-background p-4 text-left">
         <div className="mb-3 flex items-center gap-2 text-[12px] font-bold text-ink">

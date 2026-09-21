@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { MessagesSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocalizedPath } from "@/utils/routes";
 
 /**
  * AI Mentor teaser card for the candidate dashboard.
@@ -15,6 +16,8 @@ export default function AIMentorCard({
   description = "Not sure what to focus on? Ask your mentor — it knows your profile, jobs, and roadmap.",
   className,
 }) {
+  const localizedPath = useLocalizedPath();
+
   return (
     <div
       className={cn(
@@ -32,7 +35,7 @@ export default function AIMentorCard({
       </p>
 
       <Link
-        to="/mentor"
+        to={localizedPath("/dashboard/ai-chat")}
         className="inline-flex w-full items-center justify-center rounded-xl bg-primary py-2 text-[13px] font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
       >
         Ask AI Mentor

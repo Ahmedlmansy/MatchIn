@@ -6,12 +6,14 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { NAV_LINKS } from "@/constants/navLinks";
 import LogoNavy from "@/assets/logo/Full_logo_navy.svg";
 import { useTranslation } from "react-i18next";
+import { useLocalizedPath } from "@/utils/routes";
 
 export default function Header()
 {
     const { lang } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
+    const localizedPath = useLocalizedPath();
 
     const handleLanguageChange = (newLang) => {
       const segments = location.pathname.split("/");
@@ -59,14 +61,14 @@ export default function Header()
             variant="ghost"
             className="hidden font-headline-sm text-[14px] font-medium text-muted hover:bg-transparent hover:text-primary sm:inline-flex"
           >
-            <Link to="/auth/login">{t("actions.apply")}</Link>
+            <Link to={localizedPath("/auth/login")}>{t("actions.apply")}</Link>
           </Button>
 
           {/* <Button
             asChild
             className="hidden rounded-xl bg-primary px-4 py-[10px] font-headline-sm text-[14px] font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow sm:inline-flex"
           >
-            <Link to="/post-a-job">Post a Job</Link>
+            <Link to={localizedPath("/post-a-job")}>Post a Job</Link>
           </Button> */}
 
           {/* TODO: point to the real profile/dashboard route */}
@@ -76,7 +78,7 @@ export default function Header()
             size="icon"
             className="h-9 w-9 shrink-0 rounded-full border-border bg-background text-primary shadow-sm hover:bg-surface"
           >
-            <Link to="/dashboard">
+            <Link to={localizedPath("/dashboard")}>
               <User className="h-[18px] w-[18px]" />
             </Link>
           </Button>
@@ -113,7 +115,7 @@ export default function Header()
                     variant="outline"
                     className="justify-center rounded-xl border-border text-primary"
                   >
-                    <Link to="/sign-in">{t("actions.signIn")}</Link>
+                    <Link to={localizedPath("/auth/login")}>{t("actions.signIn")}</Link>
                   </Button>
                 </SheetClose>
                 <SheetClose asChild>
@@ -121,7 +123,7 @@ export default function Header()
                     asChild
                     className="justify-center rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
                   >
-                    <Link to="/post-a-job">{t("actions.postJob")}</Link>
+                    <Link to={localizedPath("/post-a-job")}>{t("actions.postJob")}</Link>
                   </Button>
                 </SheetClose>
                 <div className="mt-2 flex justify-center">

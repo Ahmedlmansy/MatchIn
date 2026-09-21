@@ -20,6 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Link } from "react-router-dom";
+import { useLocalizedPath } from "@/utils/routes";
 
 const CVS = [
   {
@@ -160,6 +162,8 @@ export default function JobApplicationModal({ job, form, onClose, onSubmit }) {
 }
 
 function ApplicantDetails() {
+  const localizedPath = useLocalizedPath();
+
   return (
     <div>
       <div className="mb-2 text-[11px] font-bold text-muted">
@@ -171,9 +175,9 @@ function ApplicantDetails() {
       </div>
       <div className="mt-1.5 text-[11px] text-muted">
         Fetched from your profile —{" "}
-        <a href="/profile" className="font-bold text-primary hover:underline">
+        <Link to={localizedPath("/dashboard/profile")} className="font-bold text-primary hover:underline">
           Edit Profile
-        </a>
+        </Link>
       </div>
     </div>
   );

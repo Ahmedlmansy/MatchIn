@@ -1,11 +1,12 @@
-import DashboardLayout from "@/components/layouts/auth/DashboardLayout/DashboardLayout";
 import MainLayout from "@/components/layouts/auth/MainLayout";
+import DashboardLayout from "@/components/layouts/auth/DashboardLayout/DashboardLayout";
 import HomePage from "@/features/HomePage/HomePage";
 import NotFoundPage from "@/features/NotFoundPage/NotFoundPage";
 
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { auth } from "./routes/auth.routes";
 import { dashboard } from "./routes/dashboard.routes";
+import LanguageLayout from "./routes/LanguageLayout";
 import RootRedirect from "./routes/RootRedirect";
 
 export const router = createBrowserRouter([
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
   // Language routes
   {
     path: "/:lang",
+    element: <LanguageLayout />,
     children: [
       // Guest routes
       {

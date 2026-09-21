@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Route } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocalizedPath } from "@/utils/routes";
 
 
 export default function RoadmapCard({
@@ -10,6 +11,7 @@ export default function RoadmapCard({
   isPartial = false,
   className,
 }) {
+  const localizedPath = useLocalizedPath();
   const clamped = Math.min(100, Math.max(0, progressPercent));
 
   return (
@@ -54,7 +56,7 @@ export default function RoadmapCard({
       )}
 
       <Link
-        to="/roadmap"
+        to={localizedPath("/dashboard/roadmap")}
         className="mt-1 inline-flex items-center justify-center self-start rounded-xl bg-surface px-4 py-2 text-[13px] font-bold text-primary shadow-sm transition-colors hover:bg-background"
       >
         Open Roadmap →

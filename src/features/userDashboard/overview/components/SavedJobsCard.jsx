@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Bookmark } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLocalizedPath } from "@/utils/routes";
 
 /**
  * @typedef {Object} SavedJobItem
@@ -24,6 +25,7 @@ export default function SavedJobsCard({
   isPartial = false,
   className,
 }) {
+  const localizedPath = useLocalizedPath();
   const isEmpty = isPartial || jobs.length === 0;
 
   return (
@@ -37,7 +39,7 @@ export default function SavedJobsCard({
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-[16px] font-bold text-primary">Saved jobs</h2>
         <Link
-          to="/saved-jobs"
+          to={localizedPath("/dashboard/saved-jobs")}
           className="text-[12px] font-semibold text-primary hover:underline"
         >
           View Saved Jobs

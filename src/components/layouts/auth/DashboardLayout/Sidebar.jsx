@@ -5,9 +5,8 @@ import LogoText from "@/assets/logo/logo_text.svg";
 import { cn } from "@/lib/utils";
 import { buildSidebarNav } from "@/utils/buildSidebarNav";
 import { dashboard } from "@/app/routes/dashboard.routes";
+import { useLocalizedPath } from "@/utils/routes";
 
-
-const NAV_ITEMS = buildSidebarNav(dashboard, "/dashboard");
 
 function NavItem({ icon: Icon, label, href, end, collapsed }) {
   return (
@@ -52,6 +51,9 @@ export default function Sidebar({
   mobileOpen,
   onCloseMobile,
 }) {
+  const localizedPath = useLocalizedPath();
+  const navItems = buildSidebarNav(dashboard, localizedPath("/dashboard"));
+
   return (
     <>
       {mobileOpen && (
@@ -72,7 +74,7 @@ export default function Sidebar({
           <div>
             {/* Logo & Brand */}
             <NavLink
-              to="/dashboard"
+              to={localizedPath("/dashboard")}
               end
               className="mb-4 flex items-center gap-3 border-b border-border/50 pb-5"
             >
@@ -99,7 +101,7 @@ export default function Sidebar({
                   Main Menu
                 </div>
               )}
-              {NAV_ITEMS.map((item) => (
+              {navItems.map((item) => (
                 <NavItem key={item.href} {...item} collapsed={collapsed} />
               ))}
             </nav>

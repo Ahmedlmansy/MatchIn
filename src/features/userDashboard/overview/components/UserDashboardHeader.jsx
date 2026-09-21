@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import DashboardBreadcrumb from "./DashboardBreadcrumb";
 import { DASHBOARD_QUICK_ACTIONS } from "@/constants/dashboardQuickActions";
+import { useLocalizedPath } from "@/utils/routes";
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -12,6 +13,8 @@ function getGreeting() {
 }
 
 export default function UserDashboardHeader({ userName = "Ahmed" }) {
+  const localizedPath = useLocalizedPath();
+
   return (
     <div>
       {/* Breadcrumb + greeting */}
@@ -51,7 +54,7 @@ export default function UserDashboardHeader({ userName = "Ahmed" }) {
                 : "gap-2 rounded-xl border-border bg-surface px-4 py-2 text-[13px] font-semibold text-primary shadow-sm hover:bg-background"
             }
           >
-            <Link to={to}>
+            <Link to={localizedPath(to)}>
               <Icon
                 className={`h-4 w-4 ${variant === "primary" ? "" : "text-muted"}`}
               />

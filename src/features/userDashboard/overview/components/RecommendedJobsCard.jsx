@@ -13,6 +13,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useLocalizedPath } from "@/utils/routes";
 
 const RECOMMENDED_JOBS = [
   {
@@ -62,6 +63,7 @@ export default function RecommendedJobsCard({
   onApply,
   onBookmark,
 }) {
+  const localizedPath = useLocalizedPath();
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -85,7 +87,7 @@ export default function RecommendedJobsCard({
               </Badge>
             </div>
             <Link
-              to="/jobs"
+              to={localizedPath("/dashboard/jobs")}
               className="flex items-center gap-1 text-[13px] font-semibold text-primary transition-colors hover:underline"
             >
               View all matches
