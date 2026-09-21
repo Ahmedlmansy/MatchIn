@@ -1,0 +1,17 @@
+{
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "apply": "تقديم"
+  },
+  "navigation": {
+    "home": "الرئيسية",
+    "jobs": "الوظائف",
+    "applications": "التقديمات",
+    "roadmap": "المسار الوظيفي",
+    "mentor": "المساعد الذكي",
+    "profile": "الملف الشخصي"
+  }
+}

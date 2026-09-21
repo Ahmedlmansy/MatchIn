@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
@@ -6,7 +6,19 @@ import LanguageSwitcher from "./LanguageSwitcher";
 import { NAV_LINKS } from "@/constants/navLinks";
 import LogoNavy from "@/assets/logo/Full_logo_navy.svg";
 
-export default function Header() {
+export default function Header()
+{
+    const { lang } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const handleLanguageChange = (newLang) => {
+      const segments = location.pathname.split("/");
+
+      segments[1] = newLang;
+
+      navigate(segments.join("/"));
+    };
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-surface/95 backdrop-blur-md">
       <div className="mx-auto flex h-20 max-w-[1280px] items-center justify-between gap-4 px-6 md:px-10 lg:px-16">
@@ -35,7 +47,7 @@ export default function Header() {
 
         {/* Right side actions */}
         <div className="flex items-center gap-3">
-          <LanguageSwitcher />
+          <LanguageSwitcher language={lang} onChange={handleLanguageChange} />
 
           {/* TODO: point to the real sign-in / post-a-job routes */}
           <Button

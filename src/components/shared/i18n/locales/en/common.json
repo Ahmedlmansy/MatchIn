@@ -1,0 +1,18 @@
+{
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "apply": "Apply"
+  },
+
+  "navigation": {
+    "home": "Home",
+    "jobs": "Jobs",
+    "applications": "Applications",
+    "roadmap": "Roadmap",
+    "mentor": "AI Mentor",
+    "profile": "Profile"
+  }
+}
