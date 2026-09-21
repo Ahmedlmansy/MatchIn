@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const TAGS = ["Frontend Dev", "Data Science", "Product Manager", "Remote"];
 
 export default function HeroPopularSearches({ onSelect }) {
+  const { t } = useTranslation("common");
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -11,7 +13,7 @@ export default function HeroPopularSearches({ onSelect }) {
       transition={{ duration: 0.6, delay: 0.4 }}
       className="mb-4 flex flex-wrap items-center justify-center gap-2 text-[12px] sm:text-[13px]"
     >
-      <span className="font-medium text-primary-foreground/60">Popular:</span>
+      <span className="font-medium text-primary-foreground/60">{t("home.hero.popular")}</span>
       {TAGS.map((tag) => (
         <Button
           key={tag}

@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function CategoryCard({ category, index = 0 }) {
   const Icon = category.icon;
+  const { t } = useTranslation("common");
 
   return (
     <motion.div
@@ -30,16 +32,16 @@ export default function CategoryCard({ category, index = 0 }) {
 
             <div>
               <h3 className="font-headline-sm text-[17px] font-semibold text-ink">
-                {category.title}
+                {t(`home.categoryData.${category.id}.title`)}
               </h3>
               <p className="mt-1 font-body-sm text-[13px] text-muted">{category.openJobs}</p>
             </div>
 
             <div className="mt-4 flex items-center justify-between border-t border-border pt-2">
               <span className="font-headline-sm text-[12px] font-semibold text-primary transition-colors group-hover:text-secondary">
-                View Roles
+                {t("home.categories.viewRoles")}
               </span>
-              <span className="font-body-sm text-[11px] text-muted">{category.tags}</span>
+              <span className="font-body-sm text-[11px] text-muted">{t(`home.categoryData.${category.id}.tags`)}</span>
             </div>
           </CardContent>
         </Card>

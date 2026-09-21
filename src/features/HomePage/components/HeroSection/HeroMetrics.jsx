@@ -2,31 +2,33 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCountUp } from "../../hooks/useCountUp";
+import { useTranslation } from "react-i18next";
 
 const METRICS = [
   {
     target: 180,
     suffix: "K+",
-    label: "Active Job Seekers",
+    labelKey: "home.metrics.activeSeekers",
     color: "text-primary-foreground",
   },
   {
     target: 4200,
     suffix: "+",
-    label: "Partner Companies",
+    labelKey: "home.metrics.partnerCompanies",
     color: "text-accent",
   },
-  { target: 93, suffix: "%", label: "Match Accuracy", color: "text-success" },
+  { target: 93, suffix: "%", labelKey: "home.metrics.matchAccuracy", color: "text-success" },
   {
     target: 2.4,
     suffix: "×",
     decimals: 1,
-    label: "Faster Hiring",
+    labelKey: "home.metrics.fasterHiring",
     color: "text-secondary",
   },
 ];
 
-function Metric({ target, suffix, decimals = 0, label, color }) {
+function Metric({ target, suffix, decimals = 0, labelKey, color }) {
+  const { t } = useTranslation("common");
   const { ref, value } = useCountUp(target, { decimals });
   const display = decimals
     ? value.toFixed(decimals)
@@ -41,7 +43,7 @@ function Metric({ target, suffix, decimals = 0, label, color }) {
         {suffix}
       </div>
       <span className="mt-1 text-[12px] font-medium text-primary-foreground/70">
-        {label}
+        {t(labelKey)}
       </span>
     </div>
   );
@@ -58,7 +60,7 @@ export default function HeroMetrics() {
       <Card className="rounded-2xl border-primary-foreground/15 bg-primary-foreground/[0.07] shadow-2xl backdrop-blur-xl">
         <CardContent className="flex flex-wrap items-center justify-around gap-4 p-4 text-center sm:p-5">
           {METRICS.map((m, i) => (
-            <div key={m.label} className="flex items-center gap-4">
+            <div key={m.labelKey} className="flex items-center gap-4">
               <Metric {...m} />
               {i < METRICS.length - 1 && (
                 <Separator

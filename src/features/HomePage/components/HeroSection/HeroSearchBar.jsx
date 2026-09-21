@@ -24,6 +24,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { useTranslation } from "react-i18next";
 
 const SUGGESTED_ROLES = [
   {
@@ -59,6 +60,7 @@ export default function HeroSearchBar({
   onLocationChange,
   onSubmit,
 }) {
+  const { t } = useTranslation("common");
   const [showDropdown, setShowDropdown] = useState(false);
   const inputRef = useRef(null);
 
@@ -83,7 +85,7 @@ export default function HeroSearchBar({
                 <Input
                   ref={inputRef}
                   autoComplete="off"
-                  placeholder="Job title, skills, or company..."
+                  placeholder={t("home.hero.jobSearchPlaceholder")}
                   value={query}
                   onChange={(e) => {
                     onQueryChange(e.target.value);
@@ -105,7 +107,7 @@ export default function HeroSearchBar({
                       inputRef.current?.focus();
                     }}
                     className="h-auto w-auto shrink-0 p-1 text-primary-foreground/50 hover:bg-transparent hover:text-primary-foreground"
-                    title="Clear search"
+                    title={t("home.hero.clearSearch")}
                   >
                     <X className="h-[18px] w-[18px]" />
                   </Button>
@@ -121,7 +123,7 @@ export default function HeroSearchBar({
               <Command shouldFilter={false} className="bg-transparent">
                 <CommandList>
                   <CommandGroup
-                    heading="Suggested Roles"
+                    heading={t("home.hero.suggestedRoles")}
                     className="[&_[cmdk-group-heading]]:px-1 [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-primary-foreground/50"
                   >
                     {filteredRoles.map(
@@ -162,7 +164,7 @@ export default function HeroSearchBar({
             <Input
               value={location}
               onChange={(e) => onLocationChange(e.target.value)}
-              placeholder="City, Country or Remote"
+              placeholder={t("home.hero.locationPlaceholder")}
               className="h-auto border-0 bg-transparent p-0 text-[15px] font-medium text-primary-foreground shadow-none placeholder:text-primary-foreground/60 focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </div>
@@ -180,7 +182,7 @@ export default function HeroSearchBar({
               whileHover={{ scale: 1.02 }}
             >
               <Search className="h-5 w-5" />
-              <span className="tracking-wide">Search Jobs</span>
+              <span className="tracking-wide">{t("home.hero.searchJobs")}</span>
             </motion.button>
           </Button>
         </CardContent>

@@ -4,9 +4,11 @@ import FooterLinkColumn from "./FooterLinkColumn";
 import NewsletterForm from "./NewsletterForm";
 import { FOOTER_COLUMNS, FOOTER_LEGAL_LINKS } from "@/constants/footerLinks";
 import LogoNavy from "@/assets/logo/Full_logo_navy.svg";
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const { t } = useTranslation("common");
 
   return (
     <footer className="w-full border-t border-border bg-surface">
@@ -24,8 +26,7 @@ export default function Footer() {
               <img src={LogoNavy} alt="MatchIn Logo" className="h-7 w-auto object-contain" />
             </Link>
             <p className="max-w-sm font-body-md text-[14px] leading-relaxed text-muted">
-              High-signal talent matching and intelligent career mobility powered by deep graph
-              neural network architecture.
+              {t("home.footer.description")}
             </p>
             <NewsletterForm />
           </motion.div>
@@ -33,7 +34,7 @@ export default function Footer() {
           {/* Link columns */}
           {FOOTER_COLUMNS.map((column, i) => (
             <motion.div
-              key={column.title}
+              key={column.titleKey}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
@@ -46,11 +47,11 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-border pt-8 font-body-sm text-[13px] text-muted sm:flex-row">
-          <p>© {year} MatchIn Inc. All rights reserved.</p>
+          <p>{t("home.footer.copyright", { year })}</p>
           <div className="flex items-center gap-6">
             {FOOTER_LEGAL_LINKS.map((link) => (
-              <Link key={link.label} to={link.to} className="transition-colors hover:text-ink">
-                {link.label}
+              <Link key={link.labelKey} to={link.to} className="transition-colors hover:text-ink">
+                {t(link.labelKey)}
               </Link>
             ))}
           </div>

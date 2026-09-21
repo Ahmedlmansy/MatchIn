@@ -1,38 +1,38 @@
 export const FOOTER_COLUMNS = [
   {
-    title: "Platform",
+    titleKey: "home.footer.columns.platform",
     links: [
-      { label: "Job Search Engine", to: "/jobs" },
-      { label: "AI Career Copilot", to: "/mentor" },
-      { label: "Talent Sourcing", to: "/employers" },
-      { label: "Subscription Plans", to: "/pricing" },
-      { label: "Platform Status", to: "/status" },
+      { labelKey: "home.footer.links.jobSearch", to: "/jobs" },
+      { labelKey: "home.footer.links.copilot", to: "/mentor" },
+      { labelKey: "home.footer.links.sourcing", to: "/employers" },
+      { labelKey: "home.footer.links.plans", to: "/pricing" },
+      { labelKey: "home.footer.links.status", to: "/status" },
     ],
   },
   {
-    title: "Resources",
+    titleKey: "home.footer.columns.resources",
     links: [
-      { label: "Tech Salary Benchmark", to: "/resources/salary-benchmark" },
-      { label: "Resume Score Analyzer", to: "/resources/resume-analyzer" },
-      { label: "Interview Intelligence", to: "/resources/interview-intelligence" },
-      { label: "Engineering Career Ladders", to: "/resources/career-ladders" },
-      { label: "Developer Community", to: "/community" },
+      { labelKey: "home.footer.links.salary", to: "/resources/salary-benchmark" },
+      { labelKey: "home.footer.links.resume", to: "/resources/resume-analyzer" },
+      { labelKey: "home.footer.links.interview", to: "/resources/interview-intelligence" },
+      { labelKey: "home.footer.links.ladders", to: "/resources/career-ladders" },
+      { labelKey: "home.footer.links.community", to: "/community" },
     ],
   },
   {
-    title: "Company",
+    titleKey: "home.footer.columns.company",
     links: [
-      { label: "About Us", to: "/about" },
-      { label: "Leadership Team", to: "/about/leadership" },
-      { label: "Careers at MatchIn", to: "/careers" },
-      { label: "Security & Trust", to: "/security" },
-      { label: "Privacy Policy", to: "/privacy" },
+      { labelKey: "home.footer.links.about", to: "/about" },
+      { labelKey: "home.footer.links.leadership", to: "/about/leadership" },
+      { labelKey: "home.footer.links.careers", to: "/careers" },
+      { labelKey: "home.footer.links.security", to: "/security" },
+      { labelKey: "home.footer.links.privacy", to: "/privacy" },
     ],
   },
 ];
 
 export const FOOTER_LEGAL_LINKS = [
-  { label: "Security", to: "/security" },
-  { label: "Terms of Service", to: "/terms" },
-  { label: "Cookie Settings", to: "/cookie-settings" },
+  { labelKey: "home.footer.links.security", to: "/security" },
+  { labelKey: "home.footer.links.terms", to: "/terms" },
+  { labelKey: "home.footer.links.cookies", to: "/cookie-settings" },
 ];

@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import JobCard from "@/components/shared/JobCard";
 import { JOBS, JOB_CATEGORIES } from "@/constants/jobsMock";
+import { useTranslation } from "react-i18next";
 
 export default function LatestJobsSection() {
   const [category, setCategory] = useState("all");
+  const { t } = useTranslation("common");
 
   const filteredJobs = useMemo(
     () =>
@@ -19,7 +21,7 @@ export default function LatestJobsSection() {
   );
 
   return (
-    <section className="mx-auto w-full max-w-[1280px] px-6 py-16 md:px-10 lg:px-16 lg:py-24">
+    <section id="jobs" className="mx-auto w-full max-w-[1280px] scroll-mt-20 px-6 py-16 md:px-10 lg:px-16 lg:py-24">
       {/* Header */}
       <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div className="flex max-w-2xl flex-col gap-2">
@@ -27,20 +29,19 @@ export default function LatestJobsSection() {
             variant="outline"
             className="w-fit self-start rounded-full border-border bg-surface px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary"
           >
-            Recent Opportunities
+            {t("home.jobs.badge")}
           </Badge>
           <h2 className="font-headline-xl text-[32px] font-bold tracking-tight text-ink sm:text-[40px]">
-            Latest Jobs &amp; Open Roles
+            {t("home.jobs.title")}
           </h2>
           <p className="font-body-lg text-muted">
-            Explore recently published roles with verified salaries and direct
-            AI skill match scoring.
+            {t("home.jobs.description")}
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <span className="font-body-sm text-[13px] text-muted">
-            Updated 12 mins ago
+            {t("home.jobs.updated")}
           </span>
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
@@ -62,7 +63,7 @@ export default function LatestJobsSection() {
               value={c.value}
               className="rounded-full border border-border bg-surface px-4 py-1.5 font-headline-sm text-[13px] font-medium text-muted shadow-none transition-colors data-[state=active]:border-transparent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none hover:bg-background hover:text-ink"
             >
-              {c.label}
+              {t(`home.jobCategories.${c.value}`)}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -90,7 +91,7 @@ export default function LatestJobsSection() {
           variant="outline"
           className="gap-2 rounded-xl border-border bg-surface px-8 py-3 font-headline-sm text-[14px] font-semibold text-primary shadow-sm hover:bg-background hover:shadow"
         >
-          Explore All 12,000+ Open Positions
+          {t("home.jobs.exploreAll")}
           <ArrowRight className="h-[18px] w-[18px]" />
         </Button>
       </motion.div>

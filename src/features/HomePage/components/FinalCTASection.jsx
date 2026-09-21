@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Rocket, Upload, Compass, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const TRUST_POINTS = [
   "Instant AI skill scoring",
@@ -11,8 +12,12 @@ const TRUST_POINTS = [
 ];
 
 export default function FinalCTASection() {
+  const { t } = useTranslation("common");
   return (
-    <section className="mx-auto w-full max-w-[1280px] px-6 py-16 md:px-10 lg:px-16 lg:py-24">
+    <section
+      className="mx-auto w-full max-w-[1280px] px-6 py-16 md:px-10 lg:px-16 lg:py-24"
+      id="get-started"
+    >
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -29,16 +34,15 @@ export default function FinalCTASection() {
             className="mb-4 gap-1.5 rounded-full border-border bg-background px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary"
           >
             <Rocket className="h-[17px] w-[17px] text-secondary" />
-            Start Your Journey
+            {t("home.cta.badge")}
           </Badge>
 
           <h2 className="mb-3 font-headline-xl text-[34px] font-bold leading-tight tracking-tight text-ink sm:text-[42px] lg:text-[48px]">
-            Ready to Find Your Next Opportunity?
+            {t("home.cta.title")}
           </h2>
 
           <p className="mb-8 max-w-2xl font-body-lg leading-relaxed text-muted">
-            Upload your CV to unlock instant AI skill scoring and curated match telemetry, or
-            explore over 12,000+ verified engineering, design, and product roles.
+            {t("home.cta.description")}
           </p>
 
           <div className="mb-8 flex w-full flex-col items-center justify-center gap-4 sm:w-auto sm:flex-row">
@@ -50,7 +54,7 @@ export default function FinalCTASection() {
               {/* TODO: point to the real upload-CV route */}
               <Link to="/upload-cv">
                 <Upload className="h-5 w-5 transition-transform group-hover:-translate-y-0.5" />
-                Upload CV
+                {t("home.cta.uploadCv")}
               </Link>
             </Button>
 
@@ -62,7 +66,7 @@ export default function FinalCTASection() {
             >
               <Link to="/jobs">
                 <Compass className="h-5 w-5 text-muted transition-colors group-hover:text-primary" />
-                Browse Jobs
+                {t("home.cta.browseJobs")}
                 <ArrowRight className="h-[18px] w-[18px] transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
@@ -72,7 +76,7 @@ export default function FinalCTASection() {
             {TRUST_POINTS.map((point) => (
               <div key={point} className="flex items-center gap-1.5">
                 <CheckCircle2 className="h-4 w-4 fill-success text-surface" />
-                <span>{point}</span>
+                <span>{t(`home.cta.trust.${point}`)}</span>
               </div>
             ))}
           </div>

@@ -2,35 +2,33 @@ import { motion } from "framer-motion";
 import { ArrowRight, BadgeCheck, Zap, Gauge, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const BENEFITS = [
   {
     icon: BadgeCheck,
     iconClass: "bg-success/15 text-success",
-    title: "Verified Jobs",
-    description: "Every role is reviewed for quality and trust.",
+    key: "verifiedJobs",
   },
   {
     icon: Zap,
     iconClass: "bg-secondary/15 text-secondary",
-    title: "AI-Powered Matching",
-    description: "Find opportunities based on skills, experience, and goals.",
+    key: "aiMatching",
   },
   {
     icon: Gauge,
     iconClass: "bg-accent/10 text-accent",
-    title: "Fast Results",
-    description: "Apply quickly and stay on top of your progress.",
+    key: "fastResults",
   },
   {
     icon: Lock,
     iconClass: "bg-primary/10 text-primary",
-    title: "Privacy First",
-    description: "Protect user data with modern security standards.",
+    key: "privacyFirst",
   },
 ];
 
 export default function WhySkillMatchContent() {
+  const { t } = useTranslation("common");
 
   return (
     <div className="flex flex-col gap-4 lg:col-span-6">
@@ -44,7 +42,7 @@ export default function WhySkillMatchContent() {
           variant="outline"
           className="w-fit self-start rounded-full border-border bg-surface px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-secondary"
         >
-          Why SkillMatch
+          {t("home.benefits.badge")}
         </Badge>
       </motion.div>
 
@@ -55,7 +53,7 @@ export default function WhySkillMatchContent() {
         transition={{ duration: 0.6, delay: 0.1 }}
         className="font-headline-xl text-[34px] font-bold tracking-tight text-ink sm:text-[42px]"
       >
-        Better Matches. Faster Hiring.
+        {t("home.benefits.title")}
       </motion.h2>
 
       <motion.p
@@ -65,8 +63,7 @@ export default function WhySkillMatchContent() {
         transition={{ duration: 0.6, delay: 0.15 }}
         className="font-body-lg leading-relaxed text-muted"
       >
-        We simplify hiring for job seekers and employers with verified listings, AI-powered
-        matching, clear workflows, and responsive support.
+        {t("home.benefits.description")}
       </motion.p>
 
       <div className="grid grid-cols-1 gap-4 pt-1 sm:grid-cols-2">
@@ -85,9 +82,9 @@ export default function WhySkillMatchContent() {
               <benefit.icon className="h-[18px] w-[18px]" />
             </div>
             <div className="flex flex-col">
-              <h4 className="font-headline-sm text-[15px] font-bold text-ink">{benefit.title}</h4>
+              <h4 className="font-headline-sm text-[15px] font-bold text-ink">{t(`home.benefitData.${benefit.key}.title`)}</h4>
               <p className="mt-1 font-body-sm text-[13px] leading-relaxed text-muted">
-                {benefit.description}
+                {t(`home.benefitData.${benefit.key}.description`)}
               </p>
             </div>
           </motion.div>
@@ -106,7 +103,7 @@ export default function WhySkillMatchContent() {
           className="group gap-2 rounded-xl bg-primary px-8 py-3 font-headline-sm text-[14px] font-semibold text-primary-foreground shadow-sm hover:bg-primary/90"
         >
           <motion.button whileTap={{ scale: 0.97 }} whileHover={{ scale: 1.01 }}>
-            Why SkillMatch
+            {t("home.benefits.button")}
             <ArrowRight className="h-[17px] w-[17px] transition-transform group-hover:translate-x-1" />
           </motion.button>
         </Button>

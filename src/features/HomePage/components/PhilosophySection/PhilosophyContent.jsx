@@ -4,31 +4,29 @@ import { BarChart3, Wallet, Check, ArrowRight, MoveRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const FEATURE_TILES = [
   {
     icon: BarChart3,
     iconClass: "bg-primary/10 text-primary",
-    title: "Verifiable Skill Telemetry",
-    description:
-      "Deep-dive objective competency scores evaluated by graph neural benchmarks.",
+    key: "telemetry",
   },
   {
     icon: Wallet,
     iconClass: "bg-secondary/20 text-secondary",
-    title: "Upfront Compensation Parity",
-    description:
-      "Guaranteed verified salary bands and clear expectations before either side commits.",
+    key: "compensation",
   },
 ];
 
 const BENEFITS = [
-  "Neural match accuracy across verified engineering & design proficiencies",
-  "Zero ghosting with enforceable 72-hour recruiter response SLAs",
-  "Private candidate profiles protected by end-to-end cryptographic trust",
+  "accuracy",
+  "response",
+  "privacy",
 ];
 
 export default function PhilosophyContent() {
+  const { t } = useTranslation("common");
   return (
     <div className="flex flex-col gap-4 lg:col-span-6">
       <motion.div
@@ -41,7 +39,7 @@ export default function PhilosophyContent() {
           variant="outline"
           className="w-fit gap-2 self-start rounded-full border-border bg-surface px-4 py-1 text-[11px] font-bold uppercase tracking-wider text-secondary shadow-sm"
         >
-          The SkillMatch Philosophy
+          {t("home.approach.badge")}
         </Badge>
       </motion.div>
 
@@ -52,7 +50,7 @@ export default function PhilosophyContent() {
         transition={{ duration: 0.6, delay: 0.1 }}
         className="font-headline-lg text-[32px] font-bold leading-tight tracking-tight text-ink sm:text-[40px]"
       >
-        Hiring shouldn&apos;t be a game of buzzwords.
+        {t("home.approach.title")}
       </motion.h2>
 
       <motion.p
@@ -62,9 +60,7 @@ export default function PhilosophyContent() {
         transition={{ duration: 0.6, delay: 0.15 }}
         className="font-body-lg leading-relaxed text-muted"
       >
-        SkillMatch eliminates inflated resumes and keyword-stuffed applicant
-        pipelines. By replacing guesswork with verifiable skill telemetry, we
-        create mutual trust and match speed for high-impact teams.
+        {t("home.approach.description")}
       </motion.p>
 
       <div className="grid grid-cols-1 gap-4 pt-1 sm:grid-cols-2">
@@ -84,10 +80,10 @@ export default function PhilosophyContent() {
                   <tile.icon className="h-5 w-5" />
                 </div>
                 <h3 className="mt-1 font-headline-sm text-[15px] font-bold text-ink">
-                  {tile.title}
+                  {t(`home.approach.tiles.${tile.key}.title`)}
                 </h3>
                 <p className="font-body-sm text-[13px] leading-relaxed text-muted">
-                  {tile.description}
+                  {t(`home.approach.tiles.${tile.key}.description`)}
                 </p>
               </CardContent>
             </Card>
@@ -109,7 +105,7 @@ export default function PhilosophyContent() {
               <Check className="h-3.5 w-3.5" />
             </span>
             <span className="font-body-md text-[14px] font-medium text-ink">
-              {benefit}
+              {t(`home.approach.benefits.${benefit}`)}
             </span>
           </motion.div>
         ))}
@@ -130,7 +126,7 @@ export default function PhilosophyContent() {
             whileTap={{ scale: 0.97 }}
             whileHover={{ scale: 1.01 }}
           >
-            <span>Discover the Matching Engine</span>
+            <span>{t("home.approach.discover")}</span>
             <ArrowRight className="h-[17px] w-[17px] transition-transform group-hover:translate-x-1" />
           </motion.button>
         </Button>
@@ -142,7 +138,7 @@ export default function PhilosophyContent() {
         >
           {/* TODO: point to the real methodology route */}
           <Link to="/methodology">
-            <span>Read our methodology</span>
+            <span>{t("home.approach.methodology")}</span>
             <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </Button>
