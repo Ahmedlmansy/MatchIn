@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PasswordInput } from "./Passwordinput";
+import { useTranslation } from "react-i18next";
 
 const FIELD_ORDER = [
   "fullName",
@@ -31,6 +32,7 @@ const FIELD_ORDER = [
  * onSubmit(data) — validated { fullName, email, password, confirmPassword, terms }
  */
 export function RegisterFormView({ onSubmit }) {
+  const { t } = useTranslation("common");
   const form = useForm({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -67,13 +69,13 @@ export function RegisterFormView({ onSubmit }) {
   return (
     <div>
       <div className="mb-1 text-[11px] font-semibold text-secondary">
-        STEP 1 OF 4
+        {t("auth.register.step", { current: 1 })}
       </div>
       <h1 className="mb-1 font-[DM_Sans] text-[23px] font-bold leading-7 tracking-tight text-ink">
-        Create your account
+        {t("auth.register.createTitle")}
       </h1>
       <p className="mb-5 text-[13.5px] text-muted">
-        Start with the basics — you can round out your profile next.
+        {t("auth.register.createDescription")}
       </p>
 
       <Form {...form}>
@@ -87,13 +89,13 @@ export function RegisterFormView({ onSubmit }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[11.5px] font-semibold text-ink/80">
-                  Full name
+                  {t("auth.register.fullName")}
                 </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                     <Input
-                      placeholder="e.g. Sara Ahmed"
+                      placeholder={t("auth.register.fullNamePlaceholder")}
                       className="h-11 rounded-xl border-border pl-9"
                       {...field}
                     />
@@ -110,14 +112,14 @@ export function RegisterFormView({ onSubmit }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[11.5px] font-semibold text-ink/80">
-                  Email address
+                  {t("auth.register.email")}
                 </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                     <Input
                       type="email"
-                      placeholder="you@company.com"
+                      placeholder={t("auth.register.emailPlaceholder")}
                       className="h-11 rounded-xl border-border pl-9"
                       {...field}
                     />
@@ -134,11 +136,11 @@ export function RegisterFormView({ onSubmit }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[11.5px] font-semibold text-ink/80">
-                  Password
+                  {t("auth.register.password")}
                 </FormLabel>
                 <FormControl>
                   <PasswordInput
-                    placeholder="At least 8 characters"
+                    placeholder={t("auth.register.passwordPlaceholder")}
                     {...field}
                   />
                 </FormControl>
@@ -153,11 +155,11 @@ export function RegisterFormView({ onSubmit }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-[11.5px] font-semibold text-ink/80">
-                  Confirm password
+                  {t("auth.register.confirmPassword")}
                 </FormLabel>
                 <FormControl>
                   <PasswordInput
-                    placeholder="Re-enter your password"
+                    placeholder={t("auth.register.confirmPasswordPlaceholder")}
                     {...field}
                   />
                 </FormControl>
@@ -180,19 +182,19 @@ export function RegisterFormView({ onSubmit }) {
                     />
                   </FormControl>
                   <label className="text-[12.5px] text-ink/80">
-                    I agree to MatchIn{" "}
+                    {t("auth.register.agree")}{" "}
                     <a
                       href="#"
                       className="font-semibold text-primary underline-offset-2 hover:underline"
                     >
-                      Terms
+                      {t("auth.register.terms")}
                     </a>{" "}
                     and{" "}
                     <a
                       href="#"
                       className="font-semibold text-primary underline-offset-2 hover:underline"
                     >
-                      Privacy Policy
+                      {t("auth.register.privacy")}
                     </a>
                     .
                   </label>
@@ -206,7 +208,7 @@ export function RegisterFormView({ onSubmit }) {
             type="submit"
             className="mt-1 h-11.5 w-full rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
           >
-            Create account
+            {t("auth.register.submit")}
           </Button>
         </form>
       </Form>

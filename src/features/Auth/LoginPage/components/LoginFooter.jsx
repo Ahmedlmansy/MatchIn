@@ -1,24 +1,26 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useLocalizedPath } from "@/utils/routes";
+import { useTranslation } from "react-i18next";
 
 export default function LoginFooter() {
   const localizedPath = useLocalizedPath();
+  const { t } = useTranslation("common");
 
   return (
     <>
             <p className="text-[#64748b] -mt-3">
-              By signing in, you agree to MatchIn's{" "}
-              <Link className="underline">Terms</Link> and{" "}
-              <Link className="underline">Privacy Policy</Link>.
+              {t("auth.login.terms")}{" "}
+              <Link className="underline">{t("auth.login.termsLink")}</Link>{" "}
+              {t("auth.login.privacyLink")}.
             </p>
             <p className="text-[#64748b] mt-3">
-              Don't have an account?{" "}
+              {t("auth.login.noAccount")}{" "}
               <Link
                 to={localizedPath("/auth/register")}
                 className="text-[#2563eb] font-semibold hover:underline"
               >
-                Create an account →
+                {t("auth.login.create")}
               </Link>
             </p>
           </>

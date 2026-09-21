@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { cvFileSchema } from "@/features/Auth/schema/cv-schema";
 import { useState } from "react";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 function formatSize(bytes) {
   return `${(bytes / 1024).toFixed(0)} KB`;
@@ -23,6 +24,7 @@ function fileKindLabel(file) {
  * onSkip()         — called when "Browse Jobs" is pressed (skip profile setup for now)
  */
 export function CvUploadStep({ onComplete, onSkip }) {
+  const { t } = useTranslation("common");
   const inputRef =useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [file, setFile] = useState(null);
@@ -61,24 +63,22 @@ export function CvUploadStep({ onComplete, onSkip }) {
   return (
     <div>
       <div className="mb-1 text-[11px] font-semibold text-secondary">
-        STEP 3 OF 4
+        {t("auth.register.step", { current: 3 })}
       </div>
       <h1 className="mb-1 font-[DM_Sans] text-[23px] font-bold leading-7 tracking-tight text-ink">
-        Upload your CV
+        {t("auth.register.uploadTitle")}
       </h1>
       <p className="mb-5 text-[13.5px] text-muted">
-        We'll read it once, privately, to pull out your skills and pre-fill your
-        profile.
+        {t("auth.register.uploadDescription")}
       </p>
 
       <div className="mb-2 rounded-2xl border border-border bg-surface p-3.5">
         <div className="mb-1 flex items-center gap-1.5 text-xs font-bold text-ink/70">
           <Upload className="h-3.5 w-3.5 text-primary" />
-          UPLOAD CV
+          {t("auth.register.uploadLabel")}
         </div>
         <p className="mb-3.5 text-[12.5px] leading-tight text-muted">
-          PDF or DOCX, up to 10MB. This lets us auto-fill your profile and match
-          you to better roles.
+          {t("auth.register.uploadHelp")}
         </p>
 
         {!file && (
@@ -99,9 +99,10 @@ export function CvUploadStep({ onComplete, onSkip }) {
               <Upload className="h-4 w-4 text-primary" />
             </div>
             <p className="mb-0.5 font-[DM_Sans] text-sm font-semibold text-ink">
-              Drop your CV here, or <span className="text-primary">browse</span>
+              {t("auth.register.drop")}{" "}
+              <span className="text-primary">{t("auth.register.browse")}</span>
             </p>
-            <p className="text-[11.5px] text-muted">PDF or DOCX, up to 10MB</p>
+            <p className="text-[11.5px] text-muted">{t("auth.register.fileLimit")}</p>
             <input
               ref={inputRef}
               type="file"
@@ -133,12 +134,12 @@ export function CvUploadStep({ onComplete, onSkip }) {
               {status === "reading" ? (
                 <>
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  Reading…
+                  {t("auth.register.reading")}
                 </>
               ) : (
                 <>
                   <CheckCircle2 className="h-3.5 w-3.5" />
-                  Ready
+                  {t("auth.register.ready")}
                 </>
               )}
             </div>
@@ -147,7 +148,7 @@ export function CvUploadStep({ onComplete, onSkip }) {
               onClick={handleRemove}
               className="shrink-0 text-xs font-semibold text-secondary"
             >
-              Remove
+              {t("auth.register.remove")}
             </button>
           </div>
         )}
@@ -160,7 +161,7 @@ export function CvUploadStep({ onComplete, onSkip }) {
           onClick={onSkip}
           className="h-[46px] rounded-xl border-border px-5 text-ink/80"
         >
-          Browse Jobs
+          {t("auth.register.browseJobs")}
         </Button>
         <Button
           type="button"
@@ -168,7 +169,7 @@ export function CvUploadStep({ onComplete, onSkip }) {
           onClick={() => onComplete?.(file)}
           className="h-[46px] flex-1 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted/40"
         >
-          Complete Profile
+          {t("auth.register.completeProfile")}
         </Button>
       </div>
     </div>

@@ -16,6 +16,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 const RESEND_SECONDS = 30;
 
@@ -33,6 +34,7 @@ function formatTimer(seconds) {
  * onResend()       — called when the resend link is used, after the timer runs out
  */
 export function OtpView({ email, onVerified, onBack, onResend }) {
+  const { t } = useTranslation("common");
   const [secondsLeft, setSecondsLeft] = React.useState(RESEND_SECONDS);
 
   const form = useForm({
@@ -58,15 +60,15 @@ export function OtpView({ email, onVerified, onBack, onResend }) {
   return (
     <div>
       <div className="mb-1 text-[11px] font-semibold text-secondary">
-        STEP 2 OF 4
+        {t("auth.register.step", { current: 2 })}
       </div>
       <h1 className="mb-1 font-[DM_Sans] text-[23px] font-bold leading-7 tracking-tight text-ink">
-        Verify your email
+        {t("auth.register.verifyTitle")}
       </h1>
       <p className="mb-5 text-[13.5px] text-muted">
-        We sent a 6-digit code to{" "}
-        <strong className="text-ink">{email || "your email"}</strong>. Enter it
-        below to continue.
+        {t("auth.register.verifyDescription", {
+          email: email || t("auth.register.yourEmail"),
+        })}
       </p>
 
       <Form {...form}>
@@ -97,7 +99,7 @@ export function OtpView({ email, onVerified, onBack, onResend }) {
           <div className="mt-2.5 text-[13px] text-muted">
             {secondsLeft > 0 ? (
               <span>
-                Resend code in{" "}
+                {t("auth.register.resendIn")}{" "}
                 <strong className="text-ink">{formatTimer(secondsLeft)}</strong>
               </span>
             ) : (
@@ -106,7 +108,7 @@ export function OtpView({ email, onVerified, onBack, onResend }) {
                 onClick={handleResend}
                 className="text-[13px] font-semibold text-primary hover:underline"
               >
-                Resend code
+                {t("auth.register.resend")}
               </button>
             )}
           </div>
@@ -118,14 +120,14 @@ export function OtpView({ email, onVerified, onBack, onResend }) {
               onClick={onBack}
               className="h-[46px] rounded-xl border-border px-5 hover:text-surface"
             >
-              Back
+              {t("auth.register.back")}
             </Button>
             <Button
               type="submit"
               disabled={!isComplete}
               className="h-[46px] flex-1 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted/40"
             >
-              Verify &amp; continue
+              {t("auth.register.verify")}
             </Button>
           </div>
         </form>

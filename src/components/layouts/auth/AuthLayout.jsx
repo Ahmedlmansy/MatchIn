@@ -1,5 +1,6 @@
 import AuthCard from "@/components/shared/auth/AuthCard";
 import AuthSidePanel from "@/components/shared/auth/Authsidepanel ";
+import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 
 
 export default function AuthLayout({
@@ -17,7 +18,7 @@ export default function AuthLayout({
 
       <main className="flex h-screen flex-col overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden">
         <div className="mx-auto flex w-full max-w-2xl shrink-0 items-center justify-end px-12 pb-1 pt-[1.1rem]">
-          {topRight}
+          {topRight || <LanguageSwitcher />}
         </div>
 
         <div className="mx-auto w-full max-w-2xl shrink-0 px-8.75 pb-5">

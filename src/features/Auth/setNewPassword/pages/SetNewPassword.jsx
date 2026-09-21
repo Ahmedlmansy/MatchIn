@@ -18,8 +18,12 @@ import ResetStateView from "../components/ResetStateView";
 import SavingPassword from "../components/SavingPassword";
 import SecurityNotice from "../components/SecurityNotice";
 import logo from "@/assets/logo/MatchIn_logo.svg";
+import { useTranslation } from "react-i18next";
+import { useLocalizedPath } from "@/utils/routes";
 
 export default function SetNewPassword() {
+  const { t } = useTranslation("common");
+  const localizedPath = useLocalizedPath();
   const [state, setState] = useState("default");
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -53,14 +57,13 @@ export default function SetNewPassword() {
                   </div>
                   <span className="mb-1 flex items-center gap-1.5 rounded-full bg-slate-200 px-2.5 py-1 text-[11px] text-slate-600">
                     <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-                    Smart Career Path Platform
+                    {t("auth.reset.badge")}
                   </span>
                   <h2 className="mt-3 mb-1.5 text-xl font-bold text-slate-900">
-                    Set New Password
+                    {t("auth.reset.title")}
                   </h2>
                   <p className="max-w-[320px] text-xs leading-relaxed text-slate-500">
-                    Please enter a strong password and confirm it to protect
-                    your professional account on MatchIn
+                    {t("auth.reset.description")}
                   </p>
                 </div>
                 <PasswordResetForm
@@ -78,15 +81,15 @@ export default function SetNewPassword() {
               <ResetStateView
                 tone="blue"
                 icon={<RotateCw className="h-7 w-7 animate-spin" />}
-                title="Verifying Security Link..."
-                desc="Please wait a moment while we validate your reset link security token."
+                title={t("auth.reset.verifying")}
+                desc={t("auth.reset.verifyingDescription")}
               >
                 <Button
                   variant="secondary"
                   onClick={() => setState("default")}
                   className="h-auto w-full gap-2 rounded-lg bg-slate-900 py-3 text-sm font-bold text-white hover:bg-slate-800"
                 >
-                  Proceed to Form Manually
+                  {t("auth.reset.proceed")}
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Button>
               </ResetStateView>
@@ -96,14 +99,14 @@ export default function SetNewPassword() {
               <ResetStateView
                 tone="red"
                 icon={<Clock className="h-7 w-7" />}
-                title="Link Has Expired"
-                desc="This password reset link is invalid or has expired for security reasons. Please request a new one."
+                title={t("auth.reset.expired")}
+                desc={t("auth.reset.expiredDescription")}
               >
                 <Button
                   onClick={() => setState("default")}
                   className="h-auto w-full gap-2 rounded-lg bg-orange-600 py-3 text-sm font-bold text-white hover:bg-orange-700"
                 >
-                  Request New Link
+                  {t("auth.reset.request")}
                   <RotateCw className="h-3.5 w-3.5" />
                 </Button>
               </ResetStateView>
@@ -115,14 +118,14 @@ export default function SetNewPassword() {
               <ResetStateView
                 tone="green"
                 icon={<Check className="h-7 w-7" />}
-                title="Onboarding Completed!"
-                desc="Your password has been successfully updated, and your account set-up is now complete. You can access your personalized dashboard now."
+                title={t("auth.reset.completed")}
+                desc={t("auth.reset.completedDescription")}
               >
                 <a
-                  href="#"
+                  href={localizedPath("/dashboard")}
                   className="flex w-full items-center justify-center gap-2 rounded-lg bg-orange-600 py-3 text-sm font-bold text-white hover:bg-orange-700"
                 >
-                  Go to Dashboard
+                  {t("auth.reset.dashboard")}
                   <ArrowRight className="h-3.5 w-3.5" />
                 </a>
               </ResetStateView>
@@ -132,14 +135,14 @@ export default function SetNewPassword() {
               <ResetStateView
                 tone="red"
                 icon={<TriangleAlert className="h-7 w-7" />}
-                title="Something Went Wrong"
-                desc="We encountered an issue updating your password. Please check your network connection and try again."
+                title={t("auth.reset.error")}
+                desc={t("auth.reset.errorDescription")}
               >
                 <Button
                   onClick={() => setState("default")}
                   className="h-auto w-full gap-2 rounded-lg bg-slate-900 py-3 text-sm font-bold text-white hover:bg-slate-800"
                 >
-                  Try Again
+                  {t("auth.reset.tryAgain")}
                   <RotateCw className="h-3.5 w-3.5" />
                 </Button>
               </ResetStateView>

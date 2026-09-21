@@ -7,18 +7,17 @@ import { z } from 'zod';
 import {
   ArrowLeft,
   Mail,
-  HelpCircle,
   ShieldCheck,
   ArrowRight,
   Loader2,
   RotateCcw,
-  Globe,
 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
 import { useLocalizedPath } from "@/utils/routes";
+import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
-import logoText from '@/assets/logo/Full_logo.svg';
 import logoIcon from '@/assets/logo/MatchIn_logo.svg';
 
 // 1. Zod Schema
@@ -30,25 +29,25 @@ const emailSchema = z
 
 export default function ForgetPasswordPage() {
   const localizedPath = useLocalizedPath();
+  const { t } = useTranslation("common");
 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [status, setStatus] = useState(false);
   const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isTimeout, setIsTimeout] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsTimeout(false);
     setMessage("");
+    setIsSuccess(false);
 
     const result = emailSchema.safeParse(email);
 
     if (!result.success) {
-      const errorMsg =
-        result.error.issues[0]?.message ||
-        "Please enter a valid email address.";
-      setEmailError(errorMsg);
+      setEmailError(t("auth.forgot.invalidEmail"));
       return;
     }
 
@@ -57,10 +56,11 @@ export default function ForgetPasswordPage() {
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      setMessage("A password reset link has been sent to your email.");
+      setIsSuccess(true);
+      setMessage(t("auth.forgot.success"));
     } catch (error) {
       setIsTimeout(true);
-      setMessage("Server connection failed. Please try again later.");
+      setMessage(t("auth.forgot.failure"));
     } finally {
       setStatus(false);
     }
@@ -74,13 +74,10 @@ export default function ForgetPasswordPage() {
         className="flex items-center gap-2 text-sm font-semibold text-slate-900"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
-        Back to Login
+        {t("auth.forgot.back")}
       </Link>
 
-      <button className="flex items-center gap-1.5 text-sm text-slate-600 hover:text-slate-900">
-        <Globe className="h-4 w-4" />
-        English
-      </button>
+      <LanguageSwitcher />
     </header>
 
       <main className="max-w-md w-full mx-auto my-auto py-2">
@@ -88,7 +85,7 @@ export default function ForgetPasswordPage() {
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 flex flex-col items-center text-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100/80 text-gray-600 text-xs font-medium mb-6">
             <span className="w-2 h-2 rounded-full bg-[#D06B4F]"></span>
-            Smart Career Platform
+            {t("auth.forgot.badge")}
           </div>
 
           <img
@@ -98,12 +95,11 @@ export default function ForgetPasswordPage() {
           />
 
           <h1 className="text-2xl md:text-3xl font-extrabold text-[#1F365C] mb-2 tracking-tight">
-            Forgot Password?
+            {t("auth.forgot.title")}
           </h1>
 
           <p className="text-sm text-gray-500 max-w-sm mb-6 leading-relaxed">
-            Enter your account's email address and we will send you a secure
-            link to reset your password immediately.
+            {t("auth.forgot.description")}
           </p>
 
           <form
@@ -116,7 +112,7 @@ export default function ForgetPasswordPage() {
                 htmlFor="email"
                 className="text-xs font-bold text-[#1F365C]"
               >
-                Professional Email
+                {t("auth.forgot.email")}
               </Label>
 
               <div className="relative">
@@ -155,15 +151,15 @@ export default function ForgetPasswordPage() {
               {status ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Sending Link...
+                  {t("auth.forgot.sending")}
                 </>
               ) : isTimeout ? (
                 <>
-                  Retry Sending <RotateCcw className="w-4 h-4" />
+                  {t("auth.forgot.retry")} <RotateCcw className="w-4 h-4" />
                 </>
               ) : (
                 <>
-                  Send Reset Link <ArrowRight className="w-4 h-4" />
+                  {t("auth.forgot.send")} <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </Button>
@@ -175,15 +171,14 @@ export default function ForgetPasswordPage() {
             </div>
 
             <p className="text-xs text-gray-500 leading-normal">
-              Advanced protection for your professional data. Saved with highest
-              certified digital identity security standards.
+              {t("auth.forgot.security")}
             </p>
           </div>
 
           {message && (
             <div
               className={`w-full mt-4 p-3 rounded-xl text-xs text-center font-medium border ${
-                message === "A password reset link has been sent to your email."
+                isSuccess
                   ? "bg-emerald-50 border-emerald-200 text-emerald-800"
                   : "bg-[#FDF2F2] border-[#FAD2D2] text-[#E05252]"
               }`}

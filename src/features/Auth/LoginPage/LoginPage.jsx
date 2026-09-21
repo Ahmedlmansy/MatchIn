@@ -28,11 +28,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/features/Auth/schema/login-schema";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocalizedPath } from "@/utils/routes";
+import { useTranslation } from "react-i18next";
 
 const FIELD_ORDER = ["email", "password"];
 
 export default function LoginPage() {
   const localizedPath = useLocalizedPath();
+  const { t } = useTranslation("common");
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
@@ -76,19 +78,18 @@ export default function LoginPage() {
       sidePanel={{
         imageSrc:
           "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80",
-        badgeText: "Better Opportunities",
+        badgeText: t("auth.side.badge"),
         badgeIcon: <BriefcaseBusiness width={13} height={13} />,
-        title: "Great companies hire great people",
-        description:
-          "Build your career with the right opportunities and take the next step toward your future.",
+        title: t("auth.side.title"),
+        description: t("auth.side.description"),
       }}
       footer={<LoginFooter />}
     >
       <Form {...form}>
         <form noValidate onSubmit={form.handleSubmit(handleLogin)}>
           <LoginHeading
-            title="Welcome Back"
-            subTitle="Log in to your account to continue"
+            title={t("auth.login.welcome")}
+            subTitle={t("auth.login.subtitle")}
           />
           <FieldGroup className="gap-5">
             <FormField
@@ -97,12 +98,12 @@ export default function LoginPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-[11px] font-bold uppercase tracking-[0.5px] text-[#64748b]">
-                    Email Address
+                    {t("auth.login.email")}
                   </FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="you@example.com"
+                      placeholder={t("auth.login.emailPlaceholder")}
                       className="h-11.5 w-full rounded-[8px] border border-[#e2e8f0] bg-white px-4 py-3.5 text-[16px] text-[#0f172a] outline-none transition-all placeholder:text-[#e2e8f0] focus-visible:border-[#1d3557]"
                       {...field}
                     />
@@ -117,13 +118,13 @@ export default function LoginPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-[11px] font-bold uppercase tracking-[0.5px] text-[#64748b]">
-                    Password
+                    {t("auth.login.password")}
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={isVisible ? "text" : "password"}
-                        placeholder="Enter your password"
+                        placeholder={t("auth.login.passwordPlaceholder")}
                         className="h-11.5 w-full rounded-[8px] border border-[#e2e8f0] bg-white px-4 py-3.5 text-[16px] text-[#0f172a] outline-none transition-all placeholder:text-[#e2e8f0] focus-visible:border-[#1d3557]"
                         {...field}
                       />
@@ -132,7 +133,9 @@ export default function LoginPage() {
                         className="absolute right-4 top-[50%] translate-y-[-50%]"
                         onClick={toggleVisiblty}
                         aria-label={
-                          isVisible ? "Hide password" : "Show password"
+                          isVisible
+                            ? t("auth.login.hidePassword")
+                            : t("auth.login.showPassword")
                         }
                       >
                         {isVisible ? (
@@ -170,13 +173,13 @@ export default function LoginPage() {
                     </FormControl>
                   )}
                 />
-                Remember me
+                {t("auth.login.remember")}
               </FieldLabel>
               <Link
                 to={localizedPath("/auth/forgot-password")}
                 className="flex justify-end sm:text-[13px] text-[#2563eb] hover:underline font-medium text-[11px]"
               >
-                Forgot password?
+                {t("auth.login.forgot")}
               </Link>
             </Field>
             <Field>
@@ -184,16 +187,16 @@ export default function LoginPage() {
                 type="submit"
                 className=" flex justify-center gap-2 duration-200 h-11.5 p-3.5 bg-primary hover:bg-primary/90 rounded-[8px] text-[15px] font-semibold cursor-pointer"
               >
-                Log In <ArrowRight width={20} className="font-bold" />
+                {t("auth.login.submit")} <ArrowRight width={20} className="font-bold" />
               </Button>
             </Field>
             <FieldSeparator className="text-[#64748b] text-[12px] px-3.5 my-1">
-              or continue with
+              {t("auth.login.or")}
             </FieldSeparator>
             <Field>
               <Button className="p-3 h-11 bg-white hover:bg-[#f8fafc] border-[#e2e8f0] border rounded-[8px] text-[#0f172a] text-[14px] font-semibold cursor-pointer flex items-center justify-center gap-2.5 duration-200">
                 <img src={google} width={18} height={18} />
-                Continue with Google
+                {t("auth.login.google")}
               </Button>
             </Field>
           </FieldGroup>
