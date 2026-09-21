@@ -21,7 +21,7 @@ export default function PhilosophyVisual() {
       >
         <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
           <img
-            alt="SkillMatch Verified Evaluation Workspace"
+            alt="MatchIn Verified Evaluation Workspace"
             src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1800&h=600&fit=crop&auto=format"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />

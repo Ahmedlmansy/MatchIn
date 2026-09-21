@@ -14,7 +14,7 @@ export function Navbar() {
       className="flex items-center justify-between border-b px-6 py-4"
     >
       <Link to={localizedPath("/")} className="text-lg font-semibold">
-        SkillMatch
+        MatchIn
       </Link>
       <nav className="flex items-center gap-4">
         <Link to={localizedPath("/dashboard/jobs")} className="text-sm text-muted-foreground hover:text-foreground">

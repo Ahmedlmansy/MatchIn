@@ -4,16 +4,17 @@ import { Brain, Bot, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLocalizedPath } from "@/utils/routes";
-
-const PREVIEW_CHIPS = [
-  "Mock Interviews",
-  "Resume Gap Analysis",
-  "Skill Roadmap",
-  "Salary Benchmarking",
-];
+import { useTranslation } from "react-i18next";
 
 export default function AIMentorCard() {
   const localizedPath = useLocalizedPath();
+  const { t } = useTranslation("common");
+  const previewChips = [
+    t("home.aiMentor.chips.mockInterviews"),
+    t("home.aiMentor.chips.resumeGapAnalysis"),
+    t("home.aiMentor.chips.skillRoadmap"),
+    t("home.aiMentor.chips.salaryBenchmarking"),
+  ];
 
   return (
     <motion.div
@@ -31,20 +32,19 @@ export default function AIMentorCard() {
           className="w-fit gap-1.5 self-start rounded-full border-primary-foreground/15 bg-primary-foreground/10 px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-accent backdrop-blur-md"
         >
           <Brain className="h-[18px] w-[18px]" />
-          Next-Gen Intelligence
+          {t("home.aiMentor.badge")}
         </Badge>
 
         <h3 className="font-headline-xl text-[32px] font-bold tracking-tight text-primary-foreground sm:text-[40px]">
-          AI Career Mentor
+          {t("home.aiMentor.title")}
         </h3>
 
         <p className="font-body-lg leading-relaxed text-primary-foreground/80">
-          Get personalized career guidance, identify skill gaps, build a learning roadmap, and
-          prepare for your next opportunity with AI.
+          {t("home.aiMentor.description")}
         </p>
 
         <div className="flex flex-wrap gap-2 pt-1">
-          {PREVIEW_CHIPS.map((chip) => (
+          {previewChips.map((chip) => (
             <Badge
               key={chip}
               variant="outline"
@@ -64,12 +64,12 @@ export default function AIMentorCard() {
           {/* TODO: point to the real AI mentor route */}
           <Link to={localizedPath("/dashboard/ai-chat")}>
             <Bot className="h-5 w-5 text-secondary transition-transform group-hover:rotate-12" />
-            Talk to AI Mentor
+            {t("home.aiMentor.action")}
             <ArrowRight className="h-[17px] w-[17px] text-primary" />
           </Link>
         </Button>
         <span className="text-center font-body-sm text-[12px] text-primary-foreground/70 lg:text-right">
-          Available 24/7 • Instant Feedback • Free Plan Included
+          {t("home.aiMentor.availability")}
         </span>
       </div>
     </motion.div>

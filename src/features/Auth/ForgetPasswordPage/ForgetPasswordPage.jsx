@@ -93,7 +93,7 @@ export default function ForgetPasswordPage() {
 
           <img
             src={logoIcon}
-            alt="SkillMatch Logo"
+            alt="MatchIn Logo"
             className="h-14 w-auto mb-4 object-contain"
           />
 

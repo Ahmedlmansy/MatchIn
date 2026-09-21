@@ -27,7 +27,7 @@ const BENEFITS = [
   },
 ];
 
-export default function WhySkillMatchContent() {
+export default function WhyMatchInContent() {
   const { t } = useTranslation("common");
 
   return (
