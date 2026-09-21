@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 
 const EXPERIENCE_OPTIONS = [
   "Less than 1 year",
@@ -62,6 +63,7 @@ function AutofillTag({ show }) {
  * onFinish(data) — called with the validated profile once the user finishes
  */
 export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
+  const { t } = useTranslation("common");
   const [analyzing, setAnalyzing] = React.useState(true);
   const [autofilled, setAutofilled] = React.useState(new Set());
 
@@ -92,14 +94,16 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
 
   return (
     <div>
-      <div className="mb-1 text-[11px] font-semibold text-secondary">STEP 4 OF 4</div>
+      <div className="mb-1 text-[11px] font-semibold text-secondary">
+        {t("auth.register.step", { current: 4 })}
+      </div>
       <h1 className="mb-1 font-[DM_Sans] text-[23px] font-bold leading-7 tracking-tight text-ink">
-        {analyzing ? "Reading your CV" : "Complete your profile"}
+        {analyzing ? t("auth.register.profileReading") : t("auth.register.profileTitle")}
       </h1>
       <p className="mb-5 text-[13.5px] text-muted">
         {analyzing
-          ? "Our model is scanning for roles, tools, and skills — this takes a few seconds."
-          : "Here's what we found — review your skills and profile details below before finishing up."}
+          ? t("auth.register.profileReadingDescription")
+          : t("auth.register.profileDescription")}
       </p>
 
       <div
@@ -114,10 +118,14 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
         )}
         <div>
           <p className="text-[13px] font-semibold text-ink">
-            {analyzing ? `Analyzing ${cvFileName || "your profile"}` : "CV analyzed"}
+            {analyzing
+              ? t("auth.register.analyzing", {
+                  file: cvFileName || t("auth.register.yourProfile"),
+                })
+              : t("auth.register.cvAnalyzed")}
           </p>
           <p className="text-xs text-muted">
-            {analyzing ? "Extracting skills and experience" : "Skills extracted successfully"}
+            {analyzing ? t("auth.register.extracting") : t("auth.register.extracted")}
           </p>
         </div>
       </div>
@@ -126,12 +134,14 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
         <>
           <div className="mb-4 flex items-center gap-3 rounded-xl bg-success/10 px-3.5 py-2.5 text-[12.5px] font-semibold text-success">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
-            {MOCK_ANALYSIS.skillsFound} skills found, {MOCK_ANALYSIS.skillsMatched} matched to
-            in-demand roles
+            {t("auth.register.skillsSummary", {
+              found: MOCK_ANALYSIS.skillsFound,
+              matched: MOCK_ANALYSIS.skillsMatched,
+            })}
           </div>
 
           <p className="mb-2 text-[10.5px] font-semibold tracking-wide text-muted">
-            SKILLS MATCHED TO YOUR ROLE
+            {t("auth.register.matchedSkills")}
           </p>
           <div className="mb-3.5 flex flex-wrap gap-1.5">
             {MOCK_ANALYSIS.matchedSkills.map((skill) => (
@@ -147,7 +157,7 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
           </div>
 
           <p className="mb-2 text-[10.5px] font-semibold tracking-wide text-muted">
-            GROWTH OPPORTUNITIES
+            {t("auth.register.growth")}
           </p>
           <div className="mb-4 flex flex-wrap gap-1.5">
             {MOCK_ANALYSIS.growthSkills.map((skill) => (
@@ -163,7 +173,7 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
           </div>
 
           <p className="mb-2 text-[10.5px] font-semibold tracking-wide text-muted">
-            YOUR PROFILE
+            {t("auth.register.profile")}
           </p>
 
           <Form {...form}>
@@ -177,14 +187,14 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-[11.5px] font-semibold text-ink/80">
-                      Current or target job title
+                      {t("auth.register.jobTitle")}
                       <AutofillTag show={autofilled.has("jobTitle")} />
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Briefcase className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                         <Input
-                          placeholder="e.g. Frontend Developer"
+                          placeholder={t("auth.register.jobTitlePlaceholder")}
                           className="h-11 rounded-xl border-border pl-9"
                           {...field}
                           onChange={(e) => {
@@ -206,14 +216,14 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-[11.5px] font-semibold text-ink/80">
-                        Location
+                        {t("auth.register.location")}
                         <AutofillTag show={autofilled.has("location")} />
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                           <Input
-                            placeholder="City, Country"
+                            placeholder={t("auth.register.locationPlaceholder")}
                             className="h-11 rounded-xl border-border pl-9"
                             {...field}
                             onChange={(e) => {
@@ -234,7 +244,7 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-[11.5px] font-semibold text-ink/80">
-                        Years of experience
+                        {t("auth.register.experience")}
                         <AutofillTag show={autofilled.has("experience")} />
                       </FormLabel>
                       <FormControl>
@@ -248,7 +258,7 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                             }}
                           >
                             <SelectTrigger className="h-11 rounded-xl border-border pl-9">
-                              <SelectValue placeholder="Select" />
+                              <SelectValue placeholder={t("auth.register.select")} />
                             </SelectTrigger>
                             <SelectContent>
                               {EXPERIENCE_OPTIONS.map((opt) => (
@@ -272,14 +282,17 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-[11.5px] font-semibold text-ink/80">
-                      Short bio <span className="font-normal text-muted">(optional)</span>
+                      {t("auth.register.bio")}{" "}
+                      <span className="font-normal text-muted">
+                        ({t("auth.register.optional")})
+                      </span>
                       <AutofillTag show={autofilled.has("bio")} />
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <PenLine className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-muted" />
                         <Textarea
-                          placeholder="A couple of lines about what you do and what you're looking for."
+                          placeholder={t("auth.register.bioPlaceholder")}
                           className="min-h-[54px] rounded-xl border-border pl-9"
                           {...field}
                           onChange={(e) => {
@@ -301,13 +314,13 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                   onClick={onBack}
                   className="h-[46px] rounded-xl border-border px-5 text-ink/80"
                 >
-                  Back
+                  {t("auth.register.back")}
                 </Button>
                 <Button
                   type="submit"
                   className="h-[46px] flex-1 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
                 >
-                  Go to dashboard
+                  {t("auth.register.dashboard")}
                 </Button>
               </div>
             </form>

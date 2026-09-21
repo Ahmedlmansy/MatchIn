@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Eye, EyeOff, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -43,6 +44,7 @@ function PasswordField({
   onToggle,
   errors,
 }) {
+  const { t } = useTranslation("common");
   return (
     <FormField
       control={control}
@@ -63,7 +65,7 @@ function PasswordField({
                 type="button"
                 onClick={onToggle}
                 className="absolute right-3 text-slate-500 hover:text-slate-700"
-                aria-label={visible ? "Hide password" : "Show password"}
+                aria-label={visible ? t("auth.reset.hidePassword") : t("auth.reset.showPassword")}
               >
                 {visible ? (
                   <EyeOff className="h-3.5 w-3.5" />
@@ -88,6 +90,7 @@ export default function PasswordResetForm({
   onToggleNew,
   onToggleConfirm,
 }) {
+  const { t } = useTranslation("common");
   const { errors } = form.formState;
 
   return (
@@ -100,8 +103,8 @@ export default function PasswordResetForm({
         <PasswordField
           control={form.control}
           name="password"
-          label="New Password"
-          placeholder="Enter new password"
+          label={t("auth.reset.newPassword")}
+          placeholder={t("auth.reset.newPasswordPlaceholder")}
           visible={showNew}
           onToggle={onToggleNew}
           errors={errors}
@@ -109,8 +112,8 @@ export default function PasswordResetForm({
         <PasswordField
           control={form.control}
           name="confirmPassword"
-          label="Confirm Password"
-          placeholder="Confirm new password"
+          label={t("auth.reset.confirmPassword")}
+          placeholder={t("auth.reset.confirmPasswordPlaceholder")}
           visible={showConfirm}
           onToggle={onToggleConfirm}
           errors={errors}
@@ -119,7 +122,7 @@ export default function PasswordResetForm({
           type="submit"
           className="h-auto w-full cursor-pointer gap-2 rounded-lg bg-primary py-3 text-sm font-bold text-white hover:bg-primary/90"
         >
-          Save &amp; Set Password
+          {t("auth.reset.save")}
           <ArrowRight className="h-3.5 w-3.5" />
         </Button>
       </form>

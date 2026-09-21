@@ -7,10 +7,12 @@ import { CvUploadStep } from "./components/CvUploadStep";
 import { ProfileCompletionStep } from "./components/Profilecompletionstep";
 import { BriefcaseBusiness } from "lucide-react";
 import { useLocalizedPath } from "@/utils/routes";
+import { useTranslation } from "react-i18next";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const localizedPath = useLocalizedPath();
+  const { t } = useTranslation("common");
 
   const [step, setStep] = useState(0);
   const [registerData, setRegisterData] = useState(null); // { fullName, email, password, otpCode }
@@ -49,22 +51,18 @@ export default function RegisterPage() {
   return (
     <AuthLayout
       sidePanel={{
-        title: "Great companies hire great people",
-        description:
-          "Build your career with the right opportunities and take the next step toward your future.",
+        title: t("auth.side.title"),
+        description: t("auth.side.description"),
         imageSrc:
           "https://images.unsplash.com/photo-1633114128814-11fac33f707b?fm=jpg&q=80&w=1400&auto=format&fit=crop",
         imageAlt: "A person working on a laptop",
-        badgeText: "Better Opportunities",
+        badgeText: t("auth.side.badge"),
         badgeIcon: <BriefcaseBusiness width={13} height={13} />,
       }}
       additional={
         <StepProgress
           steps={[
-            "Create account",
-            "Verify email",
-            "Upload CV",
-            "Complete profile",
+            t("auth.register.steps", { returnObjects: true }),
           ]}
           currentStep={step}
         />
@@ -72,12 +70,12 @@ export default function RegisterPage() {
       cardClassName={"justify-start"}
       footer={
         <p className="mx-auto w-full max-w-2xl px-6 pb-4 text-center text-[11.5px] leading-4 text-muted">
-          Already have an account?{" "}
+          {t("auth.register.haveAccount")}{" "}
           <Link
             to={localizedPath("/auth/login")}
             className="border-b border-border text-ink/80 hover:text-ink"
           >
-            Sign in
+            {t("auth.register.signIn")}
           </Link>
         </p>
       }
