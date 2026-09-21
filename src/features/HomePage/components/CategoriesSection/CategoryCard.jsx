@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useLocalizedPath } from "@/utils/routes";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function CategoryCard({ category, index = 0 }) {
   const Icon = category.icon;
   const { t } = useTranslation("common");
+  const localizedPath = useLocalizedPath();
 
   return (
     <motion.div
@@ -18,7 +20,7 @@ export default function CategoryCard({ category, index = 0 }) {
       className="h-full"
     >
       {/* TODO: point to the real category route/query param */}
-      <Link to={`/jobs?category=${category.id}`} className="block h-full">
+      <Link to={localizedPath(`/dashboard/jobs?category=${category.id}`)} className="block h-full">
         <Card className="group h-full cursor-pointer rounded-2xl border-border bg-surface p-4 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:border-primary/40 hover:shadow-md">
           <CardContent className="flex h-full flex-col justify-between p-0">
             <div className="mb-4 flex items-center justify-between">

@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { useLocalizedPath } from "@/utils/routes";
 import { X, MessageSquare, CheckCircle2, Circle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/shared/Modal";
 
 export default function TaskDetailModal({ task, onClose, onToggle }) {
+  const localizedPath = useLocalizedPath();
+
   return (
     <Modal onClose={onClose} maxWidth="max-w-[520px]" className="max-h-[88vh] overflow-y-auto">
       <div className="flex items-start justify-between border-b border-border p-6">
@@ -65,7 +68,7 @@ export default function TaskDetailModal({ task, onClose, onToggle }) {
           variant="outline"
           className="h-11 gap-1.5 rounded-full border-border px-4 text-[13px] font-semibold text-ink hover:bg-background"
         >
-          <Link to="/dashboard/mentor">
+          <Link to={localizedPath("/dashboard/ai-chat")}>
             <MessageSquare className="h-4 w-4" />
             Ask Mentor
           </Link>

@@ -6,9 +6,11 @@ import { RegisterStep } from "./components/RegisterStep";
 import { CvUploadStep } from "./components/CvUploadStep";
 import { ProfileCompletionStep } from "./components/Profilecompletionstep";
 import { BriefcaseBusiness } from "lucide-react";
+import { useLocalizedPath } from "@/utils/routes";
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
 
   const [step, setStep] = useState(0);
   const [registerData, setRegisterData] = useState(null); // { fullName, email, password, otpCode }
@@ -32,7 +34,7 @@ export default function RegisterPage() {
 
   const handleCvSkip = () => {
     // "Browse Jobs" bypasses profile completion entirely.
-    navigate("/jobs");
+    navigate(localizedPath("/dashboard/jobs"));
   };
 
   const handleProfileBack = () => {
@@ -41,7 +43,7 @@ export default function RegisterPage() {
 
   const handleProfileFinish = (profileData) => {
     // TODO: submit { ...registerData, cvFile, ...profileData } to the API
-    navigate("/dashboard");
+    navigate(localizedPath("/dashboard"));
   };
 
   return (
@@ -72,7 +74,7 @@ export default function RegisterPage() {
         <p className="mx-auto w-full max-w-2xl px-6 pb-4 text-center text-[11.5px] leading-4 text-muted">
           Already have an account?{" "}
           <Link
-            to="/auth/login"
+            to={localizedPath("/auth/login")}
             className="border-b border-border text-ink/80 hover:text-ink"
           >
             Sign in

@@ -5,10 +5,12 @@ import NewsletterForm from "./NewsletterForm";
 import { FOOTER_COLUMNS, FOOTER_LEGAL_LINKS } from "@/constants/footerLinks";
 import LogoNavy from "@/assets/logo/Full_logo_navy.svg";
 import { useTranslation } from "react-i18next";
+import { useLocalizedPath } from "@/utils/routes";
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const { t } = useTranslation("common");
+  const localizedPath = useLocalizedPath();
 
   return (
     <footer className="w-full border-t border-border bg-surface">
@@ -22,7 +24,7 @@ export default function Footer() {
             transition={{ duration: 0.5 }}
             className="flex flex-col gap-4 lg:col-span-2"
           >
-            <Link to="/" className="flex items-center gap-2">
+            <Link to={localizedPath("/")} className="flex items-center gap-2">
               <img src={LogoNavy} alt="MatchIn Logo" className="h-7 w-auto object-contain" />
             </Link>
             <p className="max-w-sm font-body-md text-[14px] leading-relaxed text-muted">
@@ -50,7 +52,7 @@ export default function Footer() {
           <p>{t("home.footer.copyright", { year })}</p>
           <div className="flex items-center gap-6">
             {FOOTER_LEGAL_LINKS.map((link) => (
-              <Link key={link.labelKey} to={link.to} className="transition-colors hover:text-ink">
+              <Link key={link.labelKey} to={localizedPath(link.to)} className="transition-colors hover:text-ink">
                 {t(link.labelKey)}
               </Link>
             ))}

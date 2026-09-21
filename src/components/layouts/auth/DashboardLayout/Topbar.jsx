@@ -1,10 +1,22 @@
 import NotificationsBellDropdown from "@/features/notifications/components/NotificationsBellDropdown";
 import { Menu, Search, User } from "lucide-react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import LanguageSwitcher from "@/features/HomePage/components/LanguageSwitcher";
 
 export default function Topbar({ onOpenMobileSidebar, userName, userRole }) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { lang } = useParams();
+
+  const handleLanguageChange = (newLang) => {
+    const segments = location.pathname.split("/");
+    segments[1] = newLang;
+    navigate(segments.join("/") + location.search + location.hash);
+  };
+
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 px-6 py-4 backdrop-blur-md">
       <div className="mx-auto flex max-w-[1360px] items-center justify-between gap-4">
@@ -26,7 +38,7 @@ export default function Topbar({ onOpenMobileSidebar, userName, userRole }) {
               "sm:flex lg:w-80",
             )}
           >
-            <Search className="mr-2 h-[18px] w-[18px] shrink-0 text-muted/70" />
+            <Search className="me-2 h-[18px] w-[18px] shrink-0 text-muted/70" />
             <Input
               type="text"
               placeholder="Search roles, skills..."
@@ -39,15 +51,19 @@ export default function Topbar({ onOpenMobileSidebar, userName, userRole }) {
         </div>
 
         <div className="flex items-center gap-3">
+          <LanguageSwitcher
+            language={lang}
+            onChange={handleLanguageChange}
+          />
           <NotificationsBellDropdown />
-          <div className="flex items-center gap-3 border-l border-border pl-2">
+          <div className="flex items-center gap-3 border-s border-border ps-2">
             <div className="relative flex items-center justify-center">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
                 <User className="h-[19px] w-[19px]" />
               </div>
-              <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-success ring-2 ring-surface" />
+              <span className="absolute bottom-0 end-0 h-2.5 w-2.5 rounded-full bg-success ring-2 ring-surface" />
             </div>
-            <div className="hidden flex-col text-left sm:flex">
+            <div className="hidden flex-col text-start sm:flex">
               <span className="text-[13px] font-semibold leading-tight text-primary">
                 {userName}
               </span>

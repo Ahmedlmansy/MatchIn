@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useLocalizedPath } from "@/utils/routes";
 import { Rocket, Upload, Compass, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ const TRUST_POINTS = [
 ];
 
 export default function FinalCTASection() {
+  const localizedPath = useLocalizedPath();
   const { t } = useTranslation("common");
   return (
     <section
@@ -52,7 +54,7 @@ export default function FinalCTASection() {
               className="group w-full gap-2 rounded-xl bg-primary px-8 py-[14px] font-headline-sm text-[15px] font-semibold text-primary-foreground shadow-md hover:bg-primary/90 hover:shadow-lg sm:w-auto"
             >
               {/* TODO: point to the real upload-CV route */}
-              <Link to="/upload-cv">
+              <Link to={localizedPath("/upload-cv")}>
                 <Upload className="h-5 w-5 transition-transform group-hover:-translate-y-0.5" />
                 {t("home.cta.uploadCv")}
               </Link>
@@ -64,7 +66,7 @@ export default function FinalCTASection() {
               size="lg"
               className="group w-full gap-2 rounded-xl border-border bg-surface px-8 py-[14px] font-headline-sm text-[15px] font-semibold text-primary shadow-sm hover:bg-background sm:w-auto"
             >
-              <Link to="/jobs">
+              <Link to={localizedPath("/dashboard/jobs")}>
                 <Compass className="h-5 w-5 text-muted transition-colors group-hover:text-primary" />
                 {t("home.cta.browseJobs")}
                 <ArrowRight className="h-[18px] w-[18px] transition-transform group-hover:translate-x-1" />

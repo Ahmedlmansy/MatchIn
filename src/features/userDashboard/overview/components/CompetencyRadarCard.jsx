@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { DEFAULT_COMPETENCY_RADAR } from "@/constants/competencyRadar";
+import { useTranslation } from "react-i18next";
 
 const RADIUS_OUTER = 50;
 const RADIUS_INNER = 38;
@@ -32,6 +33,7 @@ export default function CompetencyRadarCard({
   data = DEFAULT_COMPETENCY_RADAR,
   onRecalibrate,
 }) {
+  const { t } = useTranslation("dashboard");
   const { overallScore, secondaryScore, comparisonLabel, benchmarkLabel, skills } = data;
 
   return (
@@ -45,7 +47,7 @@ export default function CompetencyRadarCard({
         <CardContent className="p-0">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h2 className="font-serif text-[17px] font-bold text-primary">Competency Radar</h2>
+              <h2 className="font-serif text-[17px] font-bold text-primary">{t("overview.competency.title")}</h2>
               <p className="text-[12px] text-muted">{benchmarkLabel}</p>
             </div>
             <span className="font-mono text-[16px] font-bold text-primary">{overallScore}%</span>
@@ -100,7 +102,7 @@ export default function CompetencyRadarCard({
                 {overallScore}%
               </span>
               <span className="mt-1 text-[11px] font-bold uppercase tracking-wider text-muted">
-                Profile Fit
+                {t("overview.competency.profileFit")}
               </span>
               <span className="mt-0.5 text-[10px] font-semibold text-success">
                 {comparisonLabel}
@@ -130,7 +132,7 @@ export default function CompetencyRadarCard({
             onClick={onRecalibrate}
             className="mt-4 w-full rounded-xl border-border/80 bg-background py-2 text-[12.5px] font-bold text-primary hover:bg-border/10"
           >
-            Recalibrate Target Index
+            {t("overview.competency.recalibrate")}
           </Button>
         </CardContent>
       </Card>

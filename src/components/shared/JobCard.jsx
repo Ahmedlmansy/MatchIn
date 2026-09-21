@@ -4,10 +4,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useLocalizedPath } from "@/utils/routes";
 
 const LOCATION_ICONS = { globe: Globe, pin: MapPin };
 
 export default function JobCard({ job, index = 0, onApply }) {
+  const localizedPath = useLocalizedPath();
   const LocationIcon = LOCATION_ICONS[job.locationIcon] ?? Globe;
 
   return (
@@ -24,7 +26,7 @@ export default function JobCard({ job, index = 0, onApply }) {
       className="h-full"
     >
       <Card className="cursor-pointer group flex h-full flex-col justify-between rounded-2xl border-border bg-surface p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:border-primary/40 hover:shadow-md">
-        <Link to={`/dashboard/jobs/${job.id}`}>
+        <Link to={localizedPath(`/dashboard/jobs/${job.id}`)}>
           <CardContent className="flex flex-col gap-3 p-0">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">

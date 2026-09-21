@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
+import { useLocalizedPath } from "@/utils/routes";
 
 import logoText from '@/assets/logo/Full_logo.svg';
 import logoIcon from '@/assets/logo/MatchIn_logo.svg';
@@ -28,6 +29,8 @@ const emailSchema = z
   .email({ message: 'Please enter a valid email address.' });
 
 export default function ForgetPasswordPage() {
+  const localizedPath = useLocalizedPath();
+
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [status, setStatus] = useState(false);
@@ -67,7 +70,7 @@ export default function ForgetPasswordPage() {
     <div className="min-h-screen overflow-hidden bg-[#FDFBF9] text-[#1F365C] flex flex-col justify-between p-4 md:p-6 font-sans">
       <header className="flex items-center justify-between px-6 py-4 sm:px-8">
       <Link
-        to="/auth/login"
+        to={localizedPath("/auth/login")}
         className="flex items-center gap-2 text-sm font-semibold text-slate-900"
       >
         <ArrowLeft className="h-3.5 w-3.5" />

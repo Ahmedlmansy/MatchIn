@@ -9,10 +9,12 @@ import {
 } from "@/components/ui/popover";
 import NotificationsList from "./NotificationsList";
 import { MOCK_NOTIFICATIONS } from "@/constants/notificationsMock";
+import { useLocalizedPath } from "@/utils/routes";
 
 const PREVIEW_LIMIT = 4;
 
 export default function NotificationsBellDropdown() {
+  const localizedPath = useLocalizedPath();
   const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
   const unreadCount = notifications.filter((n) => !n.read).length;
   const preview = notifications.slice(0, PREVIEW_LIMIT);
@@ -37,7 +39,7 @@ export default function NotificationsBellDropdown() {
         >
           <Bell className="h-[18px] w-[18px]" />
           {unreadCount > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 text-[10px] font-bold text-secondary-foreground">
+            <span className="absolute -end-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-secondary px-1 text-[10px] font-bold text-secondary-foreground">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
@@ -71,7 +73,7 @@ export default function NotificationsBellDropdown() {
 
         {/* TODO: point to the real notifications page route */}
         <Link
-          to="/dashboard/notifications"
+          to={localizedPath("/dashboard/notifications")}
           className="block border-t border-border px-4 py-2.5 text-center text-[12px] font-semibold text-primary hover:bg-background"
         >
           View all notifications

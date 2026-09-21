@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useLocalizedPath } from "@/utils/routes";
+import { useTranslation } from "react-i18next";
 
 /**
  * @typedef {Object} NotificationItem
@@ -20,6 +22,9 @@ export default function NotificationsCard({
   notifications = DEFAULT_NOTIFICATIONS,
   className,
 }) {
+  const localizedPath = useLocalizedPath();
+  const { t } = useTranslation("dashboard");
+
   return (
     <div
       className={cn(
@@ -28,17 +33,17 @@ export default function NotificationsCard({
       )}
     >
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-[16px] font-bold text-primary">Notifications</h2>
+        <h2 className="text-[16px] font-bold text-primary">{t("overview.notifications.title")}</h2>
         <Link
-          to="/notifications"
+          to={localizedPath("/dashboard/notifications")}
           className="text-[12px] font-semibold text-primary hover:underline"
         >
-          View Notifications
+          {t("overview.notifications.view")}
         </Link>
       </div>
 
       {notifications.length === 0 ? (
-        <p className="text-[12.5px] text-muted">No new notifications.</p>
+        <p className="text-[12.5px] text-muted">{t("overview.notifications.empty")}</p>
       ) : (
         <div className="space-y-2.5">
           {notifications.map((item) => (
