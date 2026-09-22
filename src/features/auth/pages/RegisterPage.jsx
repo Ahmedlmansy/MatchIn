@@ -1,10 +1,10 @@
 import AuthLayout from "@/components/layouts/AuthLayout";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { StepProgress } from "../components/RegisterPage/step-progress";
-import { RegisterStep } from "../components/RegisterPage/RegisterStep";
-import { CvUploadStep } from "../components/RegisterPage/CvUploadStep";
-import { ProfileCompletionStep } from "../components/RegisterPage/Profilecompletionstep";
+import { StepProgress } from "@/features/Auth/components/RegisterPage/step-progress";
+import { RegisterStep } from "@/features/Auth/components/RegisterPage/RegisterStep";
+import { CvUploadStep } from "@/features/Auth/components/RegisterPage/CvUploadStep";
+import { ProfileCompletionStep } from "@/features/Auth/components/RegisterPage/Profilecompletionstep";
 import { BriefcaseBusiness } from "lucide-react";
 import { useLocalizedPath } from "@/utils/routes";
 import { useTranslation } from "react-i18next";

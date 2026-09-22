@@ -11,7 +11,7 @@ import {
   PenLine,
 } from "lucide-react";
 
-import { profileSchema } from "@/features/auth/schema/profile-schema";
+import { profileSchema } from "@/features/Auth/schema/profile-schema";
 import {
   Form,
   FormControl,

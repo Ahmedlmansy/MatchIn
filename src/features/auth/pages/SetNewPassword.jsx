@@ -9,17 +9,17 @@ import {
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import AuthCard from "@/features/auth/shared/AuthCard";
+import AuthCard from "@/features/Auth/shared/AuthCard";
 import { Button } from "@/components/ui/button";
-import { newPasswordSchema } from "@/features/auth/schema/newPassword-schema";
-import PasswordResetForm from "../components/SetNewPasswordPage/PasswordResetForm";
-import AuthHeader from "@/features/auth/shared/AuthHeader";
-import ResetStateView from "../components/SetNewPasswordPage/ResetStateView";
-import SavingPassword from "../components/SetNewPasswordPage/SavingPassword";
-import SecurityNotice from "@/features/auth/shared/SecurityNotice";
+import PasswordResetForm from "@/features/Auth/components/SetNewPasswordPage/PasswordResetForm";
+import AuthHeader from "@/features/Auth/shared/AuthHeader";
+import ResetStateView from "@/features/Auth/components/SetNewPasswordPage/ResetStateView";
+import SavingPassword from "@/features/Auth/components/SetNewPasswordPage/SavingPassword";
+import SecurityNotice from "@/features/Auth/shared/SecurityNotice";
 import logo from "@/assets/logo/MatchIn_logo.svg";
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
+import { newPasswordSchema } from "../schema/newPassword-schema";
 
 export default function SetNewPassword() {
   const { t } = useTranslation("common");

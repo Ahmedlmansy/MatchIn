@@ -2,7 +2,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { otpSchema } from "@/features/auth/schema/auth-schema";
+import { otpSchema } from "@/features/Auth/schema/auth-schema";
 import {
   Form,
   FormControl,

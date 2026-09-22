@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
-import { loginSchema } from "@/features/auth/schema/login-schema";
 
 import {
   Form,
@@ -26,8 +25,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import google from "@/assets/icons/google-icon.svg";
 
 import LoginHeading from "./LoginHeading";
-import PasswordInput from "@/features/auth/shared/PasswordInput";
-import SequentialFormMessage from "@/features/auth/shared/SequentialFormMessage";
+import PasswordInput from "@/features/Auth/shared/PasswordInput";
+import SequentialFormMessage from "@/features/Auth/shared/SequentialFormMessage";
+import { loginSchema } from "../../schema/login-schema";
 
 const FIELD_ORDER = ["email", "password"];
 

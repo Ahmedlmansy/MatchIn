@@ -2,8 +2,8 @@ import React from "react";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import { BriefcaseBusiness } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import LoginFooter from "../components/LoginPage/LoginFooter";
-import LoginForm from "../components/LoginPage/LoginForm";
+import LoginFooter from "@/features/Auth/components/LoginPage/LoginFooter";
+import LoginForm from "@/features/Auth/components/LoginPage/LoginForm";
 
 export default function LoginPage() {
   const { t } = useTranslation("common");

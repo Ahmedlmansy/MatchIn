@@ -9,8 +9,8 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import PasswordInput from "@/features/auth/shared/PasswordInput";
-import SequentialFormMessage from "@/features/auth/shared/SequentialFormMessage";
+import PasswordInput from "@/features/Auth/shared/PasswordInput";
+import SequentialFormMessage from "@/features/Auth/shared/SequentialFormMessage";
 
 const FIELD_ORDER = ["password", "confirmPassword"];
 
