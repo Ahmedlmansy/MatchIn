@@ -1,15 +1,15 @@
 import { saveLastRoute } from "@/components/shared/i18n/languageStorage";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export default function RouteTracker() {
-  const location = useLocation();
+  const { lang } = useParams();
 
   useEffect(() => {
-    if (location.pathname === "/") return;
+    if (!lang) return;
 
-    saveLastRoute(location.pathname + location.search + location.hash);
-  }, [location]);
+    saveLastRoute(lang);
+  }, [lang]);
 
   return null;
 }
