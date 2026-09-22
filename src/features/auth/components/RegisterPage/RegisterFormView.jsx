@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { User, Mail } from "lucide-react";
 
-import { registerSchema } from "@/features/Auth/schema/auth-schema";
+import { registerSchema } from "@/features/auth/schema/auth-schema";
 import {
   Form,
   FormControl,
@@ -16,8 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import PasswordInput from "@/features/Auth/shared/PasswordInput";
-import SequentialFormMessage from "@/features/Auth/shared/SequentialFormMessage";
+import PasswordInput from "@/features/auth/shared/PasswordInput";
+import SequentialFormMessage from "@/features/auth/shared/SequentialFormMessage";
 import { useTranslation } from "react-i18next";
 
 const FIELD_ORDER = [

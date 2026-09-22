@@ -25,8 +25,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import google from "@/assets/icons/google-icon.svg";
 
 import LoginHeading from "./LoginHeading";
-import PasswordInput from "@/features/Auth/shared/PasswordInput";
-import SequentialFormMessage from "@/features/Auth/shared/SequentialFormMessage";
+import PasswordInput from "@/features/auth/shared/PasswordInput";
+import SequentialFormMessage from "@/features/auth/shared/SequentialFormMessage";
 import { loginSchema } from "../../schema/login-schema";
 
 const FIELD_ORDER = ["email", "password"];

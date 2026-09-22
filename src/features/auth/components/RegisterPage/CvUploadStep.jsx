@@ -3,7 +3,7 @@ import { Upload, FileText, Loader2, CheckCircle2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { cvFileSchema } from "@/features/Auth/schema/cv-schema";
+import { cvFileSchema } from "@/features/auth/schema/cv-schema";
 import { useState } from "react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";

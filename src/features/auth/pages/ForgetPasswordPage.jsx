@@ -7,8 +7,8 @@ import { Mail, ArrowRight, Loader2, RotateCcw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import logoIcon from "@/assets/logo/MatchIn_logo.svg";
-import AuthHeader from "@/features/Auth/shared/AuthHeader";
-import SecurityNotice from "@/features/Auth/shared/SecurityNotice";
+import AuthHeader from "@/features/auth/shared/AuthHeader";
+import SecurityNotice from "@/features/auth/shared/SecurityNotice";
 
 // 1. Zod Schema
 const emailSchema = z
