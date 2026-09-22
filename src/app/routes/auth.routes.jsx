@@ -1,7 +1,9 @@
-import ForgetPasswordPage from "@/features/Auth/ForgetPasswordPage/ForgetPasswordPage";
-import LoginPage from "@/features/Auth/LoginPage/LoginPage";
-import RegisterPage from "@/features/Auth/registerPage/RegisterPage";
-import SetNewPassword from "@/features/Auth/setNewPassword/pages/SetNewPassword";
+import {
+  ForgetPasswordPage,
+  LoginPage,
+  RegisterPage,
+  SetNewPassword,
+} from "@/features/auth";
 
 export const auth = [
   { path: "login", element: <LoginPage /> },
