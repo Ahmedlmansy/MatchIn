@@ -10,8 +10,15 @@ export default function ChipSelectStep({
   onPrevious,
   isFirstStep,
 }) {
-  const { field, title, subtitle, inputLabel, placeholder, suggestionsLabel, suggestions } =
-    stepConfig;
+  const {
+    field,
+    title,
+    subtitle,
+    inputLabel,
+    placeholder,
+    suggestionsLabel,
+    suggestions,
+  } = stepConfig;
   const [inputValue, setInputValue] = useState(value || "");
   const [error, setError] = useState("");
 
@@ -33,11 +40,14 @@ export default function ChipSelectStep({
 
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
-          <label htmlFor={field} className="mb-1.5 block text-[13px] font-semibold text-ink">
+          <label
+            htmlFor={field}
+            className="mb-1.5 block text-[13px] font-semibold text-ink"
+          >
             {inputLabel}
           </label>
           <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+            <Search className="absolute inset-s-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
             <input
               id={field}
               type="text"
@@ -47,12 +57,14 @@ export default function ChipSelectStep({
                 if (error) setError("");
               }}
               placeholder={placeholder}
-              className={`w-full rounded-xl border bg-surface py-3 pl-10 pr-3.5 text-[14px] text-ink outline-none transition-colors placeholder:text-muted focus:border-primary ${
+              className={`w-full rounded-xl border bg-surface py-3 ps-10 pe-3.5 text-[14px] text-ink outline-none transition-colors placeholder:text-muted focus:border-primary ${
                 error ? "border-error" : "border-border"
               }`}
             />
           </div>
-          {error && <p className="mt-1.5 text-[12px] font-medium text-error">{error}</p>}
+          {error && (
+            <p className="mt-1.5 text-[12px] font-medium text-error">{error}</p>
+          )}
         </div>
 
         <div className="mb-8">

@@ -11,8 +11,8 @@ export default function ApplicationDetailTimeline({
       </h2>
 
       {!isBannerState ? (
-        <div className="relative pl-1">
-          <div className="absolute left-3.75 top-2 bottom-2 w-px bg-border" />
+        <div className="relative ps-1">
+          <div className="absolute inset-s-3.75 top-2 bottom-2 w-px bg-border" />
 
           <div className="relative flex gap-4 pb-6">
             <div className="w-8 h-8 rounded-full bg-success text-white flex items-center justify-center shrink-0 z-10">
@@ -79,7 +79,7 @@ export default function ApplicationDetailTimeline({
           </div>
         </div>
       ) : (
-        <div className="relative pl-1">
+        <div className="relative ps-1">
           <div className="relative flex gap-4 pb-6">
             <div className="w-8 h-8 rounded-full bg-success text-white flex items-center justify-center shrink-0 z-10">
               <Check className="h-4 w-4" />

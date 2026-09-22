@@ -54,18 +54,22 @@ function PasswordField({
           <FormLabel className="font-bold text-slate-900">{label}</FormLabel>
           <FormControl>
             <div className="relative flex items-center">
-              <Lock className="pointer-events-none absolute left-3 h-3.5 w-3.5 text-slate-500" />
+              <Lock className="pointer-events-none absolute inset-s-3 h-3.5 w-3.5 text-slate-500" />
               <Input
                 type={visible ? "text" : "password"}
                 placeholder={placeholder}
-                className="h-auto rounded-lg border-slate-300 py-2.5 pl-9 pr-9 text-sm text-slate-900 focus-visible:ring-slate-900"
+                className="h-auto rounded-lg border-slate-300 py-2.5 ps-9 pe-9 text-sm text-slate-900 focus-visible:ring-slate-900"
                 {...field}
               />
               <button
                 type="button"
                 onClick={onToggle}
-                className="absolute right-3 text-slate-500 hover:text-slate-700"
-                aria-label={visible ? t("auth.reset.hidePassword") : t("auth.reset.showPassword")}
+                className="absolute inset-e-3 text-slate-500 hover:text-slate-700"
+                aria-label={
+                  visible
+                    ? t("auth.reset.hidePassword")
+                    : t("auth.reset.showPassword")
+                }
               >
                 {visible ? (
                   <EyeOff className="h-3.5 w-3.5" />

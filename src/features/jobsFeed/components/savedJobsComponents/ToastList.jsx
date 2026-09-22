@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 export default function ToastList({ toasts, onRemove }) {
   return (
-    <div className="fixed bottom-4 left-4 right-4 sm:bottom-6 sm:left-auto sm:right-6 z-50 flex flex-col gap-2 pointer-events-none">
+    <div className="fixed bottom-4 inset-s-4 inset-e-4 sm:bottom-6 sm:inset-s-auto sm:inset-e-6 z-50 flex flex-col gap-2 pointer-events-none">
       <AnimatePresence>
         {toasts.map((toast) => (
           <motion.div
@@ -23,7 +23,7 @@ export default function ToastList({ toasts, onRemove }) {
             </div>
             <Button
               onClick={() => onRemove(toast.id)}
-              className="text-primary-foreground/60 text-xs font-semibold pl-1"
+              className="text-primary-foreground/60 text-xs font-semibold ps-1"
             >
               <X className="w-3.5 h-3.5" />
             </Button>

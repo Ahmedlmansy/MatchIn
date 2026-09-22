@@ -3,7 +3,7 @@ import { Check, Flag, GraduationCap, Plus, Sparkles } from "lucide-react";
 export default function ApplicationDetailInsight() {
   return (
     <div className="bg-white border border-primary/15 rounded-3xl p-6 mb-5 shadow-sm relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-40 h-40 bg-primary/5 rounded-full -mr-16 -mt-16 pointer-events-none" />
+      <div className="absolute top-0 inset-e-0 w-40 h-40 bg-primary/5 rounded-full -me-16 -mt-16 pointer-events-none" />
       <div className="relative">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center shrink-0">

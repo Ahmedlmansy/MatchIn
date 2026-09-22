@@ -12,7 +12,7 @@ export default function TabSaveActions({
   cancelLabel = "Cancel",
   isLoading = false,
   loadingLabel = "Saving...",
-  variant = "primary", 
+  variant = "primary",
 }) {
   if (!isOpen) return null;
 
@@ -24,22 +24,19 @@ export default function TabSaveActions({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px] p-4">
       <div className="w-full max-w-lg bg-white rounded-[28px] p-6 md:p-8 shadow-2xl relative transition-all animate-in fade-in zoom-in-95 duration-200">
-        
-    
         {title && (
           <button
             onClick={onClose}
             type="button"
-            className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors p-1 cursor-pointer"
+            className="absolute top-6 inset-e-6 text-gray-400 hover:text-gray-600 transition-colors p-1 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         )}
 
-
         {title && (
           <div className="pb-4 border-b border-gray-100 mb-6">
-            <h2 className="text-xl font-bold text-[#1E325C] pr-8 tracking-tight">
+            <h2 className="text-xl font-bold text-[#1E325C] pe-8 tracking-tight">
               {title}
             </h2>
           </div>
@@ -63,7 +60,6 @@ export default function TabSaveActions({
             description ? "justify-center" : "justify-end"
           }`}
         >
-
           <button
             type="button"
             onClick={onClose}
@@ -89,7 +85,6 @@ export default function TabSaveActions({
             )}
           </button>
         </div>
-
       </div>
     </div>
   );

@@ -1,7 +1,15 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, CheckCircle2, Plus, Briefcase, MapPin, Clock, PenLine } from "lucide-react";
+import {
+  Loader2,
+  CheckCircle2,
+  Plus,
+  Briefcase,
+  MapPin,
+  Clock,
+  PenLine,
+} from "lucide-react";
 
 import { profileSchema } from "@/features/Auth/schema/profile-schema";
 import {
@@ -50,7 +58,7 @@ const MOCK_ANALYSIS = {
 function AutofillTag({ show }) {
   if (!show) return null;
   return (
-    <span className="ml-1.5 inline-flex items-center gap-0.5 rounded-md bg-success/10 px-1.5 py-px text-[10px] font-bold text-success">
+    <span className="ms-1.5 inline-flex items-center gap-0.5 rounded-md bg-success/10 px-1.5 py-px text-[10px] font-bold text-success">
       ✓ Auto-filled
     </span>
   );
@@ -98,7 +106,9 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
         {t("auth.register.step", { current: 4 })}
       </div>
       <h1 className="mb-1 font-[DM_Sans] text-[23px] font-bold leading-7 tracking-tight text-ink">
-        {analyzing ? t("auth.register.profileReading") : t("auth.register.profileTitle")}
+        {analyzing
+          ? t("auth.register.profileReading")
+          : t("auth.register.profileTitle")}
       </h1>
       <p className="mb-5 text-[13.5px] text-muted">
         {analyzing
@@ -106,9 +116,7 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
           : t("auth.register.profileDescription")}
       </p>
 
-      <div
-        className={cnStatus(analyzing)}
-      >
+      <div className={cnStatus(analyzing)}>
         {analyzing ? (
           <Loader2 className="h-5 w-5 shrink-0 animate-spin text-primary" />
         ) : (
@@ -125,7 +133,9 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
               : t("auth.register.cvAnalyzed")}
           </p>
           <p className="text-xs text-muted">
-            {analyzing ? t("auth.register.extracting") : t("auth.register.extracted")}
+            {analyzing
+              ? t("auth.register.extracting")
+              : t("auth.register.extracted")}
           </p>
         </div>
       </div>
@@ -192,10 +202,10 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Briefcase className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+                        <Briefcase className="pointer-events-none absolute inset-s-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                         <Input
                           placeholder={t("auth.register.jobTitlePlaceholder")}
-                          className="h-11 rounded-xl border-border pl-9"
+                          className="h-11 rounded-xl border-border ps-9"
                           {...field}
                           onChange={(e) => {
                             clearAutofill("jobTitle");
@@ -221,10 +231,10 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+                          <MapPin className="pointer-events-none absolute inset-s-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                           <Input
                             placeholder={t("auth.register.locationPlaceholder")}
-                            className="h-11 rounded-xl border-border pl-9"
+                            className="h-11 rounded-xl border-border ps-9"
                             {...field}
                             onChange={(e) => {
                               clearAutofill("location");
@@ -249,7 +259,7 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Clock className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted" />
+                          <Clock className="pointer-events-none absolute inset-s-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-muted" />
                           <Select
                             value={field.value}
                             onValueChange={(value) => {
@@ -257,8 +267,10 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                               field.onChange(value);
                             }}
                           >
-                            <SelectTrigger className="h-11 rounded-xl border-border pl-9">
-                              <SelectValue placeholder={t("auth.register.select")} />
+                            <SelectTrigger className="h-11 rounded-xl border-border ps-9">
+                              <SelectValue
+                                placeholder={t("auth.register.select")}
+                              />
                             </SelectTrigger>
                             <SelectContent>
                               {EXPERIENCE_OPTIONS.map((opt) => (
@@ -290,10 +302,10 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <PenLine className="pointer-events-none absolute left-3 top-3.5 h-4 w-4 text-muted" />
+                        <PenLine className="pointer-events-none absolute inset-s-3 top-3.5 h-4 w-4 text-muted" />
                         <Textarea
                           placeholder={t("auth.register.bioPlaceholder")}
-                          className="min-h-[54px] rounded-xl border-border pl-9"
+                          className="min-h-[54px] rounded-xl border-border ps-9"
                           {...field}
                           onChange={(e) => {
                             clearAutofill("bio");
@@ -334,8 +346,6 @@ export function ProfileCompletionStep({ cvFileName, onBack, onFinish }) {
 function cnStatus(analyzing) {
   return [
     "mb-4 flex items-center gap-3.5 rounded-xl border p-3.5",
-    analyzing
-      ? "border-border bg-surface"
-      : "border-success/35 bg-success/10",
+    analyzing ? "border-border bg-surface" : "border-success/35 bg-success/10",
   ].join(" ");
 }

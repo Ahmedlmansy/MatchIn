@@ -42,7 +42,7 @@ export default function WhyMatchInVisual() {
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
         whileHover={{ y: -4 }}
-        className="absolute -bottom-6 -left-4 flex max-w-sm items-center gap-3 rounded-2xl border border-border bg-surface/95 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.08)] backdrop-blur-md sm:left-6"
+        className="absolute -bottom-6 -inset-s-4 flex max-w-sm items-center gap-3 rounded-2xl border border-border bg-surface/95 p-4 shadow-[0_10px_24px_rgba(0,0,0,0.08)] backdrop-blur-md sm:inset-s-6"
       >
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-success/15 text-success">
           <ShieldCheck className="h-[19px] w-[19px]" />

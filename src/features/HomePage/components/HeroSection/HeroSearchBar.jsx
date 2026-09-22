@@ -81,7 +81,7 @@ export default function HeroSearchBar({
           <Popover open={showDropdown} onOpenChange={setShowDropdown}>
             <PopoverAnchor asChild>
               <div className="group relative flex flex-1 items-center px-4 py-2.5">
-                <Search className="mr-2.5 h-5 w-5 shrink-0 text-primary-foreground/60 transition-colors group-focus-within:text-accent" />
+                <Search className="me-2.5 h-5 w-5 shrink-0 text-primary-foreground/60 transition-colors group-focus-within:text-accent" />
                 <Input
                   ref={inputRef}
                   autoComplete="off"
@@ -160,7 +160,7 @@ export default function HeroSearchBar({
 
           {/* Location */}
           <div className="group flex flex-1 items-center border-t border-primary-foreground/15 px-4 py-2.5 md:border-t-0">
-            <MapPin className="mr-2 h-[21px] w-[21px] shrink-0 text-primary-foreground/60 transition-colors group-focus-within:text-accent" />
+            <MapPin className="me-2 h-[21px] w-[21px] shrink-0 text-primary-foreground/60 transition-colors group-focus-within:text-accent" />
             <Input
               value={location}
               onChange={(e) => onLocationChange(e.target.value)}

@@ -21,7 +21,7 @@ export default function HeroHeadline() {
             {t("home.hero.headlineHighlight")}
           </motion.span>
           <svg
-            className="absolute -bottom-2.5 left-0 w-full overflow-visible"
+            className="absolute -bottom-2.5 inset-s-0 w-full overflow-visible"
             viewBox="0 0 260 14"
             fill="none"
           >

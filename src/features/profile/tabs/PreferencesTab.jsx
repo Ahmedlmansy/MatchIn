@@ -11,10 +11,8 @@ export default function CareerPreferencesTab() {
     preferredWorkEnv: "Remote",
   });
 
- 
   const [formData, setFormData] = useState({ ...preferences });
 
- 
   const handleOpenEdit = () => {
     setFormData({ ...preferences });
     setIsEditing(true);
@@ -24,7 +22,6 @@ export default function CareerPreferencesTab() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
 
   const handleSaveData = () => {
     setIsSaving(true);
@@ -37,7 +34,6 @@ export default function CareerPreferencesTab() {
 
   return (
     <div className="space-y-6">
-    
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-bold text-slate-900 tracking-tight">
           Career Preferences (Target Role)
@@ -63,7 +59,6 @@ export default function CareerPreferencesTab() {
           </p>
         </div>
 
-      
         <div className="bg-[#FAF8F5]/80 border border-gray-100/60 p-4 rounded-2xl space-y-1">
           <span className="text-xs font-medium text-slate-400 block">
             Preferred Work Environment
@@ -74,7 +69,6 @@ export default function CareerPreferencesTab() {
         </div>
       </div>
 
-      
       <TabSaveActions
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
@@ -85,7 +79,6 @@ export default function CareerPreferencesTab() {
         onConfirm={handleSaveData}
       >
         <div className="space-y-4">
-       
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
               Target Job Title *
@@ -109,13 +102,13 @@ export default function CareerPreferencesTab() {
                 name="preferredWorkEnv"
                 value={formData.preferredWorkEnv}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-[#FAF8F5] border border-gray-200/80 rounded-2xl text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#1E325C]/20 transition-all appearance-none cursor-pointer pr-10"
+                className="w-full px-4 py-3 bg-[#FAF8F5] border border-gray-200/80 rounded-2xl text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#1E325C]/20 transition-all appearance-none cursor-pointer pe-10"
               >
                 <option value="Remote">Remote</option>
                 <option value="Hybrid">Hybrid</option>
                 <option value="On-site">On-site</option>
               </select>
-              <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
+              <div className="absolute inset-y-0 inset-e-0 flex items-center px-4 pointer-events-none text-gray-500">
                 <svg
                   className="w-4 h-4"
                   fill="none"

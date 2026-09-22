@@ -17,7 +17,7 @@ const triggerClass = [
   "text-slate-500 transition-all duration-200 hover:text-slate-800",
   "data-[state=active]:bg-transparent data-[state=active]:shadow-none",
   "data-[state=active]:text-[#1E3A8A]",
-  "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-t-full",
+  "after:absolute after:bottom-0 after:inset-s-0 after:inset-e-0 after:h-0.5 after:rounded-t-full",
   "after:bg-[#1E3A8A] after:opacity-0 data-[state=active]:after:opacity-100",
   "focus-visible:outline-none focus-visible:ring-0",
 ].join(" ");
@@ -32,13 +32,17 @@ export default function ProfileTabsNav() {
 
   return (
     <div className="w-full border-b  border-gray-100 bg-white px-6 pt-2">
-      <Tabs value={active}  onValueChange={(value) => navigate(value)}>
+      <Tabs value={active} onValueChange={(value) => navigate(value)}>
         <TabsList
           aria-label="Tabs"
           className="h-auto  w-full justify-start gap-8  bg-transparent rounded-none overflow-x-auto scrollbar-none"
         >
           {tabs.map((tab) => (
-            <TabsTrigger  key={tab.path} value={tab.path} className={triggerClass }>
+            <TabsTrigger
+              key={tab.path}
+              value={tab.path}
+              className={triggerClass}
+            >
               {tab.label}
             </TabsTrigger>
           ))}

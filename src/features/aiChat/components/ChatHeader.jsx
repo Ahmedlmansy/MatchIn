@@ -29,7 +29,7 @@ export default function ChatHeader() {
       </div>
 
       {/* Online indicator */}
-      <div className="ml-auto flex items-center gap-1.5">
+      <div className="ms-auto flex items-center gap-1.5">
         <span className="relative flex size-2">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
           <span className="relative inline-flex size-2 rounded-full bg-success" />
