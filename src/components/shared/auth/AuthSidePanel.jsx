@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import fullLogo from "@/assets/logo/Full_logo_light.svg";
+
 export default function AuthSidePanel({
   imageSrc,
   imageAlt = "",
@@ -31,7 +32,7 @@ export default function AuthSidePanel({
       <div className="relative z-1 flex h-full max-w-120 flex-col justify-between px-12 pb-14 pt-10 text-white">
         {/* logo - stays fixed in place, no animation */}
         <div className="logo">
-          <img src={fullLogo} />
+          <img src={fullLogo} alt="MatchIn" />
         </div>
 
         {/* text content - slides in from left to right on page load */}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Plus, ExternalLink } from "lucide-react";
-import ItemCard from "@/components/ui/ItemCard";
+import ItemCard from "@/features/profile/components/shared/ItemCard";
 import TabSaveActions from "@/features/profile/components/TabSaveActions";
 
 const DEFAULT_PROJECTS = [

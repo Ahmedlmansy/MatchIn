@@ -10,7 +10,7 @@ const LANGUAGES = [
  * Controlled if `language`/`onChange` are passed (wire this to your i18n
  * setup), otherwise manages its own state so it still works standalone.
  */
-export default function LanguageSwitcher({ language, onChange }) {
+export default function LanguageToggle({ language, onChange, className = "" }) {
   const [internalLang, setInternalLang] = useState("en");
   const active = language ?? internalLang;
 
@@ -20,7 +20,9 @@ export default function LanguageSwitcher({ language, onChange }) {
   };
 
   return (
-    <div className="flex items-center gap-0.5 rounded-full border border-border bg-background p-0.5">
+    <div
+      className={`flex items-center gap-0.5 rounded-full border border-border bg-background p-0.5 ${className}`}
+    >
       {LANGUAGES.map((lang) => (
         <button
           key={lang.code}
@@ -28,7 +30,9 @@ export default function LanguageSwitcher({ language, onChange }) {
           onClick={() => handleSelect(lang.code)}
           aria-pressed={active === lang.code}
           className={`relative rounded-full px-2.5 py-1 text-[12px] font-semibold transition-colors ${
-            active === lang.code ? "text-primary-foreground" : "text-muted hover:text-primary"
+            active === lang.code
+              ? "text-primary-foreground"
+              : "text-muted hover:text-primary"
           }`}
         >
           {active === lang.code && (

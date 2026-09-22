@@ -16,7 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { PasswordInput } from "./Passwordinput";
+import PasswordInput from "@/features/Auth/components/shared/PasswordInput";
+import SequentialFormMessage from "@/features/Auth/components/shared/SequentialFormMessage";
 import { useTranslation } from "react-i18next";
 
 const FIELD_ORDER = [
@@ -47,22 +48,13 @@ export function RegisterFormView({ onSubmit }) {
   const { errors } = form.formState;
   const firstErrorField = FIELD_ORDER.find((name) => errors[name]);
 
-  function SequentialFormMessage({ name }) {
-    const isActive = firstErrorField === name;
+  function FormError({ name }) {
     return (
-      <AnimatePresence mode="wait">
-        {isActive && errors[name] && (
-          <motion.div
-            key={name}
-            initial={{ opacity: 0, y: -4, height: 0 }}
-            animate={{ opacity: 1, y: 0, height: "auto" }}
-            exit={{ opacity: 0, y: -4, height: 0 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
-          >
-            <FormMessage className="text-[11px] text-error" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <SequentialFormMessage
+        name={name}
+        errors={errors}
+        firstErrorField={firstErrorField}
+      />
     );
   }
 
@@ -101,7 +93,7 @@ export function RegisterFormView({ onSubmit }) {
                     />
                   </div>
                 </FormControl>
-                <SequentialFormMessage name="fullName" />
+                <FormError name="fullName" />
               </FormItem>
             )}
           />
@@ -125,7 +117,7 @@ export function RegisterFormView({ onSubmit }) {
                     />
                   </div>
                 </FormControl>
-                <SequentialFormMessage name="email" />
+                <FormError name="email" />
               </FormItem>
             )}
           />
@@ -140,11 +132,12 @@ export function RegisterFormView({ onSubmit }) {
                 </FormLabel>
                 <FormControl>
                   <PasswordInput
+                    showLock
                     placeholder={t("auth.register.passwordPlaceholder")}
                     {...field}
                   />
                 </FormControl>
-                <SequentialFormMessage name="password" />
+                <FormError name="password" />
               </FormItem>
             )}
           />
@@ -159,11 +152,12 @@ export function RegisterFormView({ onSubmit }) {
                 </FormLabel>
                 <FormControl>
                   <PasswordInput
+                    showLock
                     placeholder={t("auth.register.confirmPasswordPlaceholder")}
                     {...field}
                   />
                 </FormControl>
-                <SequentialFormMessage name="confirmPassword" />
+                <FormError name="confirmPassword" />
               </FormItem>
             )}
           />
@@ -199,7 +193,7 @@ export function RegisterFormView({ onSubmit }) {
                     .
                   </label>
                 </div>
-                <SequentialFormMessage name="terms" />
+                <FormError name="terms" />
               </FormItem>
             )}
           />

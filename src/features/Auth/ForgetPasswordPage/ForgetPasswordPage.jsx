@@ -3,22 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { z } from "zod";
-
-import {
-  ArrowLeft,
-  Mail,
-  ShieldCheck,
-  ArrowRight,
-  Loader2,
-  RotateCcw,
-} from "lucide-react";
-
-import { Link } from "react-router-dom";
-import { useLocalizedPath } from "@/utils/routes";
-import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import { Mail, ArrowRight, Loader2, RotateCcw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import logoIcon from "@/assets/logo/MatchIn_logo.svg";
+import AuthHeader from "@/features/Auth/components/shared/AuthHeader";
+import SecurityNotice from "@/features/Auth/components/shared/SecurityNotice";
 
 // 1. Zod Schema
 const emailSchema = z
@@ -28,7 +18,6 @@ const emailSchema = z
   .email({ message: "Please enter a valid email address." });
 
 export default function ForgetPasswordPage() {
-  const localizedPath = useLocalizedPath();
   const { t } = useTranslation("common");
 
   const [email, setEmail] = useState("");
@@ -68,17 +57,7 @@ export default function ForgetPasswordPage() {
 
   return (
     <div className="min-h-screen overflow-hidden bg-[#FDFBF9] text-[#1F365C] flex flex-col justify-between p-4 md:p-6 font-sans">
-      <header className="flex items-center justify-between px-6 py-4 sm:px-8">
-        <Link
-          to={localizedPath("/auth/login")}
-          className="flex items-center gap-2 text-sm font-semibold text-slate-900"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          {t("auth.forgot.back")}
-        </Link>
-
-        <LanguageSwitcher />
-      </header>
+      <AuthHeader bordered={false} backLabel={t("auth.forgot.back")} />
 
       <main className="max-w-md w-full mx-auto my-auto py-2">
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 flex flex-col items-center text-center">
@@ -134,7 +113,6 @@ export default function ForgetPasswordPage() {
                 />
               </div>
 
-              {/* 3. الشرط هنا: لو في خطأ بيظهر النص الأحمر فقط، غير كده ما بيظهرش نص الـ 15 دقيقة */}
               {emailError ? (
                 <p className="text-[11px] text-red-500 mt-1 font-medium">
                   {emailError}
@@ -145,7 +123,7 @@ export default function ForgetPasswordPage() {
             <Button
               type="submit"
               disabled={status}
-              className="w-full h-11 bg-[#1F365C] hover:bg-[#162744] text-white font-medium flex items-center justify-center gap-2 rounded-lg"
+              className="w-full h-11 bg-[#1F365C] hover:bg-[#162744] text-white font-medium flex items-center justify-center gap-2 rounded-lg cursor-pointer"
             >
               {status ? (
                 <>
@@ -164,15 +142,7 @@ export default function ForgetPasswordPage() {
             </Button>
           </form>
 
-          <div className="w-full bg-gray-50 border border-gray-100 rounded-xl p-3 mt-6 flex items-start gap-3 text-left">
-            <div className="p-1 bg-white border border-gray-200 rounded-md text-[#1F365C] mt-0.5">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-
-            <p className="text-xs text-gray-500 leading-normal">
-              {t("auth.forgot.security")}
-            </p>
-          </div>
+          <SecurityNotice text={t("auth.forgot.security")} className="w-full" />
 
           {message && (
             <div
