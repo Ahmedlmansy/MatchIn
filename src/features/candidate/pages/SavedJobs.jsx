@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import {
-  EmptySavedJobs,
-  JobCard,
-  JobCardSkeleton,
-  SavedJobsHeader,
-  SavedJobsSidebar,
-  SavedJobsToolbar,
-  ToastList,
-} from "../components/SavedJobs";
+import { EmptySavedJobs } from "../components/SavedJobs/SavedJobsStates";
+import JobCard, { JobCardSkeleton } from "../components/SavedJobs/JobCard";
+import SavedJobsHeader from "../components/SavedJobs/SavedJobsHeader";
+import SavedJobsSidebar from "../components/SavedJobs/SavedJobsSidebar";
+import SavedJobsToolbar from "../components/SavedJobs/SavedJobsToolbar";
+import ToastList from "../components/SavedJobs/ToastList";
 
 const INITIAL_JOBS = [
   {

@@ -1,19 +1,17 @@
 import { LayoutDashboard, Compass, Bell, FileText, Bot, Bookmark,PersonStanding ,ClipboardList} from "lucide-react";
-import {
-  AiChatPage,
-  ApplicationDetail,
-  ApplicationPage,
-  CvManagementPage,
-  JobsDetails,
-  JobsPage,
-  NotificationsPage,
-  OnboardingPage,
-  Overview,
-  ProfilePage,
-  RoadmapDetailsPage,
-  RoadmapPage,
-  SavedJobs,
-} from "@/features/candidate/index.js";
+import AiChatPage from "@/features/candidate/pages/AiChatPage";
+import ApplicationDetail from "@/features/candidate/pages/ApplicationDetail";
+import ApplicationPage from "@/features/candidate/pages/ApplicationPage";
+import CvManagementPage from "@/features/candidate/pages/CvManagementPage";
+import JobsDetails from "@/features/candidate/pages/JobsDetails";
+import JobsPage from "@/features/candidate/pages/JobsPage";
+import NotificationsPage from "@/features/candidate/pages/NotificationsPage";
+import OnboardingPage from "@/features/candidate/pages/OnboardingPage";
+import Overview from "@/features/candidate/pages/Overview";
+import ProfilePage from "@/features/candidate/pages/ProfilePage";
+import RoadmapDetailsPage from "@/features/candidate/pages/RoadmapDetailsPage";
+import RoadmapPage from "@/features/candidate/pages/RoadmapPage";
+import SavedJobs from "@/features/candidate/pages/SavedJobs";
 
 
 export const dashboard = [

@@ -1,6 +1,7 @@
 import MainLayout from "@/components/layouts/MainLayout";
 import DashboardLayout from "@/components/layouts/DashboardLayout/DashboardLayout";
-import { HomePage, NotFoundPage } from "@/features/public/index.js";
+import HomePage from "@/features/public/pages/HomePage";
+import NotFoundPage from "@/features/public/pages/NotFoundPage";
 
 import { createBrowserRouter } from "react-router-dom";
 import { auth } from "./routes/auth.routes";
