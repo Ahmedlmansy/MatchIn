@@ -91,7 +91,7 @@ export default function ApplicationCard({
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: -5 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute right-0 top-9 z-20 bg-white border border-border rounded-xl shadow-lg py-1.5 w-44"
+                  className="absolute inset-e-0 top-9 z-20 bg-white border border-border rounded-xl shadow-lg py-1.5 w-44"
                   onClick={(event) => event.stopPropagation()}
                 >
                   <Button

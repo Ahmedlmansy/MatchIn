@@ -8,7 +8,7 @@ export default function SavedJobsToolbar({ jobsCount }) {
       <div className="flex w-full sm:w-auto items-center gap-2 overflow-x-auto pb-1 md:pb-0">
         <Button className="bg-secondary text-secondary-foreground text-xs font-semibold px-3.5 py-2 rounded-lg">
           <span>All Saved</span>
-          <span className="ml-1.5 bg-surface/20 text-[10px] px-1.5 py-0.5 rounded-full">
+          <span className="ms-1.5 bg-surface/20 text-[10px] px-1.5 py-0.5 rounded-full">
             {jobsCount}
           </span>
         </Button>

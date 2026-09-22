@@ -117,7 +117,7 @@ export default function ApplicationDetailHero({
           <button
             type="button"
             onClick={handleWithdraw}
-            className="h-9 px-4 rounded-full border border-[#B3271E]/30 text-[#B3271E] text-[12.5px] font-semibold flex items-center gap-1.5 hover:bg-[#B3271E]/5 transition-colors sm:ml-auto"
+            className="h-9 px-4 rounded-full border border-[#B3271E]/30 text-[#B3271E] text-[12.5px] font-semibold flex items-center gap-1.5 hover:bg-[#B3271E]/5 transition-colors sm:ms-auto"
           >
             <XCircle className="h-4 w-4" />
             Withdraw

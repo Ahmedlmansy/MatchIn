@@ -143,7 +143,7 @@ export default function JobDetailsPage() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed bottom-6 right-6 z-50 rounded-xl border border-border bg-primary px-4 py-3 text-primary-foreground shadow-lg"
+            className="fixed bottom-6 inset-e-6 z-50 rounded-xl border border-border bg-primary px-4 py-3 text-primary-foreground shadow-lg"
           >
             <p className="text-xs font-medium">{toast}</p>
           </motion.div>

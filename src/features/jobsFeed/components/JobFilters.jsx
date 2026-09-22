@@ -10,18 +10,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-
 export default function JobFilters({ open, onToggle }) {
   return (
     <div className="space-y-3 rounded-2xl border border-border bg-white p-4 shadow-sm">
       <div className="mb-0 flex flex-col gap-3 md:flex-row">
         <div className="relative flex flex-1 items-center">
-          <Search className="absolute left-3 z-10 h-5 w-5 text-muted" />
+          <Search className="absolute inset-s-3 z-10 h-5 w-5 text-muted" />
           <Input
             type="search"
             aria-label="Search jobs"
             placeholder="Search by job title, skill, or company..."
-            className="h-11 rounded-xl border-border bg-background pl-10 pr-3 text-sm focus-visible:border-primary focus-visible:ring-primary/10"
+            className="h-11 rounded-xl border-border bg-background ps-10 pe-3 text-sm focus-visible:border-primary focus-visible:ring-primary/10"
           />
         </div>
         <Button

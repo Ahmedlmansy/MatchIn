@@ -1,7 +1,13 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useLocalizedPath } from "@/utils/routes";
-import { Rocket, Upload, Compass, ArrowRight, CheckCircle2 } from "lucide-react";
+import {
+  Rocket,
+  Upload,
+  Compass,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
@@ -27,8 +33,8 @@ export default function FinalCTASection() {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="relative flex w-full flex-col items-center overflow-hidden rounded-[24px] border border-border bg-surface p-8 text-center shadow-[0_12px_32px_rgba(27,28,26,0.06)] sm:p-12 lg:p-16"
       >
-        <div className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full bg-secondary/30 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
+        <div className="pointer-events-none absolute -inset-e-20 -top-20 h-80 w-80 rounded-full bg-secondary/30 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -inset-s-20 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
 
         <div className="relative z-10 flex max-w-3xl flex-col items-center">
           <Badge

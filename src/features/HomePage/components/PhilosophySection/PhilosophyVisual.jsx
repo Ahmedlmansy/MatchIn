@@ -10,7 +10,7 @@ export default function PhilosophyVisual() {
     // at -bottom-4 (i.e. partly outside the image frame). Without this the
     // card overlaps whatever comes after this section.
     <div className="relative pb-28 lg:col-span-6">
-      <div className="pointer-events-none absolute -left-10 -top-10 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
+      <div className="pointer-events-none absolute -inset-s-10 -top-10 h-72 w-72 rounded-full bg-accent/10 blur-3xl" />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
@@ -35,7 +35,7 @@ export default function PhilosophyVisual() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="absolute -top-3 right-3 flex items-center gap-2 rounded-full border border-border bg-surface/95 px-3.5 py-1.5 shadow-md backdrop-blur-md sm:right-6"
+        className="absolute -top-3 inset-e-3 flex items-center gap-2 rounded-full border border-border bg-surface/95 px-3.5 py-1.5 shadow-md backdrop-blur-md sm:inset-e-6"
       >
         <span className="relative flex h-2 w-2">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-75" />
@@ -53,7 +53,7 @@ export default function PhilosophyVisual() {
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
         whileHover={{ y: -4 }}
-        className="absolute -bottom-4 left-2 right-2 flex max-w-sm flex-col gap-2.5 rounded-2xl border border-border bg-surface/95 p-4 shadow-[0_12px_32px_rgba(27,28,26,0.12)] backdrop-blur-xl sm:left-6 sm:right-auto"
+        className="absolute -bottom-4 inset-s-2 inset-e-2 flex max-w-sm flex-col gap-2.5 rounded-2xl border border-border bg-surface/95 p-4 shadow-[0_12px_32px_rgba(27,28,26,0.12)] backdrop-blur-xl sm:inset-s-6 sm:inset-e-auto"
       >
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">

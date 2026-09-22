@@ -19,7 +19,7 @@ export default function UserBubble({ children, isSending = false }) {
         <motion.span
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="ml-2 inline-flex flex-shrink-0"
+          className="ms-2 inline-flex flex-shrink-0"
         >
           <Loader2 className="size-3.5 animate-spin text-primary-foreground/60" />
         </motion.span>

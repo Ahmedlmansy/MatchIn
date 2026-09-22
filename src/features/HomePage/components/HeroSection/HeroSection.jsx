@@ -46,16 +46,16 @@ export default function HeroSection() {
 
       {/* Ambient glowing orbs */}
       <motion.div
-        className="pointer-events-none absolute -left-20 -top-32 h-[520px] w-[520px] rounded-full bg-accent/20 blur-[120px]"
+        className="pointer-events-none absolute -inset-s-20 -top-32 h-[520px] w-[520px] rounded-full bg-accent/20 blur-[120px]"
         animate={{ opacity: [0.6, 1, 0.6], scale: [1, 1.08, 1] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="pointer-events-none absolute -right-28 top-1/4 h-[500px] w-[500px] rounded-full bg-secondary/20 blur-[130px]"
+        className="pointer-events-none absolute -inset-e-28 top-1/4 h-[500px] w-[500px] rounded-full bg-secondary/20 blur-[130px]"
         animate={{ x: [0, 24, 0], y: [0, -16, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
-      <div className="pointer-events-none absolute -bottom-24 left-1/3 h-[300px] w-[640px] rounded-full bg-surface/10 blur-[100px]" />
+      <div className="pointer-events-none absolute -bottom-24 inset-s-1/3 h-[300px] w-[640px] rounded-full bg-surface/10 blur-[100px]" />
 
       {/* Subtle grid overlay */}
       <div

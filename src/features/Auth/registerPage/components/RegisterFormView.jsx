@@ -93,10 +93,10 @@ export function RegisterFormView({ onSubmit }) {
                 </FormLabel>
                 <FormControl>
                   <div className="relative">
-                    <User className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+                    <User className="pointer-events-none absolute inset-s-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                     <Input
                       placeholder={t("auth.register.fullNamePlaceholder")}
-                      className="h-11 rounded-xl border-border pl-9"
+                      className="h-11 rounded-xl border-border ps-9"
                       {...field}
                     />
                   </div>
@@ -116,11 +116,11 @@ export function RegisterFormView({ onSubmit }) {
                 </FormLabel>
                 <FormControl>
                   <div className="relative">
-                    <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+                    <Mail className="pointer-events-none absolute inset-s-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                     <Input
                       type="email"
                       placeholder={t("auth.register.emailPlaceholder")}
-                      className="h-11 rounded-xl border-border pl-9"
+                      className="h-11 rounded-xl border-border ps-9"
                       {...field}
                     />
                   </div>

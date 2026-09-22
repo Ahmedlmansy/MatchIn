@@ -262,7 +262,7 @@ function MatchCard({
 
   return (
     <section className="bg-surface border border-border rounded-2xl p-6 shadow-sm relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-1.5 bg-secondary" />
+      <div className="absolute top-0 inset-s-0 inset-e-0 h-1.5 bg-secondary" />
       <div className="flex items-center justify-between mb-3 pt-1">
         <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary uppercase tracking-wider">
           <span className="w-2 h-2 rounded-full bg-secondary" />

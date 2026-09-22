@@ -44,7 +44,7 @@ export default function ApplicationFilters({
         </div>
 
         <Select value={sortBy} onValueChange={onSortChange}>
-          <SelectTrigger className="h-11 pl-4 pr-10 border-border rounded-full bg-white text-[13px] font-medium shadow-sm cursor-pointer w-full sm:w-auto">
+          <SelectTrigger className="h-11 ps-4 pe-10 border-border rounded-full bg-white text-[13px] font-medium shadow-sm cursor-pointer w-full sm:w-auto">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

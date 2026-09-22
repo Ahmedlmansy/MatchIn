@@ -134,7 +134,7 @@ export default function JobCard({
               <strong className="text-primary block mb-1">
                 Key Responsibilities
               </strong>
-              <ul className="text-muted list-disc pl-4">
+              <ul className="text-muted list-disc ps-4">
                 {job.responsibilities.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
@@ -195,7 +195,7 @@ export default function JobCard({
       ) : job.note ? (
         <div className="bg-background border border-border rounded-xl p-3 mb-4 text-xs flex items-center justify-between gap-2">
           <span className="min-w-0 flex-1 truncate">
-            <Edit3 className="w-3.5 h-3.5 inline mr-2" />
+            <Edit3 className="w-3.5 h-3.5 inline me-2" />
             <strong>Candidate Note:</strong> {job.note}
           </span>
           <Button

@@ -3,7 +3,12 @@ import { Search, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { JOB_TITLE_SUGGESTIONS } from "@/constants/jobTitleSuggestions";
 
-export default function JobTitleStep({ value, onContinue, onPrevious, isFirstStep }) {
+export default function JobTitleStep({
+  value,
+  onContinue,
+  onPrevious,
+  isFirstStep,
+}) {
   const [jobTitle, setJobTitle] = useState(value || "");
   const [error, setError] = useState("");
 
@@ -23,16 +28,20 @@ export default function JobTitleStep({ value, onContinue, onPrevious, isFirstSte
         What job title are you looking for?
       </h2>
       <p className="mb-6 text-[13px] text-muted">
-        We&apos;ll customize AI algorithms to suggest jobs most relevant to your career path.
+        We&apos;ll customize AI algorithms to suggest jobs most relevant to your
+        career path.
       </p>
 
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
-          <label htmlFor="jobTitle" className="mb-1.5 block text-[13px] font-semibold text-ink">
+          <label
+            htmlFor="jobTitle"
+            className="mb-1.5 block text-[13px] font-semibold text-ink"
+          >
             Target Job Title
           </label>
           <div className="relative">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+            <Search className="absolute inset-s-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
             <input
               id="jobTitle"
               type="text"
@@ -42,12 +51,14 @@ export default function JobTitleStep({ value, onContinue, onPrevious, isFirstSte
                 if (error) setError("");
               }}
               placeholder="Search for a job title..."
-              className={`w-full rounded-xl border bg-surface py-3 pl-10 pr-3.5 text-[14px] text-ink outline-none transition-colors placeholder:text-muted focus:border-primary ${
+              className={`w-full rounded-xl border bg-surface py-3 ps-10 pe-3.5 text-[14px] text-ink outline-none transition-colors placeholder:text-muted focus:border-primary ${
                 error ? "border-error" : "border-border"
               }`}
             />
           </div>
-          {error && <p className="mt-1.5 text-[12px] font-medium text-error">{error}</p>}
+          {error && (
+            <p className="mt-1.5 text-[12px] font-medium text-error">{error}</p>
+          )}
         </div>
 
         <div className="mb-8">

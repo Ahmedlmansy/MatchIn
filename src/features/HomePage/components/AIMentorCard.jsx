@@ -24,7 +24,7 @@ export default function AIMentorCard() {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="relative flex w-full flex-col items-center justify-between gap-8 overflow-hidden rounded-[20px] border border-primary-foreground/10 bg-gradient-to-br from-primary via-primary to-primary/90 p-8 text-primary-foreground shadow-[0_16px_36px_rgba(5,32,69,0.18)] lg:flex-row lg:p-12"
     >
-      <div className="pointer-events-none absolute -bottom-20 -right-20 h-96 w-96 rounded-full bg-secondary/15 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-20 -inset-e-20 h-96 w-96 rounded-full bg-secondary/15 blur-3xl" />
 
       <div className="z-10 flex max-w-xl flex-col gap-3">
         <Badge

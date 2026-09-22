@@ -93,7 +93,7 @@ function MentorModal({ messages, onClose, onAskQuestion }) {
         {messages.map((message, index) => (
           <div
             key={`${message.sender}-${index}`}
-            className={`rounded-xl p-3.5 leading-relaxed ${message.sender === "user" ? "bg-primary text-primary-foreground ml-8" : "bg-background border border-border text-muted mr-8"}`}
+            className={`rounded-xl p-3.5 leading-relaxed ${message.sender === "user" ? "bg-primary text-primary-foreground ms-8" : "bg-background border border-border text-muted me-8"}`}
           >
             <span
               className={`font-bold block mb-1 ${message.sender === "user" ? "opacity-70" : "text-primary"}`}

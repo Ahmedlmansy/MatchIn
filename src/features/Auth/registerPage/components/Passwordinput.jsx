@@ -19,18 +19,18 @@ export const PasswordInput = forwardRef(function PasswordInput(
 
   return (
     <div className="relative">
-      <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+      <Lock className="pointer-events-none absolute inset-s-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
       <Input
         ref={ref}
         type={visible ? "text" : "password"}
-        className={cn("h-11 rounded-xl border-border pl-9 pr-10", className)}
+        className={cn("h-11 rounded-xl border-border ps-9 pe-10", className)}
         {...props}
       />
       <button
         type="button"
         onClick={() => setVisible((v) => !v)}
         aria-label={visible ? "Hide password" : "Show password"}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
+        className="absolute inset-e-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
       >
         {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
       </button>
