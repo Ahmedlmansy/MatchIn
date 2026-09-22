@@ -1,4 +1,4 @@
-import { AuthCard, AuthSidePanel } from "@/features/auth";
+import { AuthCard, AuthSidePanel } from "@/features/auth/index.js";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 
 export default function AuthLayout({

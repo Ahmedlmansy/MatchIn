@@ -1,4 +1,4 @@
-import { NotificationsBellDropdown } from "@/features/candidate";
+import { NotificationsBellDropdown } from "@/features/candidate/index.js";
 import { Menu, Search, User } from "lucide-react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";

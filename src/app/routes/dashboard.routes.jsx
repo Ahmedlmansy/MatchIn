@@ -13,7 +13,7 @@ import {
   RoadmapDetailsPage,
   RoadmapPage,
   SavedJobs,
-} from "@/features/candidate";
+} from "@/features/candidate/index.js";
 
 
 export const dashboard = [

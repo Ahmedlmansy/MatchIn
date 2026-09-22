@@ -3,7 +3,7 @@ import {
   LoginPage,
   RegisterPage,
   SetNewPassword,
-} from "@/features/auth";
+} from "@/features/auth/index.js";
 
 export const auth = [
   { path: "login", element: <LoginPage /> },

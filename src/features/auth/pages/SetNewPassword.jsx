@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AuthCard } from "@/features/auth";
+import { AuthCard } from "@/features/auth/index.js";
 import { Button } from "@/components/ui/button";
 import { newPasswordSchema } from "@/features/auth/schema/newPassword-schema";
 import PasswordResetForm from "../components/SetNewPasswordPage/PasswordResetForm";
