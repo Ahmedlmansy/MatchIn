@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import LanguageSwitcher from "@/features/HomePage/components/LanguageSwitcher";
+import LanguageToggle from "@/components/shared/LanguageToggle";
 
 export default function Topbar({ onOpenMobileSidebar, userName, userRole }) {
   const location = useLocation();
@@ -51,10 +51,7 @@ export default function Topbar({ onOpenMobileSidebar, userName, userRole }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <LanguageSwitcher
-            language={lang}
-            onChange={handleLanguageChange}
-          />
+          <LanguageToggle language={lang} onChange={handleLanguageChange} />
           <NotificationsBellDropdown />
           <div className="flex items-center gap-3 border-s border-border ps-2">
             <div className="relative flex items-center justify-center">

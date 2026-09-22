@@ -13,10 +13,10 @@ import AuthCard from "@/components/shared/auth/AuthCard";
 import { Button } from "@/components/ui/button";
 import { newPasswordSchema } from "@/features/Auth/schema/newPassword-schema";
 import PasswordResetForm from "../components/PasswordResetForm";
-import ResetHeader from "../components/ResetHeader";
+import AuthHeader from "@/features/Auth/components/shared/AuthHeader";
 import ResetStateView from "../components/ResetStateView";
 import SavingPassword from "../components/SavingPassword";
-import SecurityNotice from "../components/SecurityNotice";
+import SecurityNotice from "@/features/Auth/components/shared/SecurityNotice";
 import logo from "@/assets/logo/MatchIn_logo.svg";
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
@@ -25,8 +25,6 @@ export default function SetNewPassword() {
   const { t } = useTranslation("common");
   const localizedPath = useLocalizedPath();
   const [state, setState] = useState("default");
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(newPasswordSchema),
@@ -44,7 +42,7 @@ export default function SetNewPassword() {
 
   return (
     <div className="flex min-h-screen flex-col bg-stone-50 text-slate-800">
-      <ResetHeader />
+      <AuthHeader />
 
       <main className="flex flex-1 items-center justify-center px-4 py-8">
         <AuthCard className="w-full max-w-120 px-6 py-6 shadow-sm sm:px-8 sm:py-8">
@@ -53,7 +51,7 @@ export default function SetNewPassword() {
               <div key="default" className="flex w-full flex-col items-center">
                 <div className="mb-6 flex flex-col items-center text-center">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-white">
-                    <img src={logo} className="h-full w-full" />
+                    <img src={logo} alt="MatchIn" className="h-full w-full" />
                   </div>
                   <span className="mb-1 flex items-center gap-1.5 rounded-full bg-slate-200 px-2.5 py-1 text-[11px] text-slate-600">
                     <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
@@ -66,14 +64,7 @@ export default function SetNewPassword() {
                     {t("auth.reset.description")}
                   </p>
                 </div>
-                <PasswordResetForm
-                  form={form}
-                  onSubmit={handleSubmit}
-                  showNew={showNew}
-                  showConfirm={showConfirm}
-                  onToggleNew={() => setShowNew((value) => !value)}
-                  onToggleConfirm={() => setShowConfirm((value) => !value)}
-                />
+                <PasswordResetForm form={form} onSubmit={handleSubmit} />
               </div>
             )}
 

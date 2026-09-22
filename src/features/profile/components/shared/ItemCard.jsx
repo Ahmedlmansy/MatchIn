@@ -1,5 +1,5 @@
-import React from 'react';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import React from "react";
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function ItemCard({
   title,
@@ -19,9 +19,9 @@ export default function ItemCard({
           {badgeText && (
             <span
               className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
-                badgeText === 'Manually Added'
-                  ? 'bg-orange-100 text-orange-700'
-                  : 'bg-blue-100 text-blue-700'
+                badgeText === "Manually Added"
+                  ? "bg-orange-100 text-orange-700"
+                  : "bg-blue-100 text-blue-700"
               }`}
             >
               {badgeText}
@@ -31,12 +31,14 @@ export default function ItemCard({
 
         {(subtitle || date) && (
           <p className="text-xs text-slate-500 font-medium">
-            {subtitle} {subtitle && date && '•'} {date}
+            {subtitle} {subtitle && date && "•"} {date}
           </p>
         )}
 
         {extraInfo && (
-          <p className="text-xs text-slate-400 font-normal pt-0.5">{extraInfo}</p>
+          <p className="text-xs text-slate-400 font-normal pt-0.5">
+            {extraInfo}
+          </p>
         )}
 
         {children}

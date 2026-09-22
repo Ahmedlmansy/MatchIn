@@ -1,39 +1,39 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 import { FileText } from "lucide-react";
+import { useLocalizedPath } from "@/utils/routes";
 
 export default function ProfileCompletionCard({
   completionPercentage = 85,
   linkText = "Manage your CV file",
-  cvPath = "/dashboard/cv"
+  cvPath = "/dashboard/cv-management",
+  className = "",
 }) {
+  const localizedPath = useLocalizedPath();
+
   return (
-    <div className="w-[280px] bg-[#FAF8F5] p-3.5 rounded-2xl border border-gray-100/80 space-y-2 shrink-0">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-bold text-slate-900 tracking-tight">
-          Profile Completion
-        </h3>
-        <span className="text-xs font-bold text-[#1E3A8A]">
-          {completionPercentage}%
-        </span>
+    <div
+      className={`w-full md:w-72 bg-amber-50/50 border border-amber-100 rounded-xl p-4 space-y-3 ${className}`}
+    >
+      <div className="flex justify-between items-center text-xs font-semibold">
+        <span className="text-gray-700">Profile Completion</span>
+        <span className="text-slate-800">{completionPercentage}%</span>
       </div>
 
-      <div className="w-full h-2 bg-[#EAE8E3] rounded-full overflow-hidden">
+      <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
         <div
-          className="h-full bg-[#1E3A8A] rounded-full transition-all duration-300"
+          className="bg-slate-800 h-full rounded-full transition-all duration-500"
           style={{ width: `${completionPercentage}%` }}
         />
       </div>
 
-      <div className="pt-0.5">
-        <Link
-          to={cvPath}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#B45309] hover:text-[#92400E] hover:underline transition-all"
-        >
-          <FileText className="w-3.5 h-3.5 text-[#B45309]" />
-          <span>{linkText}</span>
-        </Link>
-      </div>
+      <Link
+        to={localizedPath(cvPath)}
+        className="flex items-center gap-2 text-xs font-semibold text-amber-900 hover:underline pt-1 cursor-pointer"
+      >
+        <FileText className="w-3.5 h-3.5" />
+        <span>{linkText}</span>
+      </Link>
     </div>
   );
 }

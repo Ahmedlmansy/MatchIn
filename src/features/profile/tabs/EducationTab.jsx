@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
-import ItemCard from "@/components/ui/ItemCard";
+import ItemCard from "@/features/profile/components/shared/ItemCard";
 import TabSaveActions from "@/features/profile/components/TabSaveActions";
 
 const DEFAULT_EDUCATION = [
@@ -65,8 +65,8 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
       if (editingId) {
         setEducationList((prev) =>
           prev.map((item) =>
-            item.id === editingId ? { ...item, ...formData } : item
-          )
+            item.id === editingId ? { ...item, ...formData } : item,
+          ),
         );
       } else {
         const newEdu = {
@@ -91,7 +91,9 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
 
     setIsDeleting(true);
     setTimeout(() => {
-      setEducationList((prev) => prev.filter((item) => item.id !== itemToDelete.id));
+      setEducationList((prev) =>
+        prev.filter((item) => item.id !== itemToDelete.id),
+      );
       setIsDeleting(false);
       setIsDeleteOpen(false);
       setItemToDelete(null);
@@ -137,7 +139,9 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
       >
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">Degree / Field of Study *</label>
+            <label className="text-xs font-bold text-gray-700 block">
+              Degree / Field of Study *
+            </label>
             <input
               type="text"
               name="degree"
@@ -149,7 +153,9 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">School / Institution *</label>
+            <label className="text-xs font-bold text-gray-700 block">
+              School / Institution *
+            </label>
             <input
               type="text"
               name="institution"
@@ -162,7 +168,9 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700 block">Start Year</label>
+              <label className="text-xs font-bold text-gray-700 block">
+                Start Year
+              </label>
               <input
                 type="text"
                 name="startYear"
@@ -174,7 +182,9 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700 block">End Year</label>
+              <label className="text-xs font-bold text-gray-700 block">
+                End Year
+              </label>
               <input
                 type="text"
                 name="endYear"

@@ -2,7 +2,8 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
-import LanguageSwitcher from "./LanguageSwitcher";
+
+import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 import { NAV_LINKS } from "@/constants/navLinks";
 import LogoNavy from "@/assets/logo/Full_logo_navy.svg";
 import { useTranslation } from "react-i18next";
