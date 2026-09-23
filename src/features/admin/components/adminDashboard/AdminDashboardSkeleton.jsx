@@ -45,7 +45,7 @@ function SkeletonListItem() {
  */
 export default function AdminDashboardSkeleton() {
   return (
-    <div className="min-h-screen bg-[#faf8f4] text-[#222831] px-4 py-8 md:px-7 md:py-12 font-sans antialiased">
+    <div className="min-h-screen bg-background text-[#222831] px-4 py-8 md:px-7 md:py-12 font-sans antialiased">
       <div className="max-w-7xl mx-auto space-y-7">
         {/* ========== PAGE HEADER ========== */}
         <motion.header
