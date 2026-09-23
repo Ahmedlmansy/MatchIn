@@ -12,9 +12,11 @@ import ProfilePage from "@/features/candidate/pages/ProfilePage";
 import RoadmapDetailsPage from "@/features/candidate/pages/RoadmapDetailsPage";
 import RoadmapPage from "@/features/candidate/pages/RoadmapPage";
 import SavedJobs from "@/features/candidate/pages/SavedJobs";
+import AdminOverview from "@/features/admin/pages/AdminOverview";
 
+const role = "admin"
 
-export const dashboard = [
+const userDashboard =  [
   {
     index: true,
     element: <Overview />,
@@ -78,5 +80,12 @@ export const dashboard = [
       {path: ":applicationId", element: <ApplicationDetail />}
     ]
   }
+] 
+
+export const dashboard = role !== "admin" ? userDashboard : [
+  {
+    index: true,
+    element: <AdminOverview />,
+    handle: { label: "Dashboard", labelKey: "navigation.dashboard", icon: LayoutDashboard, sidebar: true },
+  }
 ]
-   
