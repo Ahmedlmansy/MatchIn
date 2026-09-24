@@ -15,7 +15,7 @@ export default function FreshnessBadge({ label, days = 0, status, className }) {
   let withDot = true;
 
   if (days < 1) {
-    tone = "bg-[#4F7A5A]/10 text-[#4F7A5A]";
+    tone = "bg-success/10 text-success";
   } else if (days <= 7) {
     tone = "bg-[#C88A26]/10 text-[#C88A26]";
   } else if (status === "draft") {
