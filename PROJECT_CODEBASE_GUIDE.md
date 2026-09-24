@@ -841,7 +841,7 @@ These are the canonical reusable form, overlay, navigation, feedback, and layout
 import { cn } from "@/lib/utils";
 ```
 
-The separate `cn` npm dependency remains in `package.json`. If it is no longer required, remove it rather than allowing two class-merging conventions.
+The separate `cn` npm dependency remains in `package.json`, but no current source file imports it. Remove the package after confirming the lockfile update.
 
 ### 12.4 Local Fonts and Branding
 
