@@ -56,7 +56,7 @@ export default function ForgetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen overflow-hidden bg-[#FDFBF9] text-[#1F365C] flex flex-col justify-between p-4 md:p-6 font-sans">
+    <div className="min-h-screen overflow-hidden bg-[#FDFBF9] text-primary flex flex-col justify-between p-4 md:p-6 font-sans">
       <AuthHeader bordered={false} backLabel={t("auth.forgot.back")} />
 
       <main className="max-w-md w-full mx-auto my-auto py-2">
@@ -72,7 +72,7 @@ export default function ForgetPasswordPage() {
             className="h-14 w-auto mb-4 object-contain"
           />
 
-          <h1 className="text-2xl md:text-3xl font-extrabold text-[#1F365C] mb-2 tracking-tight">
+          <h1 className="text-2xl md:text-3xl font-extrabold text-primary mb-2 tracking-tight">
             {t("auth.forgot.title")}
           </h1>
 
@@ -86,10 +86,7 @@ export default function ForgetPasswordPage() {
             className="w-full text-left space-y-4"
           >
             <div className="space-y-1.5">
-              <Label
-                htmlFor="email"
-                className="text-xs font-bold text-[#1F365C]"
-              >
+              <Label htmlFor="email" className="text-xs font-bold text-primary">
                 {t("auth.forgot.email")}
               </Label>
 
@@ -105,7 +102,7 @@ export default function ForgetPasswordPage() {
                     setEmail(e.target.value);
                     if (emailError) setEmailError("");
                   }}
-                  className={`ps-9 h-11 border-gray-200 focus-visible:ring-[#1F365C] ${
+                  className={`ps-9 h-11 border-gray-200 focus-visible:ring-primary ${
                     emailError
                       ? "border-red-500 focus-visible:ring-red-500"
                       : ""
@@ -123,7 +120,7 @@ export default function ForgetPasswordPage() {
             <Button
               type="submit"
               disabled={status}
-              className="w-full h-11 bg-[#1F365C] hover:bg-[#162744] text-white font-medium flex items-center justify-center gap-2 rounded-lg cursor-pointer"
+              className="w-full h-11 bg-primary hover:bg-[#162744] text-white font-medium flex items-center justify-center gap-2 rounded-lg cursor-pointer"
             >
               {status ? (
                 <>

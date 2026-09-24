@@ -1,4 +1,14 @@
-import { LayoutDashboard, Compass, Bell, FileText, Bot, Bookmark,PersonStanding ,ClipboardList} from "lucide-react";
+import {
+  LayoutDashboard,
+  Compass,
+  Bell,
+  FileText,
+  Bot,
+  Bookmark,
+  PersonStanding,
+  ClipboardList,
+  BriefcaseBusiness,
+} from "lucide-react";
 import AiChatPage from "@/features/candidate/pages/AiChatPage";
 import ApplicationDetail from "@/features/candidate/pages/ApplicationDetail";
 import ApplicationPage from "@/features/candidate/pages/ApplicationPage";
@@ -12,13 +22,21 @@ import ProfilePage from "@/features/candidate/pages/ProfilePage";
 import RoadmapDetailsPage from "@/features/candidate/pages/RoadmapDetailsPage";
 import RoadmapPage from "@/features/candidate/pages/RoadmapPage";
 import SavedJobs from "@/features/candidate/pages/SavedJobs";
+import AdminOverview from "@/features/admin/pages/AdminOverview";
+import JobManagement from "@/features/admin/pages/JobManagement";
 
+const role = "admin";
 
-export const dashboard = [
+const userDashboard = [
   {
     index: true,
     element: <Overview />,
-    handle: { label: "Dashboard", labelKey: "navigation.dashboard", icon: LayoutDashboard, sidebar: true },
+    handle: {
+      label: "Dashboard",
+      labelKey: "navigation.dashboard",
+      icon: LayoutDashboard,
+      sidebar: true,
+    },
   },
   {
     path: "notifications",
@@ -32,7 +50,12 @@ export const dashboard = [
   },
   {
     path: "jobs",
-    handle: { label: "Explore Jobs", labelKey: "navigation.exploreJobs", icon: Compass, sidebar: true },
+    handle: {
+      label: "Explore Jobs",
+      labelKey: "navigation.exploreJobs",
+      icon: Compass,
+      sidebar: true,
+    },
     children: [
       { index: true, element: <JobsPage /> },
       { path: ":jobId", element: <JobsDetails /> },
@@ -41,21 +64,41 @@ export const dashboard = [
   {
     path: "saved-jobs",
     element: <SavedJobs />,
-    handle: { label: "Saved Jobs", labelKey: "navigation.savedJobs", icon: Bookmark, sidebar: true },
+    handle: {
+      label: "Saved Jobs",
+      labelKey: "navigation.savedJobs",
+      icon: Bookmark,
+      sidebar: true,
+    },
   },
   {
     path: "cv-management",
     element: <CvManagementPage />,
-    handle: { label: "Cv Management", labelKey: "navigation.cvManagement", icon: FileText, sidebar: true },
+    handle: {
+      label: "Cv Management",
+      labelKey: "navigation.cvManagement",
+      icon: FileText,
+      sidebar: true,
+    },
   },
   {
     path: "ai-chat",
     element: <AiChatPage />,
-    handle: { label: "AI Chat", labelKey: "navigation.aiChat", icon: Bot, sidebar: true },
+    handle: {
+      label: "AI Chat",
+      labelKey: "navigation.aiChat",
+      icon: Bot,
+      sidebar: true,
+    },
   },
   {
     path: "roadmap",
-    handle: { label: "Roadmap", labelKey: "navigation.roadmap", icon: Compass, sidebar: true },
+    handle: {
+      label: "Roadmap",
+      labelKey: "navigation.roadmap",
+      icon: Compass,
+      sidebar: true,
+    },
     children: [
       { index: true, element: <RoadmapPage /> },
       { path: ":roleId", element: <RoadmapDetailsPage /> },
@@ -74,9 +117,34 @@ export const dashboard = [
       sidebar: true,
     },
     children: [
-      {index: true, element: <ApplicationPage />},
-      {path: ":applicationId", element: <ApplicationDetail />}
-    ]
-  }
-]
-   
+      { index: true, element: <ApplicationPage /> },
+      { path: ":applicationId", element: <ApplicationDetail /> },
+    ],
+  },
+];
+
+export const dashboard =
+  role !== "admin"
+    ? userDashboard
+    : [
+        {
+          index: true,
+          element: <AdminOverview />,
+          handle: {
+            label: "Dashboard",
+            labelKey: "navigation.dashboard",
+            icon: LayoutDashboard,
+            sidebar: true,
+          },
+        },
+        {
+          path: "job-management",
+          element: <JobManagement />,
+          handle: {
+            label: "Job Management",
+            labelKey: "navigation.jobManagement",
+            icon: BriefcaseBusiness,
+            sidebar: true,
+          },
+        },
+      ];
