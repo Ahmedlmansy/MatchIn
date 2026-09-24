@@ -24,6 +24,7 @@ import RoadmapPage from "@/features/candidate/pages/RoadmapPage";
 import SavedJobs from "@/features/candidate/pages/SavedJobs";
 import AdminOverview from "@/features/admin/pages/AdminOverview";
 import JobManagement from "@/features/admin/pages/JobManagement";
+import EditJob from "@/features/admin/pages/Edit jobs"; 
 
 const role = "admin";
 
@@ -145,6 +146,16 @@ export const dashboard =
             labelKey: "navigation.jobManagement",
             icon: BriefcaseBusiness,
             sidebar: true,
+          },
+        },
+        {
+          path: "edit", 
+          element: <EditJob />,
+          handle: {
+            label: "Edit Job",
+            labelKey: "navigation.editJob",
+            icon: BriefcaseBusiness,
+            sidebar: false, 
           },
         },
       ];
