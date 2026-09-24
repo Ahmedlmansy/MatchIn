@@ -8,6 +8,7 @@ import {
   PersonStanding,
   ClipboardList,
   BriefcaseBusiness,
+  Users,
 } from "lucide-react";
 import AiChatPage from "@/features/candidate/pages/AiChatPage";
 import ApplicationDetail from "@/features/candidate/pages/ApplicationDetail";
@@ -24,6 +25,9 @@ import RoadmapPage from "@/features/candidate/pages/RoadmapPage";
 import SavedJobs from "@/features/candidate/pages/SavedJobs";
 import AdminOverview from "@/features/admin/pages/AdminOverview";
 import JobManagement from "@/features/admin/pages/JobManagement";
+import { UsersDetailsPage } from "@/features/admin/pages/UsersDetailsPage";
+import { UserManagementPage } from "@/features/admin/pages/UserManagementPage";
+import { JobDetailsPage } from "@/features/admin/pages/JobDetailsPage";
 
 const role = "admin";
 
@@ -146,5 +150,23 @@ export const dashboard =
             icon: BriefcaseBusiness,
             sidebar: true,
           },
+        },
+        {
+          path: "users/:id",
+          element: <UsersDetailsPage />,
+        },
+        {
+          path: "user-management",
+          element: <UserManagementPage />,
+          handle: {
+            label: "User Management",
+            labelKey: "navigation.usermanagement",
+            icon: Users,
+            sidebar: true,
+          },
+        },
+        {
+          path: "jobs/:id",
+          element: <JobDetailsPage />,
         },
       ];

@@ -10,3 +10,4 @@ export { default as EmptyState } from "./EmptyState";
 export { default as ErrorState } from "./ErrorState";
 
 export { containerVariants, rowVariants } from "./motion";
+export { RoleBadge, UserStatusBadge, ROLE_LABELS, STATUS_LABELS } from "./UserBadges";
