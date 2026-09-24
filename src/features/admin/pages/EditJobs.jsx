@@ -72,7 +72,6 @@ export default function EditJob() {
   return (
     <div className="min-h-screen bg-[#FBF9F5] p-6 md:p-8 text-[#18181B] font-sans">
       <div className="max-w-5xl mx-auto space-y-6">
-        
         {/* Header & Breadcrumb */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#E8E6E1] pb-5">
           <div>
