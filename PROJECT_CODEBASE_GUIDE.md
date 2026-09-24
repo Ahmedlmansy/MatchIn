@@ -2,9 +2,9 @@
 
 > **Document type:** Living frontend architecture and maintenance guide
 > **Last refreshed:** 2026-09-24
-> **Committed code baseline:** `c259f2d` (`ahmed`, also `origin/main` at refresh time)
-> **Working-tree scope:** Includes the current modified `src/app/routes/dashboard.routes.jsx` and five untracked admin/skeleton files. Those additions are marked **WIP** throughout this document.
-> **Validation at refresh:** `npm run build` passes; `npm run lint` reports **0 errors and 34 warnings**.
+> **Committed code baseline:** `d9eaed0` (`ahmed`, also `origin/ahmed` at refresh time)
+> **Working-tree scope:** Includes the current modified `src/app/routes/dashboard.routes.jsx` and untracked `src/features/admin/pages/CmsHomePage.jsx`. The CMS page/route is marked **WIP** throughout this document.
+> **Validation at refresh:** `npm run build` passes; `npm run lint` reports **0 errors and 32 warnings**.
 > **Change policy:** This refresh audits the implementation but changes no application source files.
 
 ---
@@ -17,7 +17,7 @@
 4. [Runtime Architecture](#4-runtime-architecture)
 5. [Source Layout and Ownership](#5-source-layout-and-ownership)
 6. [Feature-Domain Map](#6-feature-domain-map)
-7. [Routing and Role Selection](#7-routing-and-role-selection)
+7. [Routing, Localization, and Role Selection](#7-routing-localization-and-role-selection)
 8. [Layouts, Navigation, and Route Metadata](#8-layouts-navigation-and-route-metadata)
 9. [Authentication and Authorization](#9-authentication-and-authorization)
 10. [API, TanStack Query, Redux, and Mock Data](#10-api-tanstack-query-redux-and-mock-data)
@@ -39,11 +39,11 @@ MatchIn is a role-oriented React single-page application for a public job platfo
 - `public` — landing page and 404 page.
 - `auth` — login, registration, OTP, CV upload, password recovery, and password reset UX.
 - `candidate` — jobs, saved jobs, applications, profile, CV management, notifications, onboarding, roadmap, AI chat, and overview.
-- `admin` — administrative overview, job management, and **WIP** user/job management pages.
+- `admin` — overview, job/user management, audit logs, and a **WIP** home-page CMS editor.
 
 The application has moved beyond the small, single-screen prototype described by the previous guide. It now has a modular route tree, role-oriented feature groups, broad candidate workflows, an admin area, shared loading/empty/error patterns, Arabic/English localization, and substantially more UI primitives.
 
-However, it is still primarily a **high-fidelity frontend implementation backed by local/static data**. Authentication, mutations, and feature data are not consistently connected to a backend. TanStack Query and Redux are mounted at the root but are not yet the source of feature data or authenticated user state.
+However, it is still primarily a **high-fidelity frontend implementation backed by local/static data**. No current authentication, query, mutation, or feature-data flow is connected to a backend. TanStack Query and Redux are mounted at the root but own no application data or authenticated user state.
 
 ### 1.1 Current Size
 
@@ -51,10 +51,10 @@ Counts below include the current working tree and exclude `node_modules/` and ge
 
 | Area | Current count / state |
 | :--- | :--- |
-| Files physically under `src/` | 440, including 147 local font files |
-| JavaScript/JSX modules | 273: 228 `.jsx` and 45 `.js` |
-| Feature modules | 193 across four domains |
-| Admin feature modules | 37, including three WIP pages |
+| Files physically under `src/` | 467, including 147 local font files |
+| JavaScript/JSX modules | 300: 251 `.jsx` and 49 `.js` |
+| Feature modules | 220 across four domains |
+| Admin feature modules | 64, including the WIP CMS page |
 | Auth feature modules | 29 |
 | Candidate feature modules | 102 |
 | Public feature modules | 25 |
@@ -64,26 +64,26 @@ Counts below include the current working tree and exclude `node_modules/` and ge
 
 ### 1.2 Committed Change Since the Previous Guide Snapshot
 
-From the guide's last code-aligned snapshot (`a6e7caa`) to `c259f2d`:
+From the guide's last code-aligned snapshot (`a6e7caa`) to `d9eaed0`:
 
-- 27 commits landed, including 15 non-merge commits.
-- 232 tracked files changed.
-- 4,647 lines were added and 1,489 removed.
+- 32 commits landed, including 18 non-merge commits.
+- 263 implementation/config files changed (excluding this guide).
+- 8,203 implementation/config lines were added and 1,490 removed.
 - The codebase was reorganized around role-oriented feature groups.
 - Candidate and admin functionality expanded substantially.
 - Authentication UX was refactored and expanded.
 - Layouts were moved out of the misleading `layouts/auth/` directory.
 - Localization and RTL support were introduced.
 
-The current working tree adds one modified route module and five untracked files that are documented as WIP rather than stable architecture.
+The current working tree adds one modified route module and one untracked CMS page, documented as WIP rather than stable architecture.
 
 ### 1.3 Build and Quality Snapshot
 
 | Check | Result |
 | :--- | :--- |
 | `npm run build` | Passes with Vite 8.2.2 |
-| Production JavaScript | Approximately 1.08 MB before gzip; approximately 327 KB gzip |
-| `npm run lint` | 34 warnings, 0 errors |
+| Production JavaScript | Approximately 1.13 MB before gzip; approximately 341 KB gzip |
+| `npm run lint` | 32 warnings, 0 errors |
 | Unit/component tests | Not configured or present |
 | Type checking | Not configured; the project is JavaScript/JSX |
 
@@ -132,19 +132,19 @@ Committed admin work currently provides:
 
 - `AdminOverview`
 - `JobManagement`
-- Reusable admin filter/state components under `src/features/admin/shared/`
-- An admin-specific route branch and sidebar metadata
+- `JobDetailsPage`
+- `UserManagementPage`
+- `UsersDetailsPage`
+- `AuditLogsPage` and `AuditLogsDetailsPage`
+- Feature components for job management, job detail, user management/detail, audit-log lists, and audit-log details
+- Expanded reusable admin controls/states under `src/features/admin/shared/`
+- `ApplicationSkeleton`, `JobDetailsSkeleton`, `StatsStripSkeleton`, and `UsersTableSkeleton`
 
-The current working tree additionally contains these **WIP** pages:
+The current working tree additionally contains one **WIP** page:
 
-- `src/features/admin/pages/JobDetailsPage.jsx`
-- `src/features/admin/pages/UserManagementPage.jsx`
-- `src/features/admin/pages/UsersDetailsPage.jsx`
+- `src/features/admin/pages/CmsHomePage.jsx` — a large bilingual home-page content editor with local draft persistence and simulated publishing.
 
-It also adds reusable skeleton components:
-
-- `src/components/layouts/skeleton/StatsStripSkeleton.jsx`
-- `src/components/layouts/skeleton/UsersTableSkeleton.jsx`
+The route module is also modified to register the CMS page, but it currently contains a duplicate `path` key that causes the admin job-detail route to be overwritten by the audit-log route.
 
 ### 2.4 Authentication Refactor
 
@@ -176,7 +176,7 @@ A shared localization layer now exists under `src/components/shared/i18n/`, with
 
 ### 2.7 UI Expansion
 
-The UI primitive layer now contains 20 primitives, including newer additions such as `avatar.jsx`, `sheet.jsx`, and `skeleton.jsx`. Shared application components now include page headers, language controls, modals, status views, toasts, and action banners.
+The UI primitive layer now contains 20 primitives, including newer additions such as `avatar.jsx`, `sheet.jsx`, and `skeleton.jsx`. Shared application components include language controls, modals, status views, and action banners; admin-specific page headers, skeletons, badges, and filters live under `features/admin/shared/`.
 
 ---
 
@@ -276,13 +276,19 @@ flowchart TD
 
 This distinction is important: infrastructure presence must not be interpreted as live data integration.
 
+### 4.5 Deployment Routing
+
+`vercel.json` rewrites every request to `/index.html`, allowing React Router to handle direct localized URLs such as `/ar/dashboard` during browser-side navigation. `public/` contains the deployed favicon and icon sprite; `dist/` and `node_modules/` are ignored generated/dependency directories.
+
 ---
 
 ## 5. Source Layout and Ownership
 
 ### 5.1 Major Source Tree
 
-The following is a practical map rather than an exhaustive listing of every page-local component:
+Root-level development/deployment files are `package.json`, `package-lock.json`, `vite.config.js`, `jsconfig.json`, `.oxlintrc.json`, `components.json`, `vercel.json`, `index.html`, `README.md`, and `public/` assets. The README is still the generic Vite template and is not a reliable setup guide; use this document plus `package.json` instead.
+
+The following is a practical source map rather than an exhaustive listing of every page-local component:
 
 ```text
 src/
@@ -314,8 +320,8 @@ src/
 │   │   └── skeleton/
 │   │       ├── ApplicationSkeleton.jsx
 │   │       ├── JobDetailsSkeleton.jsx
-│   │       ├── StatsStripSkeleton.jsx              # WIP
-│   │       └── UsersTableSkeleton.jsx              # WIP
+│   │       ├── StatsStripSkeleton.jsx
+│   │       └── UsersTableSkeleton.jsx
 │   ├── shared/
 │   │   ├── ActionBanner.jsx
 │   │   ├── JobCard.jsx
@@ -369,7 +375,7 @@ src/
 | `src/lib/` | Reusable clients and framework configuration |
 | `src/services/` | Axios instances and interceptors |
 | `src/store/` | Redux store and future global client slices |
-| `src/utils/` | Route constants and sidebar navigation construction |
+| `src/utils/` | Language/path helpers and sidebar navigation construction |
 
 ---
 
@@ -384,7 +390,7 @@ Purpose: public acquisition and fallback pages.
 - `components/HomePage/` contains the header, footer, hero, jobs preview, categories, philosophy, “why MatchIn,” CTA, and newsletter sections.
 - `hooks/` contains `useCountUp.js` and `useMouseSpotlight.js`.
 
-The landing page is visually complete but remains data-driven primarily by static constants and local interactions.
+The landing page is visually complete and localized but remains data-driven primarily by static constants and local interactions. `NotFoundPage.jsx` is still a minimal, unstyled, English-only fallback outside `LanguageLayout`.
 
 ### 6.2 Auth Domain — `src/features/auth/`
 
@@ -455,22 +461,27 @@ Committed structure:
 admin/
 ├── components/
 │   ├── adminDashboard/
-│   └── jobManagement/
+│   ├── jobManagement/
+│   ├── JobDetailsPage/
+│   ├── UserManagementPage/
+│   ├── UsersDetailsPage/
+│   ├── auditLogsList/
+│   └── auditLogDetails/
 ├── pages/
 │   ├── AdminOverview.jsx
-│   └── JobManagement.jsx
+│   ├── JobManagement.jsx
+│   ├── JobDetailsPage.jsx
+│   ├── UserManagementPage.jsx
+│   ├── UsersDetailsPage.jsx
+│   ├── AuditLogsPage.jsx
+│   ├── AuditLogsDetailsPage.jsx
+│   └── CmsHomePage.jsx                         # WIP
 └── shared/
 ```
 
-`admin/shared/` contains feature-specific reusable controls and states including search, filter pills, sorting, freshness/source/status badges, empty/error states, avatars, and motion helpers.
+`admin/shared/` now contains search, filter/select controls, sort options, page headers, read-only banners, status/source/freshness/generic badges, user badges, skeleton loaders, empty/error states, avatars, and motion helpers.
 
-**WIP working-tree additions:**
-
-- `pages/JobDetailsPage.jsx` — mock job detail, edit/status/delete actions, metrics, and related-job presentation.
-- `pages/UserManagementPage.jsx` — mock user table, search/filter/sort/pagination, and management modals.
-- `pages/UsersDetailsPage.jsx` — mock account/profile/CV/application/saved-job detail with local mutations.
-
-These files are not yet committed and still contain mock request functions, TODOs, and route inconsistencies documented in Section 17.
+Committed job/user detail and user-management pages use local mock request functions and still contain navigation/parameter defects. Audit-log list/detail pages use static data modules, a preview drawer, simulated refresh timers, and placeholder links; the list drawer imports `DiffViewer` from the detail component folder, reversing the intended feature ownership. The WIP CMS page manages a large in-file bilingual content schema, restores/saves a `cms:home:draft` local-storage draft, and simulates publish with a timer rather than calling an API. The public `HomePage` does not read this draft, so “publish” currently has no effect on the public page.
 
 ---
 
@@ -511,10 +522,13 @@ The table shows canonical localized URLs. Replace `{lang}` with `en` or `ar`.
 | `/{lang}/auth/reset-password` | `SetNewPassword` | New-password/reset-state flow | Public |
 | `/{lang}/auth/forgot-password` | `ForgetPasswordPage` | Password recovery request | Public |
 | `/{lang}/dashboard` | `AdminOverview` | Admin dashboard | Selected in current build |
-| `/{lang}/dashboard/job-management` | `JobManagement` | Job administration | Committed |
-| `/{lang}/dashboard/user-management` | `UserManagementPage` | User administration | WIP |
-| `/{lang}/dashboard/users/:id` | `UsersDetailsPage` | User detail | WIP; parameter/link mismatch |
-| `/{lang}/dashboard/jobs/:id` | `JobDetailsPage` | Admin job detail | WIP; parameter/link mismatch |
+| `/{lang}/dashboard/job-management` | `JobManagement` | Job administration | Active; row actions still placeholder |
+| `/{lang}/dashboard/user-management` | `UserManagementPage` | User administration | Active; detail links broken |
+| `/{lang}/dashboard/users/:id` | `UsersDetailsPage` | User detail | Active; parameter/link mismatch |
+| `/{lang}/dashboard/jobs/:id` | `JobDetailsPage` | Intended admin job detail | Not registered: duplicate `path` key overwrites it |
+| `/{lang}/dashboard/audit-logs` | `AuditLogsList` | Audit-log list | Intended child, but parent `JobDetailsPage` has no outlet |
+| `/{lang}/dashboard/audit-logs/:auditId` | `AuditLogDetails` | Audit-log detail | Intended child, but parent `JobDetailsPage` has no outlet |
+| `/{lang}/dashboard/cms` | `CmsHomePage` | Home-page CMS editor | WIP |
 | `/{lang}/dashboard` | `Overview` | Candidate dashboard | Defined but not selected while `role === "admin"` |
 | `/{lang}/dashboard/notifications` | `NotificationsPage` | Candidate notifications | Defined, currently inactive |
 | `/{lang}/dashboard/profile` | `ProfilePage` | Candidate profile | Defined, currently inactive |
@@ -547,7 +561,7 @@ export const dashboard =
 
 This means the candidate route array is present but not exported or selected in the current build. Both arrays share the same `/{lang}/dashboard` URL namespace, so only one can be mounted at a time.
 
-This is not role-based authorization; it is a hardcoded development branch. The current dashboard also has no authentication/role guard. A production implementation should derive role from authenticated user state and enforce authorization on the backend. Client-side route selection alone is not a security boundary.
+This is not role-based authorization; it is a hardcoded development branch. The condition is also binary: any value other than the exact string `"admin"` would select the candidate array, so there is no recruiter/admin/candidate policy. The current dashboard has no authentication/role guard. A production implementation should derive role from authenticated user state and enforce authorization on the backend. Client-side route selection alone is not a security boundary.
 
 ### 7.4 Route Metadata
 
@@ -562,20 +576,45 @@ handle: {
 }
 ```
 
-`Sidebar.jsx` passes the selected `dashboard` array to `buildSidebarNav`, which keeps routes with `handle.sidebar === true`, localizes the dashboard base path, and converts route config into `NavLink` items. `labelKey` is translated through the `dashboard` namespace.
+`Sidebar.jsx` passes the selected `dashboard` array to `buildSidebarNav`, which keeps top-level routes with `handle.sidebar === true`, localizes the dashboard base path, and converts route config into `NavLink` items. It does not recurse into child routes. `labelKey` is translated through the `dashboard` namespace.
+
+With the current admin array, the generated sidebar is Dashboard, Job Management, User Management, Audit Logs, and CMS. The malformed audit route therefore makes its sidebar item open `JobDetailsPage`. The candidate branch would generate Dashboard, Jobs, Saved Jobs, CV Management, AI Chat, Roadmap, and Applications; hidden profile/notification routes are not included.
 
 The current topbar does not derive a page title from this metadata, and only some pages provide their own breadcrumbs. Developers should not assume `handle` currently drives all titles or breadcrumbs.
 
-### 7.5 Parameter and Link Contract
+### 7.5 Duplicate Route Key Breaks Job and Audit Pages
 
-Route parameters must match the names consumed by pages. Both current WIP detail routes violate this rule:
+The current admin route object contains two `path` properties:
+
+```javascript
+{
+  path: "jobs/:id",
+  element: <JobDetailsPage />,
+  path: "audit-logs",
+  children: [/* audit pages */],
+}
+```
+
+In JavaScript, the later `path: "audit-logs"` wins. Therefore:
+
+- `/{lang}/dashboard/jobs/:id` is not registered.
+- The object is registered at `audit-logs` with `JobDetailsPage` as its element.
+- The audit child pages have no outlet in that parent and are not visible.
+- `JobDetailsPage` receives neither its intended `id` nor `jobId`.
+
+Split this into two independent route objects before treating either feature as functional.
+
+### 7.6 Parameter and Link Contract
+
+Route parameters must match the names consumed by pages:
 
 - `users/:id` is registered, but `UsersDetailsPage` reads `userId`.
-- `jobs/:id` is registered, but `JobDetailsPage` reads `jobId`.
+- The intended admin job route uses `:id`, but `JobDetailsPage` reads `jobId`.
+- The intended audit route uses `:auditId`, but `AuditLogDetails` renders a static record and does not read it.
 
-The WIP pages also navigate to unregistered, nonlocalized `/admin/users/...` and `/admin/jobs...` URLs. Their links must use `useLocalizedPath`/the active language and the canonical `/{lang}/dashboard/...` paths.
+The committed user/job pages navigate to unregistered, nonlocalized `/admin/users/...` and `/admin/jobs...` URLs. Their links must use `useLocalizedPath` and canonical `/{lang}/dashboard/...` paths.
 
-The committed `JobManagement` row actions still use `href="#"`, so the new job-detail route is not reachable from that list yet.
+`JobManagement` row actions still use `href="#"`. Shared candidate/public job cards build localized `/dashboard/jobs/:id` links, which now fall through because the malformed admin route no longer registers that URL. Once the duplicate key is fixed, the admin/candidate branches must still use non-colliding role-aware paths.
 
 ---
 
@@ -583,13 +622,13 @@ The committed `JobManagement` row actions still use `href="#"`, so the new job-d
 
 ### 8.1 `MainLayout`
 
-`src/components/layouts/MainLayout.jsx` is the public router shell. It provides the route outlet/context used by public pages without the dashboard sidebar or topbar.
+`src/components/layouts/MainLayout.jsx` is a thin public/guest outlet wrapper with no shared header, footer, or auth state. `HomePage` supplies its own public header/footer; auth pages are rendered beneath the same wrapper.
 
 ### 8.2 `AuthLayout`
 
-`src/components/layouts/AuthLayout.jsx` composes authentication screens from reusable slots such as the side panel, card, header, security notice, and footer actions.
+`src/components/layouts/AuthLayout.jsx` is not a router-level layout. `LoginPage` and `RegisterPage` render it internally with side-panel/card/footer slots. `ForgetPasswordPage` and `SetNewPassword` use their own full-screen composition with `AuthHeader`/`AuthCard`.
 
-Current implementation still passes `children` as a component prop, which triggers an Oxlint warning. Prefer JSX children composition.
+The current `AuthLayout` still passes `children` to `AuthCard` as a prop, which triggers an Oxlint warning. Prefer JSX children composition.
 
 ### 8.3 `DashboardLayout`
 
@@ -640,7 +679,7 @@ The login experience has a dedicated `LoginForm`, localized labels, Zod validati
 
 1. React Hook Form validates the fields.
 2. `LoginForm` calls its `onSubmit` callback.
-3. `LoginPage` only runs `console.log("Login submitted:", data)`.
+3. `LoginPage` runs `console.log("Login submitted:", data)`, which exposes the submitted password in browser/developer logs.
 4. No request, token write, user state, navigation, pending state, or server-error state occurs.
 
 The Google button is also presentation-only. `src/features/auth/api/auth.api.js` contains only an unused import of the service Axios client and defines no login request.
@@ -672,7 +711,7 @@ The CV skip/final actions navigate to candidate URLs, but the current `role = "a
 ### 9.3 Password Recovery and Reset
 
 - `ForgetPasswordPage.jsx` validates an email with an inline Zod schema and waits two seconds before showing success. Its error branch is currently unreachable because the simulated promise does not reject.
-- `SetNewPassword.jsx` uses React Hook Form + `newPasswordSchema`, then waits 1.5 seconds before showing completion.
+- `SetNewPassword.jsx` uses React Hook Form + `newPasswordSchema`, logs the full form object (including the new password), then waits 1.5 seconds before showing completion.
 - The page renders `verifying`, `expired`, and `error` states, but no current action transitions into those states.
 - The completion action uses a raw `<a href>` instead of React Router `<Link>`.
 - Security messaging is centralized in the auth shared area.
@@ -715,16 +754,30 @@ Two Axios configurations still coexist:
 
 No current feature executes an HTTP request. The previous recommendation to consolidate Axios remains valid: register one client and its interceptors in one place, then make new code choose that client deliberately.
 
+Both clients globally set `Content-Type: application/json`; CV/form-data uploads will need an explicit per-request override. Neither config uses `withCredentials`, and there is no documented decision between bearer tokens and HttpOnly cookies, refresh queue, error normalization, or cancellation contract.
+
 ### 10.2 Environment Variables
 
 - `.env` is ignored by Git.
-- The application expects Vite-prefixed variables such as `VITE_API_URL`.
+- The application expects Vite-prefixed variables such as `VITE_API_URL`; all `VITE_*` values are exposed to the browser bundle.
+- `VITE_API_BASE_URL` is referenced by the legacy client but is not part of the current local environment.
+- The service client has no fallback or startup validation when `VITE_API_URL` is absent, so it can silently use relative URLs.
 - Do not commit secrets or assume a developer's local `.env` exists in CI.
 - Add a sanitized `.env.example` when backend integration begins.
 
+Current browser-storage semantics:
+
+| Key | Owner | Actual status |
+| :--- | :--- | :--- |
+| `"token"` | Dormant Axios interceptors | Read/removed by client code, never written by an auth flow |
+| `"skillmatch_last_route"` | Shared i18n | Stores only `en` or `ar` |
+| `"cms:home:draft"` | WIP CMS editor | Stores unsaved editor state; no public consumer |
+
+There are no active cookies, refresh tokens, logout cleanup, or cross-tab session synchronization.
+
 ### 10.3 TanStack Query
 
-`src/lib/queryClient.js` creates the shared Query client, and `src/app/providers.jsx` mounts `QueryClientProvider` and devtools.
+`src/lib/queryClient.js` creates the shared Query client, and `src/app/providers.jsx` mounts `QueryClientProvider` and `ReactQueryDevtools` unconditionally, including production builds.
 
 No current feature uses Query. There are zero `useQuery`, `useMutation`, or `useQueryClient` calls under `src/`. Pages use:
 
@@ -784,19 +837,31 @@ The primary form stack is:
 | `newPassword-schema.js` | New-password strength and confirmation |
 | `profile-schema.js` | Registration profile fields and skills |
 
-### 11.3 Candidate Validation
+### 11.3 Current Validation Coverage
 
-`src/features/candidate/schema/onboardingSchema.js` exports a required-field schema used directly with `safeParse` inside `ChipSelectStep`; onboarding does not use React Hook Form. `ForgetPasswordPage` similarly owns an inline email schema and controlled state. Other candidate tabs mix controlled local state and presentation-only save behavior. Standardize these flows when persistence is connected.
+| Area | Current mechanism |
+| :--- | :--- |
+| Login, registration, OTP, profile completion, password reset | React Hook Form + Zod resolver |
+| Forgot password | Inline Zod schema + controlled local state |
+| Candidate onboarding | Direct `safeParse` with local state |
+| Candidate job application | React Hook Form field rules, no Zod resolver |
+| Candidate profile tabs | Controlled local state, minimal truthy checks, simulated saves |
+| Admin user forms | Controlled local state, truthy name/email checks, no schema |
+| WIP CMS editor | Raw controlled inputs with no payload schema |
 
-### 11.4 Sequential Form Errors
+Treat React Hook Form + Zod as the target for new forms, not a statement that every current form already follows it.
+
+### 11.4 Validation Drift
+
+Registration accepts PDF/DOC/DOCX up to 10 MB, while candidate CV management uses a 5 MB limit and a looser extension fallback. `remember_me` is present in login UI but is not part of the login schema/session logic. Auth validation messages are hard-coded English even though empty `validation.json` locale files exist.
+
+Standardize file policy and move user-facing validation copy into loaded namespaces before backend integration.
+
+### 11.5 Sequential Form Errors
 
 `src/features/auth/shared/SequentialFormMessage.jsx` centralizes the one-error-at-a-time animated auth error pattern. New auth forms should reuse it rather than copying the logic.
 
 The pattern improves focus, but forms must still expose an accessible summary or appropriate field association for assistive technology.
-
-### 11.5 Admin Form Drift
-
-The WIP admin user pages use local controlled form state and simple disabled-button checks rather than React Hook Form + Zod. This is acceptable only while the pages are prototypes. Before commit/production integration, move user create/edit/role/status operations behind validated mutation hooks.
 
 ---
 
@@ -817,7 +882,9 @@ Use semantic theme classes such as:
 - `border-border`
 - `text-success`, `text-warning`, `text-error`
 
-The current code still contains arbitrary colors and shadow values, so “theme tokens only” is a direction for consistency rather than a fully achieved rule.
+The current code still contains arbitrary colors and shadow values, so “theme tokens only” is a direction for consistency rather than a fully achieved rule. Many generated UI primitives also contain `dark:` utilities, but `src/index.css` does not define a dark custom variant or dark theme palette. Decide whether dark mode is supported before relying on those classes.
+
+The generated UI primitives also expect shadcn semantic tokens that are not defined in this MatchIn theme: `card`, `foreground`, `popover`, `input`, `ring`, `destructive`, and `muted-foreground` variants. Utilities such as `bg-card`, `border-input`, `ring-ring`, and `bg-destructive` therefore do not have matching theme values and can produce incomplete primitive styling.
 
 ### 12.2 Global UI Primitives
 
@@ -841,11 +908,15 @@ These are the canonical reusable form, overlay, navigation, feedback, and layout
 import { cn } from "@/lib/utils";
 ```
 
-The separate `cn` npm dependency remains in `package.json`, but no current source file imports it. Remove the package after confirming the lockfile update.
+The separate `cn` npm dependency is actively imported by 19 of the 20 global UI primitives; only `skeleton.jsx` currently uses the local utility. This leaves two class-merging conventions in the codebase. New code should use `@/lib/utils`, and the existing primitives should be migrated before the npm dependency is removed.
 
 ### 12.4 Local Fonts and Branding
 
-Local font assets are committed for Inter, Tajawal, and DM Sans. Logo assets include light, dark/navy, icon, and wordmark variants. Prefer these local assets over remote font/image dependencies.
+Local font assets are committed for Inter, Tajawal, DM Sans, and Alexandria. Logo assets include light, dark/navy, icon, and wordmark variants.
+
+`src/index.css` declares font-family theme variables, but there are no `@font-face` rules and no CSS/JS imports of the committed font files. The current production build therefore does not emit those font assets. Either register the local files explicitly or intentionally switch to a tested delivery strategy; family names alone do not load a font.
+
+The code also uses `font-headline-*`, `font-body-*`, and `font-display` utilities that are not declared in `@theme`, so those classes currently have no project-defined typography effect.
 
 ### 12.5 Motion
 
@@ -871,7 +942,7 @@ The application now has a more deliberate state-view vocabulary:
 - Auth reset and saving states
 - Custom `Status` and `Toast` components
 
-These should eventually be standardized further so the same state does not produce several unrelated visual patterns.
+These should eventually be standardized further so the same state does not produce several unrelated visual patterns. Many currently render polished loading/error/empty states that their mock loaders cannot reach because the local promises never reject or omit data.
 
 ### 12.7 Accessibility
 
@@ -884,7 +955,7 @@ Radix primitives provide a strong base for dialogs, popovers, selects, tabs, che
 - Sufficient contrast
 - Screen-reader status/error announcements
 
-No automated accessibility test suite is currently configured.
+Current gaps include a custom shared `Modal` without dialog semantics/focus trapping, clickable audit `<tr>` elements without keyboard semantics, and CMS section headers that nest a checkbox/label inside a button. No automated accessibility test suite is configured, and nonessential motion does not yet have an explicit reduced-motion strategy.
 
 ---
 
@@ -894,29 +965,44 @@ No automated accessibility test suite is currently configured.
 
 Localization lives under `src/components/shared/i18n/`:
 
-- `index.js`
-- `I18nSync.jsx`
-- `languageStorage.js`
-- `locales/en/common.json`
-- `locales/ar/common.json`
+- `index.js` — initializes bundled i18next resources.
+- `I18nSync.jsx` — changes i18n language and document `lang`/`dir`.
+- `languageStorage.js` — persists only the selected language under `skillmatch_last_route` and migrates old full-path values.
+- `locales/{en,ar}/common.json` — public, auth, and shared UI copy.
+- `locales/{en,ar}/dashboard.json` — dashboard navigation/overview copy.
+- `locales/{en,ar}/validation.json` — empty files, not loaded by the active i18n initializer and not imported anywhere.
 
-The application uses `i18next` and `react-i18next`, stores a language preference in browser storage, and provides language controls in public, auth, and dashboard contexts.
+`main.jsx` imports the shared i18n module for side-effect initialization. `LanguageLayout` then mounts `I18nSync` for each supported URL language. No React context provider is active; `src/app/providers/I18nProvider.jsx` is empty and unused.
 
-### 13.2 RTL Support
+### 13.2 Language Routing
+
+Only `en` and `ar` are accepted. The supported-language list is duplicated in `LanguageLayout`, `I18nSync`, and `RootRedirect`; centralize it before adding more locales.
+
+Current edge cases:
+
+- Unlocalized one-segment paths such as `/dashboard` are interpreted as an invalid language and redirect to `/en`.
+- Unsupported localized paths such as `/fr/dashboard` lose the rest of the path and redirect to `/en`, not `/en/dashboard`.
+- `localizedPath` assumes an unlocalized input; passing `/en/dashboard` produces `/en/en/dashboard`.
+- Header, auth, and topbar language switchers preserve path differently; some drop query/hash state.
+- Admin route metadata references missing dashboard translation keys (`jobManagement`, `usermanagement`, `auditLogs`, and `cms`), so English fallbacks remain in Arabic.
+
+Use `localizedPath`/`useLocalizedPath` for internal SPA links, with canonical unlocalized route paths as inputs.
+
+### 13.3 RTL Support
 
 The UI has been migrated toward CSS logical properties so spacing, borders, and directional layout can adapt to Arabic. New CSS should prefer logical properties such as `ms-*`, `me-*`, `ps-*`, `pe-*`, `border-start-*`, and `border-end-*` where directional behavior matters.
 
-Do not introduce left/right physical utilities for components that must support both English and Arabic unless the distinction is intentionally language-specific.
+Some newer WIP/admin code still uses physical utilities such as `left-*`, `right-*`, `pl-*`, and `pr-*`. Do not introduce more physical direction utilities unless the distinction is intentionally language-specific.
 
-### 13.3 Translation Coverage
+### 13.4 Translation Coverage
 
-Authentication and shared navigation have meaningful translation resources. Much of the candidate/admin UI remains hard-coded English. Feature work should add translation keys when user-facing strings are introduced rather than postponing extraction.
+The public landing page, auth pages, sidebar, and candidate overview have meaningful translation resources. Most other candidate workflows and all current admin pages remain hard-coded English. Admin sidebar metadata is only partially localized because its keys are missing from the dashboard resources.
 
-Keep backend/network error text separate from UI copy so it can be localized consistently.
+Feature work should add translation keys when user-facing strings are introduced. Keep backend/network error text separate from UI copy so it can be localized consistently.
 
-### 13.4 Legacy i18n Caveat
+### 13.5 Legacy i18n Caveat
 
-`src/lib/i18n.js` is a separate legacy setup and references packages not listed in `package.json`. The current build succeeds because the active shared i18n path does not require those missing packages. Remove or repair the legacy file to prevent future accidental imports from breaking the build.
+`src/lib/i18n.js` is a separate dormant implementation and references packages not listed in `package.json`. The current build succeeds because the active shared i18n path does not require those missing packages. Remove it or make it the single tested i18n entry point.
 
 ---
 
@@ -963,7 +1049,7 @@ Avoid long parent traversals such as `../../../../`.
 - Shared/reusable components commonly use named exports.
 - UI primitives use named exports.
 - Admin feature folders use `index.js` barrels selectively.
-- Some WIP pages use named exports while route modules import them by name.
+- Some admin pages use named exports while route modules import them by name.
 
 For a page used by the router, choose one export style and update the route import consistently. Avoid mixing default and named exports for the same component without a reason.
 
@@ -989,7 +1075,7 @@ Do not put feature-specific admin controls into global shared components merely 
 
 Page modules should primarily compose feature components and connect state/data. Extract large tables, forms, status sections, and repeated cards when a page becomes difficult to scan.
 
-The three WIP admin detail/management pages currently violate this guideline and should be split before they are treated as stable architecture.
+The large job/user detail pages and the WIP CMS editor currently violate this guideline and should be split by responsibility before they are treated as stable architecture.
 
 ---
 
@@ -999,18 +1085,20 @@ The three WIP admin detail/management pages currently violate this guideline and
 | :--- | :--- | :--- |
 | `react`, `react-dom` | UI runtime | Used throughout |
 | `react-router-dom` | Routing, links, params, route matches | Central to application shell |
-| `@tanstack/react-query` | Server cache/read/mutation infrastructure | Provider mounted; little feature usage |
-| `@reduxjs/toolkit`, `react-redux` | Global client state | Store mounted; no meaningful slices yet |
-| `axios` | REST networking | Two configurations remain |
-| `react-hook-form` | Form state | Used by auth/onboarding and selected forms |
-| `zod`, `@hookform/resolvers` | Schema validation | Used in auth and onboarding |
+| `@tanstack/react-query` | Server cache/read/mutation infrastructure | Provider/devtools mounted; zero feature hooks or requests |
+| `@reduxjs/toolkit`, `react-redux` | Global client state | Store mounted with an empty reducer map |
+| `axios` | REST networking | Two unused configurations; no feature request |
+| `react-hook-form` | Form state | Used by login, registration, OTP, profile completion, and password reset; not onboarding |
+| `zod`, `@hookform/resolvers` | Schema validation | Used in auth; onboarding and forgot-password call Zod directly |
 | `framer-motion` | UI motion | Used extensively |
 | `radix-ui`, `@radix-ui/react-slot` | Accessible primitives | Used by UI layer |
 | `class-variance-authority` | Variant classes | Used by primitives |
-| `clsx`, `tailwind-merge` | `cn` implementation | Canonical utility |
+| `clsx`, `tailwind-merge` | `cn` implementation | Canonical local utility |
+| `tw-animate-css` | shadcn-style animation utilities | Imported by `src/index.css` |
+| `cn` | Alternate class-name utility | Imported by 19 global UI primitives; migrate to local utility before removal |
 | `lucide-react` | Icons | Standard icon source |
 | `i18next`, `react-i18next` | Localization | Active through shared i18n layer |
-| `js-cookie` | Browser cookie access | Part of current auth/networking design; standardize before production |
+| `js-cookie` | Browser cookie access | No current imports; unused |
 | `cmdk` | Command UI | Used by command/search primitives |
 | `input-otp` | OTP slots | Used by auth OTP step |
 | `jest` | Test runner | Installed but no script or tests are present |
@@ -1059,11 +1147,13 @@ Avoid adding a second library for a concern already covered by the stack unless 
 
 1. Add a feature-local page.
 2. Import it in `src/app/routes/dashboard.routes.jsx` or the appropriate route module.
-3. Give sidebar routes `handle.label`, `handle.labelKey`, `handle.icon`, and `handle.sidebar`.
+3. Give sidebar routes `handle.label`, `handle.labelKey`, `handle.icon`, and `handle.sidebar`; ensure the key exists in both dashboard locale files.
 4. Add nested children only when the URL hierarchy reflects the user task.
-5. Ensure `useParams()` names match route params.
-6. Test every link to and from the route.
-7. Do not add a hardcoded role branch; use authenticated role state.
+5. Ensure `useParams()` names exactly match route params.
+6. Build internal links from canonical unlocalized paths with `localizedPath`/`useLocalizedPath`.
+7. Ensure a visible control actually navigates to detail routes; do not register direct-URL-only pages accidentally.
+8. Test every link to and from the route in both languages and in the correct role branch.
+9. Do not add a hardcoded role branch; use authenticated role state.
 
 ### 16.5 Add an Admin Feature
 
@@ -1091,101 +1181,134 @@ There is currently no reliable `npm test` command. Add and document one when a t
 
 ### 17.1 Critical
 
-#### 1. Role Selection Is Hardcoded
+#### 1. Public Admin Dashboard With No Guard
 
-`const role = "admin"` makes the admin branch the only active dashboard route tree. Candidate routes exist but cannot be selected in the current build.
+`const role = "admin"` makes the admin branch the only active dashboard route tree, and `router.jsx` mounts `DashboardLayout` without authentication or role protection. Any visitor can open the admin UI.
 
-**Required action:** derive role from authenticated user state and test both branches. Keep backend authorization independent of client routing.
+**Required action:** implement session bootstrap and explicit route guards, derive the route tree from authenticated role/permissions, and keep backend authorization independent of client routing.
 
-#### 2. WIP User Detail Route Contract Is Broken
+#### 2. Candidate and Public Links Do Not Match the Active Route Tree
 
-The route uses `:id`, but `UsersDetailsPage` expects `userId`. The page also links to `/admin/users`, while the registered list route is `/admin/user-management`.
+Public/registration/candidate links target candidate pages that are not selected and fall through to 404. Shared job-card links currently do the same because the duplicate admin route key prevents `jobs/:id` from being registered. Once that key is fixed, the admin and candidate job-detail URL shapes will collide unless they are separated by role-aware paths.
 
-**Required action:** choose one canonical URL, align `useParams()`, and update every breadcrumb/back/detail link before committing.
+**Required action:** define a real role strategy, make route and navigation generation role-aware, and test every public → auth → workspace transition.
 
-#### 3. Authentication Is Not Backend-Integrated
+#### 3. Authentication Does Not Establish a Session
 
-The current auth API module defines no request functions. Login, registration, OTP, recovery, and reset behavior cannot yet establish a real server session.
+The auth API defines no request. Login and password reset log full credential objects; registration/OTP/upload/analysis/reset are local simulations; no token is written; Redux has no auth state; no guard exists.
 
-**Required action:** define endpoint contracts, standardize Axios/interceptors, and move auth mutations into Query hooks or a deliberate auth service/state layer.
+**Required action:** remove credential logging immediately, then define endpoint contracts and a session state machine before protecting any route or displaying real user/role data.
 
 ### 17.2 High
 
-#### 4. Two Axios Clients Still Coexist
+#### 4. Admin Route Object, Parameters, and Links Are Broken
 
-`src/lib/axios.js` and `src/services/axios/axiosInstance.js` use different environment variables, timeouts, and token conventions.
+- A duplicate `path` key overwrites `jobs/:id` with `audit-logs`.
+- The surviving object retains `JobDetailsPage` as parent element and has no `Outlet`, so the audit children cannot render.
+- `users/:id` supplies `id`, but `UsersDetailsPage` reads `userId`.
+- The intended job route supplies `id`, but `JobDetailsPage` reads `jobId`.
+- User/job pages navigate to unregistered `/admin/...` paths and do not preserve the language segment.
+- Job-management rows and audit navigation still use placeholders instead of detail routes.
 
-**Required action:** keep one client, register interceptors in the same module that creates it, and document the token lifecycle.
+**Required action:** split the route objects, add the required outlets, align parameter names, use canonical localized `/{lang}/dashboard/...` paths, and wire producer controls.
 
-#### 5. Legacy i18n Setup Contains Missing Imports
+#### 5. `LoginFooter` Can Fail at Runtime
 
-`src/lib/i18n.js` is not on the active build path but references uninstalled packages.
+`LoginFooter.jsx` renders a React Router `<Link>` without a `to` prop. React Router can throw its “link must have a `to` prop” invariant when the login page renders; the production build does not catch this.
 
-**Required action:** remove it or make it the single tested i18n entry point.
+**Required action:** supply a localized destination or use a normal anchor until the terms route exists.
 
-#### 6. No Automated Tests
+#### 6. Axios Configuration Is Split and Inactive
 
-The repository has no test files, no test script, and no CI workflow. Jest is installed but unused.
+Two clients remain. `apiClient` is unused; the service `api` has no active interceptor because nothing imports `interceptors.js`; `auth.api.js` contains only an unused import. No request is made anywhere.
 
-**Required action:** prioritize tests for schemas, auth/session logic, route guards, API response mapping, and critical state transitions.
+**Required action:** keep one client, register interceptors where the client is created, normalize errors, and document the token lifecycle.
 
-#### 7. WIP Admin Pages Are Monolithic
+#### 7. No Automated Tests or CI
 
-The three untracked admin pages are approximately 638–762 lines each and combine data simulation, tables/forms, modals, state transitions, and presentation.
+There are no test/spec files, no test script, and no GitHub Actions workflow. Jest is installed but unused.
 
-**Required action:** split them into page orchestration, feature components, schemas, mock/API adapters, and shared admin primitives before commit.
+**Required action:** prioritize tests for language redirects, route matching/guards, role selection, params, sidebar generation, auth state transitions, and API mapping.
+
+#### 8. Large Admin Pages Combine Too Many Responsibilities
+
+`CmsHomePage.jsx` is 1,344 lines; `JobDetailsPage.jsx`, `UsersDetailsPage.jsx`, and `UserManagementPage.jsx` are 783, 628, and 461 lines respectively. They combine mock requests, data schemas, forms/tables, modals, state transitions, and presentation.
+
+The CMS editor also writes both “Save draft” and “Save changes” to the same `cms:home:draft` key, has no published snapshot/version contract, and its generic list editor assumes object records even where the defaults contain translated strings. Nested controls and draft/reset semantics are not production-safe.
+
+**Required action:** define the CMS payload/version contract, connect a public consumer, fix mixed list schemas, then split the editor into page orchestration, feature components, schemas, persistence/API adapters, and shared admin primitives.
 
 ### 17.3 Medium
 
-#### 8. Lint Has 34 Warnings
+#### 9. Several URL Parameters and Queries Are Decorative
 
-Current warnings include unused imports/variables, Fast Refresh export warnings, state updates inside effects, a `children` prop, a constant logical comparison, and a React Hook Form `watch()` compiler warning.
+Candidate `JobsDetails`, `RoadmapDetailsPage`, and `ApplicationDetail` do not consume their route IDs. Category links emit `?category=...`, but the jobs page does not read search params. Profile tabs use local state rather than URL segments.
 
-`npm run lint` exits without errors, but warnings should be reduced to zero for a clean quality gate.
+**Required action:** either make the URL the source of truth or remove misleading params/tabs from the route contract.
 
-#### 9. Large Eager Bundle
+#### 10. No Centralized Route Constants
 
-The production JavaScript bundle is approximately 1.08 MB before gzip because all route pages are imported eagerly.
+`src/utils/routes.js` contains language helpers, not canonical route names/paths. Strings are repeated across routes, layouts, pages, constants, and mock data, which caused the `/admin` versus `/{lang}/dashboard` drift.
 
-**Required action:** introduce route-level lazy loading and split large feature dependencies such as chat/chart-like UI where practical.
+**Required action:** centralize canonical unlocalized route builders and make `localizedPath` consume those builders.
 
-#### 10. No Application Error Boundary
+#### 11. Placeholder and Unregistered Navigation
 
-Feature-specific error states exist, but there is no root React error boundary for render-time failures.
+Committed and WIP code still contains `#` links and many routes referenced only by UI (for example post-a-job, upload-CV, methodology, legal/resource/company pages, and CMS default content). Audit-log search/filter/sort/pagination/export controls are also mostly decorative, and the two mock rows conflict with the displayed “248 logs / 25 pages” summary. `vercel.json` correctly rewrites direct SPA URLs, but missing destinations still do not exist.
 
-**Required action:** add a user-safe error boundary with logging/reporting integration.
+**Required action:** remove placeholders, implement destinations, or render non-link text until a route exists.
 
-#### 11. Inconsistent Feature Data Ownership
+#### 12. i18n Architecture and Coverage Are Incomplete
 
-Some features read centralized constants, while others embed large page-local mock datasets and timers.
+Supported-language lists are duplicated. `validation.json` resources are not loaded. Admin translation keys are missing. One legacy i18n file has missing dependencies, and the nominal `I18nProvider` is empty. Public and auth switchers preserve query/hash differently.
+
+**Required action:** centralize locale configuration, load every declared namespace, complete feature keys, and test route-state preservation in both languages.
+
+#### 13. Dashboard Identity and Components Contradict the Active Role
+
+The route selects admin, while the topbar displays hardcoded `Alex Mercer` / `Senior Dev` and imports candidate notification UI. The layout defaults repeat the same identity.
+
+**Required action:** source user/role from authenticated state and make shell components role-aware.
+
+#### 14. Lint Has 32 Warnings
+
+Warnings include the duplicate `path` key in `dashboard.routes.jsx`, unused imports/variables (including WIP CMS code), Fast Refresh export warnings, state updates inside effects, a `children` prop, a constant logical comparison, and React Hook Form `watch()` compiler guidance.
+
+**Required action:** reduce warnings to zero; do not rely on the current zero-error exit as a clean quality gate.
+
+#### 15. Large Eager Bundle and No Route Boundaries
+
+All pages are eagerly imported, producing approximately 1.13 MB of JavaScript before gzip, and Query devtools are mounted unconditionally. The router has no route `errorElement`, Suspense fallback, loader/action, or `ScrollRestoration`.
+
+**Required action:** lazy-load route pages, gate devtools to development, add route error/loading boundaries, and implement scroll restoration.
+
+#### 16. Inconsistent Feature Data Ownership
+
+Features mix centralized constants, large page-local mocks, and timers. None use the mounted Query client, and many intervals/timeouts are not cancelled on unmount.
 
 **Required action:** standardize API → Query → component data flow before adding more mutations.
 
-#### 12. Placeholder and Dead Navigation
+#### 17. Typography and Semantic Theme Tokens Are Incomplete
 
-The WIP admin pages contain `#` links and links to unregistered paths. Some old shared components also appear orphaned.
+`src/index.css` declares Inter, DM Sans, Alexandria, and Tajawal family variables, but no `@font-face` or imports connect those names to the committed TTF files. They are absent from the production output, while `font-display`, `font-headline-*`, and `font-body-*` are used without definitions.
 
-**Required action:** run a route/link audit and remove or wire unused components before release.
+The same stylesheet omits shadcn semantic tokens expected by the generated UI primitives (`card`, `foreground`, `popover`, `input`, `ring`, `destructive`, and `muted-foreground` families).
+
+**Required action:** register the intended local files/weights, align the UI token contract, and verify actual font/Arabic rendering plus primitive states.
 
 ### 17.4 Low
 
-#### 13. Naming and Export Drift
+#### 18. Naming, Export, and Orphan Cleanup
 
-The repository mixes default/named page exports, singular/plural page names, and a few inconsistent schema/component names.
+The repository mixes route/component names (`reset-password` vs `SetNewPassword`, `ForgetPasswordPage`, `JobsDetails`), default/named exports, and physical/logical CSS utilities. `JobsPage.jsx` also contains the invalid `text--primary` utility. The root `README.md` is still the generic Vite template rather than project setup documentation. Branding is also mixed: the package and language-storage key still use `skillmatch`, and CMS/admin mock copy still contains `SkillMatch`. Global `Navbar`, `Loader`, `PageHeader`, and `Toast`, plus `ProfileTabsNav`, several onboarding components, the duplicate auth `Progress.jsx` (which imports an undeclared Radix package), the near-duplicate `components/jobManagement/JobManagement.jsx`, the empty i18n provider, and the legacy i18n module are currently orphaned or shadowed by feature-specific replacements.
 
-**Required action:** apply the conventions in Section 14 to new work; avoid mass renames without dedicated regression passes.
+**Required action:** clean these during focused refactors, not as an unreviewed repository-wide rename.
 
-#### 14. Dependency Cleanup
+#### 19. Dependency Cleanup
 
-`cn` and `jest` are installed alongside canonical local utilities/new test plans. Type packages are installed even though the project is JavaScript.
+`js-cookie` and Jest are installed but unused by current source; type packages are installed in a JavaScript project. The `cn` package is still used by 19 UI primitives and must not be removed until those imports are migrated.
 
-**Required action:** verify actual imports and remove unused dependencies.
-
-#### 15. Translation Coverage Is Uneven
-
-Authentication/navigation are localized, while many feature strings remain hard-coded English.
-
-**Required action:** add keys incrementally in each feature and test Arabic/RTL layouts in CI or review.
+**Required action:** verify imports and remove unused packages/lockfile entries.
 
 ---
 
@@ -1216,13 +1339,13 @@ Authentication/navigation are localized, while many feature strings remain hard-
 1. Use `@/lib/utils` for `cn`.
 2. Use semantic Tailwind theme tokens where practical.
 3. Use existing UI primitives before creating duplicates.
-4. Use `Link`/`NavLink`; never commit placeholder `#` links.
+4. Use `Link`/`NavLink` with `localizedPath`; never commit placeholder `#` links.
 5. Keep API calls outside rendering components.
 6. Use TanStack Query for server data once endpoints exist.
 7. Use Redux only for genuine global client state.
 8. Validate forms with React Hook Form and Zod.
 9. Reuse auth shared components instead of copying form/error/password logic.
-10. Register dashboard route metadata consistently.
+10. Register dashboard metadata with translation keys present in both locales.
 11. Match route params with `useParams()` exactly.
 12. Provide loading, empty, error, and success states.
 13. Add English and Arabic copy for new user-facing text.
@@ -1239,7 +1362,7 @@ Authentication/navigation are localized, while many feature strings remain hard-
 ```text
 [ ] Correct feature-domain placement
 [ ] Route registered and navigable in both directions
-[ ] Route params and links match
+[ ] Route params and localized links match in both languages
 [ ] No direct Axios/fetch calls in components
 [ ] Loading/empty/error/pending states implemented
 [ ] Form validation and duplicate-submit protection implemented

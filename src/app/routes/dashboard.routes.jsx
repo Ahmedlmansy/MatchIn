@@ -31,6 +31,7 @@ import { UserManagementPage } from "@/features/admin/pages/UserManagementPage";
 import { JobDetailsPage } from "@/features/admin/pages/JobDetailsPage";
 import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
 import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
+import CmsHomePage from "@/features/admin/pages/CmsHomePage";
 
 const role = "admin";
 
@@ -169,25 +170,33 @@ export const dashboard =
           },
         },
         {
-          path: "jobs/:id",
-          element: <JobDetailsPage />,
-          path: "audit-logs",handle: {
-                label: "Audit Logs",
-                labelKey: "navigation.auditLogs",
-                icon: List,
-                sidebar: true,
-              },
+         
+          path: "audit-logs",
+          handle: {
+            label: "Audit Logs",
+            labelKey: "navigation.auditLogs",
+            icon: List,
+            sidebar: true,
+          },
           children: [
             {
               index: true,
               element: <AuditLogsList />,
-              
             },
             {
               path: ":auditId",
               element: <AuditLogDetails />,
-              
             },
           ],
+        },
+        {
+          path: "cms",
+          element: <CmsHomePage />,
+          handle: {
+            label: "CMS",
+            labelKey: "navigation.cms",
+            icon: Users,
+            sidebar: true,
+          },
         },
       ];
