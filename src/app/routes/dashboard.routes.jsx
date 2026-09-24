@@ -25,7 +25,7 @@ import RoadmapPage from "@/features/candidate/pages/RoadmapPage";
 import SavedJobs from "@/features/candidate/pages/SavedJobs";
 import AdminOverview from "@/features/admin/pages/AdminOverview";
 import JobManagement from "@/features/admin/pages/JobManagement";
-import EditJob from "@/features/admin/pages/Edit jobs"; 
+import EditJob from "@/features/admin/pages/EditJobs"; 
 import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
 import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
 
@@ -152,14 +152,7 @@ export const dashboard =
           },
         },
         {
-          path: "edit", 
-          element: <EditJob />,
-          handle: {
-            label: "Edit Job",
-            labelKey: "navigation.editJob",
-            icon: BriefcaseBusiness,
-            sidebar: false, 
-          },
+          
           path: "audit-logs",handle: {
                 label: "Audit Logs",
                 labelKey: "navigation.auditLogs",
@@ -178,5 +171,14 @@ export const dashboard =
               
             },
           ],
-        },
+        },{
+          path: "edit", 
+          element: <EditJob />,
+          handle: {
+            label: "Edit Job",
+            labelKey: "navigation.editJob",
+            icon: BriefcaseBusiness,
+            sidebar: false, 
+          },
+        }
       ];

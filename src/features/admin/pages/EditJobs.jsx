@@ -3,14 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { RotateCcw, CheckCircle2, ArrowLeft } from 'lucide-react';
 
 // استدعاء المكونات الفرعية
-import UnsavedChangesBanner from '../components/edit jobs/UnsavedChangesBanner';
-import JobInformationSection from '../components/edit jobs/JobInformationSection';
-import DescriptionSection from '../components/edit jobs/DescriptionSection';
-import ResponsibilitiesSection from '../components/edit jobs/ResponsibilitiesSection';
-import SkillsSection from '../components/edit jobs/SkillsSection';
-import LocationWorkSection from '../components/edit jobs/LocationWorkSection';
-import StatusSection from '../components/edit jobs/StatusSection';
-import SkeletonLoader from '../components/edit jobs/SkeletonLoader';
+import UnsavedChangesBanner from '../components/editJobs/UnsavedChangesBanner';
+import JobInformationSection from '../components/editJobs/JobInformationSection';
+import DescriptionSection from '../components/editJobs/DescriptionSection';
+import ResponsibilitiesSection from '../components/editJobs/ResponsibilitiesSection';
+import SkillsSection from '../components/editJobs/SkillsSection';
+import LocationWorkSection from '../components/editJobs/LocationWorkSection';
+import StatusSection from '../components/editJobs/StatusSection';
+import SkeletonLoader from '../components/editJobs/SkeletonLoader';
 
 const initialData = {
   jobTitle: 'Senior Frontend Engineer',
