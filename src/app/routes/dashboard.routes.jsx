@@ -8,6 +8,7 @@ import {
   PersonStanding,
   ClipboardList,
   BriefcaseBusiness,
+  List,
 } from "lucide-react";
 import AiChatPage from "@/features/candidate/pages/AiChatPage";
 import ApplicationDetail from "@/features/candidate/pages/ApplicationDetail";
@@ -25,6 +26,8 @@ import SavedJobs from "@/features/candidate/pages/SavedJobs";
 import AdminOverview from "@/features/admin/pages/AdminOverview";
 import JobManagement from "@/features/admin/pages/JobManagement";
 import EditJob from "@/features/admin/pages/Edit jobs"; 
+import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
+import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
 
 const role = "admin";
 
@@ -157,5 +160,23 @@ export const dashboard =
             icon: BriefcaseBusiness,
             sidebar: false, 
           },
+          path: "audit-logs",handle: {
+                label: "Audit Logs",
+                labelKey: "navigation.auditLogs",
+                icon: List,
+                sidebar: true,
+              },
+          children: [
+            {
+              index: true,
+              element: <AuditLogsList />,
+              
+            },
+            {
+              path: ":auditId",
+              element: <AuditLogDetails />,
+              
+            },
+          ],
         },
       ];
