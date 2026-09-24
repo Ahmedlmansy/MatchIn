@@ -4,14 +4,14 @@ import { cn } from "@/lib/utils";
  * Canonical status -> visual token map for admin job/listing statuses.
  */
 const STATUS_VARIANTS = {
-  active: "bg-[#4F7A5A]/10 text-[#4F7A5A]",
+  active: "bg-success/10 text-success",
   draft: "bg-background text-[#44474E] border border-border",
   expired: "bg-[#B3271E]/10 text-[#B3271E]",
   closed: "bg-background text-muted border border-border",
 };
 
 const STATUS_DOTS = {
-  active: "bg-[#4F7A5A]",
+  active: "bg-success",
   draft: "bg-muted",
   expired: "bg-[#B3271E]",
   closed: "bg-muted",
