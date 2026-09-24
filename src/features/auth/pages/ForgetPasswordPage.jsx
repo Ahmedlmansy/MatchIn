@@ -62,7 +62,7 @@ export default function ForgetPasswordPage() {
       <main className="max-w-md w-full mx-auto my-auto py-2">
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 flex flex-col items-center text-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100/80 text-gray-600 text-xs font-medium mb-6">
-            <span className="w-2 h-2 rounded-full bg-[#D06B4F]"></span>
+            <span className="w-2 h-2 rounded-full bg-secondary"></span>
             {t("auth.forgot.badge")}
           </div>
 
