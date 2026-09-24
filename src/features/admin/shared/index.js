@@ -20,3 +20,4 @@ export {
 } from "./SkeletonLoader";
 
 export { containerVariants, rowVariants } from "./motion";
+export { RoleBadge, UserStatusBadge, ROLE_LABELS, STATUS_LABELS } from "./UserBadges";

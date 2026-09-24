@@ -8,6 +8,7 @@ import {
   PersonStanding,
   ClipboardList,
   BriefcaseBusiness,
+  Users,
   List,
 } from "lucide-react";
 import AiChatPage from "@/features/candidate/pages/AiChatPage";
@@ -25,8 +26,12 @@ import RoadmapPage from "@/features/candidate/pages/RoadmapPage";
 import SavedJobs from "@/features/candidate/pages/SavedJobs";
 import AdminOverview from "@/features/admin/pages/AdminOverview";
 import JobManagement from "@/features/admin/pages/JobManagement";
+import { UsersDetailsPage } from "@/features/admin/pages/UsersDetailsPage";
+import { UserManagementPage } from "@/features/admin/pages/UserManagementPage";
+import { JobDetailsPage } from "@/features/admin/pages/JobDetailsPage";
 import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
 import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
+import CmsHomePage from "@/features/admin/pages/CmsHomePage";
 
 const role = "admin";
 
@@ -151,23 +156,47 @@ export const dashboard =
           },
         },
         {
-          path: "audit-logs",handle: {
-                label: "Audit Logs",
-                labelKey: "navigation.auditLogs",
-                icon: List,
-                sidebar: true,
-              },
+          path: "users/:id",
+          element: <UsersDetailsPage />,
+        },
+        {
+          path: "user-management",
+          element: <UserManagementPage />,
+          handle: {
+            label: "User Management",
+            labelKey: "navigation.usermanagement",
+            icon: Users,
+            sidebar: true,
+          },
+        },
+        {
+         
+          path: "audit-logs",
+          handle: {
+            label: "Audit Logs",
+            labelKey: "navigation.auditLogs",
+            icon: List,
+            sidebar: true,
+          },
           children: [
             {
               index: true,
               element: <AuditLogsList />,
-              
             },
             {
               path: ":auditId",
               element: <AuditLogDetails />,
-              
             },
           ],
+        },
+        {
+          path: "cms",
+          element: <CmsHomePage />,
+          handle: {
+            label: "CMS",
+            labelKey: "navigation.cms",
+            icon: Users,
+            sidebar: true,
+          },
         },
       ];
