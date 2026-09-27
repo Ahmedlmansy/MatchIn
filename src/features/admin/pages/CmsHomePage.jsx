@@ -636,8 +636,8 @@ export default function CmsHomePage() {
           onValueChange={setActiveTab}
           className="mt-8 gap-5"
         >
-          <div className="sticky top-0 z-10 h-auto rounded-2xl border border-border bg-surface/90 p-2 shadow-sm backdrop-blur-sm">
-            <TabsList className="flex h-[700px] w-full gap-2 overflow-x-auto bg-transparent p-0 scrollbar ">
+          <div className="sticky top-0 h-auto z-10 rounded-2xl border border-border bg-surface/90 p-2 shadow-sm backdrop-blur-sm">
+            <TabsList className="flex w-full gap-2 h-16! overflow-x-auto justify-start bg-transparent px-1 scrollbar-thin ">
               {" "}
               {sectionTabs.map(({ id, group }) => {
                 const info = SECTION_INFO[id];
@@ -653,7 +653,7 @@ export default function CmsHomePage() {
                     value={id}
                     title={info?.label || id}
                     className={cn(
-                      "group relative  min-w-100 min-h-auto flex-col items-start gap-1 rounded-xl px-3 py-3 text-left text-muted",
+                      "group relative min-w-40 h-auto flex-col items-start gap-1 rounded-xl px-2 py-1 text-start text-muted",
                       "transition-all duration-200 ease-out",
                       "hover:bg-muted/50 hover:text-foreground",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1",
