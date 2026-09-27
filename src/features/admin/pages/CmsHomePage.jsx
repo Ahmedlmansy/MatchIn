@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import CmsToastStack from "@/features/admin/components/CmsHomePage/ToastStack";
 import CmsSectionCard from "@/features/admin/components/CmsHomePage/SectionCard";
@@ -391,25 +392,6 @@ function isI18n(v) {
   return v && typeof v === "object" && ("en" in v || "ar" in v);
 }
 
-/* ------------------------------------------------------------------ */
-/* Toast                                                               */
-/* ------------------------------------------------------------------ */
-
-/* ------------------------------------------------------------------ */
-/* List editor                                                         */
-/* ------------------------------------------------------------------ */
-
-/* ------------------------------------------------------------------ */
-/* Section body field maps (simplified but complete enough)            */
-/* ------------------------------------------------------------------ */
-
-/* ------------------------------------------------------------------ */
-/* Section card                                                        */
-/* ------------------------------------------------------------------ */
-
-/* ------------------------------------------------------------------ */
-/* Main page                                                           */
-/* ------------------------------------------------------------------ */
 
 export default function CmsHomePage() {
   const [state, setState] = useState(() => clone(DEFAULTS));
@@ -417,6 +399,7 @@ export default function CmsHomePage() {
   const [saving, setSaving] = useState(false);
   const [query, setQuery] = useState("");
   const [viewLang, setViewLang] = useState("both");
+  const [activeTab, setActiveTab] = useState("sections");
   const [openSecs, setOpenSecs] = useState(() => new Set(["sections"]));
   const [toasts, setToasts] = useState([]);
 
@@ -533,6 +516,14 @@ export default function CmsHomePage() {
     return blob.toLowerCase().includes(q);
   };
 
+  const sectionTabs = SECTION_META.flatMap(({ group, keys }) =>
+    keys.filter(matchesQuery).map((id) => ({ id, group })),
+  );
+
+  const selectedTab = sectionTabs.some(({ id }) => id === activeTab)
+    ? activeTab
+    : sectionTabs[0]?.id || activeTab;
+
   const ActionRow = (
     <div className="flex flex-wrap items-center gap-2">
       <span
@@ -589,7 +580,9 @@ export default function CmsHomePage() {
           transition={{ duration: 0.4, ease }}
         >
           <div className="mb-2 flex items-start gap-4">
-            <h1 className="text-2xl font-bold text-primary">Home page content</h1>
+            <h1 className="text-2xl font-bold text-primary">
+              Home page content
+            </h1>
           </div>
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -636,34 +629,87 @@ export default function CmsHomePage() {
           </div>
         </motion.div>
 
-        {SECTION_META.map(({ group, keys }) => (
-          <div key={group}>
-            <h2 className="mb-3 mt-8 text-[11px] font-bold uppercase tracking-widest text-muted">
-              {group}
-            </h2>
-            <div className="space-y-3">
-              {keys.filter(matchesQuery).map((id) => (
-                <CmsSectionCard
-                  key={id}
-                  id={id}
-                  open={openSecs.has(id) || !!query}
-                  onToggle={() => toggleSec(id)}
-                  data={state[id]}
-                  rootState={state}
-                  viewLang={viewLang}
-                  langs={LANGS}
-                  isI18n={isI18n}
-                  tx={tx}
-                  clone={clone}
-                  sectionInfo={SECTION_INFO}
-                  ease={ease}
-                  onPatchSection={(patch) => patchSection(id, patch)}
-                  onPatchRoot={patchRoot}
-                />
-              ))}
-            </div>
+        <Tabs
+          value={selectedTab}
+          onValueChange={setActiveTab}
+          className="mt-8 gap-5"
+        >
+          <div className="sticky top-0 z-10 h-auto rounded-2xl border border-border bg-surface/90 p-2 shadow-sm backdrop-blur-sm">
+            <TabsList className="flex h-[700px] w-full gap-2 overflow-x-auto bg-transparent p-0 scrollbar ">
+              {" "}
+              {sectionTabs.map(({ id, group }) => {
+                const info = SECTION_INFO[id];
+                const sectionKey = info?.sectionKey;
+                const visible = sectionKey
+                  ? state.sections?.[sectionKey]?.visible !== false
+                  : true;
+                const isActive = selectedTab === id;
+
+                return (
+                  <TabsTrigger
+                    key={id}
+                    value={id}
+                    title={info?.label || id}
+                    className={cn(
+                      "group relative  min-w-100 min-h-auto flex-col items-start gap-1 rounded-xl px-3 py-3 text-left text-muted",
+                      "transition-all duration-200 ease-out",
+                      "hover:bg-muted/50 hover:text-foreground",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-1",
+                      "after:hidden",
+                      "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm data-[state=active]:scale-[1.02]",
+                    )}
+                  >
+                    <span className="flex w-full items-center justify-between gap-2">
+                      <span className="truncate text-sm font-semibold">
+                        {info?.label || id}
+                      </span>
+                      <span
+                        className={cn(
+                          "h-1.5 w-1.5 shrink-0 rounded-full transition-colors",
+                          visible ? "bg-success" : "bg-muted/50",
+                          !visible && isActive && "bg-primary-foreground/50",
+                        )}
+                      />
+                    </span>
+                    <span
+                      className={cn(
+                        "max-w-[150px] truncate text-[10px] font-medium opacity-70",
+                        isActive && "opacity-90",
+                      )}
+                    >
+                      {group}
+                    </span>
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
           </div>
-        ))}
+
+          {sectionTabs.map(({ id }) => (
+            <TabsContent
+              key={id}
+              value={id}
+              className="mt-0 data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-bottom-1 data-[state=active]:duration-200"
+            >
+              <CmsSectionCard
+                id={id}
+                open={openSecs.has(id) || !!query}
+                onToggle={() => toggleSec(id)}
+                data={state[id]}
+                rootState={state}
+                viewLang={viewLang}
+                langs={LANGS}
+                isI18n={isI18n}
+                tx={tx}
+                clone={clone}
+                sectionInfo={SECTION_INFO}
+                ease={ease}
+                onPatchSection={(patch) => patchSection(id, patch)}
+                onPatchRoot={patchRoot}
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
 
         <div className="mt-8 border-t border-border pt-5">{ActionRow}</div>
       </main>
