@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { useParams, Link } from "react-router-dom";
 import {
   ChevronRight,
@@ -103,6 +104,7 @@ function saveUserDetails(userId, patch) {
 }
 
 export function UsersDetailsPage() {
+  const { t } = useTranslation("dashboard");
   const { userId } = useParams();
 
   const [pageState, setPageState] = React.useState("loading"); // loading | loaded | not-found | error
@@ -206,7 +208,7 @@ export function UsersDetailsPage() {
           <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-muted/15 text-muted">
             <AlertTriangle className="h-5 w-5" />
           </div>
-          <h1 className="mb-1 text-lg font-bold text-ink">User not found</h1>
+          <h1 className="mb-1 text-lg font-bold text-ink">{t("pages.admin.userNotFound")}</h1>
           <p className="mb-5 text-sm text-muted">This user may have been deleted or the link is incorrect.</p>
           <Button asChild className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90">
             <Link to="/admin/users">Back to Users</Link>
@@ -224,7 +226,7 @@ export function UsersDetailsPage() {
           <div className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-error/10 text-error">
             <AlertTriangle className="h-5 w-5" />
           </div>
-          <h1 className="mb-1 text-lg font-bold text-ink">Couldn't load this user</h1>
+          <h1 className="mb-1 text-lg font-bold text-ink">{t("pages.admin.userLoadFailed")}</h1>
           <p className="mb-5 text-sm text-muted">Something went wrong. Please try again.</p>
           <Button onClick={load} className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90">
             Retry
@@ -374,7 +376,7 @@ export function UsersDetailsPage() {
           {/* LEFT */}
           <div>
             {/* Personal Information */}
-            <Section title="Personal Information" hint="Identity & contact">
+            <Section title={t("pages.admin.userDetails.personalInformation")} hint="Identity & contact">
               <div className="grid grid-cols-2 gap-x-6 gap-y-4.5 max-[560px]:grid-cols-1">
                 {isEditing ? (
                   <>
@@ -407,7 +409,7 @@ export function UsersDetailsPage() {
             </Section>
 
             {/* Account Information */}
-            <Section title="Account Information">
+            <Section title={t("pages.admin.userDetails.accountInformation")}>
               <div className="grid grid-cols-2 gap-x-6 gap-y-4.5 max-[560px]:grid-cols-1">
                 <Field label="User ID" value={user.id} mono />
                 <Field label="Role" value={<RoleBadge role={user.role} />} />
@@ -419,7 +421,7 @@ export function UsersDetailsPage() {
             </Section>
 
             {/* Career Profile Summary */}
-            <Section title="Career Profile Summary">
+            <Section title={t("pages.admin.userDetails.careerProfile")}>
               <div className="grid grid-cols-2 gap-x-6 gap-y-4.5 max-[560px]:grid-cols-1">
                 {isEditing ? (
                   <>
@@ -467,7 +469,7 @@ export function UsersDetailsPage() {
             </Section>
 
             {/* CV Status */}
-            <Section title="CV Status">
+            <Section title={t("pages.admin.userDetails.cvStatus")}>
               <div className="grid grid-cols-2 gap-x-6 gap-y-4.5 max-[560px]:grid-cols-1">
                 <Field
                   label="Status"
@@ -493,7 +495,7 @@ export function UsersDetailsPage() {
             </Section>
 
             {/* Applications Summary */}
-            <Section title="Applications Summary" action={{ label: "View all →", onClick: () => {} }} className="px-5 pb-1 pt-1">
+            <Section title={t("pages.admin.userDetails.applications")} action={{ label: "View all →", onClick: () => {} }} className="px-5 pb-1 pt-1">
               {user.applications.map((app, i) => (
                 <div key={i} className="flex items-center justify-between gap-3 border-b border-border py-3 last:border-b-0">
                   <div>
@@ -506,7 +508,7 @@ export function UsersDetailsPage() {
             </Section>
 
             {/* Saved Jobs Summary */}
-            <Section title="Saved Jobs Summary" className="px-5 pb-1 pt-1">
+            <Section title={t("pages.admin.userDetails.savedJobs")} className="px-5 pb-1 pt-1">
               <div className="flex items-center justify-between gap-3 border-b border-border py-3">
                 <span className="text-[13.5px] font-medium text-ink">Total saved</span>
                 <span className="text-sm font-bold text-ink">{user.savedJobs.total}</span>
@@ -528,7 +530,7 @@ export function UsersDetailsPage() {
 
           {/* SIDEBAR */}
           <div className="sticky top-6">
-            <Section title="Role & Status">
+            <Section title={t("pages.admin.userDetails.roleStatus")}>
               <div className="mb-3.5">
                 <div className="mb-1.5 text-[11.5px] font-bold uppercase tracking-wide text-muted">Role</div>
                 <RoleBadge role={user.role} />
@@ -562,7 +564,7 @@ export function UsersDetailsPage() {
               </div>
             </Section>
 
-            <Section title="Dates" className="px-5 pb-1.5 pt-1.5">
+            <Section title={t("pages.admin.userDetails.dates")} className="px-5 pb-1.5 pt-1.5">
               {[
                 ["Created", user.dates.created],
                 ["Last Activity", user.dates.lastActivity],
@@ -578,7 +580,7 @@ export function UsersDetailsPage() {
               ))}
             </Section>
 
-            <Section title="Quick Links">
+            <Section title={t("pages.admin.userDetails.quickLinks")}>
               <div className="flex flex-col gap-2">
                 <Button variant="outline" asChild className="h-10 w-full justify-center gap-2 rounded-xl border-border text-ink">
                   <Link to="#"><FileText className="h-4 w-4" />View Applications</Link>

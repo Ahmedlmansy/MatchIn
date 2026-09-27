@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -95,6 +96,7 @@ function updateJobStatus(jobId, status) {
 }
 
 export function JobDetailsPage() {
+  const { t } = useTranslation("dashboard");
   const { jobId } = useParams();
 
   const [pageState, setPageState] = React.useState("loading"); // loading | loaded | not-found | error
@@ -240,7 +242,7 @@ export function JobDetailsPage() {
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-background">
               <SearchX className="h-7 w-7 text-muted" />
             </div>
-            <h2 className="mb-2 text-xl font-bold text-ink">Job not found</h2>
+            <h2 className="mb-2 text-xl font-bold text-ink">{t("pages.admin.jobNotFound")}</h2>
             <p className="mx-auto mb-7 max-w-sm text-[13.5px] text-muted">
               This job may have been deleted, or the link you followed is no
               longer valid.
@@ -267,7 +269,7 @@ export function JobDetailsPage() {
               <AlertTriangle className="h-7 w-7 text-error" />
             </div>
             <h2 className="mb-2 text-xl font-bold text-ink">
-              Couldn't load this job
+              {t("pages.admin.jobDetails.loadFailed")}
             </h2>
             <p className="mx-auto mb-7 max-w-sm text-[13.5px] text-muted">
               Something went wrong on our end. Please try again.
@@ -578,7 +580,7 @@ export function JobDetailsPage() {
         {/* Description */}
         <JobCard>
           <h2 className="mb-3 font-display text-[15px] font-bold text-ink">
-            Description
+            {t("pages.admin.jobDetails.description")}
           </h2>
           {isEditing ? (
             <Textarea
@@ -597,7 +599,7 @@ export function JobDetailsPage() {
         {/* Responsibilities */}
         <JobCard>
           <h2 className="mb-3 font-display text-[15px] font-bold text-ink">
-            Responsibilities
+            {t("pages.admin.jobDetails.responsibilities")}
           </h2>
           {isEditing ? (
             <>
@@ -629,7 +631,7 @@ export function JobDetailsPage() {
         {/* Required Skills */}
         <JobCard>
           <h2 className="mb-3 font-display text-[15px] font-bold text-ink">
-            Required skills
+            {t("pages.admin.jobDetails.requiredSkills")}
           </h2>
           {isEditing ? (
             <>
@@ -657,7 +659,7 @@ export function JobDetailsPage() {
         {/* Preferred Skills */}
         <JobCard>
           <h2 className="mb-3 font-display text-[15px] font-bold text-ink">
-            Preferred skills
+            {t("pages.admin.jobDetails.preferredSkills")}
           </h2>
           {isEditing ? (
             <>
@@ -686,7 +688,7 @@ export function JobDetailsPage() {
         <JobCard>
           <div className="mb-4 flex items-center gap-2">
             <h2 className="font-display text-[15px] font-bold text-ink">
-              Source &amp; application method
+              {t("pages.admin.jobDetails.sourceAndMethod")}
             </h2>
             <Lock
               className="h-[15px] w-[15px] text-muted"
@@ -728,7 +730,7 @@ export function JobDetailsPage() {
         {/* Job Status */}
         <JobCard className="mb-0">
           <h2 className="mb-4 font-display text-[15px] font-bold text-ink">
-            Job status
+            {t("pages.admin.jobDetails.status")}
           </h2>
           <div className="flex items-center justify-between gap-3">
             <div>

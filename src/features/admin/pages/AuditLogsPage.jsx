@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Download, RefreshCw } from "lucide-react";
 import { PageHeader, FilterSelect } from "@/features/admin/shared";
 import {
@@ -20,6 +21,7 @@ import {
  * table and animated preview drawer.
  */
 export default function AuditLogsList() {
+  const { t } = useTranslation("dashboard");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
   const [filters, setFilters] = useState(INITIAL_ACTIVE_FILTERS);
@@ -39,7 +41,7 @@ export default function AuditLogsList() {
     <div className="max-w-7xl mx-auto p-4 sm:p-7 pb-16 bg-background text-[#222831] min-h-screen font-sans antialiased">
       {/* Page Header */}
       <PageHeader
-        title="Audit Logs"
+        title={t("pages.admin.auditLogs")}
         subtitle="Complete record of administrative actions across the platform"
         meta={
           <>

@@ -21,6 +21,10 @@
     "mentor": "AI Mentor",
     "profile": "Profile"
   },
+  "notFound": {
+    "title": "404 - Page Not Found",
+    "description": "The page you are looking for does not exist."
+  },
   "home": {
     "aiMentor": {
       "badge": "Next-Gen Intelligence",

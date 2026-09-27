@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import {
   Loader2,
@@ -394,6 +395,7 @@ function isI18n(v) {
 
 
 export default function CmsHomePage() {
+  const { t } = useTranslation("dashboard");
   const [state, setState] = useState(() => clone(DEFAULTS));
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -581,7 +583,7 @@ export default function CmsHomePage() {
         >
           <div className="mb-2 flex items-start gap-4">
             <h1 className="text-2xl font-bold text-primary">
-              Home page content
+              {t("pages.admin.cms")}
             </h1>
           </div>
 

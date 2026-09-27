@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { ArrowLeftRight, Loader2, PencilLine } from "lucide-react";
 import Status from "@/components/shared/Status";
 import Modal from "@/components/shared/Modal";
@@ -12,8 +13,9 @@ export function UserFormBody({ title, subtitle, submitLabel, initialValues, busy
 }
 
 export function ChangeRoleBody({ user, busy, onCancel, onConfirm }) {
+  const { t } = useTranslation("dashboard");
   const [role, setRole] = React.useState(user.role);
-  return <Status icon={<ArrowLeftRight className="h-6 w-6" />} iconClassName="bg-primary/10 text-primary" title="Change Role" subtitle={`Choose a new role for ${user.fullName}.`} secondaryButton={{ label: "Cancel", onClick: onCancel, disabled: busy }} primaryButton={{ label: busy ? "Saving…" : "Confirm", onClick: () => onConfirm(role), disabled: busy || role === user.role }}><div className="mb-5 text-left"><Select value={role} onValueChange={setRole}><SelectTrigger className="h-10 rounded-lg border-border"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="candidate">Candidate</SelectItem><SelectItem value="recruiter">Recruiter</SelectItem><SelectItem value="admin">Admin</SelectItem></SelectContent></Select></div></Status>;
+  return <Status icon={<ArrowLeftRight className="h-6 w-6" />} iconClassName="bg-primary/10 text-primary" title={t("pages.admin.userManagementStates.changeRole")} subtitle={`Choose a new role for ${user.fullName}.`} secondaryButton={{ label: "Cancel", onClick: onCancel, disabled: busy }} primaryButton={{ label: busy ? "Saving…" : "Confirm", onClick: () => onConfirm(role), disabled: busy || role === user.role }}><div className="mb-5 text-left"><Select value={role} onValueChange={setRole}><SelectTrigger className="h-10 rounded-lg border-border"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="candidate">Candidate</SelectItem><SelectItem value="recruiter">Recruiter</SelectItem><SelectItem value="admin">Admin</SelectItem></SelectContent></Select></div></Status>;
 }
 
 export function UserDialog({ children, onClose, maxWidth }) { return <Modal onClose={onClose} maxWidth={maxWidth}>{children}</Modal>; }

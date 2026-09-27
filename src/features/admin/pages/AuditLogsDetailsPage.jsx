@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ChevronRight, RotateCcw, ExternalLink, Briefcase, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -31,6 +32,7 @@ function FieldLabel({ children }) {
  * animated section cards (actor, entity, diff, related entities).
  */
 export default function AuditLogDetails() {
+  const { t } = useTranslation("dashboard");
   const [isLoading, setIsLoading] = useState(false);
   const log = AUDIT_LOG_DETAIL;
 
@@ -47,13 +49,13 @@ export default function AuditLogDetails() {
         breadcrumbs={
           <nav className="flex items-center gap-1.5 text-xs sm:text-sm text-muted mb-3 flex-wrap">
             <a href="#" className="hover:text-primary transition-colors">
-              Audit Logs
+              {t("pages.admin.auditLogs")}
             </a>
             <ChevronRight className="w-3.5 h-3.5 opacity-60" />
             <span className="font-medium text-[#222831]">{log.id}</span>
           </nav>
         }
-        title="Audit Log Details"
+        title={t("pages.admin.auditLogDetails")}
         subtitle={
           <span className="text-xs sm:text-sm font-mono text-muted">
             #{log.id}
@@ -99,7 +101,7 @@ export default function AuditLogDetails() {
       </div>
 
       {/* Card 1: Actor */}
-      <DetailCard title="Admin / Actor" hint="Who performed this action">
+      <DetailCard title={t("pages.admin.auditDetails.actor")} hint="Who performed this action">
         <div className="flex items-center gap-3">
           <div
             className={cn(
@@ -122,7 +124,7 @@ export default function AuditLogDetails() {
 
       {/* Card 2: Entity */}
       <DetailCard
-        title="Entity"
+        title={t("pages.admin.auditDetails.entity")}
         hint="What was affected"
         delay={0.05}
         bodyClassName="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs sm:text-sm"
@@ -148,7 +150,7 @@ export default function AuditLogDetails() {
 
       {/* Card 3: What Changed */}
       <DetailCard
-        title="What Changed"
+        title={t("pages.admin.auditDetails.changes")}
         hint="Previous value → New value"
         delay={0.1}
       >
@@ -168,7 +170,7 @@ export default function AuditLogDetails() {
 
       {/* Card 4: Related Entities */}
       <DetailCard
-        title="Related Entities"
+        title={t("pages.admin.auditDetails.relatedEntities")}
         hint="Jump to linked records"
         delay={0.15}
         bodyClassName="grid grid-cols-1 sm:grid-cols-2 gap-3.5"
