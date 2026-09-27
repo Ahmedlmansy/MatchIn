@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import ItemCard from "./shared/ItemCard";
 import TabSaveActions from "./TabSaveActions";
@@ -14,6 +15,7 @@ const DEFAULT_EDUCATION = [
 ];
 
 export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
+  const { t } = useTranslation("dashboard");
   const [educationList, setEducationList] = useState(initialEducation);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -104,7 +106,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-bold text-slate-900 tracking-tight">
-          Education & Qualifications
+          {t("pages.profile.education")}
         </h3>
         <button
           onClick={handleOpenAdd}

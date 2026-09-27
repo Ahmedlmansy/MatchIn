@@ -1,14 +1,19 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { RotateCw, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 
 export default function DashboardHeader({
-  title = "Admin Dashboard",
-  subtitle = "Platform overview & operational snapshot",
+  title,
+  subtitle,
   onRefresh,
   onNewCompany,
 }) {
+  const { t } = useTranslation("dashboard");
+  const headerTitle = title ?? t("pages.admin.overview.title");
+  const headerSubtitle = subtitle ?? t("pages.admin.overview.subtitle");
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -10 }}
@@ -17,8 +22,8 @@ export default function DashboardHeader({
       className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
     >
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-[#222831]">{title}</h1>
-        <p className="text-sm text-muted mt-1">{subtitle}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-[#222831]">{headerTitle}</h1>
+        <p className="text-sm text-muted mt-1">{headerSubtitle}</p>
       </div>
       <div className="flex items-center gap-2.5 flex-wrap">
         <Button

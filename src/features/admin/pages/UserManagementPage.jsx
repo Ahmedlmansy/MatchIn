@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -56,6 +57,7 @@ const PAGE_SIZE = 8;
 
 export function UserManagementPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation("dashboard");
 
   const [pageState, setPageState] = React.useState("loading"); // loading | loaded | error
   const [users, setUsers] = React.useState([]);
@@ -175,7 +177,7 @@ export function UserManagementPage() {
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-[22px] font-bold tracking-tight text-ink">User Management</h1>
+            <h1 className="text-[22px] font-bold tracking-tight text-ink">{t("pages.admin.userManagement")}</h1>
             <p className="mt-1 text-sm text-muted">Search, view, and manage all platform users</p>
           </div>
           <div className="flex flex-wrap gap-2.5">
@@ -326,7 +328,7 @@ export function UserManagementPage() {
             <Status
               icon={<AlertTriangle className="h-6 w-6" />}
               iconClassName="bg-error/10 text-error"
-              title="Couldn't load users"
+              title={t("pages.admin.userManagementStates.loadFailed")}
               subtitle="Something went wrong while fetching the users list."
               primaryButton={{ label: "Retry", onClick: load }}
             />
@@ -341,7 +343,7 @@ export function UserManagementPage() {
             <Status
               icon={<UsersIcon className="h-6 w-6" />}
               iconClassName="bg-primary/10 text-primary"
-              title="No users yet"
+              title={t("pages.admin.userManagementStates.empty")}
               subtitle="Once people sign up, they'll show up here."
               primaryButton={{ label: "Add User", onClick: () => openModal("add") }}
             />
@@ -349,7 +351,7 @@ export function UserManagementPage() {
             <Status
               icon={<SearchX className="h-6 w-6" />}
               iconClassName="bg-muted/12 text-muted"
-              title="No results found"
+              title={t("pages.admin.userManagementStates.noResults")}
               subtitle="Try adjusting your search or filters."
               primaryButton={{ label: "Clear filters", onClick: clearFilters }}
             />
@@ -389,7 +391,7 @@ export function UserManagementPage() {
               busy={modalBusy}
               onCancel={closeModal}
               onSubmit={handleAddUser}
-              title="Add New User"
+              title={t("pages.admin.userManagementStates.addUser")}
               subtitle="Create a new account on the platform."
               submitLabel="Add User"
             />
@@ -402,7 +404,7 @@ export function UserManagementPage() {
               busy={modalBusy}
               onCancel={closeModal}
               onSubmit={handleEditUser}
-              title="Edit User"
+              title={t("pages.admin.userManagementStates.editUser")}
               subtitle={`Update ${modal.user.fullName}'s details.`}
               submitLabel="Save Changes"
               initialValues={{ fullName: modal.user.fullName, email: modal.user.email, role: modal.user.role }}
@@ -421,7 +423,7 @@ export function UserManagementPage() {
             <Status
               icon={<Power className="h-6 w-6" />}
               iconClassName="bg-success/10 text-success"
-              title="Activate user?"
+              title={t("pages.admin.userManagementStates.activateUser")}
               subtitle={`${modal.user.fullName} will regain full access to their account.`}
               secondaryButton={{ label: "Cancel", onClick: closeModal, disabled: modalBusy }}
               primaryButton={{ label: modalBusy ? "Activating…" : "Activate", onClick: () => handleSetStatus("active"), disabled: modalBusy }}
@@ -434,7 +436,7 @@ export function UserManagementPage() {
             <Status
               icon={<Ban className="h-6 w-6" />}
               iconClassName="bg-error/10 text-error"
-              title="Deactivate user?"
+              title={t("pages.admin.userManagementStates.deactivateUser")}
               subtitle={`${modal.user.fullName} will lose access until reactivated.`}
               secondaryButton={{ label: "Cancel", onClick: closeModal, disabled: modalBusy }}
               primaryButton={{ label: modalBusy ? "Deactivating…" : "Deactivate", onClick: () => handleSetStatus("inactive"), disabled: modalBusy }}
@@ -447,7 +449,7 @@ export function UserManagementPage() {
             <Status
               icon={<Trash2 className="h-6 w-6" />}
               iconClassName="bg-error/10 text-error"
-              title="Delete this user?"
+              title={t("pages.admin.userManagementStates.deleteUser")}
               subtitle={`This permanently removes ${modal.user.fullName}'s account. This can't be undone.`}
               secondaryButton={{ label: "Cancel", onClick: closeModal, disabled: modalBusy }}
               primaryButton={{ label: modalBusy ? "Deleting…" : "Delete User", onClick: handleDelete, disabled: modalBusy }}
