@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,10 +12,19 @@ import LanguageToggle from "@/components/shared/LanguageToggle";
 
 export default function Header()
 {
+  const [isScrolled, setIsScrolled] = useState(false);
     const { lang } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
     const localizedPath = useLocalizedPath();
+
+    useEffect(() => {
+      const updateScrollState = () => setIsScrolled(window.scrollY > 24);
+
+      updateScrollState();
+      window.addEventListener("scroll", updateScrollState, { passive: true });
+      return () => window.removeEventListener("scroll", updateScrollState);
+    }, []);
 
     const handleLanguageChange = (newLang) => {
       const segments = location.pathname.split("/");
@@ -28,14 +38,14 @@ export default function Header()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-surface/95 backdrop-blur-md">
-      <div className="mx-auto flex h-20 max-w-[1280px] items-center justify-between gap-4 px-6 md:px-10 lg:px-16">
+      <div className={`mx-auto flex ${isScrolled ? "h-16" : "h-20"} max-w-[1280px] items-center justify-between gap-4 px-6 transition-[height] duration-300 md:px-10 lg:px-16`}>
         {/* Logo + desktop nav */}
         <div className="flex items-center gap-8">
           <a href="#home" className="group flex items-center gap-2 shrink-0">
             <img
               src={LogoNavy}
               alt="MatchIn Logo"
-              className="h-8 w-auto object-contain transition-transform group-hover:scale-105"
+              className={`w-auto object-contain transition-all duration-300 group-hover:scale-105 ${isScrolled ? "h-7" : "h-8"}`}
             />
           </a>
 
