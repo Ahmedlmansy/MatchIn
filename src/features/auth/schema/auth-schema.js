@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const registerSchema = z
   .object({
-    fullName: z
+    name: z
       .string()
       .min(1, "Full name is required")
       .min(3, "Full name must be at least 3 characters"),
@@ -23,12 +23,14 @@ export const registerSchema = z
       .regex(/[^A-Za-z0-9]/, {
         message: "Password must contain at least one special character",
       }),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
-    terms: z.literal(true, "You must accept the Terms and Privacy Policy"),
+    password_confirmation: z.string().min(1, "Please confirm your password"),
+    terms: z.literal(true, {
+      message: "You must accept the Terms and Privacy Policy",
+    }),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data.password === data.password_confirmation, {
     message: "Passwords don't match — please check and try again.",
-    path: ["confirmPassword"],
+    path: ["password_confirmation"],
   });
 
 export const otpSchema = z.object({
