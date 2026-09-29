@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { FilterX } from "lucide-react";
 import { containerVariants } from "@/features/admin/shared";
@@ -19,6 +20,7 @@ import {
  * data lifecycle instead of a manual preview switcher.
  */
 export default function JobManagement() {
+  const { t } = useTranslation("dashboard");
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -120,11 +122,10 @@ export default function JobManagement() {
         {/* Page Title */}
         <div className="mb-6">
           <h1 className="font-extrabold text-[24px] tracking-tight text-[#1B1C1A]">
-            Job Management
+            {t("pages.admin.jobManagement.title")}
           </h1>
           <p className="text-[13.5px] text-muted mt-1">
-            Monitor and manage every job listed on SkillMatch — internal
-            postings and external sources alike.
+            {t("pages.admin.jobManagement.subtitle")}
           </p>
         </div>
 

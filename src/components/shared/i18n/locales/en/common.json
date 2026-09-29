@@ -4,7 +4,7 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
-    "apply": "test",
+    "apply": "Apply",
     "signIn": "Sign In",
     "postJob": "Post a Job"
   },
@@ -20,6 +20,10 @@
     "roadmap": "Roadmap",
     "mentor": "AI Mentor",
     "profile": "Profile"
+  },
+  "notFound": {
+    "title": "404 - Page Not Found",
+    "description": "The page you are looking for does not exist."
   },
   "home": {
     "aiMentor": {
