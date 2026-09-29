@@ -10,6 +10,7 @@ import {
   BriefcaseBusiness,
   Users,
   List,
+  ShieldCheck, // أو أي أيقونة مناسبة للـ Auth Dashboard
 } from "lucide-react";
 import AiChatPage from "@/features/candidate/pages/AiChatPage";
 import ApplicationDetail from "@/features/candidate/pages/ApplicationDetail";
@@ -32,6 +33,7 @@ import { JobDetailsPage } from "@/features/admin/pages/JobDetailsPage";
 import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
 import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
 import CmsHomePage from "@/features/admin/pages/CmsHomePage";
+import DashBoardOathContent from "@/features/admin/components/dashBoardOuth/DashBoardOuth";
 
 const role = "admin";
 
@@ -170,7 +172,6 @@ export const dashboard =
           },
         },
         {
-         
           path: "audit-logs",
           handle: {
             label: "Audit Logs",
@@ -197,6 +198,16 @@ export const dashboard =
             labelKey: "navigation.cms",
             icon: Users,
             sidebar: true,
+          },
+        },
+        {
+          path: "dashboard-auth", 
+          element: <DashBoardOathContent />,
+          handle: {
+            label: "Auth CMS",
+            labelKey: "navigation.authCms",
+            icon: ShieldCheck,
+            sidebar: true, 
           },
         },
       ];
