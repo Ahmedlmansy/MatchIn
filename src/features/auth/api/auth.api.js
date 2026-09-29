@@ -18,8 +18,6 @@ export const resendEmailOtpRequest = (payload) =>
 export const loginRequest = (payload) =>
   api.post("/auth/login", payload).then((res) => res.data);
 
-import { api } from "@/services/axios/axiosInstance"
-
 // Posts { email } to the reset endpoint; resolves with the normalized server payload, rejects with the axios error.
 export const forgotPassword = async (payload) => {
     const { data } = await api.post("/api/auth/forgot-password", payload)
