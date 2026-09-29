@@ -10,15 +10,23 @@ import { useMutation } from "@tanstack/react-query";
  * No redirect / toast logic here on purpose — each feature hook decides what
  * "success" or "failure" means for its own flow.
  */
-export const useApiMutation = ({ mutationFn, onSuccess, onError }) => {
+export const useApiMutation = ({ mutationFn, ...options }) => {
   return useMutation({
-    mutationFn,
-    onSuccess,
-    onError: (error) => {
-      onError?.(normalizeApiError(error));
+    // Normalizing inside mutationFn (not inside onError) means the thrown value
+    // becomes mutation.error itself, so components and onError callbacks both
+    // see { status, message, fieldErrors } instead of the raw AxiosError.
+    mutationFn: async (variables) => {
+      try {
+        return await mutationFn(variables);
+      } catch (error) {
+        throw normalizeApiError(error);
+      }
     },
+    ...options,
   });
 };
+
+
 
 /**
  * Axios failure → { status, message, fieldErrors }.
