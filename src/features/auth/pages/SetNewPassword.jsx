@@ -20,6 +20,7 @@ import logo from "@/assets/logo/MatchIn_logo.svg";
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
 import { newPasswordSchema } from "../schema/newPassword-schema";
+import { translateValidationMessage } from "../schema/validation-message";
 import { useResetPasswordMutation } from "@/features/auth/hooks/useResetPasswordMutation";
 import {
   isExpiredAuthStatus,
@@ -58,7 +59,9 @@ export default function SetNewPassword() {
         const name = SERVER_TO_FORM_FIELD[field] ?? field;
         form.setError(name, {
           type: "server",
-          message: Array.isArray(messages) ? messages[0] : String(messages),
+          message: translateValidationMessage(
+            Array.isArray(messages) ? messages[0] : messages,
+          ),
         });
       });
     },
