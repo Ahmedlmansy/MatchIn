@@ -26,7 +26,24 @@ export const useApiMutation = ({ mutationFn, ...options }) => {
   });
 };
 
-function normalizeApiError(error) {
+
+
+/**
+ * Axios failure → { status, message, fieldErrors }.
+ * Idempotent: an error already in that shape (thrown enriched by useAuthApiMutation)
+ * passes through untouched, so a second pass cannot wipe message/fieldErrors.
+ */
+export function normalizeApiError(error) {
+  if (
+    error &&
+    typeof error === "object" &&
+    !error.response &&
+    "fieldErrors" in error &&
+    "status" in error
+  ) {
+    return error;
+  }
+
   const status = error?.response?.status;
   const data = error?.response?.data;
 

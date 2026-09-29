@@ -1,3 +1,5 @@
 node_modules
 dist
 .env
+PROJECT_CODEBASE_GUIDE.md
+AUTH_LOGIC_CONVENTION.md

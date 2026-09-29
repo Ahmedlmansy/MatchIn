@@ -235,6 +235,13 @@
           "autofilled": "Auto-filled",
           "dashboard": "Go to dashboard"
         },
+        "errors": {
+          "invalidOrExpired": "This code is invalid or has expired. Request a new one and try again.",
+          "noAccount": "We couldn't find an account with that email address. Please check it or create an account.",
+          "sessionExpired": "Your session has expired. Please start the password reset again.",
+          "tooManyAttempts": "Too many attempts. Please wait a moment before trying again.",
+          "serverUnavailable": "We couldn't reach the server. Check your connection and try again."
+        },
         "forgot": {
           "back": "Back to Login",
           "badge": "Smart Career Platform",
@@ -248,7 +255,12 @@
           "success": "A password reset link has been sent to your email.",
           "failure": "Server connection failed. Please try again later.",
           "security": "Advanced protection for your professional data. Saved with highest certified digital identity security standards.",
-          "invalidEmail": "Please enter a valid email address."
+          "invalidEmail": "Please enter a valid email address.",
+          "otpTitle": "Verify your email",
+          "otpDescription": "We sent a 6-digit code to {{email}}. Enter it below to reset your password.",
+          "otpBack": "Back to reset request",
+          "otpMissingEmail": "This reset request has expired. Request a new link to continue.",
+          "otpRequestNew": "Request a new link"
         },
         "reset": {
           "back": "Back to Login",
