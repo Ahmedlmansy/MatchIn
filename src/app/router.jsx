@@ -44,6 +44,11 @@ export const router = createBrowserRouter([
         ),
         children: [...dashboard],
       },
+
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
     ],
   },
 
