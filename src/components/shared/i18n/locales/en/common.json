@@ -22,8 +22,11 @@
     "profile": "Profile"
   },
   "notFound": {
-    "title": "404 - Page Not Found",
-    "description": "The page you are looking for does not exist."
+    "eyebrow": "Error 404",
+    "title": "This page could not be found",
+    "description": "The link may be incorrect, or the page may have moved somewhere else.",
+    "home": "Back to home",
+    "back": "Go back"
   },
   "ui": {
     "editJob": {
