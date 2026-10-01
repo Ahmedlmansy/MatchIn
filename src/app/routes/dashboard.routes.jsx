@@ -10,7 +10,7 @@ import {
   BriefcaseBusiness,
   Users,
   List,
-  ShieldCheck, // أو أي أيقونة مناسبة للـ Auth Dashboard
+  ShieldCheck, 
 } from "lucide-react";
 import AiChatPage from "@/features/candidate/pages/AiChatPage";
 import ApplicationDetail from "@/features/candidate/pages/ApplicationDetail";

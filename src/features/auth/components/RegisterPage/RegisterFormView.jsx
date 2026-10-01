@@ -10,7 +10,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import PasswordInput from "@/features/auth/shared/PasswordInput";
 import SequentialFormMessage from "@/features/auth/shared/SequentialFormMessage";
 import { useTranslation } from "react-i18next";
+import { translateValidationMessage } from "@/features/auth/schema/validation-message";
 
 
 const FIELD_ORDER = [
@@ -64,7 +64,10 @@ export function RegisterFormView({
     if (!fieldErrors) return;
     Object.entries(fieldErrors).forEach(([field, messages]) => {
       if (FIELD_ORDER.includes(field)) {
-        form.setError(field, { type: "server", message: messages[0] });
+        form.setError(field, {
+          type: "server",
+          message: translateValidationMessage(messages[0]),
+        });
       }
     });
     // fieldErrors is a new object reference on every failed mutation, so this

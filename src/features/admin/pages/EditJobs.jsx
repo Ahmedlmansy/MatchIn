@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RotateCcw, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { useTranslation } from "react-i18next";
 
 // استدعاء المكونات الفرعية
 import UnsavedChangesBanner from '../components/editJobs/UnsavedChangesBanner';
@@ -28,6 +29,7 @@ const initialData = {
 };
 
 export default function EditJob() {
+  const { t } = useTranslation("common");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState(initialData);
@@ -76,17 +78,17 @@ export default function EditJob() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#E8E6E1] pb-5">
           <div>
             <div className="flex items-center gap-1.5 text-xs text-[#71717A] mb-2">
-              <span>Jobs</span>
+              <span>{t("ui.editJob.jobs")}</span>
               <span>/</span>
               <span>JOB-2841</span>
               <span>/</span>
-              <span className="text-[#09090B] font-medium">Edit</span>
+              <span className="text-[#09090B] font-medium">{t("ui.editJob.edit")}</span>
             </div>
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-[#09090B]">
-              Edit Job
+              {t("ui.editJob.title")}
             </h1>
             <p className="text-xs text-[#71717A] mt-1.5">
-              ID: JOB-2841 <span className="mx-1">•</span> Last updated · 3 hours ago <span className="mx-1">•</span> by BrightPath Inc.
+              ID: JOB-2841 <span className="mx-1">•</span> {t("ui.editJob.updated", { time: "3 hours" })} <span className="mx-1">•</span> {t("ui.editJob.by")} BrightPath Inc.
             </p>
           </div>
 
@@ -98,7 +100,7 @@ export default function EditJob() {
               className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#52525B] hover:text-[#09090B] hover:bg-white/60 rounded-lg transition cursor-pointer"
             >
               <ArrowLeft size={14} />
-              Cancel
+              {t("ui.editJob.cancel")}
             </button>
 
             <button
@@ -108,7 +110,7 @@ export default function EditJob() {
               className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#09090B] bg-white border border-[#E4E4E7] rounded-lg hover:bg-[#F4F4F5] disabled:opacity-40 transition shadow-xs cursor-pointer"
             >
               <RotateCcw size={14} />
-              Reset
+              {t("ui.editJob.reset")}
             </button>
 
             <button
@@ -118,7 +120,7 @@ export default function EditJob() {
               className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-[#1D2A44] rounded-lg hover:bg-[#162034] disabled:opacity-40 transition shadow-xs cursor-pointer"
             >
               <CheckCircle2 size={14} />
-              {isSaving ? 'Saving...' : 'Save Changes'}
+              {isSaving ? t("ui.editJob.saving") : t("ui.editJob.saveChanges")}
             </button>
           </div>
         </div>
@@ -156,7 +158,7 @@ export default function EditJob() {
             className="flex items-center gap-1.5 text-xs font-medium text-[#DC2626] hover:text-[#B91C1C] disabled:opacity-30 transition cursor-pointer"
           >
             <RotateCcw size={14} />
-            Reset Changes
+            {t("ui.editJob.resetChanges")}
           </button>
 
           <div className="flex items-center gap-3">
@@ -165,7 +167,7 @@ export default function EditJob() {
               onClick={handleReset}
               className="px-4 py-2 text-xs font-medium text-[#09090B] bg-white border border-[#E4E4E7] rounded-lg hover:bg-[#F4F4F5] transition shadow-xs cursor-pointer"
             >
-              Cancel
+              {t("ui.editJob.cancel")}
             </button>
             <button
               type="button"
@@ -174,7 +176,7 @@ export default function EditJob() {
               className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-[#1D2A44] rounded-lg hover:bg-[#162034] disabled:opacity-40 transition shadow-xs cursor-pointer"
             >
               <CheckCircle2 size={14} />
-              {isSaving ? 'Saving...' : 'Save Changes'}
+              {isSaving ? t("ui.editJob.saving") : t("ui.editJob.saveChanges")}
             </button>
           </div>
         </div>
