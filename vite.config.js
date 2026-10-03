@@ -13,8 +13,6 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      // أي request يبدأ بـ /api يتوجه للسيرفر عبر Vite
-      // فالمتصفح بيشوف localhost فقط → مفيش CORS خالص
       '/api': {
         target: 'https://skillmatch.iptvdemo.serv5group.com',
         changeOrigin: true,
