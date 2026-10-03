@@ -74,7 +74,6 @@ export function RegisterFormView({
     // re-runs exactly once per server response — not on every render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldErrors]);
-  console.log(serverError);
   function FormError({ name }) {
     return (
       <SequentialFormMessage
