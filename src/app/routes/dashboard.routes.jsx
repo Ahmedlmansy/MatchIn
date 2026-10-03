@@ -10,7 +10,6 @@ import {
   BriefcaseBusiness,
   Users,
   List,
-  ShieldCheck, 
 } from "lucide-react";
 import AiChatPage from "@/features/candidate/pages/AiChatPage";
 import ApplicationDetail from "@/features/candidate/pages/ApplicationDetail";
@@ -33,11 +32,13 @@ import { JobDetailsPage } from "@/features/admin/pages/JobDetailsPage";
 import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
 import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
 import CmsHomePage from "@/features/admin/pages/CmsHomePage";
-import DashBoardOathContent from "@/features/admin/components/dashBoardOuth/DashBoardOuth";
 
-const role = "admin";
+// No hardcoded role here anymore. Both trees are always defined; which one
+// renders is decided at request time by <RequireRole allow={[...]} /> in the
+// router file, reading the real role from Redux — not by picking an array
+// once at import time.
 
-const userDashboard = [
+export const candidateDashboardRoutes = [
   {
     index: true,
     element: <Overview />,
@@ -133,81 +134,62 @@ const userDashboard = [
   },
 ];
 
-export const dashboard =
-  role !== "admin"
-    ? userDashboard
-    : [
-        {
-          index: true,
-          element: <AdminOverview />,
-          handle: {
-            label: "Dashboard",
-            labelKey: "navigation.dashboard",
-            icon: LayoutDashboard,
-            sidebar: true,
-          },
-        },
-        {
-          path: "job-management",
-          element: <JobManagement />,
-          handle: {
-            label: "Job Management",
-            labelKey: "navigation.jobManagement",
-            icon: BriefcaseBusiness,
-            sidebar: true,
-          },
-        },
-        {
-          path: "users/:id",
-          element: <UsersDetailsPage />,
-        },
-        {
-          path: "user-management",
-          element: <UserManagementPage />,
-          handle: {
-            label: "User Management",
-            labelKey: "navigation.usermanagement",
-            icon: Users,
-            sidebar: true,
-          },
-        },
-        {
-          path: "audit-logs",
-          handle: {
-            label: "Audit Logs",
-            labelKey: "navigation.auditLogs",
-            icon: List,
-            sidebar: true,
-          },
-          children: [
-            {
-              index: true,
-              element: <AuditLogsList />,
-            },
-            {
-              path: ":auditId",
-              element: <AuditLogDetails />,
-            },
-          ],
-        },
-        {
-          path: "cms",
-          element: <CmsHomePage />,
-          handle: {
-            label: "CMS",
-            labelKey: "navigation.cms",
-            icon: Users,
-            sidebar: true,
-          },
-        },
-        {
-          path: "dashboard-auth", 
-          element: <DashBoardOathContent />,
-          handle: {
-            label: "Auth CMS",
-            labelKey: "navigation.authCms",
-            icon: ShieldCheck,
-            sidebar: true, 
-          },
-        },
-      ];
+export const adminDashboardRoutes = [
+  {
+    index: true,
+    element: <AdminOverview />,
+    handle: {
+      label: "Dashboard",
+      labelKey: "navigation.dashboard",
+      icon: LayoutDashboard,
+      sidebar: true,
+    },
+  },
+  {
+    path: "job-management",
+    element: <JobManagement />,
+    handle: {
+      label: "Job Management",
+      labelKey: "navigation.jobManagement",
+      icon: BriefcaseBusiness,
+      sidebar: true,
+    },
+  },
+  {
+    path: "users/:id",
+    element: <UsersDetailsPage />,
+  },
+  {
+    path: "user-management",
+    element: <UserManagementPage />,
+    handle: {
+      label: "User Management",
+      labelKey: "navigation.usermanagement",
+      icon: Users,
+      sidebar: true,
+    },
+  },
+  {
+    path: "audit-logs",
+    handle: {
+      label: "Audit Logs",
+      labelKey: "navigation.auditLogs",
+      icon: List,
+      sidebar: true,
+    },
+    children: [
+      { index: true, element: <AuditLogsList /> },
+      { path: ":auditId", element: <AuditLogDetails /> },
+    ],
+  },
+  {
+    path: "cms",
+    element: <CmsHomePage />,
+    handle: {
+      label: "CMS",
+      labelKey: "navigation.cms",
+      icon: Users,
+      sidebar: true,
+    },
+  },
+];
