@@ -20,6 +20,7 @@ export default function DashboardLayout() {
         onToggleCollapse={() => setCollapsed((v) => !v)}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
+        role={user.role}
       />
 
       <div
