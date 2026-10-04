@@ -36,6 +36,7 @@ import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
 import CmsHomePage from "@/features/admin/pages/CmsHomePage";
 import DashBoardOathContent from "@/features/admin/components/dashBoardOuth/DashBoardOuth";
 import CompanyDetails from "@/features/admin/pages/CompaniesDetailsPage";
+import CompaniesPage from "@/features/admin/pages/ComoaniesPage";
 
 // No hardcoded role here anymore. Both trees are always defined; which one
 // renders is decided at request time by <RequireRole allow={[...]} /> in the
@@ -170,7 +171,10 @@ export const dashboard =
             icon: Building,
             sidebar: true,
           },
-          children: [{ path: ":id", element: <CompanyDetails /> }],
+          children: [
+            { index: true, element: <CompaniesPage /> },
+            { path: ":id", element: <CompanyDetails /> },
+          ],
         },
         {
           path: "users/:id",

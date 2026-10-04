@@ -105,6 +105,10 @@
         "title": "Job Management",
         "subtitle": "Monitor and manage every job listed on SkillMatch — internal postings and external sources alike."
       },
+      "companies": {
+        "title": "Company Management",
+        "subtitle": "View, verify, and manage companies registered on the platform"
+      },
       "userManagement": "User Management",
       "auditLogs": "Audit Logs",
       "companies": "Companies",
