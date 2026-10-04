@@ -32,6 +32,7 @@ import { JobDetailsPage } from "@/features/admin/pages/JobDetailsPage";
 import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
 import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
 import CmsHomePage from "@/features/admin/pages/CmsHomePage";
+import CompaniesPage from "@/features/admin/pages/ComoaniesPage";
 
 // No hardcoded role here anymore. Both trees are always defined; which one
 // renders is decided at request time by <RequireRole allow={[...]} /> in the
@@ -191,5 +192,17 @@ export const adminDashboardRoutes = [
       icon: Users,
       sidebar: true,
     },
+  },
+  {
+    path: "companies",
+    handle: {
+      label: "Companies",
+      labelKey: "navigation.companies",
+      icon: BriefcaseBusiness,
+      sidebar: true,
+    },
+    children: [
+      { index: true, element: <CompaniesPage /> },
+    ],
   },
 ];
