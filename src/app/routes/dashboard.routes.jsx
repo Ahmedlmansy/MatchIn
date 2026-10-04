@@ -37,9 +37,12 @@ import CmsHomePage from "@/features/admin/pages/CmsHomePage";
 import DashBoardOathContent from "@/features/admin/components/dashBoardOuth/DashBoardOuth";
 import CompanyDetails from "@/features/admin/pages/CompaniesDetailsPage";
 
-const role = "admin";
+// No hardcoded role here anymore. Both trees are always defined; which one
+// renders is decided at request time by <RequireRole allow={[...]} /> in the
+// router file, reading the real role from Redux — not by picking an array
+// once at import time.
 
-const userDashboard = [
+export const candidateDashboardRoutes = [
   {
     index: true,
     element: <Overview />,
