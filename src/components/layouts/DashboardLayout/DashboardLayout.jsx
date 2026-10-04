@@ -11,7 +11,7 @@ import { selectCurrentUser } from "@/features/auth/store/auth.selectors";
 export default function DashboardLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const user = useSelector(selectCurrentUser);
+  // const user = useSelector(selectCurrentUser);
 
   return (
     <div className="flex min-h-screen bg-background font-sans text-ink antialiased">
@@ -20,7 +20,7 @@ export default function DashboardLayout() {
         onToggleCollapse={() => setCollapsed((v) => !v)}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
-        role={user.role}
+        role={'admin'}
       />
 
       <div
@@ -31,8 +31,8 @@ export default function DashboardLayout() {
       >
         <Topbar
           onOpenMobileSidebar={() => setMobileOpen(true)}
-          userName={user?.name}
-          userRole={user?.role}
+          userName={"Alex"}
+          userRole={"Dev"}
         />
 
         <main className="w-full min-h-screen bg-background pb-12">
