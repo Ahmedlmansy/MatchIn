@@ -34,7 +34,7 @@ import { JobDetailsPage } from "@/features/admin/pages/JobDetailsPage";
 import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
 import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
 import CmsHomePage from "@/features/admin/pages/CmsHomePage";
-import DashBoardOathContent from "@/features/admin/components/dashBoardOuth/DashBoardOuth";
+import AuthSettingsPage from "@/features/admin/pages/AuthSettingsPage";
 import CompanyDetails from "@/features/admin/pages/CompaniesDetailsPage";
 import CompaniesPage from "@/features/admin/pages/ComoaniesPage";
 
@@ -220,7 +220,7 @@ export const adminDashboardRoutes = [
         },
         {
           path: "dashboard-auth",
-          element: <DashBoardOathContent />,
+          element: <AuthSettingsPage />,
           handle: {
             label: "Auth CMS",
             labelKey: "navigation.authCms",
