@@ -220,11 +220,7 @@ export const adminDashboardRoutes = [
         },
         {
           path: "dashboard-auth",
-<<<<<<< HEAD
           element: <AuthSettingsPage />,
-=======
-          element: <DashboardAuthPage />,
->>>>>>> 4ce0211125f7878700a26b9408b3ed71531afeca
           handle: {
             label: "Auth CMS",
             labelKey: "navigation.authCms",
