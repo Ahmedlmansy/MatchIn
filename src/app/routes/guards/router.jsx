@@ -15,6 +15,7 @@ export const router = createBrowserRouter([
     path: "/",
     element:<RootRedirect />,
   },
+  
 
   // Language routes
   {
