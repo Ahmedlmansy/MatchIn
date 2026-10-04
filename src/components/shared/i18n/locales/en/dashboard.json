@@ -9,13 +9,15 @@
     "roadmap": "Roadmap",
     "applicationTracker": "Application Tracker",
     "jobManagement": "Job Management",
+    "companymanagement": "Company Management",
     "usermanagement": "User Management",
     "auditLogs": "Audit Logs",
     "cms": "Home Page CMS"
   },
   "actions": {
     "collapseSidebar": "Collapse Sidebar",
-    "expandSidebar": "Expand Sidebar"
+    "expandSidebar": "Expand Sidebar",
+    "back": "Back"
   },
   "mentor": {
     "title": "Need Help?",
@@ -109,6 +111,8 @@
       },
       "userManagement": "User Management",
       "auditLogs": "Audit Logs",
+      "companies": "Companies",
+      "companyManagement": "Company Management",
       "auditLogDetails": "Audit Log Details",
       "cms": "Home page content",
       "userNotFound": "User not found",
@@ -145,6 +149,70 @@
         "activateUser": "Activate user?",
         "deactivateUser": "Deactivate user?",
         "deleteUser": "Delete this user?"
+      },
+      "companyDetails": {
+        "companyInformation": "Company Information",
+        "contactInformation": "Contact Information",
+        "coreProfileDetails": "Core profile details",
+        "jobs": "Jobs",
+        "activity": "Activity",
+        "dates": "Dates",
+        "quickLinks": "Quick Links",
+        "verificationStatus": "Verification Status",
+        "markAsVerified": "Verified company",
+        "verifiedHint": "This company is verified and shown with a verified badge.",
+        "pendingHint": "This company is still awaiting review.",
+        "editCompany": "Edit Company",
+        "backToCompanies": "Back to Companies",
+        "saveChanges": "Save Changes",
+        "viewAllJobs": "View all jobs →",
+        "viewAll": "View all →",
+        "reject": "Reject",
+        "reEvaluate": "Re-evaluate",
+        "status": {
+          "pending": "Pending",
+          "verified": "Verified",
+          "rejected": "Rejected"
+        },
+        "banner": {
+          "pending": "Pending Verification",
+          "verified": "Company Verified",
+          "rejected": "Verification Rejected"
+        },
+        "bannerDescriptions": {
+          "pending": "Submitted for review · Sep 22, 2026 · 41 min ago",
+          "verified": "Verified on Sep 22, 2026",
+          "rejected": "Application does not meet guidelines"
+        },
+        "dateLabels": {
+          "created": "Created",
+          "lastUpdated": "Last Updated",
+          "submitted": "Submitted"
+        },
+        "stats": {
+          "openJobs": "Open Jobs",
+          "totalApplications": "Total Applications",
+          "created": "Created",
+          "lastUpdated": "Last Updated"
+        },
+        "fields": {
+          "companyName": "Company Name",
+          "legalName": "Legal Name",
+          "industry": "Industry",
+          "companySize": "Company Size",
+          "website": "Website",
+          "headquarters": "Headquarters",
+          "about": "About",
+          "primaryEmail": "Primary Email",
+          "phone": "Phone",
+          "hrEmail": "HR / Recruiting Email",
+          "linkedin": "LinkedIn"
+        },
+        "links": {
+          "jobs": "View Company Jobs",
+          "activity": "View Activity",
+          "auditLogs": "Audit Logs"
+        }
       },
       "jobDetails": {
         "loadFailed": "Couldn't load this job",

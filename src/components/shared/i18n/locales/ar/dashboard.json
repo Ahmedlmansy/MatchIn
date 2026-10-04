@@ -9,13 +9,15 @@
     "roadmap": "المسار المهني",
     "applicationTracker": "متابعة الطلبات",
     "jobManagement": "إدارة الوظائف",
+    "companymanagement": "إدارة الشركات",
     "usermanagement": "إدارة المستخدمين",
     "auditLogs": "سجلات التدقيق",
     "cms": "إدارة الصفحة الرئيسية"
   },
   "actions": {
     "collapseSidebar": "طي الشريط الجانبي",
-    "expandSidebar": "توسيع الشريط الجانبي"
+    "expandSidebar": "توسيع الشريط الجانبي",
+    "back": "رجوع"
   },
   "mentor": {
     "title": "هل تحتاج إلى مساعدة؟",
@@ -109,6 +111,8 @@
       },
       "userManagement": "إدارة المستخدمين",
       "auditLogs": "سجلات التدقيق",
+      "companies": "الشركات",
+      "companyManagement": "إدارة الشركات",
       "auditLogDetails": "تفاصيل سجل التدقيق",
       "cms": "محتوى الصفحة الرئيسية",
       "userNotFound": "لم يتم العثور على المستخدم",
@@ -145,6 +149,70 @@
         "activateUser": "تفعيل المستخدم؟",
         "deactivateUser": "إلغاء تفعيل المستخدم؟",
         "deleteUser": "حذف هذا المستخدم؟"
+      },
+      "companyDetails": {
+        "companyInformation": "معلومات الشركة",
+        "contactInformation": "معلومات التواصل",
+        "coreProfileDetails": "بيانات الملف الأساسي",
+        "jobs": "الوظائف",
+        "activity": "النشاط",
+        "dates": "التواريخ",
+        "quickLinks": "روابط سريعة",
+        "verificationStatus": "حالة التوثيق",
+        "markAsVerified": "شركة موثقة",
+        "verifiedHint": "هذه الشركة موثقة وتظهر بشارة التوثيق.",
+        "pendingHint": "هذه الشركة لا تزال قيد المراجعة.",
+        "editCompany": "تعديل الشركة",
+        "backToCompanies": "العودة إلى الشركات",
+        "saveChanges": "حفظ التغييرات",
+        "viewAllJobs": "عرض كل الوظائف ←",
+        "viewAll": "عرض الكل ←",
+        "reject": "رفض",
+        "reEvaluate": "إعادة التقييم",
+        "status": {
+          "pending": "قيد الانتظار",
+          "verified": "موثقة",
+          "rejected": "مرفوضة"
+        },
+        "banner": {
+          "pending": "التوثيق قيد الانتظار",
+          "verified": "تم توثيق الشركة",
+          "rejected": "تم رفض التوثيق"
+        },
+        "bannerDescriptions": {
+          "pending": "تم الإرسال للمراجعة · ٢٢ سبتمبر ٢٠٢٦ · منذ ٤١ دقيقة",
+          "verified": "تم التوثيق في ٢٢ سبتمبر ٢٠٢٦",
+          "rejected": "الطلب لا يستوفي الإرشادات"
+        },
+        "dateLabels": {
+          "created": "تاريخ الإنشاء",
+          "lastUpdated": "آخر تحديث",
+          "submitted": "تاريخ الإرسال"
+        },
+        "stats": {
+          "openJobs": "الوظائف المفتوحة",
+          "totalApplications": "إجمالي الطلبات",
+          "created": "تاريخ الإنشاء",
+          "lastUpdated": "آخر تحديث"
+        },
+        "fields": {
+          "companyName": "اسم الشركة",
+          "legalName": "الاسم القانوني",
+          "industry": "القطاع",
+          "companySize": "حجم الشركة",
+          "website": "الموقع الإلكتروني",
+          "headquarters": "المقر الرئيسي",
+          "about": "نبذة",
+          "primaryEmail": "البريد الإلكتروني الأساسي",
+          "phone": "الهاتف",
+          "hrEmail": "بريد الموارد البشرية",
+          "linkedin": "لينكدإن"
+        },
+        "links": {
+          "jobs": "عرض وظائف الشركة",
+          "activity": "عرض النشاط",
+          "auditLogs": "سجلات التدقيق"
+        }
       },
       "jobDetails": {
         "loadFailed": "تعذر تحميل هذه الوظيفة",
