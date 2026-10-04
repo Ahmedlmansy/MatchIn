@@ -8,7 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { STATUS_FILTER_OPTIONS, DATE_FILTER_OPTIONS } from "../constants/filterOptions";
+import {
+  STATUS_FILTER_OPTIONS,
+  DATE_FILTER_OPTIONS,
+} from "@/constants/filterOptions";
 
 export default function CompaniesToolbar({
   search,

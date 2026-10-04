@@ -1,6 +1,6 @@
 import CompanyStatusBadge from "./CompanyStatusBadge";
 import CompanyRowActions from "./CompanyRowActions";
-import { getRelativeLabel, formatDisplayDate } from "../utils/companyDateFormat";
+import { getRelativeLabel, formatDisplayDate } from "./companyDateFormat";
 
 export default function CompanyRow({ company, onVerify, onReject }) {
   return (

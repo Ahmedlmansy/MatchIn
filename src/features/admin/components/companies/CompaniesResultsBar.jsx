@@ -5,14 +5,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SORT_OPTIONS } from "../constants/filterOptions";
+import { SORT_OPTIONS } from "@/constants/filterOptions";
 
-export default function CompaniesResultsBar({ total, sort, onSortChange }) {
+export default function CompaniesResultsBar({
+  total,
+  start,
+  end,
+  sort,
+  onSortChange,
+}) {
   return (
     <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
       <div className="text-[13.5px] text-muted">
-        <strong className="font-semibold text-ink">{total}</strong>{" "}
-        {total === 1 ? "company" : "companies"} found
+        Showing{" "}
+        <strong className="font-semibold text-ink">
+          {start}–{end}
+        </strong>{" "}
+        of <strong className="font-semibold text-ink">{total}</strong>{" "}
+        {total === 1 ? "company" : "companies"}
       </div>
       <div className="flex items-center gap-2 text-[13px] text-muted">
         <span>Sort by</span>
