@@ -10,7 +10,8 @@ import {
   BriefcaseBusiness,
   Users,
   List,
-  ShieldCheck, 
+  ShieldCheck,
+  Building,
 } from "lucide-react";
 import AiChatPage from "@/features/candidate/pages/AiChatPage";
 import ApplicationDetail from "@/features/candidate/pages/ApplicationDetail";
@@ -34,6 +35,7 @@ import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
 import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
 import CmsHomePage from "@/features/admin/pages/CmsHomePage";
 import DashBoardOathContent from "@/features/admin/components/dashBoardOuth/DashBoardOuth";
+import CompanyDetails from "@/features/admin/pages/CompaniesDetailsPage";
 
 const role = "admin";
 
@@ -158,6 +160,16 @@ export const dashboard =
           },
         },
         {
+          path: "company-management",
+          handle: {
+            label: "Company Management",
+            labelKey: "navigation.companymanagement",
+            icon: Building,
+            sidebar: true,
+          },
+          children: [{ path: ":id", element: <CompanyDetails /> }],
+        },
+        {
           path: "users/:id",
           element: <UsersDetailsPage />,
         },
@@ -201,13 +213,13 @@ export const dashboard =
           },
         },
         {
-          path: "dashboard-auth", 
+          path: "dashboard-auth",
           element: <DashBoardOathContent />,
           handle: {
             label: "Auth CMS",
             labelKey: "navigation.authCms",
             icon: ShieldCheck,
-            sidebar: true, 
+            sidebar: true,
           },
         },
       ];
