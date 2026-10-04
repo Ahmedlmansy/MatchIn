@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MOCK_NOTIFICATIONS } from "@/constants/notificationsMock";
+import { MOCK_NOTIFICATIONS } from "@/features/candidate/shared/notificationsMock";
 import NotificationsList from "../components/NotificationsPage/NotificationsList";
 
 export default function NotificationsPage() {

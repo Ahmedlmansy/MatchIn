@@ -7,7 +7,7 @@ import ApplicationList from "../components/ApplicationPage/ApplicationList";
 import ApplicationStateViews from "../components/ApplicationPage/ApplicationStateViews";
 import ApplicationStats from "../components/ApplicationPage/ApplicationStats";
 import ApplicationToast from "../components/ApplicationPage/ApplicationToast";
-import { INITIAL_APPLICATIONS } from "@/constants/application";
+import { INITIAL_APPLICATIONS } from "@/features/candidate/shared/application";
 
 export default function ApplicationTracker() {
   const { t } = useTranslation("dashboard");

@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { validationMessage } from "./validation-message";
+import { validationMessage } from "@/components/shared/i18n/validationMessage";
 
 export const loginSchema = z.object({
     email: z.string()

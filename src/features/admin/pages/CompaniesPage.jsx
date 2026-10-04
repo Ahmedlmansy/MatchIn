@@ -6,7 +6,7 @@ import CompaniesToolbar from "../components/companies/CompaniesToolbar";
 import CompanyPagination from "../components/companies/CompanyPagination";
 import CompanyStatsStrip from "../components/companies/CompanyStatsStrip";
 import CompanyStatusLegend from "../components/companies/CompanyStatusLegend";
-import { INITIAL_COMPANIES } from "../components/companies/companiesData";
+import { INITIAL_COMPANIES } from "@/features/admin/shared/companiesData";
 
 const PAGE_SIZE = 8;
 const CURRENT_TIME = Date.now();

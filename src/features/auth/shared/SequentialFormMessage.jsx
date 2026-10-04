@@ -1,6 +1,6 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { translateValidationMessage } from "@/features/auth/schema/validation-message";
+import { translateValidationMessage } from "@/components/shared/i18n/validationMessage";
 
 export default function SequentialFormMessage({
   name,

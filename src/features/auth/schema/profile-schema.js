@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { validationMessage } from "./validation-message";
+import { validationMessage } from "@/components/shared/i18n/validationMessage";
 
 export const profileSchema = z.object({
   jobTitle: z.string().min(1, { error: validationMessage("jobTitleRequired") }),

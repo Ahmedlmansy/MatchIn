@@ -61,9 +61,9 @@ export default function Sidebar({
 }) {
   const { t } = useTranslation("dashboard");
   const localizedPath = useLocalizedPath();
-  const navItems = buildSidebarNav(routes, localizedPath("/dashboard"));
-const routes =
+  const routes =
   role === "admin" ? adminDashboardRoutes : candidateDashboardRoutes;
+  const navItems = buildSidebarNav(routes, localizedPath("/dashboard"));
   return (
     <>
       {mobileOpen && (

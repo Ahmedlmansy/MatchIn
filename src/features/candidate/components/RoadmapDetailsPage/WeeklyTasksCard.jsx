@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import TaskRow from "./TaskRow";
 import TaskDetailModal from "./TaskDetailModal";
-import { WEEKLY_TASKS } from "@/constants/weeklyTasksMock";
+import { WEEKLY_TASKS } from "@/features/candidate/shared/weeklyTasksMock";
 
 export default function WeeklyTasksCard({ initialTasks = WEEKLY_TASKS }) {
   const { t } = useTranslation("dashboard");

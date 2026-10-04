@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
-import ItemCard from "./shared/ItemCard";
+import ItemCard from "./ItemCard";
 import TabSaveActions from "./TabSaveActions";
 
 const DEFAULT_EDUCATION = [

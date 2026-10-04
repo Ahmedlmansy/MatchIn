@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SORT_OPTIONS } from "@/constants/filterOptions";
+import { SORT_OPTIONS } from "@/features/admin/shared/filterOptions";
 
 export default function CompaniesResultsBar({
   total,
