@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import PhaseSkillRow from "./PhaseSkillRow";
-import { PHASE_SKILLS } from "@/constants/phaseSkillsMock";
+import { PHASE_SKILLS } from "@/features/candidate/shared/phaseSkillsMock";
 
 export default function PhaseSkillsCard({ skills = PHASE_SKILLS }) {
   const { t } = useTranslation("dashboard");

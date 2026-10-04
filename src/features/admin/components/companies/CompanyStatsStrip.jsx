@@ -1,6 +1,6 @@
 import StatPill from "./StatPill";
-import { COMPANY_STATS } from "@/constants/companyStats";
-import { INITIAL_COMPANIES } from "./companiesData";
+import { COMPANY_STATS } from "@/features/admin/shared/companyStats";
+import { INITIAL_COMPANIES } from "../../shared/companiesData";
 
 function countStatuses(companies) {
   return companies.reduce(

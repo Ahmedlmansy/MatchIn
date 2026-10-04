@@ -4,7 +4,7 @@ import { Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 
-import { NAV_LINKS } from "@/constants/navLinks";
+import { NAV_LINKS } from "@/features/public/shared/navLinks";
 import LogoNavy from "@/assets/logo/Full_logo_navy.svg";
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";

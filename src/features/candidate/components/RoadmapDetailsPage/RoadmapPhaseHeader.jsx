@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_ROADMAP_PHASE } from "@/constants/roadmapPhaseMock";
+import { DEFAULT_ROADMAP_PHASE } from "@/features/candidate/shared/roadmapPhaseMock";
 import { useLocalizedPath } from "@/utils/routes";
 import { useTranslation } from "react-i18next";
 

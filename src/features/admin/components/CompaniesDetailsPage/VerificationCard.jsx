@@ -10,7 +10,7 @@ import VerificationBadge from "./VerificationBadge";
 import {
   VERIFICATION_STATUS,
   VERIFICATION_TONES,
-} from "./companiesDetailsData";
+} from "../../shared/companiesDetailsData";
 
 /**
  * VerificationCard

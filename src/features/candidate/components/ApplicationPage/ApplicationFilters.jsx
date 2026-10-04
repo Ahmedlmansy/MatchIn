@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { STATUS_CONFIG } from "@/constants/application";
+import { STATUS_CONFIG } from "@/features/candidate/shared/application";
 import { useTranslation } from "react-i18next";
 
 export default function ApplicationFilters({

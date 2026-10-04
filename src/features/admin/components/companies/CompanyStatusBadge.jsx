@@ -1,4 +1,4 @@
-import { COMPANY_STATUS_STYLES } from "@/constants/companyStatusStyles";
+import { COMPANY_STATUS_STYLES } from "@/features/admin/shared/companyStatusStyles";
 
 export default function CompanyStatusBadge({ status, compact = false }) {
   const style = COMPANY_STATUS_STYLES[status];

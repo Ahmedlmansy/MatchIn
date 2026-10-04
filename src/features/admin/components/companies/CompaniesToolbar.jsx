@@ -11,7 +11,7 @@ import {
 import {
   STATUS_FILTER_OPTIONS,
   DATE_FILTER_OPTIONS,
-} from "@/constants/filterOptions";
+} from "@/features/admin/shared/filterOptions";
 
 export default function CompaniesToolbar({
   search,

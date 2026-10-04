@@ -3,3 +3,4 @@ node_modules
 .env
 PROJECT_CODEBASE_GUIDE.md
 AUTH_LOGIC_CONVENTION.md
+refactoring_guidelines.md

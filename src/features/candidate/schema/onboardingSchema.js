@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { validationMessage } from "@/features/auth/schema/validation-message";
+import { validationMessage } from "@/components/shared/i18n/validationMessage";
 
 export const requiredFieldSchema = z
   .string()

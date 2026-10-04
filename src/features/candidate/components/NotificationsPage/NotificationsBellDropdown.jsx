@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import NotificationsList from "./NotificationsList";
-import { MOCK_NOTIFICATIONS } from "@/constants/notificationsMock";
+import { MOCK_NOTIFICATIONS } from "@/features/candidate/shared/notificationsMock";
 import { useLocalizedPath } from "@/utils/routes";
 import { useTranslation } from "react-i18next";
 

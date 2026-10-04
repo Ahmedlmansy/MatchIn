@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import MilestoneItem from "./MilestoneItem";
-import { MILESTONES } from "@/constants/milestonesMock";
+import { MILESTONES } from "@/features/candidate/shared/milestonesMock";
 
 export default function MilestonesCard({ milestones = MILESTONES }) {
   const { t } = useTranslation("dashboard");

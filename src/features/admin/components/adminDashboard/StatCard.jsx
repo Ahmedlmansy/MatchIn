@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { itemVariants } from "./motionVariants";
+import { itemVariants } from "../../shared/motionVariants";
 
 
 export default function StatCard({ icon: Icon, iconClass, value, label, sublabel, trend }) {
