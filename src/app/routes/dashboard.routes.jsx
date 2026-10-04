@@ -139,10 +139,7 @@ export const candidateDashboardRoutes = [
   },
 ];
 
-export const dashboard =
-  role !== "admin"
-    ? userDashboard
-    : [
+export const adminDashboardRoutes = [
         {
           index: true,
           element: <AdminOverview />,
@@ -230,3 +227,8 @@ export const dashboard =
           },
         },
       ];
+
+export const dashboard =
+  role !== "admin"
+    ? userDashboard
+    : adminDashboardRoutes
