@@ -4,6 +4,8 @@ import { useState } from "react";
 import { RegisterFormView } from "./RegisterFormView";
 import { OtpView } from "./OtpView";
 import { useRegisterMutation } from "@/features/auth/hooks/useRegisterMutation";
+import { useVerifyOtpMutation } from "@/features/auth/hooks/useVerifyOtpMutation";
+import { useResendOtpMutation } from "@/features/auth/hooks/useResendOtpMutation";
 
 /**
  * RegisterStep
@@ -31,19 +33,34 @@ export function RegisterStep({ onComplete, onPhaseChange }) {
     onVerificationStep: () => goToPhase("otp"),
   });
 
+  const verifyMutation = useVerifyOtpMutation({
+    onSuccess: (_, variables) => {
+      onComplete?.({ ...registerData, otpCode: variables.code });
+    },
+  });
+
+  const resendMutation = useResendOtpMutation();
+
   const handleRegisterSubmit = (data) => {
     setRegisterData(data); // keep the submitted fields for the OTP screen + final onComplete
     registerMutation.mutate(data);
   };
 
-  const handleOtpVerified = async (code) => {
-    // TODO: call the verify-email-otp API here — next step, not this one
-    onComplete?.({ ...registerData, otpCode: code });
+  const handleOtpVerified = (code) => {
+    resendMutation.reset();
+    verifyMutation.mutate({ email: registerData?.email, code });
   };
 
   const handleResend = () => {
-    // TODO: call the resend-email-otp API here — next step, not this one
+    verifyMutation.reset();
+    resendMutation.mutate({ email: registerData?.email });
   };
+
+  const otpError = verifyMutation.isError
+    ? verifyMutation.error?.message
+    : resendMutation.isError
+      ? resendMutation.error?.message
+      : null;
 
   if (phase === "otp") {
     return (
@@ -52,6 +69,8 @@ export function RegisterStep({ onComplete, onPhaseChange }) {
         onVerified={handleOtpVerified}
         onBack={() => goToPhase("form")}
         onResend={handleResend}
+        isPending={verifyMutation.isPending}
+        error={otpError}
       />
     );
   }
@@ -60,7 +79,7 @@ export function RegisterStep({ onComplete, onPhaseChange }) {
     <RegisterFormView
       onSubmit={handleRegisterSubmit}
       isPending={registerMutation.isPending}
-      fieldErrors={registerMutation.message ?? null}
+      fieldErrors={registerMutation.error?.fieldErrors ?? null}
       serverError={
         registerMutation.error && !registerMutation.error.fieldErrors
           ? registerMutation.error.message
@@ -69,3 +88,4 @@ export function RegisterStep({ onComplete, onPhaseChange }) {
     />
   );
 }
+
