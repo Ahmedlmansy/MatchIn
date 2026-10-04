@@ -3,7 +3,7 @@ import { Search, ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { requiredFieldSchema } from "../../schema/onboardingSchema";
 import { useTranslation } from "react-i18next";
-import { translateValidationMessage } from "@/features/auth/schema/validation-message";
+import { translateValidationMessage } from "@/components/shared/i18n/validationMessage";
 
 export default function ChipSelectStep({
   stepConfig,

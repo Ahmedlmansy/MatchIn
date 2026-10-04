@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import Section from "./Section";
-import { ACTIVITY_DOTS } from "./companiesDetailsData";
+import { ACTIVITY_DOTS } from "../../shared/companiesDetailsData";
 
 /**
  * CompanyActivity

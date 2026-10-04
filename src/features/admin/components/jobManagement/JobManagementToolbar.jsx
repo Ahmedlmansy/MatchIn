@@ -8,7 +8,7 @@ import {
   STATUS_FILTERS,
   SOURCE_FILTERS,
   SORT_OPTIONS,
-} from "./jobManagementData";
+} from "../../shared/jobManagementData";
 
 /**
  * JobManagementToolbar

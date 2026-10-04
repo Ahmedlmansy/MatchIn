@@ -17,7 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import PasswordInput from "@/features/auth/shared/PasswordInput";
 import SequentialFormMessage from "@/features/auth/shared/SequentialFormMessage";
 import { useTranslation } from "react-i18next";
-import { translateValidationMessage } from "@/features/auth/schema/validation-message";
+import { translateValidationMessage } from "@/components/shared/i18n/validationMessage";
 
 
 const FIELD_ORDER = [

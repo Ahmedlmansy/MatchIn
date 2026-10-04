@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-export default function DashBoardauthContent() {
+export default function DashboardAuthPage() {
   const [activeTab, setActiveTab] = useState('auth-form');
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
 

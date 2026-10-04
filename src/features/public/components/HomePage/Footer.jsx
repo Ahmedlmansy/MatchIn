@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import FooterLinkColumn from "./FooterLinkColumn";
 import NewsletterForm from "./NewsletterForm";
-import { FOOTER_COLUMNS, FOOTER_LEGAL_LINKS } from "@/constants/footerLinks";
+import { FOOTER_COLUMNS, FOOTER_LEGAL_LINKS } from "@/features/public/shared/footerLinks";
 import LogoNavy from "@/assets/logo/Full_logo_navy.svg";
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";

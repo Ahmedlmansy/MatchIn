@@ -7,7 +7,7 @@ import { cvFileSchema } from "@/features/auth/schema/cv-schema";
 import { useState } from "react";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { translateValidationMessage } from "@/features/auth/schema/validation-message";
+import { translateValidationMessage } from "@/components/shared/i18n/validationMessage";
 
 function formatSize(bytes) {
   return `${(bytes / 1024).toFixed(0)} KB`;

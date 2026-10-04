@@ -20,7 +20,7 @@ import logo from "@/assets/logo/MatchIn_logo.svg";
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
 import { newPasswordSchema } from "../schema/newPassword-schema";
-import { translateValidationMessage } from "../schema/validation-message";
+import { translateValidationMessage } from "@/components/shared/i18n/validationMessage";
 import { useResetPasswordMutation } from "@/features/auth/hooks/useResetPasswordMutation";
 import {
   isExpiredAuthStatus,

@@ -34,9 +34,9 @@ import { JobDetailsPage } from "@/features/admin/pages/JobDetailsPage";
 import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
 import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
 import CmsHomePage from "@/features/admin/pages/CmsHomePage";
-import DashBoardOathContent from "@/features/admin/components/dashBoardOuth/DashBoardOuth";
+import DashboardAuthPage from "@/features/admin/pages/DashboardAuthPage";
 import CompanyDetails from "@/features/admin/pages/CompaniesDetailsPage";
-import CompaniesPage from "@/features/admin/pages/ComoaniesPage";
+import CompaniesPage from "@/features/admin/pages/CompaniesPage";
 
 // No hardcoded role here anymore. Both trees are always defined; which one
 // renders is decided at request time by <RequireRole allow={[...]} /> in the
@@ -220,7 +220,7 @@ export const adminDashboardRoutes = [
         },
         {
           path: "dashboard-auth",
-          element: <DashBoardOathContent />,
+          element: <DashboardAuthPage />,
           handle: {
             label: "Auth CMS",
             labelKey: "navigation.authCms",

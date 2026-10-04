@@ -20,4 +20,4 @@ export {
   DEFAULT_VERIFICATION_STATUS,
   VERIFICATION_STATUS,
   VERIFICATION_TONES,
-} from "./companiesDetailsData";
+} from "../../shared/companiesDetailsData";
