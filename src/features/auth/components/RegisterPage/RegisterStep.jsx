@@ -78,6 +78,9 @@ export function RegisterStep({ onComplete, onPhaseChange }) {
   return (
     <RegisterFormView
       onSubmit={handleRegisterSubmit}
+      // Coming back from the OTP screen unmounts this form, so re-seed it with
+      // what was already submitted instead of making the user retype it all.
+      defaultValues={registerData}
       isPending={registerMutation.isPending}
       fieldErrors={registerMutation.error?.fieldErrors ?? null}
       serverError={
