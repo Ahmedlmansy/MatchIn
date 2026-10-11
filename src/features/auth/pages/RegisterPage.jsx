@@ -19,7 +19,9 @@ export default function RegisterPage() {
   const [cvFile, setCvFile] = useState(null);
 
   const handleAccountPhaseChange = (phase) => {
-    setStep(phase === "otp" ? 1 : 1);
+    // Step 0 is the account form, step 1 is the OTP screen — both live inside
+    // RegisterStep, so the shared progress bar has to follow the phase.
+    setStep(phase === "otp" ? 1 : 0);
   };
 
   const handleAccountComplete = (data) => {

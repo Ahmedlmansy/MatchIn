@@ -1,22 +1,21 @@
 import { useDispatch } from "react-redux";
-import { loginRequest } from "../api/auth.api";
+import { loginRequest, meRequest } from "../api/auth.api";
 import { setCredentials } from "../store/auth.slice";
-import { tokenStorage } from "@/lib/token";
 import { useApiMutation } from "./useApiMutation";
 
-// The login response already includes the user object directly:
-// { access_token, token_type, expires_in, user: { id, name, email, role, ... } }
-// So we don't need a second /me request here — that stays in useInitializeAuth for page reloads.
+// The login response sets the httpOnly session cookie, so there is nothing to
+// store client-side. Some deployments still echo { user } back; when they do not,
+// we read it from /auth/me instead — one extra call, always correct.
 export const useLoginMutation = ({ onAuthenticated } = {}) => {
   const dispatch = useDispatch();
 
   return useApiMutation({
-    mutationFn: loginRequest,
-    onSuccess: (data) => {
-      tokenStorage.set(data.access_token);
-      const user = data.user;
-      dispatch(setCredentials({ user, token: data.access_token }));
-      onAuthenticated?.(user);
+    mutationFn: async (variables) => {
+      const data = await loginRequest(variables);
+      const user = data?.user ?? (await meRequest());
+      dispatch(setCredentials({ user }));
+      return user;
     },
+    onSuccess: (user) => onAuthenticated?.(user),
   });
 };

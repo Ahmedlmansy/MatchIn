@@ -28,6 +28,14 @@ const FIELD_ORDER = [
   "terms",
 ];
 
+const EMPTY_VALUES = {
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+  terms: false,
+};
+
 /**
  * RegisterFormView — step 1 of 4: "Create your account"
  * Pure view: it owns no mutation/network logic. The parent (RegisterPage)
@@ -38,23 +46,20 @@ const FIELD_ORDER = [
  * @param {string|null} [serverError] - non-field-level backend error (e.g. network/500), shown as a banner
  * @param {Record<string, string[]>|null} [fieldErrors] - Laravel 422 shape, e.g. { email: ["already taken"] }.
  *   This component owns the RHF instance, so it's the one place that can call setError with these.
+ * @param {object} [defaultValues] - previously submitted values, so returning here
+ *   from the OTP step (which unmounts this form) doesn't wipe what the user typed.
  */
 export function RegisterFormView({
   onSubmit,
   isPending = false,
   serverError = null,
   fieldErrors = null,
+  defaultValues = null,
 }) {
   const { t } = useTranslation("common");
   const form = useForm({
     resolver: zodResolver(registerSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
-      terms: false,
-    },
+    defaultValues: { ...EMPTY_VALUES, ...(defaultValues ?? {}) },
   });
 
   const { errors } = form.formState;
@@ -98,7 +103,7 @@ export function RegisterFormView({
 
       {serverError && (
         <div className="mb-3 rounded-lg border border-error/30 bg-error/10 px-3 py-2 text-[12.5px] text-error">
-          {serverError.message}
+          {serverError}
         </div>
       )}
 
