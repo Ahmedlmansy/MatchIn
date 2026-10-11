@@ -38,7 +38,7 @@ export function DashboardRoleTree() {
     // first render after a hard refresh, while /auth/me is still in flight.
     if (!role) return [];
 
-    const tree = role === "admin" ? adminDashboardRoutes : candidateDashboardRoutes;
+    const tree = role === "super_admin" ? adminDashboardRoutes : candidateDashboardRoutes;
     return [{ path: "/", element: <DashboardLayout />, children: tree }];
   }, [role]);
 

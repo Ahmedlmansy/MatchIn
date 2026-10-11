@@ -231,6 +231,6 @@ export const adminDashboardRoutes = [
       ];
 
 export const dashboard =
-  role !== "admin"
+  role !== "super_admin"
     ? candidateDashboardRoutes
     : adminDashboardRoutes
