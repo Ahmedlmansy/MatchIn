@@ -5,3 +5,6 @@ dist/
 PROJECT_CODEBASE_GUIDE.md
 AUTH_LOGIC_CONVENTION.md
 refactoring_guidelines.md
+API_README.md 
+API_README.pdf
+/docs

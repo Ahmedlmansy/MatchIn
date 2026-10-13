@@ -1,10 +1,8 @@
 import AuthLayout from "@/components/layouts/AuthLayout";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { StepProgress } from "@/features/auth/components/RegisterPage/step-progress";
 import { RegisterStep } from "@/features/auth/components/RegisterPage/RegisterStep";
-import { CvUploadStep } from "@/features/auth/components/RegisterPage/CvUploadStep";
-import { ProfileCompletionStep } from "@/features/auth/components/RegisterPage/Profilecompletionstep";
 import { BriefcaseBusiness } from "lucide-react";
 import { useLocalizedPath } from "@/utils/routes";
 import { useTranslation } from "react-i18next";
@@ -14,9 +12,8 @@ export default function RegisterPage() {
   const localizedPath = useLocalizedPath();
   const { t } = useTranslation("common");
 
-  const [step, setStep] = useState(0);
-  const [registerData, setRegisterData] = useState(null); // { fullName, email, password, otpCode }
-  const [cvFile, setCvFile] = useState(null);
+  const [step, setStep] = useState(0); // 0 = form+otp, 1 = done
+  const [registerData, setRegisterData] = useState(null);
 
   const handleAccountPhaseChange = (phase) => {
     // Step 0 is the account form, step 1 is the OTP screen — both live inside
@@ -25,30 +22,19 @@ export default function RegisterPage() {
   };
 
   const handleAccountComplete = (data) => {
-    // TODO: account + otp were already verified inside RegisterStep;
-    // this is just where the wizard advances once that's done.
+    // Account + OTP verified. Register wizard ends here.
+    // Onboarding page (guarded by RequireOnboarding) handles profile completion.
     setRegisterData(data);
     setStep(2);
   };
 
-  const handleCvComplete = (file) => {
-    setCvFile(file);
-    setStep(3);
-  };
-
-  const handleCvSkip = () => {
-    // "Browse Jobs" bypasses profile completion entirely.
-    navigate(localizedPath("/dashboard/jobs"));
-  };
-
-  const handleProfileBack = () => {
-    setStep(2);
-  };
-
-  const handleProfileFinish = (profileData) => {
-    // TODO: submit { ...registerData, cvFile, ...profileData } to the API
-    navigate(localizedPath("/dashboard"));
-  };
+  // After OTP verification, user is authenticated. Navigate to dashboard.
+  // The RequireOnboarding guard will redirect to onboarding if needed.
+  useEffect(() => {
+    if (step === 2) {
+      navigate(localizedPath("/dashboard"), { replace: true });
+    }
+  }, [step, navigate, localizedPath]);
 
   return (
     <AuthLayout
@@ -88,15 +74,14 @@ export default function RegisterPage() {
       )}
 
       {step === 2 && (
-        <CvUploadStep onComplete={handleCvComplete} onSkip={handleCvSkip} />
-      )}
-
-      {step === 3 && (
-        <ProfileCompletionStep
-          cvFileName={cvFile?.name}
-          onBack={handleProfileBack}
-          onFinish={handleProfileFinish}
-        />
+        <div className="text-center py-8">
+          <div className="animate-pulse text-primary">
+            <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <p className="mt-4 text-muted">{t("auth.register.redirecting")}</p>
+        </div>
       )}
     </AuthLayout>
   );
