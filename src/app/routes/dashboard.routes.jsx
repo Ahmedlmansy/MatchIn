@@ -43,8 +43,6 @@ import CompaniesPage from "@/features/admin/pages/CompaniesPage";
 // router file, reading the real role from Redux — not by picking an array
 // once at import time.
 
-const role = 'user'
-
 export const candidateDashboardRoutes = [
   {
     index: true,

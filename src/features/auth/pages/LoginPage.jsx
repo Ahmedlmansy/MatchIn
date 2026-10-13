@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import { BriefcaseBusiness } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -12,10 +12,31 @@ export default function LoginPage() {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
   const localizedPath = useLocalizedPath();
+  const emailRef = useRef("");
 
-  const { mutate, isPending, isError, error } = useLoginMutation({
-    onAuthenticated: () => navigate(localizedPath("/dashboard"), { replace: true }),
+  const { mutate, isPending, isError, error, reset } = useLoginMutation({
+    onAuthenticated: (user) => {
+      // Check if there's a stored redirect location from RequireAuth
+      const from = navigate.location?.state?.from?.pathname || localizedPath("/dashboard");
+      navigate(from, { replace: true });
+    },
   });
+
+  // Handle 403 (unverified email) - redirect to OTP verification with email
+  useEffect(() => {
+    if (isError && error?.status === 403 && emailRef.current) {
+      navigate(localizedPath("/auth/forgot-password/verify-otp"), {
+        state: { email: emailRef.current },
+        replace: true,
+      });
+      reset(); // Clear error so form can be used again
+    }
+  }, [isError, error, navigate, localizedPath, reset]);
+
+  const handleSubmit = (data) => {
+    emailRef.current = data.email;
+    mutate(data);
+  };
 
   return (
     <AuthLayout
@@ -30,9 +51,10 @@ export default function LoginPage() {
       footer={<LoginFooter />}
     >
       <LoginForm
-        onSubmit={mutate}
+        onSubmit={handleSubmit}
         isPending={isPending}
         serverError={isError ? error?.message : null}
+        fieldErrors={error?.fieldErrors ?? null}
       />
     </AuthLayout>
   );
