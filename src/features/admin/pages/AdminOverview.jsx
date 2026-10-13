@@ -1,4 +1,12 @@
+// src/features/admin/pages/AdminOverview.jsx
+//
+// Admin overview. Reads through useAdminDashboardQuery and renders the view
+// model that turns the normalized payload into the exact card/list props.
+
+import { useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useLocalizedPath } from "@/utils/routes";
 import {
   AdminDashboardSkeleton,
   DashboardHeader,
@@ -7,9 +15,9 @@ import {
   RecentActivity,
   AuditLogs,
   containerVariants,
-  quickActions,
 } from "@/features/admin/components/adminDashboard";
-import { useAdminDashboardQuery } from "@/features/admin/hooks/useAdminDashboardQuery";
+import { useAdminDashboardQuery } from "@/features/admin/hooks";
+import { QUICK_ACTIONS } from "@/features/admin/constants/adminDashboardActions";
 import {
   buildOverviewStats,
   buildRecentActivity,
@@ -18,19 +26,22 @@ import {
 import { ErrorState, EmptyState } from "@/features/admin/shared";
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const { data, isPending, isError, error, refetch, isFetching } = useAdminDashboardQuery();
 
   // Domain data -> the exact props the cards/lists render (icons, Tailwind
   // classes, title/meta segments). See adminDashboardViewModel.js.
-  const overviewStats = buildOverviewStats(data?.stats);
-  const recentActivity = buildRecentActivity(data?.recentActivity);
-  const auditLogs = buildAuditLogs(data?.auditLogs);
+  const overviewStats = useMemo(() => buildOverviewStats(data?.stats), [data?.stats]);
+  const recentActivity = useMemo(() => buildRecentActivity(data?.recentActivity), [data?.recentActivity]);
+  const auditLogs = useMemo(() => buildAuditLogs(data?.auditLogs), [data?.auditLogs]);
 
-  const handleRefresh = () => refetch();
-
-  const handleNewCompany = () => {
-    // TODO: open create-company flow
-  };
+  // The quick-action hrefs are language-agnostic in the constants module, so
+  // they get localized once here rather than in every action card.
+  const quickActions = useMemo(
+    () => QUICK_ACTIONS.map((action) => ({ ...action, href: localizedPath(action.href) })),
+    [localizedPath],
+  );
 
   if (isPending) {
     return <AdminDashboardSkeleton />;
@@ -43,7 +54,7 @@ export default function AdminDashboard() {
           <ErrorState
             title="Couldn't load the dashboard"
             description={error?.message || "Something went wrong on our end. Please try again."}
-            onRetry={handleRefresh}
+            onRetry={() => refetch()}
           />
         </div>
       </div>
@@ -58,8 +69,9 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto space-y-7">
         {/* ========== PAGE HEADER ========== */}
         <DashboardHeader
-          onRefresh={handleRefresh}
-          onNewCompany={handleNewCompany}
+          onRefresh={() => refetch()}
+          isRefreshing={isFetching}
+          onNewCompany={() => navigate(localizedPath("/dashboard/company-management"))}
         />
 
         {!hasContent ? (

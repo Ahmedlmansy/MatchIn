@@ -2,7 +2,7 @@ import { Download, RefreshCw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 
-export default function CompaniesPageHeader({ onExport, onRefresh }) {
+export default function CompaniesPageHeader({ onExport, onRefresh, isRefreshing = false }) {
   const { t } = useTranslation("dashboard");
 
   return (
@@ -20,6 +20,7 @@ export default function CompaniesPageHeader({ onExport, onRefresh }) {
           type="button"
           variant="outline"
           onClick={onExport}
+          disabled={!onExport}
           className="h-10 gap-2 rounded-xl border-border bg-surface text-[13.5px] font-semibold text-ink hover:bg-background"
         >
           <Download className="h-4 w-4" />
@@ -28,9 +29,10 @@ export default function CompaniesPageHeader({ onExport, onRefresh }) {
         <Button
           type="button"
           onClick={onRefresh}
-          className="h-10 gap-2 rounded-xl bg-primary text-[13.5px] font-semibold text-primary-foreground hover:bg-primary/90"
+          disabled={isRefreshing}
+          className="h-10 gap-2 rounded-xl bg-primary text-[13.5px] font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-70"
         >
-          <RefreshCw className="h-4 w-4" />
+          <RefreshCw className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`} />
           Refresh
         </Button>
       </div>

@@ -10,7 +10,7 @@ import VerificationBadge from "./VerificationBadge";
 import {
   VERIFICATION_STATUS,
   VERIFICATION_TONES,
-} from "../../shared/companiesDetailsData";
+} from "@/features/admin/constants/companyVerification";
 
 /**
  * VerificationCard
@@ -18,7 +18,7 @@ import {
  * verified/pending and a secondary button toggles rejected. Replaces the
  * three duplicated full-width button stacks.
  */
-export default function VerificationCard({ status, onStatusChange }) {
+export default function VerificationCard({ status, onStatusChange, isSaving = false }) {
   const { t } = useTranslation("dashboard");
   const config = VERIFICATION_STATUS[status] ?? VERIFICATION_STATUS.pending;
   const tone = VERIFICATION_TONES[config.tone];
@@ -44,6 +44,7 @@ export default function VerificationCard({ status, onStatusChange }) {
         <Switch
           id="company-verified"
           checked={isVerified}
+          disabled={isSaving}
           onCheckedChange={(checked) =>
             onStatusChange(checked ? "verified" : "pending")
           }
@@ -59,9 +60,10 @@ export default function VerificationCard({ status, onStatusChange }) {
       {/* Reject / re-evaluate */}
       <Button
         variant="outline"
+        disabled={isSaving}
         onClick={() => onStatusChange(isRejected ? "pending" : "rejected")}
         className={cn(
-          "h-10 w-full justify-center gap-2 rounded-xl border-border bg-surface",
+          "h-10 w-full justify-center gap-2 rounded-xl border-border bg-surface disabled:opacity-60",
           tone.control,
         )}
       >

@@ -4,58 +4,53 @@ import {
   SortDropdown,
   FilterPillGroup,
 } from "@/features/admin/shared";
-import {
-  STATUS_FILTERS,
-  SOURCE_FILTERS,
-  SORT_OPTIONS,
-} from "../../shared/jobManagementData";
 
 /**
  * JobManagementToolbar
  * Search input, status/source filter pills, sort dropdown and "Clear Filters".
+ *
+ * Options are passed in rather than imported so the page owns which filter set
+ * is active (and the toolbar stays reusable if a second job list appears).
  */
 export default function JobManagementToolbar({
-  searchQuery,
-  onSearchChange,
-  statusFilter,
-  onStatusChange,
-  sourceFilter,
-  onSourceChange,
-  sortBy,
-  onSortChange,
+  filters,
+  onFilterChange,
   onClearFilters,
+  statusOptions,
+  sourceOptions,
+  sortOptions,
 }) {
   return (
     <div className="space-y-4">
       {/* Search + Sort Bar */}
       <div className="flex flex-col sm:flex-row gap-2.5">
         <SearchInput
-          value={searchQuery}
-          onChange={onSearchChange}
+          value={filters.search}
+          onChange={onFilterChange("search")}
           placeholder="Search by job title or company..."
         />
         <SortDropdown
-          value={sortBy}
-          onChange={onSortChange}
-          options={SORT_OPTIONS}
+          value={filters.sort}
+          onChange={onFilterChange("sort")}
+          options={sortOptions}
         />
       </div>
 
       {/* Filter Pills + Clear Filters */}
       <div className="flex items-center gap-2">
         <FilterPillGroup
-          options={STATUS_FILTERS}
-          value={statusFilter}
-          onChange={onStatusChange}
+          options={statusOptions}
+          value={filters.status}
+          onChange={onFilterChange("status")}
           className="flex-1"
         />
 
         <span className="w-px h-5 bg-border shrink-0 mx-1" />
 
         <FilterPillGroup
-          options={SOURCE_FILTERS}
-          value={sourceFilter}
-          onChange={onSourceChange}
+          options={sourceOptions}
+          value={filters.source}
+          onChange={onFilterChange("source")}
           className="flex-1"
         />
 

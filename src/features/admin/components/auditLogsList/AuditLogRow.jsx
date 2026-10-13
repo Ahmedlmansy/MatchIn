@@ -54,7 +54,7 @@ export default function AuditLogRow({ log, onSelect }) {
         {log.prev}
       </td>
       <td className="py-3.5 px-4 font-mono text-xs text-success font-semibold">
-        {log.new}
+        {log.newValue}
       </td>
 
       {/* IP / Meta */}
