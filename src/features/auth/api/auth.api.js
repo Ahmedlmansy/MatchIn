@@ -88,6 +88,10 @@ export const resetPassword = async (payload) => {
 
 // POST /api/auth/logout — clears the session cookie on the server.
 // Resolves with the server payload, rejects with the axios error.
-// If the endpoint doesn't exist (404/405), the caller should still clear local state.
+// Tagged with skip-refresh header to prevent 401 refresh retry loops.
 export const logoutRequest = () =>
-  api.post("/api/auth/logout").then((res) => res.data?.data ?? res.data);
+  api
+    .post("/api/auth/logout", null, {
+      headers: { "x-skillmatch-refresh-retry": "true" },
+    })
+    .then((res) => res.data?.data ?? res.data);

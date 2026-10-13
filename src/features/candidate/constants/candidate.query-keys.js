@@ -10,10 +10,14 @@ export const candidateKeys = {
 
   profile: () => [...candidateKeys.all, "profile"],
 
+  cv: {
+    history: () => [...candidateKeys.all, "cv", "history"],
+    status: (id) => [...candidateKeys.all, "cv", "status", id],
+  },
+
   // Placeholders for the rest of the candidate domain, added as each screen is
   // migrated off its mock data — keeps every key defined in exactly one place.
   savedJobs: (filters) => [...candidateKeys.all, "saved-jobs", filters ?? {}],
   applications: (filters) => [...candidateKeys.all, "applications", filters ?? {}],
-  cv: () => [...candidateKeys.all, "cv"],
   roadmap: (roleId) => [...candidateKeys.all, "roadmap", roleId ?? {}],
 };

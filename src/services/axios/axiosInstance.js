@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAccessToken } from "./tokenStore";
+import { detectInitialLanguage } from "@/features/language/store/language.slice";
 
 // The one app-wide client (convention §4.2). The session token is an httpOnly
 // cookie the backend sets on login / email verification, so JS never holds it
@@ -13,28 +13,28 @@ export const api = axios.create({
   },
 });
 
-const REFRESH_HEADER = "x-skillmatch-refresh-retry";
+api.interceptors.request.use(async (config) => {
+  const existingHeader =
+    config.headers?.["Accept-Language"] ||
+    config.headers?.["accept-language"];
 
-/**
- * Attach the bearer token when we have one.
- *
- * The app supports BOTH session styles at once:
- *   · cookie session — no token, `withCredentials` does the work
- *   · bearer session — token from the login response, sent as a header
- *
- * That dual support is the fix for the 401s: the backend returns an
- * `access_token` from /api/auth/login, and this app was dropping it on the
- * floor, so /api/auth/me went out unauthenticated and came back 401 — which
- * the refresh flow then converted into a full logout.
- *
- * `withCredentials` stays true regardless, because a deployment may set the
- * cookie *and* return a token.
- */
-api.interceptors.request.use((config) => {
-  const token = getAccessToken();
-  if (token && !config.headers?.[REFRESH_HEADER]) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (!existingHeader) {
+    let currentLang = null;
+    try {
+      const { store } = await import("@/store");
+      currentLang = store?.getState()?.language?.lang;
+    } catch {
+      // Store not ready or failed to import
+    }
+
+    if (currentLang !== "ar" && currentLang !== "en") {
+      currentLang = detectInitialLanguage();
+    }
+
+    config.headers = config.headers || {};
+    config.headers["Accept-Language"] = currentLang === "ar" ? "ar" : "en";
   }
+
   return config;
 });
 

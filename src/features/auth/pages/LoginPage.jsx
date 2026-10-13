@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import { BriefcaseBusiness } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoginFooter from "@/features/auth/components/LoginPage/LoginFooter";
 import LoginForm from "@/features/auth/components/LoginPage/LoginForm";
 import { useLoginMutation } from "@/features/auth/hooks/useLoginMutation";
@@ -16,12 +16,8 @@ export default function LoginPage() {
   const emailRef = useRef("");
 
   const { mutate, isPending, isError, error, reset } = useLoginMutation({
-    onAuthenticated: () => {
-      // Where the guard wanted us to go before it bounced us here. `location`
-      // (not `navigate.location`, which does not exist — `navigate` is just a
-      // function) holds the router state RequireAuth passed along.
+    onAuthenticated: (user) => {
       const from = location.state?.from?.pathname ?? localizedPath("/dashboard");
-
       navigate(from, { replace: true });
     },
   });

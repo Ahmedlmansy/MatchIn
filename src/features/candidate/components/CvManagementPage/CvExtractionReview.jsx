@@ -8,10 +8,11 @@ import {
   Languages,
   User,
   Layers,
-  FolderGit2,
+  Loader2,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import Status from "@/components/shared/Status";
 
 import CvProfileCard from "./CvProfileCard";
 import CvExperiencesCard from "./CvExperiencesCard";
@@ -30,11 +31,14 @@ export default function CvExtractionReview({
   onConfirmLanguage,
   onConfirmProfile,
   onConfirmAll,
+  onVerify,
+  isVerifying = false,
+  isVerified = false,
 }) {
+  const { t } = useTranslation("dashboard");
   const [activeTab, setActiveTab] = useState("all");
 
-  // Normalize data support (both extractionData object and legacy skills prop)
-  const skills = extractionData?.candidate_skills || legacySkills || [];
+  const skills = extractionData?.skills || extractionData?.candidate_skills || legacySkills || [];
   const experiences = extractionData?.experiences || [];
   const educations = extractionData?.educations || [];
   const languages = extractionData?.languages || [];
@@ -42,7 +46,6 @@ export default function CvExtractionReview({
   const profile = extractionData?.candidate_profile || null;
   const profileConfirmed = extractionData?.profileConfirmed || false;
 
-  // Calculate confirmation stats
   const totalItems =
     (user || profile ? 1 : 0) +
     experiences.length +
@@ -62,41 +65,72 @@ export default function CvExtractionReview({
   const tabs = [
     {
       id: "all",
-      label: "All Extracted Data",
+      label: t("pages.cvManagement.allExtractedData", "All Extracted Data"),
       icon: Layers,
       count: totalItems,
     },
     {
       id: "skills",
-      label: "Skills",
+      label: t("pages.cvManagement.skills", "Skills"),
       icon: Sparkles,
       count: skills.length,
     },
     {
       id: "experience",
-      label: "Experience",
+      label: t("pages.cvManagement.experience", "Experience"),
       icon: Briefcase,
       count: experiences.length,
     },
     {
       id: "education",
-      label: "Education",
+      label: t("pages.cvManagement.education", "Education"),
       icon: GraduationCap,
       count: educations.length,
     },
     {
       id: "profile",
-      label: "Profile & Bio",
+      label: t("pages.cvManagement.profileAndBio", "Profile & Bio"),
       icon: User,
       count: user || profile ? 1 : 0,
     },
     {
       id: "languages",
-      label: "Languages",
+      label: t("pages.cvManagement.languages", "Languages"),
       icon: Languages,
       count: languages.length,
     },
   ];
+
+  if (totalItems === 0) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.16, ease }}
+        className="rounded-2xl border border-border bg-surface p-6 shadow-xs"
+      >
+        <Status
+          icon={<Sparkles className="h-6 w-6" />}
+          iconClassName="bg-primary/10 text-primary"
+          title={t("pages.cvManagement.emptyExtractionTitle", "No Extracted Data Available")}
+          subtitle={t(
+            "pages.cvManagement.emptyExtractionSubtitle",
+            "Waiting for extraction schema details from backend."
+          )}
+        />
+        <div className="mt-4 flex justify-end border-t border-border pt-4">
+          <Button
+            type="button"
+            disabled
+            className="rounded-xl bg-success/50 px-6 py-2.5 text-xs font-bold text-success-foreground cursor-not-allowed"
+          >
+            <CheckCircle2 className="h-4 w-4 me-1.5" />
+            {t("pages.cvManagement.confirmAndVerify", "Verify & Sync with Profile")}
+          </Button>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
@@ -110,22 +144,23 @@ export default function CvExtractionReview({
         <div>
           <h3 className="flex items-center gap-2 text-lg font-bold text-primary">
             <Sparkles className="h-5 w-5 text-accent" />
-            AI Extraction Review
+            {t("pages.cvManagement.aiExtractionReview", "AI Extraction Review")}
           </h3>
           <p className="text-xs text-muted">
-            Verify and confirm your parsed professional background before updating your profile
+            {t(
+              "pages.cvManagement.reviewSubtitle",
+              "Verify and confirm your parsed professional background before updating your profile"
+            )}
           </p>
         </div>
 
         {/* Verification Progress Badge */}
         <div className="flex items-center gap-2 rounded-xl border border-border bg-background px-3 py-1.5 text-xs">
-          <span className="text-muted">Verification:</span>
+          <span className="text-muted">{t("pages.cvManagement.verification", "Verification")}:</span>
           <span className="font-bold text-primary">
-            {confirmedCount} of {totalItems} confirmed
+            {confirmedCount} {t("pages.cvManagement.of", "of")} {totalItems} {t("pages.cvManagement.confirmed", "confirmed")}
           </span>
-          {allConfirmed && (
-            <CheckCircle2 className="h-4 w-4 text-success" />
-          )}
+          {allConfirmed && <CheckCircle2 className="h-4 w-4 text-success" />}
         </div>
       </div>
 
@@ -185,10 +220,7 @@ export default function CvExtractionReview({
 
           {/* Skills Section */}
           {(activeTab === "all" || activeTab === "skills") && (
-            <CvSkillsCard
-              skills={skills}
-              onConfirmSkill={onConfirmSkill}
-            />
+            <CvSkillsCard skills={skills} onConfirmSkill={onConfirmSkill} />
           )}
 
           {/* Work Experience Section */}
@@ -220,19 +252,40 @@ export default function CvExtractionReview({
       {/* Action Footer */}
       <div className="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-4 sm:flex-row sm:items-center sm:justify-between shadow-xs">
         <div className="text-xs text-muted">
-          <p className="font-semibold text-ink">Ready to sync with your candidate profile?</p>
-          <p>Confirming extracted data will update your MatchIn profile information automatically.</p>
+          <p className="font-semibold text-ink">
+            {t("pages.cvManagement.readyToSync", "Ready to sync with your candidate profile?")}
+          </p>
+          <p>
+            {t(
+              "pages.cvManagement.syncDescription",
+              "Confirming extracted data will update your MatchIn profile information automatically."
+            )}
+          </p>
         </div>
 
         <div className="flex items-center gap-3">
           <Button
             type="button"
-            onClick={onConfirmAll}
-            disabled={allConfirmed || totalItems === 0}
+            onClick={onVerify || onConfirmAll}
+            disabled={isVerifying || isVerified || totalItems === 0}
             className="flex items-center gap-2 rounded-xl bg-success px-6 py-2.5 text-xs font-bold text-success-foreground hover:bg-success/90 disabled:opacity-50"
           >
-            <CheckCircle2 className="h-4 w-4" />
-            {allConfirmed ? "All Data Confirmed" : "Confirm All Extracted Data"}
+            {isVerifying ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {t("pages.cvManagement.verifying", "Verifying & Syncing...")}
+              </>
+            ) : isVerified ? (
+              <>
+                <CheckCircle2 className="h-4 w-4" />
+                {t("pages.cvManagement.verified", "Already Verified & Synced")}
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="h-4 w-4" />
+                {t("pages.cvManagement.confirmAndVerify", "Verify & Sync with Profile")}
+              </>
+            )}
           </Button>
         </div>
       </div>

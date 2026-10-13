@@ -5,7 +5,6 @@ import {
   CheckCircle2,
   Search,
   Quote,
-  SlidersHorizontal,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";

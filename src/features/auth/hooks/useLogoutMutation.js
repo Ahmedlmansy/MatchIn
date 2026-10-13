@@ -17,7 +17,14 @@ export const useLogoutMutation = () => {
   const localizedPath = useLocalizedPath();
 
   return useMutation({
-    mutationFn: logoutRequest,
+    mutationFn: async () => {
+      try {
+        return await logoutRequest();
+      } catch (error) {
+        // Network errors, 401, 404, 405 should not prevent client cleanup
+        return null;
+      }
+    },
     onSettled: () => {
       // Always clear local state regardless of server response
       dispatch(clearCredentials());
