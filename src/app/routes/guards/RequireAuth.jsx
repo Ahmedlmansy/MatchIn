@@ -1,13 +1,14 @@
 // src/routes/guards/RequireAuth.jsx
 import { useSelector } from "react-redux";
-import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { selectAuthStatus } from "@/features/auth/store/auth.selectors";
+import { useLocalizedPath } from "@/utils/routes";
 
 export function RequireAuth() {
   const status = useSelector(selectAuthStatus);
   const location = useLocation();
-  const { lang } = useParams();
+  const localizedPath = useLocalizedPath();
 
   // Still verifying the session cookie against /auth/me. Redirecting here
   // would bounce a signed-in user to login, so hold the route and show a
@@ -27,7 +28,7 @@ export function RequireAuth() {
   if (status !== "authenticated") {
     return (
       <Navigate
-        to={`/${lang}/auth/login`}
+        to={localizedPath("/auth/login")}
         state={{ from: location }}
         replace
       />

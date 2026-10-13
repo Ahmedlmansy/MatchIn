@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import AuthLayout from "@/components/layouts/AuthLayout";
 import { BriefcaseBusiness } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import LoginFooter from "@/features/auth/components/LoginPage/LoginFooter";
 import LoginForm from "@/features/auth/components/LoginPage/LoginForm";
 import { useLoginMutation } from "@/features/auth/hooks/useLoginMutation";
@@ -11,13 +11,13 @@ import { useLocalizedPath } from "@/utils/routes";
 export default function LoginPage() {
   const { t } = useTranslation("common");
   const navigate = useNavigate();
+  const location = useLocation();
   const localizedPath = useLocalizedPath();
   const emailRef = useRef("");
 
   const { mutate, isPending, isError, error, reset } = useLoginMutation({
     onAuthenticated: (user) => {
-      // Check if there's a stored redirect location from RequireAuth
-      const from = navigate.location?.state?.from?.pathname || localizedPath("/dashboard");
+      const from = location.state?.from?.pathname ?? localizedPath("/dashboard");
       navigate(from, { replace: true });
     },
   });
