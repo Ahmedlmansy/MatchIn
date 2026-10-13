@@ -151,7 +151,7 @@ export function UsersDetailsPage() {
           <Button
             variant="outline"
             onClick={() => (error?.status === 404 ? navigate(usersPath) : refetch())}
-            className="ml-2.5 rounded-xl"
+            className="ms-2.5 rounded-xl"
           >
             Retry
           </Button>
@@ -164,7 +164,9 @@ export function UsersDetailsPage() {
   const actionError = updateUser.error || setStatus.error || deleteUser.error;
 
   return (
-    <div className="min-h-screen bg-background px-7 py-8">
+    // Responsive gutter, matching UserManagementPage — px-7 flat was too tight
+    // on a 375px screen.
+    <div className="min-h-screen bg-background px-4 py-6 sm:px-7 sm:py-8">
       <div className="mx-auto max-w-[1100px]">
         {/* Breadcrumb */}
         <div className="mb-3.5 flex flex-wrap items-center gap-1.5 text-[13px] text-muted">
@@ -460,7 +462,7 @@ export function UsersDetailsPage() {
                   className="flex items-start justify-between gap-3 border-b border-border py-2.5 text-[13.5px] last:border-b-0"
                 >
                   <span className="text-muted">{label}</span>
-                  <div className="text-right font-semibold text-ink">
+                  <div className="text-end font-semibold text-ink">
                     {date.date}
                     {date.sub && (
                       <small className="mt-0.5 block text-xs font-normal text-muted">

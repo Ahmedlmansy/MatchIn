@@ -50,7 +50,7 @@ export default function ResponsibilitiesSection({ formData, onChange }) {
             className="border-[#E4E4E7] focus-visible:ring-[#1D2A44]"
           />
           <Button type="button" onClick={handleAdd} className="bg-[#1D2A44] hover:bg-[#162034] text-white">
-            <Plus className="h-4 w-4 mr-1" /> {t("ui.responsibilities.add")}
+            <Plus className="h-4 w-4 me-1" /> {t("ui.responsibilities.add")}
           </Button>
         </div>
 

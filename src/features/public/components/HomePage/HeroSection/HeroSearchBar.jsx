@@ -118,7 +118,7 @@ export default function HeroSearchBar({
             <PopoverContent
               align="start"
               onOpenAutoFocus={(e) => e.preventDefault()}
-              className="w-[--radix-popover-trigger-width] border-primary-foreground/20 bg-primary/95 p-2 text-left backdrop-blur-xl md:w-80"
+              className="w-[--radix-popover-trigger-width] border-primary-foreground/20 bg-primary/95 p-2 text-start backdrop-blur-xl md:w-80"
             >
               <Command shouldFilter={false} className="bg-transparent">
                 <CommandList>

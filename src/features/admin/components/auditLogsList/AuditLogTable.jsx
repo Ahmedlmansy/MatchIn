@@ -50,7 +50,7 @@ export default function AuditLogTable({
       )}
     >
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-225">
+        <table className="w-full text-start border-collapse min-w-225">
           <thead>
             <tr className="bg-[#f7f4ef] border-b border-border text-[11px] font-bold uppercase tracking-wider text-muted">
               {COLUMNS.map((column) => (

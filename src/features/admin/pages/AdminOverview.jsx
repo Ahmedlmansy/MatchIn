@@ -110,6 +110,10 @@ export default function AdminDashboard() {
       {/* Subtle progress hint while a manual refresh is in flight — the data
           on screen stays visible rather than flashing the skeleton again. */}
       {isFetching && !isPending && (
+        // Centering is direction-agnostic, so this intentionally stays
+        // physical `left-1/2` + `-translate-x-1/2`. Using `start-1/2` here
+        // would place it 50% from the right in RTL while the (physical)
+        // translate still shifted it left — pushing the bar off-centre.
         <div className="pointer-events-none fixed bottom-4 left-1/2 h-1 w-24 -translate-x-1/2 overflow-hidden rounded-full bg-border">
           <div className="h-full w-1/2 animate-[pulse_1s_ease-in-out_infinite] rounded-full bg-primary" />
         </div>

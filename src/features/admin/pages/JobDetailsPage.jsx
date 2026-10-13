@@ -344,7 +344,7 @@ export function JobDetailsPage() {
               ● {job.freshness}
             </span>
             {isEditing && (
-              <span className="ml-1 flex items-center gap-1 text-[11px] text-muted">
+              <span className="ms-1 flex items-center gap-1 text-[11px] text-muted">
                 <Lock className="h-3.5 w-3.5" />
                 Preserved from source — not editable
               </span>
@@ -434,7 +434,7 @@ export function JobDetailsPage() {
               <Button
                 variant="ghost"
                 asChild
-                className="ml-auto h-10 gap-1.5 rounded-full px-4 text-[12.5px] font-semibold text-muted hover:text-ink"
+                className="ms-auto h-10 gap-1.5 rounded-full px-4 text-[12.5px] font-semibold text-muted hover:text-ink"
               >
                 <Link to={jobsPath}>
                   <ArrowLeft className="h-4 w-4" />
@@ -638,7 +638,7 @@ function Picker({ value, onValueChange, options }) {
 
 function StatusMenu({ options, current, isSaving, onSelect }) {
   return (
-    <div className="absolute left-0 top-11 z-10 w-40 rounded-xl border border-border bg-surface p-1.5 shadow-md">
+    <div className="absolute start-0 top-11 z-10 w-40 rounded-xl border border-border bg-surface p-1.5 shadow-md">
       {options.map((option) => (
         <button
           key={option}
@@ -646,7 +646,7 @@ function StatusMenu({ options, current, isSaving, onSelect }) {
           disabled={isSaving}
           onClick={() => onSelect(option)}
           className={cn(
-            "flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left text-[12.5px] font-medium text-ink hover:bg-background disabled:opacity-50",
+            "flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-start text-[12.5px] font-medium text-ink hover:bg-background disabled:opacity-50",
             current === option && "font-bold text-primary",
           )}
         >

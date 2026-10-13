@@ -149,7 +149,7 @@ export default function CvExtractionReview({
               <span>{tab.label}</span>
               {typeof tab.count === "number" && (
                 <span
-                  className={`ml-1 rounded-full px-1.5 py-0.2 text-[10px] ${
+                  className={`ms-1 rounded-full px-1.5 py-0.2 text-[10px] ${
                     isActive
                       ? "bg-primary text-primary-foreground font-bold"
                       : "bg-muted/15 text-muted font-medium"

@@ -52,13 +52,13 @@ export default function JobActionMenu({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -5 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 top-9 z-20 bg-white border border-border rounded-xl shadow-lg py-1.5 w-48"
+            className="absolute end-0 top-9 z-20 bg-white border border-border rounded-xl shadow-lg py-1.5 w-48"
           >
             {companyHref && (
               <Link
                 to={companyHref}
                 onClick={() => onToggle(false)}
-                className="w-full flex items-center gap-2 px-3.5 py-2 text-[12.5px] text-[#44474E] hover:bg-background transition-colors text-left"
+                className="w-full flex items-center gap-2 px-3.5 py-2 text-[12.5px] text-[#44474E] hover:bg-background transition-colors text-start"
               >
                 <Building className="w-4 h-4 text-muted" /> Open Company
               </Link>
@@ -73,7 +73,7 @@ export default function JobActionMenu({
                 type="button"
                 disabled={isUpdating}
                 onClick={() => onChangeStatus(option)}
-                className={`w-full flex items-center justify-between rounded-lg px-3.5 py-1.5 text-[12.5px] transition-colors text-left ${
+                className={`w-full flex items-center justify-between rounded-lg px-3.5 py-1.5 text-[12.5px] transition-colors text-start ${
                   job.status === option.toLowerCase()
                     ? "font-bold text-primary"
                     : "text-[#44474E] hover:bg-background"

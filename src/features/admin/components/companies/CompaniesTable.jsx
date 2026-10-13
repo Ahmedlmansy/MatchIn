@@ -27,12 +27,12 @@ export default function CompaniesTable({
           {COLUMNS.map((col) => (
             <th
               key={col}
-              className="px-4 py-3 text-left text-[11.5px] font-bold uppercase tracking-wider text-muted"
+              className="px-4 py-3 text-start text-[11.5px] font-bold uppercase tracking-wider text-muted"
             >
               {col}
             </th>
           ))}
-          <th className="px-4 py-3 pr-5 text-right text-[11.5px] font-bold uppercase tracking-wider text-muted">
+          <th className="px-4 py-3 pe-5 text-end text-[11.5px] font-bold uppercase tracking-wider text-muted">
             Actions
           </th>
         </tr>

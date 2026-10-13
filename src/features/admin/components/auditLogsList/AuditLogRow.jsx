@@ -61,7 +61,7 @@ export default function AuditLogRow({ log, onSelect }) {
       <td className="py-3.5 px-4 font-mono text-xs text-muted">{log.ip}</td>
 
       {/* Preview action */}
-      <td className="py-3.5 px-4 text-right">
+      <td className="py-3.5 px-4 text-end">
         <button
           type="button"
           title="Preview log"

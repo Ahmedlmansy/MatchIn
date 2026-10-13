@@ -47,13 +47,13 @@ export default function CompaniesToolbar({
     <div className="mb-4 flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-[220px] flex-1">
-          <Search className="pointer-events-none absolute left-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-muted" />
+          <Search className="pointer-events-none absolute start-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-muted" />
           <Input
             type="search"
             value={filters.search}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Search by company name, email, or ID…"
-            className="h-[42px] rounded-xl border-border bg-surface pl-10 text-[14px] text-ink shadow-none placeholder:text-muted focus-visible:border-primary focus-visible:ring-0"
+            className="h-[42px] rounded-xl border-border bg-surface ps-10 text-[14px] text-ink shadow-none placeholder:text-muted focus-visible:border-primary focus-visible:ring-0"
           />
         </div>
 

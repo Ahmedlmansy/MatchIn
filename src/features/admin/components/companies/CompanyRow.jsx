@@ -33,7 +33,7 @@ export default function CompanyRow({ company, onVerify, onReject, isUpdating }) 
         <div className="text-[13.5px] text-ink">{formatDisplayDate(company.updatedAt)}</div>
         <div className="text-[12px] text-muted">{getRelativeLabel(company.updatedAt)}</div>
       </td>
-      <td className="px-4 py-3.5 pr-5">
+      <td className="px-4 py-3.5 pe-5">
         <CompanyRowActions
           company={company}
           onVerify={onVerify}

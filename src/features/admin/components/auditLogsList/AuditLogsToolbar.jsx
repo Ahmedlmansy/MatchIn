@@ -50,13 +50,13 @@ export default function AuditLogsToolbar({
     <div className="space-y-3.5 mb-5">
       <div className="flex flex-wrap gap-3 items-center">
         <div className="flex-1 min-w-60 relative">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+          <Search className="absolute start-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
           <input
             type="search"
             value={filters.search}
             onChange={(event) => onFilterChange("search")(event.target.value)}
             placeholder="Search by actor, action, entity ID, or IP…"
-            className="w-full h-10.5 pl-10 pr-3.5 border border-border rounded-xl text-sm bg-white outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-muted"
+            className="w-full h-10.5 ps-10 pe-3.5 border border-border rounded-xl text-sm bg-white outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-muted"
           />
         </div>
         <FilterSelect

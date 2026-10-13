@@ -103,13 +103,13 @@ export default function CvSkillsCard({ skills = [], onConfirmSkill }) {
 
       {/* Search Bar */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+        <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search extracted skills (e.g. Sales, CRM, Operations)..."
-          className="w-full rounded-xl border border-border/80 bg-background/80 py-2 pl-9 pr-4 text-xs font-medium text-ink placeholder:text-muted focus:border-primary focus:bg-surface focus:outline-none transition-all"
+          className="w-full rounded-xl border border-border/80 bg-background/80 py-2 ps-9 pe-4 text-xs font-medium text-ink placeholder:text-muted focus:border-primary focus:bg-surface focus:outline-none transition-all"
         />
       </div>
 
@@ -210,7 +210,7 @@ function SkillCardItem({ skill, index, onConfirm }) {
               <p className="line-clamp-2 italic text-ink/80 text-[11px]">
                 "{primaryEvidence.text}"
                 {primaryEvidence.section && (
-                  <span className="ml-1.5 not-italic font-semibold text-secondary uppercase text-[10px]">
+                  <span className="ms-1.5 not-italic font-semibold text-secondary uppercase text-[10px]">
                     [{primaryEvidence.section}]
                   </span>
                 )}
@@ -257,7 +257,7 @@ function SkillCardItem({ skill, index, onConfirm }) {
                         <p className="text-ink/80">
                           "{ev.text}"
                           {ev.section && (
-                            <span className="ml-1 not-italic font-semibold text-secondary text-[9px] uppercase">
+                            <span className="ms-1 not-italic font-semibold text-secondary text-[9px] uppercase">
                               [{ev.section}]
                             </span>
                           )}

@@ -43,7 +43,7 @@ export function UserFormBody({
       }}
     >
       {error && <ErrorNote message={error} />}
-      <div className="mb-5 flex flex-col gap-3 text-left">
+      <div className="mb-5 flex flex-col gap-3 text-start">
         <FormField label="Full Name">
           <Input
             value={form.fullName}
@@ -96,7 +96,7 @@ export function ChangeRoleBody({ user, busy, error, onCancel, onConfirm }) {
       }}
     >
       {error && <ErrorNote message={error} />}
-      <div className="mb-5 text-left">
+      <div className="mb-5 text-start">
         <Select value={role} onValueChange={setRole}>
           <SelectTrigger className="h-10 rounded-lg border-border">
             <SelectValue />
@@ -120,7 +120,7 @@ export function UserDialog({ children, onClose, maxWidth }) {
 
 function ErrorNote({ message }) {
   return (
-    <p className="mb-4 flex items-start gap-2 rounded-lg bg-error/10 px-3 py-2 text-left text-[12.5px] font-semibold text-error">
+    <p className="mb-4 flex items-start gap-2 rounded-lg bg-error/10 px-3 py-2 text-start text-[12.5px] font-semibold text-error">
       <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
       {message}
     </p>

@@ -102,7 +102,7 @@ export default function AuditLogDetails() {
           <span className="w-1 h-1 rounded-full bg-border" />
           <span>{log.relative}</span>
         </div>
-        <Badge type="readonly" text="Read-only" className="ml-auto" />
+        <Badge type="readonly" text="Read-only" className="ms-auto" />
       </div>
 
       {/* Card 1: Actor */}

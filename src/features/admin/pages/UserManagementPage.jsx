@@ -232,7 +232,10 @@ export function UserManagementPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background px-7 py-8">
+    // px-4 on phones, easing to px-7 from sm up. A flat px-7 left only ~37%
+    // of a 375px viewport for content, which is what made the stat grid and
+    // toolbar chips feel cramped.
+    <div className="min-h-screen bg-background px-4 py-6 sm:px-7 sm:py-8">
       <div className="mx-auto max-w-[1280px]">
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
@@ -268,12 +271,12 @@ export function UserManagementPage() {
         <div className="mb-4.5 flex flex-col gap-3">
           <div className="flex flex-wrap items-center gap-3">
             <div className="relative min-w-[220px] flex-1">
-              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-muted" />
+              <Search className="pointer-events-none absolute start-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-muted" />
               <Input
                 value={filters.search}
                 onChange={(event) => setFilter("search")(event.target.value)}
                 placeholder="Search by name, email, or user ID…"
-                className="h-[42px] rounded-xl border-border pl-10"
+                className="h-[42px] rounded-xl border-border ps-10"
               />
             </div>
 
@@ -353,7 +356,7 @@ export function UserManagementPage() {
             <RoleBadge role="candidate" />
             <RoleBadge role="recruiter" />
             <RoleBadge role="admin" />
-            <span className="ml-1">
+            <span className="ms-1">
               <UserStatusBadge status="active" />
             </span>
             <UserStatusBadge status="inactive" />
@@ -427,6 +430,8 @@ export function UserManagementPage() {
       {/* Subtle progress hint while a background refetch is in flight — the
           rows stay visible rather than flashing the skeleton again. */}
       {isFetching && !isPending && (
+        // Physical left on purpose: see AdminOverview — a centred element
+        // must not flip, or the physical translate pushes it off-centre.
         <div className="pointer-events-none fixed bottom-4 left-1/2 h-1 w-24 -translate-x-1/2 overflow-hidden rounded-full bg-border">
           <div className="h-full w-1/2 animate-[pulse_1s_ease-in-out_infinite] rounded-full bg-primary" />
         </div>
