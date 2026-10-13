@@ -3,19 +3,30 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { selectUserRole } from "@/features/auth/store/auth.selectors";
+import { isCandidateRole } from "@/features/auth/store/auth.roles";
 
 /**
  * RequireOnboarding guard.
  *
- * Checks if the authenticated user has completed onboarding.
- * - While user role is still loading (null), shows a spinner.
- * - If user exists but hasn't completed onboarding, allows access to onboarding page.
- * - If user has completed onboarding, redirects to dashboard (or lets them through to other pages).
+ * Onboarding is a candidate-only flow: it prefills from GET
+ * /api/candidate/profile, which is candidate-gated. So this guard has two jobs.
  *
- * The onboarding completion status is expected to be on the user object as `onboardingCompleted` boolean.
+ *  1. Candidates without `onboardingCompleted` are redirected to
+ *     /dashboard/onboarding to finish it.
+ *  2. Everyone else — admins, recruiters, any staff role — is kept OUT of
+ *     onboarding entirely, including when they navigate to the URL directly.
+ *     Staff landing there would otherwise render a candidate form, fire a
+ *     candidate-gated request, get a 401, and be logged out by the refresh
+ *     interceptor.
+ *
+ * The completion flag is read from `user.onboardingCompleted`; the backend owns
+ * that value.
  */
 export function RequireOnboarding() {
+  // Both hooks are called unconditionally at the top: the early returns below
+  // must never skip one, or the hook order changes between renders.
   const role = useSelector(selectUserRole);
+  const user = useSelector((state) => state.auth.user);
   const location = useLocation();
   const { lang } = useParams();
 
@@ -33,27 +44,33 @@ export function RequireOnboarding() {
     );
   }
 
-  // Only apply onboarding check for candidate role
-  if (role !== "candidate") {
+  const isOnboardingPath = location.pathname.includes("/onboarding");
+
+  // Staff never need onboarding. If one lands on the onboarding path anyway —
+  // typed URL, stale bookmark, or a link from the register flow — send them to
+  // their own workspace rather than rendering a candidate-only form.
+  //
+  // This matters beyond tidiness: OnboardingPage fires
+  // GET /api/candidate/profile on mount, which is candidate-gated. An admin
+  // rendering it got a 401, which the axios interceptor turned into a refresh
+  // and then a full logout. Bouncing them here removes that whole path.
+  if (!isCandidateRole(role)) {
+    if (isOnboardingPath) {
+      // /dashboard is role-agnostic: DashboardRoleTree resolves it to the
+      // admin or candidate tree from the same role value.
+      return <Navigate to={`/${lang}/dashboard`} replace />;
+    }
     return <Outlet />;
   }
 
-  // Get the full user object to check onboarding status
-  const user = useSelector((state) => state.auth.user);
-
-  // If user doesn't have onboardingCompleted flag yet, allow onboarding
-  // The backend should set this flag when onboarding is complete
+  // Candidates: allow the onboarding page regardless of completion status
+  // (they may want to redo it), otherwise send them there to complete it.
   const hasCompletedOnboarding = user?.onboardingCompleted === true;
-
-  // Allow access to onboarding page regardless of completion status
-  // (users might want to redo onboarding)
-  const isOnboardingPath = location.pathname.includes("/onboarding");
 
   if (isOnboardingPath) {
     return <Outlet />;
   }
 
-  // If onboarding not completed, redirect to onboarding
   if (!hasCompletedOnboarding) {
     return (
       <Navigate

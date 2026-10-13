@@ -10,6 +10,7 @@
 // change — no component reads a URL.
 
 import { api } from "@/services/axios/axiosInstance";
+import { normalizeRole as normalizeRoleValue } from "@/features/auth/store/auth.roles";
 import {
   unwrap,
   pick,
@@ -23,16 +24,29 @@ import { initialsOf } from "./admin-jobs.api";
 
 const DAY_MS = 86_400_000;
 
-/** The three roles the user-management UI can assign. */
-export const ADMIN_ROLES = ["candidate", "recruiter", "admin"];
+/**
+ * The roles an admin may assign from the user-management dropdown.
+ *
+ * Deliberately NOT named ADMIN_ROLES: that name now belongs to
+ * features/auth/store/auth.roles.js, which means "roles that grant admin
+ * access". These are the roles you can hand out.
+ */
+export const ASSIGNABLE_ROLES = ["candidate", "recruiter", "admin"];
 
 /** The four account states the user badges render. */
 const USER_STATUSES = ["active", "inactive", "suspended"];
 
+/**
+ * Role for display + filtering.
+ *
+ * Delegates the admin-role collapsing (super_admin/superadmin/administrator →
+ * "admin") to the shared helper so routing and this list can never disagree.
+ * The result is then clamped to the assignable set: an unrecognised backend
+ * role must not reach <RoleBadge />, which would render an undefined label.
+ */
 const normalizeRole = (raw) => {
-  const value = String(toText(raw) ?? "candidate").toLowerCase();
-  if (value === "super_admin" || value === "superadmin") return "admin";
-  return ADMIN_ROLES.includes(value) ? value : "candidate";
+  const role = normalizeRoleValue(raw);
+  return ASSIGNABLE_ROLES.includes(role) ? role : "candidate";
 };
 
 const normalizeUserStatus = (raw) => {

@@ -1,5 +1,10 @@
 import { api } from "@/services/axios/axiosInstance";
 
+// Mirrors REFRESH_HEADER in axiosInstance, repeated here so this module does
+// not import the client it already depends on for something the client also
+// needs. A refresh response must never re-enter the refresh interceptor.
+const REFRESH_HEADER = "x-skillmatch-refresh-retry";
+
 
 
 // POST /api/auth/register
@@ -18,13 +23,31 @@ export const loginRequest = (payload) =>
 // GET /api/auth/me — the only way to read the session, since the cookie is httpOnly.
 // Resolves with the authenticated user, rejects with the axios error when the
 // cookie is absent or expired.
-export const meRequest = () =>
-  api.get("/api/auth/me").then((res) => res.data?.data ?? res.data);
+//
+// `config` is passed straight through so the boot-time session check in
+// useInitializeAuth can pass an AbortSignal — see the race-condition note
+// there for why cancelling it matters.
+export const meRequest = (config) =>
+  api.get("/api/auth/me", config).then((res) => res.data?.data ?? res.data);
 
-// POST /api/auth/refresh — exchanges a valid refresh token for a new access token.
-// The backend sets a new httpOnly cookie; resolves with the server payload.
-export const refreshTokenRequest = () =>
-  api.post("/api/auth/refresh").then((res) => res.data?.data ?? res.data);
+// POST /api/auth/refresh — exchanges the refresh token for a new access token.
+//
+// Returns the new access token when the server issues one, otherwise null. A
+// cookie-session backend answers 200/204 with an empty body and the browser
+// just updates its cookie, so "no token in the body" is a normal outcome and
+// must not be treated as a failure.
+//
+// Tagged with REFRESH_HEADER so its own 401 can never re-enter the refresh
+// queue in the axios response interceptor.
+export const refreshTokenRequest = async () => {
+  const { data } = await api.post(
+    "/api/auth/refresh",
+    null,
+    { headers: { [REFRESH_HEADER]: "true" } },
+  );
+  const body = data?.data ?? data ?? {};
+  return body.access_token ?? body.token ?? null;
+};
 
 // Posts { email } to the reset endpoint; resolves with the normalized server payload, rejects with the axios error.
 export const forgotPassword = async (payload) => {

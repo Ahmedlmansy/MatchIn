@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getAccessToken } from "./tokenStore";
 
 // The one app-wide client (convention §4.2). The session token is an httpOnly
 // cookie the backend sets on login / email verification, so JS never holds it
@@ -10,6 +11,31 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+const REFRESH_HEADER = "x-skillmatch-refresh-retry";
+
+/**
+ * Attach the bearer token when we have one.
+ *
+ * The app supports BOTH session styles at once:
+ *   · cookie session — no token, `withCredentials` does the work
+ *   · bearer session — token from the login response, sent as a header
+ *
+ * That dual support is the fix for the 401s: the backend returns an
+ * `access_token` from /api/auth/login, and this app was dropping it on the
+ * floor, so /api/auth/me went out unauthenticated and came back 401 — which
+ * the refresh flow then converted into a full logout.
+ *
+ * `withCredentials` stays true regardless, because a deployment may set the
+ * cookie *and* return a token.
+ */
+api.interceptors.request.use((config) => {
+  const token = getAccessToken();
+  if (token && !config.headers?.[REFRESH_HEADER]) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 /**
@@ -31,8 +57,6 @@ export const api = axios.create({
 let refreshPromise = null;
 const pendingQueue = [];
 
-const REFRESH_HEADER = "x-skillmatch-refresh-retry";
-
 function queueRefresh(originalRequest) {
   return new Promise((resolve, reject) => {
     pendingQueue.push({ resolve, reject, originalRequest });
@@ -47,17 +71,22 @@ async function processQueue() {
   // Kick off the refresh.
   refreshPromise = (async () => {
     try {
-      // Tag the request so the interceptor ignores its own 401.
-      await api.post("/api/auth/refresh", null, {
-        headers: { [REFRESH_HEADER]: "true" },
-      });
+      // Imported lazily: axiosInstance is imported *by* the auth api module, so
+      // a static import would be a cycle.
+      const { refreshTokenRequest, meRequest } = await import(
+        "@/features/auth/api/auth.api"
+      );
 
-      // Refresh succeeded — re-fetch user to keep Redux in sync (mirrors login flow).
-      const { meRequest } = await import("@/features/auth/api/auth.api");
+      // A bearer backend returns a fresh access_token; a cookie backend returns
+      // an empty body and just updates the cookie. Both are successes.
+      const newToken = await refreshTokenRequest();
+
+      // Re-read the user so Redux reflects the refreshed session.
       const user = await meRequest();
+
       const { store } = await import("@/store");
       const { setCredentials } = await import("@/features/auth/store/auth.slice");
-      store.dispatch(setCredentials({ user }));
+      store.dispatch(setCredentials({ user, token: newToken ?? getAccessToken() }));
 
       refreshPromise = null;
       // Retry all queued requests.
@@ -86,12 +115,33 @@ api.interceptors.response.use(
     const originalRequest = error?.config;
     const status = error?.response?.status;
 
-    // Only handle 401 on non-refresh requests.
+    // A 403 means "authenticated but not allowed" — refreshing cannot fix that
+    // and logging the user out would be wrong. Only 401 (no valid session)
+    // justifies the refresh dance.
+    //
+    // Two exclusions keep this from turning a simple "not logged in" into a
+    // logout storm:
+    //
+    //  · `_retry` marks a request we already re-sent after a refresh. Without
+    //    it an endpoint that keeps answering 401 (a candidate-only route hit by
+    //    an admin, say) would loop forever: refresh -> retry -> 401 -> refresh,
+    //    dispatching clearCredentials() on every pass.
+    //
+    //  · When there is no session to refresh — no access token and no cookie —
+    //    a 401 just means "not signed in". Refreshing is pointless and, because
+    //    the refresh call also 401s, it would clear auth and bounce the user.
+    //    GET /auth/me at app boot takes exactly this path for signed-out
+    //    visitors, which is why it must not be treated as a refresh trigger.
+    const hasSession = Boolean(getAccessToken());
+
     if (
       status === 401 &&
       originalRequest &&
-      !originalRequest.headers?.[REFRESH_HEADER]
+      !originalRequest._retry &&
+      !originalRequest.headers?.[REFRESH_HEADER] &&
+      hasSession
     ) {
+      originalRequest._retry = true;
       try {
         return await queueRefresh(originalRequest);
       } catch (refreshError) {

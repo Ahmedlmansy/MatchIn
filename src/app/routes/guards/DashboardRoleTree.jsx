@@ -4,6 +4,7 @@ import { useParams, useRoutes } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import DashboardLayout from "@/components/layouts/DashboardLayout/DashboardLayout";
 import { selectUserRole } from "@/features/auth/store/auth.selectors";
+import { isAdminRole } from "@/features/auth/store/auth.roles";
 import {
   candidateDashboardRoutes,
   adminDashboardRoutes,
@@ -38,7 +39,7 @@ export function DashboardRoleTree() {
     // first render after a hard refresh, while /auth/me is still in flight.
     if (!role) return [];
 
-    const tree = role === "super_admin" ? adminDashboardRoutes : candidateDashboardRoutes;
+    const tree = isAdminRole(role) ? adminDashboardRoutes : candidateDashboardRoutes;
     return [{ path: "/", element: <DashboardLayout />, children: tree }];
   }, [role]);
 
