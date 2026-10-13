@@ -46,10 +46,23 @@ export default function CompanyDetails() {
   const companiesPath = localizedPath("/dashboard/company-management");
 
   const { data: company, isPending, isError, error, refetch } = useAdminCompanyQuery(id);
-  const { mutate: setStatus, isPending: isSaving } = useUpdateAdminCompanyMutation(id);
+  const {
+    mutate: setStatus,
+    isPending: isSaving,
+    error: saveError,
+  } = useUpdateAdminCompanyMutation(id);
 
-  const handleStatusChange = (status) => setStatus({ status });
-  const handleNavigate = (destination) => navigate(`${companiesPath}?${destination}`);
+  // The detail screen and the list speak different vocabularies for
+  // verification — this one renders pending | verified | rejected, the list
+  // collapses rejected into "not-verified". That mapping is for display only;
+  // the wire value is always the list's vocabulary.
+  //
+  // Sending "rejected" straight through was a latent 422: the backend validates
+  // `status in:verified,pending,not-verified`, so the Reject button failed
+  // against the same endpoint the list used successfully — and, since the
+  // mutation's error was never rendered, it failed silently.
+  const handleStatusChange = (status) =>
+    setStatus({ status: status === "rejected" ? "not-verified" : status });
 
   if (isPending) {
     return (
@@ -127,7 +140,18 @@ export default function CompanyDetails() {
           <div className="space-y-5">
             <CompanyInformation profile={{ ...company.profile, companyName: company.name }} />
             <ContactInformation contact={company.contact} />
-            <CompanyJobs jobs={company.jobs} onViewAll={() => handleNavigate("status=active")} />
+            {/* "View all jobs" is on the jobs panel, so it belongs on the job
+                list — it was navigating to the *companies* list with
+                ?status=active, which is a company-status filter and showed the
+                admin a list of companies instead of this company's jobs. */}
+            <CompanyJobs
+              jobs={company.jobs}
+              onViewAll={() =>
+                navigate(
+                  `${localizedPath("/dashboard/job-management")}?search=${encodeURIComponent(company.name)}`,
+                )
+              }
+            />
             <CompanyActivity activity={company.activity} />
           </div>
 
@@ -156,7 +180,7 @@ export default function CompanyDetails() {
                 },
               ]}
             />
-            <CompanyQuickLinks companyId={company.id} />
+            <CompanyQuickLinks companyName={company.name} />
           </aside>
         </div>
 
@@ -169,12 +193,19 @@ export default function CompanyDetails() {
             </Link>
           </Button>
 
-          {error && (
+          {/*
+            This slot used to render `error`, which is the *query* error — and
+            the query error is always null here, because the isError branch
+            above already returned an ErrorState. So a failed Verify or Reject
+            produced no message anywhere on the page and the switch just
+            snapped back.
+          */}
+          {saveError ? (
             <span className="flex items-center gap-2 text-[13px] font-semibold text-error">
               <AlertTriangle className="h-4 w-4" />
-              {error.message}
+              {saveError.message}
             </span>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

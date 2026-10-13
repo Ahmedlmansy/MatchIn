@@ -49,5 +49,9 @@ export const adminInvalidation = {
   jobs: () => adminKeys.jobsRoot(),
   companies: () => adminKeys.companiesRoot(),
   users: () => adminKeys.usersRoot(),
+  // Every admin write lands in the audit trail, so auditLogs belongs on the
+  // invalidation list of all of them. It used to be declared and then never
+  // referenced by any mutation, which left the audit screen showing the state
+  // of the world from before the write that was supposed to be recorded in it.
   auditLogs: () => adminKeys.auditLogsRoot(),
 };

@@ -11,6 +11,7 @@ import { Briefcase, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PageHeader, Badge, ReadOnlyBanner, ErrorState } from "@/features/admin/shared";
 import { useAdminAuditLogQuery } from "@/features/admin/hooks";
+import { entityKindOf } from "@/features/admin/api/admin-audit-logs.api";
 import {
   DetailCard,
   DiffViewer,
@@ -57,6 +58,10 @@ export default function AuditLogDetails() {
   // Related entities come from the record's own payload when the backend
   // supplies them; otherwise the log's entity is the only related record.
   const relatedEntities = log.related ?? [];
+
+  // Which admin list this log's subject belongs to — decides the single
+  // "View related …" target below.
+  const entityKind = entityKindOf(log.entity);
 
   return (
     <div className="max-w-225 mx-auto p-4 sm:p-7 pb-16 bg-background text-[#222831] min-h-screen font-sans antialiased">
@@ -183,17 +188,23 @@ export default function AuditLogDetails() {
           Return to Audit Logs
         </button>
         <div className="flex gap-2.5 flex-wrap">
-          <RelatedLink
-            to={localizedPath(`/dashboard/company-management/${log.entityId}`)}
-            icon={Building2}
-            label="View Related Company"
-          />
-          <RelatedLink
-            to={localizedPath(`/dashboard/job-management/${log.entityId}`)}
-            icon={Briefcase}
-            label="View Related Job"
-            primary
-          />
+          {/* One link, for the screen this record's subject actually lives on.
+              There used to be two, a Company link and a Job link, both built
+              from the same `log.entityId` and both rendered unconditionally —
+              so for every single log exactly one of them pointed at an id that
+              was not on that list, and clicking it was a guaranteed 404. */}
+          {entityKind && log.entityId ? (
+            <RelatedLink
+              to={
+                entityKind === "job"
+                  ? localizedPath(`/dashboard/job-management/${log.entityId}`)
+                  : localizedPath(`/dashboard/company-management/${log.entityId}`)
+              }
+              icon={entityKind === "job" ? Briefcase : Building2}
+              label={entityKind === "job" ? "View Related Job" : "View Related Company"}
+              primary
+            />
+          ) : null}
         </div>
       </div>
     </div>

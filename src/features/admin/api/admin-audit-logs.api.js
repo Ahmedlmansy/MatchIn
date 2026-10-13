@@ -73,7 +73,13 @@ export function normalizeAuditLog(raw) {
     prev: toText(pick(raw, ["old_value", "previous_value", "old", "previous"])),
     newValue: toText(pick(raw, ["new_value", "new", "after"])),
     ip: toText(pick(raw, ["ip_address", "ip", "meta.ip"])) ?? "—",
-    time: toText(pick(raw, ["time", "created_at", "createdAt"])) ?? "—",
+    // Same alias list as `createdAt` above, plus the pre-formatted `time` the
+    // backend may send directly. It used to accept only three of the five, so a
+    // record timestamped with `occurred_at` or `timestamp` got a `createdAt`
+    // and no `time` — and every surface that renders the Timestamp column (the
+    // table, the drawer, the detail header, the CSV export) printed "—" for a
+    // log that plainly carried a time.
+    time: toText(pick(raw, ["time", "created_at", "createdAt", "occurred_at", "timestamp"])) ?? "—",
     relative: toText(pick(raw, ["relative", "human_time"])) ?? "—",
     createdAt,
     raw: raw,
@@ -129,6 +135,23 @@ function fieldChanges(previous, next) {
 }
 
 /**
+ * Which admin screen a log's subject actually lives on: "job", "company", or
+ * null when the entity type is unknown.
+ *
+ * This decides the icon on a related-entity card and the target of the
+ * "View related …" link, so both derive from here and cannot disagree — which
+ * is how the detail screen ended up offering a Company link and a Job link
+ * built from the same `entityId`, one of which was guaranteed to be wrong.
+ */
+export function entityKindOf(entityType) {
+  const type = String(toText(entityType) ?? "").toLowerCase();
+  if (!type) return null;
+  if (/job|post/.test(type)) return "job";
+  if (/compan|organi|employer|business|agency/.test(type)) return "company";
+  return null;
+}
+
+/**
  * Related-entity cards for the details screen.
  *
  * The backend may supply an explicit `related` array; when it does we use it
@@ -142,8 +165,9 @@ export function relatedEntitiesFrom(log) {
     : [{ id: log.entityId, type: log.entity, title: log.entityTitle ?? log.entity, href: null }];
 
   return source.map((entity, index) => {
-    const type = String(toText(pick(entity, ["label", "type"])) ?? log.entity ?? "").toLowerCase();
-    const isJob = /job|post/.test(type);
+    const kind =
+      entityKindOf(pick(entity, ["label", "type"])) ?? entityKindOf(log.entity);
+    const isJob = kind === "job";
 
     return {
       id: toId(pick(entity, ["id"]), `related-${index}`),

@@ -32,14 +32,19 @@ function shortDate(isoDate, emptyLabel = "—") {
   return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(date);
 }
 
-/** "Fresh · 3h ago" — mirrors the wording the freshness pill already expects. */
+/**
+ * "Fresh · 3d ago" — mirrors the wording the freshness pill already expects.
+ *
+ * daysSince() returns *days*; this used to name the result `hours` and print it
+ * with an "h", so a job published two days ago read "Fresh · 2h ago" while the
+ * badge beside it coloured it amber for being stale.
+ */
 function freshnessLabel(isoDate, status) {
   if (!isoDate) return status === "draft" ? "Not published" : "—";
-  const hours = Math.floor(daysSince(isoDate));
-  if (hours < 1) return "Fresh · just now";
-  if (hours < 24) return `Fresh · ${hours}h ago`;
-  if (hours <= 7) return `Fresh · ${hours}d ago`;
-  return `Stale · ${hours}d ago`;
+  const days = Math.floor(daysSince(isoDate));
+  if (days < 1) return "Fresh · just now";
+  if (days <= 7) return `Fresh · ${days}d ago`;
+  return `Stale · ${days}d ago`;
 }
 
 // --- normalizers ------------------------------------------------------------

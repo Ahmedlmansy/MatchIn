@@ -27,6 +27,7 @@ export const useAdminDashboardQuery = (options = {}) =>
   useAdminQuery({
     queryKey: adminKeys.dashboard(),
     queryFn: async () => normalizeAdminDashboard(await fetchAdminDashboardRequest()),
+    name: "dashboard.summary",
     staleTime: 60_000,
     ...options,
   });

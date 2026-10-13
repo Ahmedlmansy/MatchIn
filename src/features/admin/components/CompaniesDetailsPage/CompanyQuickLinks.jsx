@@ -1,30 +1,40 @@
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
 import { Link } from "react-router-dom";
-import { Building2 } from "lucide-react";
+import { Building2, FileText } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Section from "./Section";
 
 /**
  * CompanyQuickLinks
- * Cross-links to the surfaces this company also appears on. Each target is a
- * real route, filtered out when the company has no id to build it from.
+ * Cross-links to the surfaces this company also appears on.
+ *
+ * Both links used to be built from the company **id**, which is the wrong value
+ * for both filters and made the links useless:
+ *
+ *   · the job list's `search` matches a job title or company *name*, so a
+ *     numeric id matched nothing and the link opened an empty list;
+ *   · the audit list's `entity` filter matches the entity *type* ("Company",
+ *     "Job"), not a row id, for the same reason.
+ *
+ * So the jobs link carries the company name and the audit link carries the
+ * entity type. Each is dropped when the value it needs is missing.
  */
-export default function CompanyQuickLinks({ companyId }) {
+export default function CompanyQuickLinks({ companyName }) {
   const { t } = useTranslation("dashboard");
   const localizedPath = useLocalizedPath();
 
   const links = [
-    companyId && {
+    companyName && {
       key: "jobs",
       icon: Building2,
-      to: localizedPath(`/dashboard/job-management?search=${encodeURIComponent(companyId)}`),
+      to: localizedPath(`/dashboard/job-management?search=${encodeURIComponent(companyName)}`),
     },
-    companyId && {
+    {
       key: "auditLogs",
       icon: FileText,
-      to: localizedPath(`/dashboard/audit-logs?entity=${encodeURIComponent(companyId)}`),
+      to: localizedPath(`/dashboard/audit-logs?entity=${encodeURIComponent("Company")}`),
     },
   ].filter(Boolean);
 

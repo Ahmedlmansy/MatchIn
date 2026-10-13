@@ -27,8 +27,26 @@ export const loginRequest = (payload) =>
 // `config` is passed straight through so the boot-time session check in
 // useInitializeAuth can pass an AbortSignal — see the race-condition note
 // there for why cancelling it matters.
+//
+// ── Why this unwraps `.user` ────────────────────────────────────────────────
+// This endpoint nests the user one level deeper than every other auth call:
+// Laravel's default AuthResource serializes as { data: { user: { … } } }, and
+// loginRequest's consumers already read `data.user` accordingly. But the
+// previous version returned the whole `res.data.data`, so all four callers here
+// — useInitializeAuth (x2), useVerifyOtpMutation, useRefreshToken and the
+// axios refresh queue — stored `{ user: {...} }` *as the user*.
+//
+// The failure is silent and severe: auth.status still became "authenticated",
+// so RequireAuth let the route through, but user.role was undefined, so
+// DashboardRoleTree hit its `if (!role)` branch and rendered its spinner —
+// forever, with no error and no way forward. Signing in worked, because the
+// login hook reads data.user; reloading a signed-in session hung, because this
+// one did not. Normalizing here means the shape is fixed once (convention §4.5).
 export const meRequest = (config) =>
-  api.get("/api/auth/me", config).then((res) => res.data?.data ?? res.data);
+  api.get("/api/auth/me", config).then((res) => {
+    const body = res.data?.data ?? res.data;
+    return body?.user ?? body;
+  });
 
 // POST /api/auth/refresh — exchanges the refresh token for a new access token.
 //

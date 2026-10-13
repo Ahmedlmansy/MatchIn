@@ -3,11 +3,13 @@
 // Admin audit log list. Audit logs are an immutable read-only record, so this
 // page has exactly one data operation: useAdminAuditLogsQuery.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Download, RefreshCw } from "lucide-react";
 import { PageHeader, ErrorState } from "@/features/admin/shared";
 import { useAdminAuditLogsQuery } from "@/features/admin/hooks";
+import { filtersToUrlParams } from "@/features/admin/api/normalize";
 import { AUDIT_SORT_OPTIONS } from "@/features/admin/constants/admin.filters";
 import {
   AuditLogTable,
@@ -17,6 +19,24 @@ import {
 } from "@/features/admin/components/auditLogsList";
 
 const DEFAULT_FILTERS = { search: "", action: "", entity: "", actor: "", sort: "newest", page: 1 };
+
+/**
+ * A company's detail page links here as `?entity=Company` to show the trail for
+ * that kind of record. Nothing read the param, so the link arrived on the
+ * unfiltered list.
+ *
+ * `entity` is deliberately not validated against the dropdown options: those are
+ * derived from the rows already loaded, so the very value a deep link is
+ * arriving with would not be in the list yet, and validating against it would
+ * discard exactly the filter we were asked to apply.
+ */
+function filtersFromParams(params) {
+  return {
+    ...DEFAULT_FILTERS,
+    search: params.get("search") ?? DEFAULT_FILTERS.search,
+    entity: params.get("entity") ?? DEFAULT_FILTERS.entity,
+  };
+}
 
 /**
  * Filter dropdown options are derived from the loaded rows rather than
@@ -31,9 +51,15 @@ function optionsFrom(values, allLabel) {
 
 export default function AuditLogsList() {
   const { t } = useTranslation("dashboard");
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [filters, setFilters] = useState(() => filtersFromParams(searchParams));
   const [selectedLog, setSelectedLog] = useState(null);
+
+  // Keep the URL in step with the filters — see the same effect in JobManagement.
+  useEffect(() => {
+    setSearchParams(filtersToUrlParams(filters), { replace: true });
+  }, [filters, setSearchParams]);
 
   // Any filter change resets to page 1 for the same reason as the other lists.
   const setFilter = (key) => (value) => setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));

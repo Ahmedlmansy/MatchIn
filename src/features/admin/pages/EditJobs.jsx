@@ -119,9 +119,18 @@ function JobEditor({ job, companies, onExit }) {
   const handleSave = () =>
     saveJob(toPayload(formData), {
       onSuccess: (saved) => {
-        // Snapshot what the server actually stored, so "unsaved changes"
-        // reflects reality (e.g. a server-side default the form didn't have).
-        setSavedSnapshot(toFormData(saved));
+        // Re-seed both sides of the comparison from the saved record.
+        //
+        // normalizeJobDetail substitutes placeholders for anything the PATCH
+        // response omits ("—", "Untitled job", "Full-time", []). Updating only
+        // the snapshot therefore made it a *different shape* from formData,
+        // which still held the user's real values — so isDirty stayed true
+        // forever after a successful save, the "Unsaved changes" banner and the
+        // enabled Save/Reset buttons never went away, and Reset then
+        // overwrote the real server values with those placeholders.
+        const next = toFormData(saved);
+        setFormData(next);
+        setSavedSnapshot(next);
       },
     });
 

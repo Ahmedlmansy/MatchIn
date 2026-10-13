@@ -13,7 +13,10 @@
 
 /**
  * Unwraps the standard `{ data: {...} }` envelope.
- * Single resources, paginated lists and bare payloads all resolve correctly.
+ * Single resources and bare payloads resolve correctly.
+ *
+ * NOT for paginated lists — see normalizePaginated() for why reaching through
+ * `data.data` destroys the paginator metadata.
  */
 export const unwrap = (response) => response?.data?.data ?? response?.data ?? response;
 
@@ -70,9 +73,20 @@ export const toId = (value, fallback = null) => {
  *
  * Always returns items as an array, never undefined, so a component can map
  * over it without a guard.
+ *
+ * ── Why this does not use unwrap() ────────────────────────────────────────
+ * It looks like it could, and that is exactly the trap. unwrap() reaches
+ * through `response.data.data`, which for a paginator body is the *array* —
+ * so it returns the rows and throws `meta` and `links` away. The array then
+ * fell through to the unpaginated branch below, and every list quietly reported
+ * `total` = page size, `page` = 1 and `pageCount` = 1: "Next" stayed disabled
+ * and page two was unreachable on users, companies, jobs and audit logs alike.
+ *
+ * So the HTTP envelope is stripped here and no further: what is left is either
+ * the paginator body, or the rows themselves.
  */
 export function normalizePaginated(payload, { perPage = 15 } = {}) {
-  const body = unwrap(payload);
+  const body = payload?.data ?? payload;
 
   // Paginated: the rows live in body.data and meta/links describe the page.
   if (body && Array.isArray(body.data)) {
@@ -119,4 +133,23 @@ export function pruneParams(params = {}) {
         value !== "any",
     ),
   );
+}
+
+/**
+ * The inverse direction: a list's filter state as URLSearchParams, with the
+ * noise removed.
+ *
+ * A list that seeds its filters from the URL on mount has to write them back
+ * too, or the two drift: the user deep-links to ?search=Acme, types "Globex",
+ * opens a record and comes back — the URL still says Acme, so the remount
+ * restores the old filter and silently undoes the search they just typed.
+ * Pruning keeps the address bar readable too, so the neutral values do not
+ * clutter it.
+ */
+export function filtersToUrlParams(filters = {}) {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(pruneParams(filters))) {
+    params.set(key, String(value));
+  }
+  return params;
 }

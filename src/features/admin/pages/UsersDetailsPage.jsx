@@ -294,6 +294,13 @@ export function UsersDetailsPage() {
           {/* LEFT */}
           <div>
             {isEditing ? (
+              // EditableProfile owns the Save/Cancel pair *and* the draft, so it
+              // is the only place a save can be triggered from. There used to
+              // be a second "Save Changes" in the page footer that called
+              // updateUser.mutate(toForm(user)) — built from the query data,
+              // not from the draft the user had been typing into. It PATCHed the
+              // original values, closed the editor and reported success, so
+              // every edit was discarded without any visible sign of it.
               <EditableProfile
                 key={editSession}
                 user={user}
@@ -484,31 +491,6 @@ export function UsersDetailsPage() {
               Back to Users
             </Link>
           </Button>
-
-          {isEditing && (
-            <div className="flex flex-wrap gap-2.5">
-              <Button
-                variant="outline"
-                onClick={cancelEditing}
-                disabled={updateUser.isPending}
-                className="h-10 rounded-xl border-border text-ink"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => updateUser.mutate(toForm(user), { onSuccess: () => setIsEditing(false) })}
-                disabled={updateUser.isPending}
-                className="h-10 gap-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
-              >
-                {updateUser.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <CheckCircle2 className="h-4 w-4" />
-                )}
-                {updateUser.isPending ? "Saving…" : "Save Changes"}
-              </Button>
-            </div>
-          )}
         </div>
       </div>
     </div>

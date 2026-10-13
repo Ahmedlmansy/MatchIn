@@ -33,7 +33,12 @@ const DAY_MS = 86_400_000;
  */
 export const ASSIGNABLE_ROLES = ["candidate", "recruiter", "admin"];
 
-/** The four account states the user badges render. */
+/**
+ * The four account states the user badges render.
+ *
+ * `normalizeUserStatus` accepts a boolean `is_active` as well as a string,
+ * because the normalizer lists is_active among its aliases — see there.
+ */
 const USER_STATUSES = ["active", "inactive", "suspended"];
 
 /**
@@ -49,7 +54,23 @@ const normalizeRole = (raw) => {
   return ASSIGNABLE_ROLES.includes(role) ? role : "candidate";
 };
 
+/**
+ * Account state -> one of USER_STATUSES.
+ *
+ * `is_active` is one of the aliases normalizeUser reads, and Laravel sends it
+ * as a real boolean. Booleans and 0/1 therefore have to be handled *before* the
+ * text coercion: String(true) is "true", which is not an account state, so
+ * every user with `{ is_active: true }` and no `status` key fell through to the
+ * "unrecognised" branch and rendered as Inactive — in the table, in the Active /
+ * Inactive / Suspended counters, and in the detail page's suspend/activate
+ * toggle. An admin looking at a list of healthy accounts saw a wall of
+ * "Inactive" and a button inviting them to activate users who were already
+ * active.
+ */
 const normalizeUserStatus = (raw) => {
+  if (typeof raw === "boolean") return raw ? "active" : "inactive";
+  if (raw === 1 || raw === 0) return raw === 1 ? "active" : "inactive";
+
   const value = String(toText(raw) ?? "active").toLowerCase();
   if (value === "banned" || value === "blocked") return "suspended";
   return USER_STATUSES.includes(value) ? value : "inactive";
@@ -207,6 +228,36 @@ function normalizeSavedJobs(raw) {
   };
 }
 
+/**
+ * Component-facing field names -> the backend's wire names.
+ *
+ * The read path above proves the backend is snake_case (full_name, job_title,
+ * experience_level), but the forms build camelCase objects — `UserFormBody`
+ * submits { fullName, email, role } and the detail page's toForm() submits
+ * { fullName, phone, jobTitle, experience, bio }. Those were posted as-is, and
+ * Laravel does not reject unknown keys: it drops them. "Edit user" therefore
+ * reported success, closed the dialog and invalidated the cache, and saved
+ * nothing at all — the user would reload and find their old details.
+ *
+ * Mapping lives here rather than in the forms so the wire format is defined in
+ * exactly one place, and any component can keep using the camelCase shape the
+ * rest of the app reads.
+ */
+const USER_FIELD_ALIASES = {
+  fullName: "full_name",
+  jobTitle: "job_title",
+  experience: "experience_level",
+  isActive: "is_active",
+  emailVerified: "email_verified",
+  lastLoginAt: "last_login_at",
+};
+
+/** Renames the aliased keys and passes everything else through untouched. */
+const toUserPayload = (payload = {}) =>
+  Object.fromEntries(
+    Object.entries(payload).map(([key, value]) => [USER_FIELD_ALIASES[key] ?? key, value]),
+  );
+
 // --- requests ---------------------------------------------------------------
 
 /** GET /api/admin/users?search=&role=&status=&sort=&page= */
@@ -224,13 +275,13 @@ export const fetchAdminUserRequest = async (userId) => {
 
 /** POST /api/admin/users */
 export const createAdminUserRequest = async (payload) => {
-  const response = await api.post("/api/admin/users", payload);
+  const response = await api.post("/api/admin/users", toUserPayload(payload));
   return normalizeUser(unwrap(response));
 };
 
 /** PATCH /api/admin/users/{user} — partial update (profile fields, role). */
 export const updateAdminUserRequest = async ({ id, ...payload }) => {
-  const response = await api.patch(`/api/admin/users/${id}`, payload);
+  const response = await api.patch(`/api/admin/users/${id}`, toUserPayload(payload));
   return normalizeUser(unwrap(response));
 };
 

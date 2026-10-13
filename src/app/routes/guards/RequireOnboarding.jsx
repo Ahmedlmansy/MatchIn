@@ -1,28 +1,48 @@
 // src/app/routes/guards/RequireOnboarding.jsx
 import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { Loader2 } from "lucide-react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { useProfileQuery } from "@/features/candidate/hooks/useProfileQuery";
 import { selectUserRole } from "@/features/auth/store/auth.selectors";
+import { isCandidateRole } from "@/features/auth/store/auth.roles";
 import { useLocalizedPath } from "@/utils/routes";
 import Status from "@/components/shared/Status";
 
+/**
+ * RequireOnboarding guard.
+ *
+ * Onboarding is a candidate-only flow, and completion is read from
+ * GET /api/candidate/profile rather than from a flag on the user.
+ *
+ * ── Why `enabled` matters here ────────────────────────────────────────────
+ * `useProfileQuery()` is a hook, so it must be called on every render — it
+ * cannot sit below the role check. Without `enabled` it fired for *everyone*,
+ * and because that endpoint is candidate-gated an admin got a 401, which the
+ * axios interceptor turned into a refresh, a failed refresh, and
+ * clearCredentials() — i.e. "admin logs in, fetches the candidate profile,
+ * gets bounced back to /login". Gating the query on the role removes the
+ * request entirely for staff.
+ *
+ * A disabled query reports `isPending: true`, which is harmless here: non-
+ * candidates return at the role check before the loading branch is reached.
+ */
 export function RequireOnboarding() {
-  // Both hooks are called unconditionally at the top: the early returns below
-  // must never skip one, or the hook order changes between renders.
+  // Hooks are called unconditionally at the top: the early returns below must
+  // never skip one, or the hook order changes between renders.
   const role = useSelector(selectUserRole);
-  const user = useSelector((state) => state.auth.user);
   const location = useLocation();
   const localizedPath = useLocalizedPath();
   const isOnboardingPath = location.pathname.endsWith("/onboarding");
+
+  const isCandidate = isCandidateRole(role);
+
   const {
     data: profileData,
     isPending: isProfileLoading,
     isError: isProfileError,
     error: profileError,
     refetch,
-  } = useProfileQuery();
+  } = useProfileQuery({ enabled: isCandidate });
 
   if (!role) {
     return (
@@ -36,7 +56,10 @@ export function RequireOnboarding() {
     );
   }
 
-  if (role !== "candidate") {
+  // Staff never onboard. They also skip the candidate-only profile request
+  // entirely (see the note above), so there is nothing left for them to hit a
+  // 401 on.
+  if (!isCandidate) {
     return <Outlet />;
   }
 

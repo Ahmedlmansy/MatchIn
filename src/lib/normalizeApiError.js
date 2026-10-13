@@ -31,6 +31,31 @@ export function normalizeApiError(error) {
   const status = error?.response?.status;
   const data = error?.response?.data;
 
+  // A timeout has no response at all, so the raw axios message
+  // ("timeout of 30000ms exceeded") is the only thing available — and it reads
+  // like a bug rather than a slow server. Say what actually happened.
+  if (error?.code === "ECONNABORTED" || /timeout/i.test(error?.message ?? "")) {
+    return {
+      status,
+      message:
+        "The server took too long to respond. It may be slow or overloaded — please try again.",
+      fieldErrors: null,
+      isTimeout: true,
+    };
+  }
+
+  // No response and not a timeout: DNS failure, refused connection, CORS, or an
+  // offline client. Same class of problem, different wording.
+  if (!error?.response && error?.request) {
+    return {
+      status,
+      message:
+        "Could not reach the server. Check your connection and that the API is running.",
+      fieldErrors: null,
+      isNetworkError: true,
+    };
+  }
+
   return {
     status,
     message: data?.message ?? error?.message ?? "Something went wrong",

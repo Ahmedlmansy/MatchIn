@@ -9,10 +9,10 @@ export default function CompaniesPageHeader({ onExport, onRefresh, isRefreshing 
     <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
       <div>
         <h1 className="text-[22px] font-bold tracking-tight text-ink">
-          {t("pages.admin.companies.title")}
+          {t("pages.admin.company.title")}
         </h1>
         <p className="mt-1 text-[14px] text-muted">
-          {t("pages.admin.companies.subtitle")}
+          {t("pages.admin.company.subtitle")}
         </p>
       </div>
       <div className="flex flex-wrap gap-2.5">

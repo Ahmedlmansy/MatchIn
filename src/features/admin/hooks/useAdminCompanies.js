@@ -23,17 +23,24 @@ export function useAdminCompaniesQuery(filters, options = {}) {
   return useAdminQuery({
     queryKey: adminKeys.companies(params),
     queryFn: () => fetchAdminCompaniesRequest(params),
+    name: "companies.list",
     ...options,
   });
 }
 
 /** Single company with its profile, jobs, activity and counters. */
 export function useAdminCompanyQuery(companyId, options = {}) {
+  // enabled is re-applied last so a caller cannot bypass the id guard and
+  // request /companies/undefined.
+  const { enabled: callerEnabled = true, ...rest } = options;
+
   return useAdminQuery({
     queryKey: adminKeys.company(companyId),
     queryFn: () => fetchAdminCompanyRequest(companyId),
-    enabled: Boolean(companyId),
-    ...options,
+    name: "companies.detail",
+    params: { companyId },
+    enabled: Boolean(companyId) && callerEnabled,
+    ...rest,
   });
 }
 
@@ -41,7 +48,8 @@ export function useAdminCompanyQuery(companyId, options = {}) {
 export function useCreateAdminCompanyMutation() {
   return useAdminMutation({
     mutationFn: createAdminCompanyRequest,
-    invalidates: [adminInvalidation.companies, adminInvalidation.dashboard],
+    name: "companies.create",
+    invalidates: [adminInvalidation.companies, adminInvalidation.dashboard, adminInvalidation.auditLogs],
   });
 }
 
@@ -49,11 +57,20 @@ export function useCreateAdminCompanyMutation() {
  * PATCH /api/admin/companies/{id}
  * Also backs Verify and Reject: the verification card sets a status, which is
  * a partial update on the same record.
+ *
+ * As with jobs, the id is resolved from the payload first and the hook argument
+ * second, and a missing id fails locally rather than issuing
+ * `PATCH /api/admin/companies/undefined`.
  */
 export function useUpdateAdminCompanyMutation(companyId) {
   return useAdminMutation({
-    mutationFn: (payload) => updateAdminCompanyRequest({ id: companyId, ...payload }),
-    invalidates: [adminInvalidation.companies, adminInvalidation.dashboard],
+    mutationFn: ({ id, ...payload } = {}) => {
+      const targetId = id ?? companyId;
+      if (!targetId) throw new Error("Cannot update a company without an id.");
+      return updateAdminCompanyRequest({ id: targetId, ...payload });
+    },
+    name: "companies.update",
+    invalidates: [adminInvalidation.companies, adminInvalidation.dashboard, adminInvalidation.auditLogs],
   });
 }
 
@@ -66,6 +83,7 @@ export function useUpdateAdminCompanyMutation(companyId) {
 export function useMergeAdminCompaniesMutation() {
   return useAdminMutation({
     mutationFn: mergeAdminCompaniesRequest,
-    invalidates: [adminInvalidation.companies, adminInvalidation.dashboard],
+    name: "companies.merge",
+    invalidates: [adminInvalidation.companies, adminInvalidation.dashboard, adminInvalidation.auditLogs],
   });
 }

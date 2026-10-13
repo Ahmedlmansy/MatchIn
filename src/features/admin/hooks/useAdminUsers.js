@@ -24,17 +24,24 @@ export function useAdminUsersQuery(filters, options = {}) {
   return useAdminQuery({
     queryKey: adminKeys.users(params),
     queryFn: () => fetchAdminUsersRequest(params),
+    name: "users.list",
     ...options,
   });
 }
 
 /** Single user with profile, CV, applications and counters. */
 export function useAdminUserQuery(userId, options = {}) {
+  // enabled is re-applied last so a caller cannot bypass the id guard and
+  // request /users/undefined.
+  const { enabled: callerEnabled = true, ...rest } = options;
+
   return useAdminQuery({
     queryKey: adminKeys.user(userId),
     queryFn: () => fetchAdminUserRequest(userId),
-    enabled: Boolean(userId),
-    ...options,
+    name: "users.detail",
+    params: { userId },
+    enabled: Boolean(userId) && callerEnabled,
+    ...rest,
   });
 }
 
@@ -42,7 +49,8 @@ export function useAdminUserQuery(userId, options = {}) {
 export function useCreateAdminUserMutation() {
   return useAdminMutation({
     mutationFn: createAdminUserRequest,
-    invalidates: [adminInvalidation.users, adminInvalidation.dashboard],
+    name: "users.create",
+    invalidates: [adminInvalidation.users, adminInvalidation.dashboard, adminInvalidation.auditLogs],
   });
 }
 
@@ -54,7 +62,8 @@ export function useCreateAdminUserMutation() {
 export function useUpdateAdminUserMutation(userId) {
   return useAdminMutation({
     mutationFn: (payload) => updateAdminUserRequest({ id: userId, ...payload }),
-    invalidates: [adminInvalidation.users, adminInvalidation.dashboard],
+    name: "users.update",
+    invalidates: [adminInvalidation.users, adminInvalidation.dashboard, adminInvalidation.auditLogs],
   });
 }
 
@@ -62,7 +71,8 @@ export function useUpdateAdminUserMutation(userId) {
 export function useSetAdminUserStatusMutation(userId) {
   return useAdminMutation({
     mutationFn: (status) => setAdminUserStatusRequest({ id: userId, status }),
-    invalidates: [adminInvalidation.users, adminInvalidation.dashboard],
+    name: "users.setStatus",
+    invalidates: [adminInvalidation.users, adminInvalidation.dashboard, adminInvalidation.auditLogs],
   });
 }
 
@@ -70,6 +80,7 @@ export function useSetAdminUserStatusMutation(userId) {
 export function useDeleteAdminUserMutation(userId) {
   return useAdminMutation({
     mutationFn: () => deleteAdminUserRequest(userId),
-    invalidates: [adminInvalidation.users, adminInvalidation.dashboard],
+    name: "users.delete",
+    invalidates: [adminInvalidation.users, adminInvalidation.dashboard, adminInvalidation.auditLogs],
   });
 }

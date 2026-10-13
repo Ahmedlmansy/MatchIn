@@ -4,9 +4,11 @@
 // actions go through useUpdateAdminCompanyMutation, which invalidates the list
 // and the overview counters on success.
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAdminCompaniesQuery, useUpdateAdminCompanyMutation } from "@/features/admin/hooks";
-import { ErrorState } from "@/features/admin/shared";
+import { ErrorState, ResultsPagination } from "@/features/admin/shared";
+import { filtersToUrlParams } from "@/features/admin/api/normalize";
 import {
   COMPANY_DATE_FILTER_OPTIONS,
   COMPANY_SORT_OPTIONS,
@@ -16,7 +18,6 @@ import CompaniesPageHeader from "../components/companies/CompaniesPageHeader";
 import CompaniesResultsBar from "../components/companies/CompaniesResultsBar";
 import CompaniesTable from "../components/companies/CompaniesTable";
 import CompaniesToolbar from "../components/companies/CompaniesToolbar";
-import CompanyPagination from "../components/companies/CompanyPagination";
 import CompanyStatsStrip from "../components/companies/CompanyStatsStrip";
 import CompanyStatusLegend from "../components/companies/CompanyStatusLegend";
 
@@ -27,6 +28,29 @@ const DEFAULT_FILTERS = {
   sort: "newest",
   page: 1,
 };
+
+/**
+ * The dashboard's "Review Pending" action links to this list as
+ * `?status=pending`. Seed the filters from the URL so that link lands on the
+ * filtered list it advertises instead of on everything — values outside the
+ * known option sets are ignored rather than pushed into the query.
+ */
+function filtersFromParams(params) {
+  const pickFrom = (key, allowed) => {
+    const value = params.get(key);
+    return value && allowed.includes(value) ? value : null;
+  };
+
+  return {
+    ...DEFAULT_FILTERS,
+    search: params.get("search") ?? DEFAULT_FILTERS.search,
+    status:
+      pickFrom(
+        "status",
+        COMPANY_STATUS_FILTER_OPTIONS.map((option) => option.value),
+      ) ?? DEFAULT_FILTERS.status,
+  };
+}
 
 const CSV_COLUMNS = [
   ["Company ID", "id"],
@@ -57,7 +81,13 @@ function downloadCompaniesCsv(companies) {
 }
 
 export default function CompaniesPage() {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState(() => filtersFromParams(searchParams));
+
+  // Keep the URL in step with the filters — see the same effect in JobManagement.
+  useEffect(() => {
+    setSearchParams(filtersToUrlParams(filters), { replace: true });
+  }, [filters, setSearchParams]);
 
   // Any filter change resets to page 1 — otherwise changing a filter while on
   // page 3 can land the user on a page that no longer exists.
@@ -65,7 +95,11 @@ export default function CompaniesPage() {
     setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
 
   const { data, isPending, isError, error, refetch, isFetching } = useAdminCompaniesQuery(filters);
-  const { mutate: setStatus, isPending: isUpdating } = useUpdateAdminCompanyMutation();
+  const {
+    mutate: setStatus,
+    isPending: isUpdating,
+    error: statusError,
+  } = useUpdateAdminCompanyMutation();
 
   const companies = data?.items ?? [];
   const total = data?.total ?? 0;
@@ -101,6 +135,17 @@ export default function CompaniesPage() {
 
         {renderContent()}
 
+        {/* Verify/Reject from the row menu produced no feedback at all on
+            failure — the switch snapped back and nothing explained why. */}
+        {!isError && statusError ? (
+          <p
+            role="alert"
+            className="mb-4 rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-2.5 text-[13px] font-medium text-destructive"
+          >
+            {statusError.message}
+          </p>
+        ) : null}
+
         {!isError && (
           <>
             <CompanyStatsStrip companies={companies} total={total} />
@@ -134,10 +179,12 @@ export default function CompaniesPage() {
                 onReject={(id) => setStatus({ id, status: "not-verified" })}
                 isUpdating={isUpdating}
               />
-              <CompanyPagination
+              <ResultsPagination
                 page={page}
                 pageCount={pageCount}
                 onPageChange={(next) => setFilters((prev) => ({ ...prev, page: next }))}
+                label="Company results pages"
+                summary={total > 0 ? `Showing ${start}–${end} of ${total} companies` : null}
               />
             </section>
 

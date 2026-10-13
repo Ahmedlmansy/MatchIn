@@ -49,6 +49,7 @@ import {
 } from "@/features/admin/hooks";
 import {
   ErrorState,
+  ResultsPagination,
   RoleBadge,
   UserStatusBadge,
   ROLE_LABELS,
@@ -60,7 +61,6 @@ import {
   USER_STATUS_OPTIONS,
 } from "@/features/admin/constants/admin.filters";
 import { TableHead, UserTable } from "@/features/admin/components/UserManagementPage/UserTable";
-import Pagination from "@/features/admin/components/UserManagementPage/Pagination";
 import {
   UserFormBody,
   ChangeRoleBody,
@@ -222,10 +222,14 @@ export function UserManagementPage() {
           </table>
         </div>
 
-        <Pagination
+        <ResultsPagination
           page={page}
-          totalPages={pageCount}
+          pageCount={pageCount}
           onPageChange={(next) => setFilters((prev) => ({ ...prev, page: next }))}
+          label="User results pages"
+          summary={
+            total > 0 ? `Showing ${firstRow}–${lastRow} of ${total} users` : null
+          }
         />
       </>
     );
