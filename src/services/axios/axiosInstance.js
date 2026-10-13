@@ -1,4 +1,5 @@
 import axios from "axios";
+import { detectInitialLanguage } from "@/features/language/store/language.slice";
 
 // The one app-wide client (convention §4.2). The session token is an httpOnly
 // cookie the backend sets on login / email verification, so JS never holds it
@@ -10,6 +11,31 @@ export const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+api.interceptors.request.use(async (config) => {
+  const existingHeader =
+    config.headers?.["Accept-Language"] ||
+    config.headers?.["accept-language"];
+
+  if (!existingHeader) {
+    let currentLang = null;
+    try {
+      const { store } = await import("@/store");
+      currentLang = store?.getState()?.language?.lang;
+    } catch {
+      // Store not ready or failed to import
+    }
+
+    if (currentLang !== "ar" && currentLang !== "en") {
+      currentLang = detectInitialLanguage();
+    }
+
+    config.headers = config.headers || {};
+    config.headers["Accept-Language"] = currentLang === "ar" ? "ar" : "en";
+  }
+
+  return config;
 });
 
 /**

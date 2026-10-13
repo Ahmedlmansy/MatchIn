@@ -105,6 +105,10 @@
       "loadErrorTitle": "Couldn't load profile",
       "loadErrorMessage": "Something went wrong. Please try again.",
       "retry": "Try again",
+      "profileSaveError": "Failed to save profile information. Please retry.",
+      "careerPreferencesSaveError": "Profile saved, but failed to save career preferences. Please retry.",
+      "incompleteError": "Your onboarding details were saved, but the backend did not mark the profile as complete yet. Please retry or contact support.",
+      "submitError": "Something went wrong while saving your profile.",
       "jobTitle": {
         "title": "What job title are you looking for?", "subtitle": "We'll customize AI algorithms to suggest jobs most relevant to your career path.",
         "inputLabel": "Target Job Title", "placeholder": "Search for a job title...",
@@ -337,6 +341,9 @@
           "back": "Back",
           "verify": "Verify & continue",
           "redirecting": "Redirecting to dashboard..."
+        },
+        "otp": {
+          "verifiedSuccessLogin": "Email verified successfully! Please log in to continue."
         },
         "errors": {
           "invalidOrExpired": "This code is invalid or has expired. Request a new one and try again.",

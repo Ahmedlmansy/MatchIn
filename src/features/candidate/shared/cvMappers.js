@@ -15,11 +15,14 @@
  */
 export const mapSkillToVerifyPayload = (skill) => ({
   name: skill.name?.trim() ?? "",
-  category: skill.category?.trim() ?? "General", // Default category if not provided
-  proficiency_level: skill.proficiency?.trim() ?? null, // Can be "Beginner", "Intermediate", "Advanced", "Expert" or null
-  confidence_score: typeof skill.confidence === "number"
-    ? (skill.confidence <= 1 ? Math.round(skill.confidence * 100) : Math.round(skill.confidence)) / 100
-    : 0.8, // Default confidence
+  category: skill.category?.trim() ?? "General",
+  proficiency_level: skill.proficiency_level?.trim?.() ?? skill.proficiency?.trim?.() ?? null,
+  confidence_score:
+    typeof skill.confidence_score === "number"
+      ? skill.confidence_score
+      : typeof skill.confidence === "number"
+        ? (skill.confidence <= 1 ? Math.round(skill.confidence * 100) : Math.round(skill.confidence)) / 100
+        : 0.8,
 });
 
 /**
@@ -27,13 +30,20 @@ export const mapSkillToVerifyPayload = (skill) => ({
  * @param {Object} exp - Extracted experience from status response
  * @returns {Object} Verify experience payload
  */
-export const mapExperienceToVerifyPayload = (exp) => ({
-  company_name: exp.company_name?.trim() ?? "",
-  title: exp.job_title?.trim() ?? "", // BACKEND EXPECTS `title` not `job_title`
-  start_date: exp.start_date ?? null, // YYYY-MM-DD or null
-  end_date: exp.is_current ? null : (exp.end_date ?? null), // null if current
-  description: exp.description?.trim() ?? "",
-});
+export const mapExperienceToVerifyPayload = (exp) => {
+  const rawEndDate = exp.is_current ? null : (exp.end_date ?? null);
+  const normalizedEndDate = rawEndDate && String(rawEndDate).trim() !== "" ? String(rawEndDate).trim() : null;
+  const rawStartDate = exp.start_date ?? null;
+  const normalizedStartDate = rawStartDate && String(rawStartDate).trim() !== "" ? String(rawStartDate).trim() : null;
+
+  return {
+    company_name: exp.company_name?.trim() ?? "",
+    title: exp.title?.trim() ?? exp.job_title?.trim() ?? "",
+    start_date: normalizedStartDate,
+    end_date: normalizedEndDate,
+    description: exp.description?.trim() ?? "",
+  };
+};
 
 /**
  * Deduplicate skills by lowercase name within the submitted list
@@ -63,25 +73,25 @@ export const filterValidExperiences = (experiences) =>
 
 /**
  * Build the complete verify payload from extraction data
- * @param {Object} extractionData - The completed extraction from status response
- * @param {Object} selection - User's selections { skillIds: [], experienceIds: [] }
+ * @param {Object} extractionData - The completed extraction or items from status response
+ * @param {Object} selection - User's selections { skillIds: [], experienceIds: [] } or array of items
  * @returns {Object} Verify payload { skills: [], experiences: [] }
  */
-export const buildVerifyPayload = (extractionData, selection) => {
-  const skills = extractionData?.candidate_skills ?? [];
-  const experiences = extractionData?.experiences ?? [];
+export const buildVerifyPayload = (extractionData, selection = {}) => {
+  const rawSkills = extractionData?.skills ?? extractionData?.candidate_skills ?? [];
+  const rawExperiences = extractionData?.experiences ?? [];
 
-  const selectedSkills = skills
-    .filter((s) => selection.skillIds.includes(s.skill_id ?? s.id))
-    .map(mapSkillToVerifyPayload);
+  const selectedSkills = selection?.skillIds
+    ? rawSkills.filter((s) => selection.skillIds.includes(s.skill_id ?? s.id))
+    : rawSkills;
 
-  const selectedExperiences = experiences
-    .filter((e) => selection.experienceIds.includes(e.id))
-    .map(mapExperienceToVerifyPayload);
+  const selectedExperiences = selection?.experienceIds
+    ? rawExperiences.filter((e) => selection.experienceIds.includes(e.id))
+    : rawExperiences;
 
   return {
-    skills: deduplicateSkills(selectedSkills),
-    experiences: filterValidExperiences(selectedExperiences),
+    skills: deduplicateSkills(selectedSkills.map(mapSkillToVerifyPayload)),
+    experiences: filterValidExperiences(selectedExperiences.map(mapExperienceToVerifyPayload)),
   };
 };
 
@@ -93,7 +103,6 @@ export const buildVerifyPayload = (extractionData, selection) => {
 export const getLatestCompletedExtraction = (cvStatus) => {
   if (!cvStatus?.extractions?.length) return null;
 
-  // Find the extraction with highest attempt_number that has status "completed"
   const completed = cvStatus.extractions
     .filter((e) => e.status === "completed")
     .sort((a, b) => (b.attempt_number ?? 0) - (a.attempt_number ?? 0));
@@ -102,22 +111,41 @@ export const getLatestCompletedExtraction = (cvStatus) => {
 };
 
 /**
- * Extract parsed skills/experiences from a completed extraction
- * BACKEND SHAPE UNKNOWN - This is a stub that will be updated once real response is known.
- * Expected to find parsed data in extraction.parsed_data or similar.
+ * Extract parsed skills/experiences from a completed extraction.
+ * Isolated mapper waiting for real backend response schema.
+ * Returns normalized arrays for UI rendering.
  * @param {Object} extraction - Completed extraction object
- * @returns {Object} { candidate_skills: [], experiences: [], educations: [], languages: [], candidate_profile: {}, user: {} }
+ * @returns {Object} { skills: [], candidate_skills: [], experiences: [], educations: [], languages: [], candidate_profile: {}, user: {} }
  */
 export const extractParsedDataFromExtraction = (extraction) => {
-  // STUB: Backend shape unknown - waiting for real response
-  // Expected: extraction.parsed_data or extraction.data or similar
-  // For now return empty structure - will be populated after seeing real response
-  console.warn(
-    "[cvMappers] extractParsedDataFromExtraction: Backend extraction shape unknown. Using mock structure.",
-    extraction
-  );
+  if (!extraction) {
+    return {
+      skills: [],
+      candidate_skills: [],
+      experiences: [],
+      educations: [],
+      languages: [],
+      candidate_profile: {},
+      user: {},
+    };
+  }
+
+  const parsed = extraction.parsed_data ?? extraction.data ?? null;
+  if (parsed && typeof parsed === "object") {
+    const skills = parsed.skills ?? parsed.candidate_skills ?? [];
+    return {
+      skills,
+      candidate_skills: skills,
+      experiences: Array.isArray(parsed.experiences) ? parsed.experiences : [],
+      educations: Array.isArray(parsed.educations) ? parsed.educations : [],
+      languages: Array.isArray(parsed.languages) ? parsed.languages : [],
+      candidate_profile: parsed.candidate_profile ?? {},
+      user: parsed.user ?? {},
+    };
+  }
 
   return {
+    skills: [],
     candidate_skills: [],
     experiences: [],
     educations: [],

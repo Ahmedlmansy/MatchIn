@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { AlertCircle } from "lucide-react";
 import Status from "@/components/shared/Status";
@@ -86,6 +86,9 @@ export default function OnboardingPage() {
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [submitError, setSubmitError] = useState("");
   const [completed, setCompleted] = useState(false);
+  const [profileSaved, setProfileSaved] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmittingRef = useRef(false);
 
   const {
     data: profileData,
@@ -113,6 +116,9 @@ export default function OnboardingPage() {
   }, [profileData]);
 
   const handleSubmit = async (nextData) => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
+    setIsSubmitting(true);
     setSubmitError("");
 
     const profilePayload = {
@@ -142,11 +148,38 @@ export default function OnboardingPage() {
     };
 
     try {
-      await Promise.all([
-        updateProfileMutation.mutateAsync(profilePayload),
-        updateCareerPreferencesMutation.mutateAsync(careerPayload),
-      ]);
+      // Step 1: Sequential save - Profile first
+      if (!profileSaved) {
+        try {
+          await updateProfileMutation.mutateAsync(profilePayload);
+          setProfileSaved(true);
+        } catch (profileErr) {
+          const message =
+            profileErr?.message ??
+            t(
+              "ui.onboarding.profileSaveError",
+              "Failed to save profile information. Please retry."
+            );
+          setSubmitError(message);
+          return;
+        }
+      }
 
+      // Step 2: Sequential save - Career preferences second
+      try {
+        await updateCareerPreferencesMutation.mutateAsync(careerPayload);
+      } catch (careerErr) {
+        const message =
+          careerErr?.message ??
+          t(
+            "ui.onboarding.careerPreferencesSaveError",
+            "Profile saved, but failed to save career preferences. Please retry."
+          );
+        setSubmitError(message);
+        return;
+      }
+
+      // Step 3: Refresh profile to verify completion marker
       const refreshed = await refetchProfile();
       const nextProfile = refreshed?.data ?? profileData;
       const hasCompletionMarker =
@@ -155,15 +188,23 @@ export default function OnboardingPage() {
 
       if (!hasCompletionMarker) {
         setSubmitError(
-          "Your onboarding details were saved, but the backend did not mark the profile as complete yet. Please retry or contact support."
+          t(
+            "ui.onboarding.incompleteError",
+            "Your onboarding details were saved, but the backend did not mark the profile as complete yet. Please retry or contact support."
+          )
         );
         return;
       }
 
       setCompleted(true);
     } catch (error) {
-      const message = error?.message ?? t("ui.onboarding.submitError", "Something went wrong while saving your profile.");
+      const message =
+        error?.message ??
+        t("ui.onboarding.submitError", "Something went wrong while saving your profile.");
       setSubmitError(message);
+    } finally {
+      isSubmittingRef.current = false;
+      setIsSubmitting(false);
     }
   };
 
@@ -227,6 +268,7 @@ export default function OnboardingPage() {
         onContinue={handleContinue}
         onPrevious={handlePrevious}
         isFirstStep={step === 1}
+        isSubmitting={isSubmitting}
       />
     </div>
   );

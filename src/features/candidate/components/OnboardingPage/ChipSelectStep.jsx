@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, ArrowLeft, ArrowRight } from "lucide-react";
+import { Search, ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { requiredFieldSchema } from "../../schema/onboardingSchema";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ export default function ChipSelectStep({
   onContinue,
   onPrevious,
   isFirstStep,
+  isSubmitting = false,
 }) {
   const { t } = useTranslation("common");
   const copy = t(`ui.onboarding.${stepConfig.field}`, { returnObjects: true });
@@ -28,6 +29,7 @@ export default function ChipSelectStep({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
     const result = requiredFieldSchema.safeParse(inputValue);
     if (!result.success) {
       setError(result.error.issues[0].message);
@@ -56,6 +58,7 @@ export default function ChipSelectStep({
               id={field}
               type="text"
               value={inputValue}
+              disabled={isSubmitting}
               onChange={(e) => {
                 setInputValue(e.target.value);
                 if (error) setError("");
@@ -82,6 +85,7 @@ export default function ChipSelectStep({
               <button
                 key={option}
                 type="button"
+                disabled={isSubmitting}
                 onClick={() => {
                   setInputValue(option);
                   if (error) setError("");
@@ -103,7 +107,7 @@ export default function ChipSelectStep({
             type="button"
             variant="outline"
             onClick={onPrevious}
-            disabled={isFirstStep}
+            disabled={isFirstStep || isSubmitting}
             className="h-11 flex-1 gap-1.5 rounded-xl border-border text-[13px] font-bold text-muted disabled:cursor-not-allowed disabled:opacity-50"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -111,10 +115,20 @@ export default function ChipSelectStep({
           </Button>
           <Button
             type="submit"
-            className="h-11 flex-1 gap-1.5 rounded-xl bg-primary text-[13px] font-bold text-primary-foreground hover:bg-primary/90"
+            disabled={isSubmitting}
+            className="h-11 flex-1 gap-1.5 rounded-xl bg-primary text-[13px] font-bold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
-            {t("ui.onboarding.continue")}
-            <ArrowRight className="h-4 w-4" />
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {t("ui.onboarding.saving", "Saving...")}
+              </>
+            ) : (
+              <>
+                {t("ui.onboarding.continue")}
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
           </Button>
         </div>
       </form>

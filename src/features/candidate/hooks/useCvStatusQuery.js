@@ -1,4 +1,5 @@
 // src/features/candidate/hooks/useCvStatusQuery.js
+import { useState, useRef, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchCvStatusRequest,
@@ -8,119 +9,132 @@ import { candidateKeys } from "@/features/candidate/constants/candidate.query-ke
 import { normalizeApiError } from "@/features/auth/hooks/useApiMutation";
 
 /**
- * Statuses that indicate the CV is still being processed.
- * Backend returns: "processing" for document, "pending" for extraction.
- * We poll while ANY extraction is pending or document is processing.
+ * Statuses that indicate the CV or extraction is still being processed.
  */
-const IN_PROGRESS_STATUSES = ["processing", "pending", "uploaded", "queued"];
+export const IN_PROGRESS_STATUSES = ["processing", "pending", "uploaded", "queued"];
 
 /**
- * Statuses that indicate completion (success or failure).
- * We stop polling on these.
+ * Statuses that indicate terminal completion (success or failure).
  */
-const TERMINAL_STATUSES = ["completed", "failed", "error", "cancelled"];
+export const TERMINAL_STATUSES = ["completed", "failed", "error", "cancelled"];
 
 /**
  * Check if a CV status indicates processing is still in progress.
- * Considers both document status and extraction statuses.
- * @param {Object} cvStatus - Normalized CV status
- * @returns {boolean}
  */
 export const isCvStatusInProgress = (cvStatus) => {
   if (!cvStatus) return false;
 
-  // Document-level status
   const docStatus = cvStatus.status?.toLowerCase();
   if (IN_PROGRESS_STATUSES.includes(docStatus)) return true;
   if (TERMINAL_STATUSES.includes(docStatus)) return false;
 
-  // Extraction-level statuses - if any extraction is pending, we're still processing
   const extractions = cvStatus.extractions ?? [];
   if (extractions.length > 0) {
-    const hasPendingExtraction = extractions.some(
-      (e) => IN_PROGRESS_STATUSES.includes((e.status ?? "").toLowerCase())
+    const hasPendingExtraction = extractions.some((e) =>
+      IN_PROGRESS_STATUSES.includes((e.status ?? "").toLowerCase())
     );
     if (hasPendingExtraction) return true;
 
-    // If all extractions are terminal, we're done
     const allTerminal = extractions.every((e) =>
       TERMINAL_STATUSES.includes((e.status ?? "").toLowerCase())
     );
     if (allTerminal) return false;
   }
 
-  // Unknown status - stop polling and report
-  console.warn("[useCvStatusQuery] Unknown CV status:", cvStatus.status);
+  // Unknown status - stops polling
   return false;
 };
 
 /**
- * Get the refetch interval for polling.
- * Starts at 2s, backs off to 5s.
- * Returns false to stop polling.
- * @param {Object} query - TanStack query object
- * @returns {number|false}
+ * Check if CV document or extraction has reached terminal status.
  */
-export const getCvStatusRefetchInterval = (query) => {
-  const data = query.state.data;
-  if (!data || !isCvStatusInProgress(data)) {
-    return false; // Stop polling
-  }
-  // Back off: 2s for first ~60s, then 5s
-  // We can't easily track elapsed time here, so use a simple approach
-  return 3000; // 3s average
+export const isCvStatusTerminal = (cvStatus) => {
+  if (!cvStatus) return false;
+  const docStatus = cvStatus.status?.toLowerCase();
+  if (TERMINAL_STATUSES.includes(docStatus)) return true;
+
+  const extractions = cvStatus.extractions ?? [];
+  return (
+    extractions.length > 0 &&
+    extractions.every((e) => TERMINAL_STATUSES.includes((e.status ?? "").toLowerCase()))
+  );
+};
+
+/**
+ * Check if CV has an unknown/unrecognized status.
+ */
+export const isCvStatusUnknown = (cvStatus) => {
+  if (!cvStatus) return false;
+  return !isCvStatusInProgress(cvStatus) && !isCvStatusTerminal(cvStatus);
 };
 
 /**
  * Maximum polling duration in ms (3 minutes).
- * After this, stop polling and show "taking longer" message.
  */
-const MAX_POLLING_DURATION = 3 * 60 * 1000;
+export const MAX_POLLING_DURATION = 3 * 60 * 1000;
 
 /**
  * CV Status query with intelligent polling.
- * Polls while processing, stops on completed/failed.
- * Resumes on window focus if still in progress.
- * @param {string} cvDocumentId
- * @returns TanStack query result
+ * - Polls every 3000ms while in progress.
+ * - Stops on completed/failed or unknown status.
+ * - Stops after 3 minutes and flags `isTakingLonger`.
+ * - Does NOT poll in background tab (refetchIntervalInBackground: false).
+ * - Exposes `isTakingLonger`, `isUnknownStatus`, and `resetPollingTimer`.
  */
 export const useCvStatusQuery = (cvDocumentId, options = {}) => {
-  // Track when polling started for this document
-  const pollStartRef = { current: null };
+  const pollStartRef = useRef(null);
+  const [isTakingLonger, setIsTakingLonger] = useState(false);
 
-  return useQuery({
+  const resetPollingTimer = useCallback(() => {
+    pollStartRef.current = Date.now();
+    setIsTakingLonger(false);
+  }, []);
+
+  const query = useQuery({
     queryKey: candidateKeys.cv.status(cvDocumentId),
     queryFn: async () => {
       try {
-        return normalizeCvStatus(await fetchCvStatusRequest(cvDocumentId));
+        const data = normalizeCvStatus(await fetchCvStatusRequest(cvDocumentId));
+        if (data && !isCvStatusInProgress(data)) {
+          setIsTakingLonger(false);
+        }
+        return data;
       } catch (error) {
         throw normalizeApiError(error);
       }
     },
     enabled: !!cvDocumentId,
-    staleTime: 0, // Always fresh when polling
-    refetchInterval: (query) => {
-      const data = query.state.data;
+    staleTime: 0,
+    refetchIntervalInBackground: false,
+    refetchInterval: (q) => {
+      const data = q.state.data;
       if (!data || !isCvStatusInProgress(data)) {
         pollStartRef.current = null;
         return false;
       }
 
-      // Track polling start time
       if (!pollStartRef.current) {
         pollStartRef.current = Date.now();
       }
 
-      // Stop after max duration
       if (Date.now() - pollStartRef.current > MAX_POLLING_DURATION) {
-        pollStartRef.current = null;
+        setIsTakingLonger(true);
         return false;
       }
 
-      return 3000; // 3s interval
+      return 3000;
     },
-    refetchOnWindowFocus: true, // Resume on focus if still in progress
+    refetchOnWindowFocus: true,
     retry: 1,
     ...options,
   });
+
+  const isUnknown = isCvStatusUnknown(query.data);
+
+  return {
+    ...query,
+    isTakingLonger,
+    isUnknownStatus: isUnknown,
+    resetPollingTimer,
+  };
 };

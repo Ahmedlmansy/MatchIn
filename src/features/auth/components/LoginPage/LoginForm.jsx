@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
@@ -44,17 +44,24 @@ export default function LoginForm({
   serverError = null,
   fieldErrors = null,
 }) {
+  const location = useLocation();
   const localizedPath = useLocalizedPath();
   const { t } = useTranslation("common");
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      email: location.state?.email || "",
       password: "",
       remember_me: false,
     },
   });
+
+  useEffect(() => {
+    if (location.state?.email) {
+      form.setValue("email", location.state.email);
+    }
+  }, [location.state?.email, form]);
 
   // Map server field errors to RHF fields
   useEffect(() => {
@@ -87,6 +94,12 @@ export default function LoginForm({
           subTitle={t("auth.login.subtitle")}
         />
         <FieldGroup className="gap-5">
+          {location.state?.successMessage && (
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-[13px] font-medium text-emerald-700">
+              {location.state.successMessage}
+            </div>
+          )}
+
           {serverError && (
             <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-[13px] font-medium text-red-600">
               {serverError}

@@ -1,5 +1,5 @@
 // src/features/candidate/hooks/useRetryCvMutation.js
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { retryCvRequest } from "@/features/candidate/api/cv.api";
 import { candidateKeys } from "@/features/candidate/constants/candidate.query-keys";
 import { useApiMutation } from "@/features/auth/hooks/useApiMutation";
@@ -15,7 +15,6 @@ export const useRetryCvMutation = (options = {}) => {
   return useApiMutation({
     mutationFn: retryCvRequest,
     onSuccess: (data, variables, context) => {
-      // Invalidate both history and status for this document
       queryClient.invalidateQueries({ queryKey: candidateKeys.cv.history() });
       queryClient.invalidateQueries({ queryKey: candidateKeys.cv.status(variables) });
       options.onSuccess?.(data, variables, context);
