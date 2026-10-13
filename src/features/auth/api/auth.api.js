@@ -57,3 +57,7 @@ export const resetPassword = async (payload) => {
     const { data } = await api.post("/api/auth/reset-password", { ...payload, reset_token: payload.token })
     return data;
 }
+// POST /api/auth/logout - invalidates the server session/refresh token; 
+// resolves with the normalized server response, rejects with the axios error.
+export const logoutRequest = () =>
+  api.post("/api/auth/logout").then((res) => res.data?.data ?? res.data);

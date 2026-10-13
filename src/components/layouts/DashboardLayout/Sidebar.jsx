@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PanelLeftClose, PanelLeftOpen, Sparkles } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen, Sparkles, LogOut } from "lucide-react";
 import LogoNavy from "@/assets/logo/MatchIn_logo.svg";
 import LogoText from "@/assets/logo/logo_text.svg";
 import { cn } from "@/lib/utils";
 import { buildSidebarNav } from "@/utils/buildSidebarNav";
 import { useLocalizedPath } from "@/utils/routes";
+import { useLogoutMutation } from '@/features/auth/hooks/useLogoutMutation';
 
 import {
   candidateDashboardRoutes,
@@ -64,6 +65,8 @@ export default function Sidebar({
   const routes =
   role === "super_admin" ? adminDashboardRoutes : candidateDashboardRoutes;
   const navItems = buildSidebarNav(routes, localizedPath("/dashboard"));
+  const { mutate: logout, isPending } = useLogoutMutation();
+
   return (
     <>
       {mobileOpen && (
@@ -162,6 +165,30 @@ export default function Sidebar({
           </div>
 
           <div className="flex flex-col gap-3">
+            {/* Logout Button */}
+            <button
+              type="button"
+              onClick={() => logout()}
+              disabled={isPending}
+              className={cn(
+                "group relative flex items-center gap-3 rounded-xl px-3.5 py-3 text-[13px] font-medium text-red-600 transition-all hover:bg-red-50 hover:text-red-700",
+                collapsed && "justify-center px-0",
+              )}
+              title={collapsed ? "Logout" : undefined}
+            >
+              <LogOut className="h-5 w-5 shrink-0" />
+              {!collapsed && (
+                <span>{isPending ? "Logging out..." : "Logout"}</span>
+              )}
+
+              {/* Tooltip shown only in collapsed mode, on hover */}
+              {collapsed && (
+                <span className="pointer-events-none absolute start-[70px] z-[100] whitespace-nowrap rounded-lg bg-red-600 px-2.5 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+                  Logout
+                </span>
+              )}
+            </button>
+
             {/* AI Mentor callout */}
             {!collapsed && (
               <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-primary/80 p-4 text-xs text-primary-foreground shadow-sm">
