@@ -7,9 +7,9 @@ import logoIcon from "@/assets/logo/MatchIn_logo.svg";
 import AuthHeader from "@/features/auth/shared/AuthHeader";
 import SecurityNotice from "@/features/auth/shared/SecurityNotice";
 import { OtpView } from "@/features/auth/components/RegisterPage/OtpView";
-import { useVerifyOtpMutation } from "@/features/auth/hooks/useVerifyOtpMutation";
 import { useResendOtpMutation } from "@/features/auth/hooks/useResendOtpMutation";
 import { useLocalizedPath } from "@/utils/routes";
+import { useVerifyForgotOtpMutation } from "../hooks/useVerifyForgotOtpMutation";
 
 // Password-recovery OTP step: verifies the 6-digit code, then continues to /reset-password.
 export default function VerifyOtpPage() {
@@ -20,7 +20,7 @@ export default function VerifyOtpPage() {
   // Email + OTP token live in router state only — server flow data, not durable client state, so never Redux.
   const { email = "" } = useLocation().state ?? {};
 
-  const verify = useVerifyOtpMutation({
+  const verify = useVerifyForgotOtpMutation({
     onSuccess: ({ token }) =>
       navigate(localizedPath("/auth/reset-password"), {
         state: { email, token },

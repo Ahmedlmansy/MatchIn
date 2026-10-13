@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthCard from "@/features/auth/shared/AuthCard";
 import { Button } from "@/components/ui/button";
 import PasswordResetForm from "@/features/auth/components/SetNewPasswordPage/PasswordResetForm";
@@ -20,6 +20,7 @@ import logo from "@/assets/logo/MatchIn_logo.svg";
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
 import { newPasswordSchema } from "../schema/newPassword-schema";
+import { translateValidationMessage } from "@/components/shared/i18n/validationMessage";
 import { useResetPasswordMutation } from "@/features/auth/hooks/useResetPasswordMutation";
 import {
   isExpiredAuthStatus,
@@ -58,7 +59,9 @@ export default function SetNewPassword() {
         const name = SERVER_TO_FORM_FIELD[field] ?? field;
         form.setError(name, {
           type: "server",
-          message: Array.isArray(messages) ? messages[0] : String(messages),
+          message: translateValidationMessage(
+            Array.isArray(messages) ? messages[0] : messages,
+          ),
         });
       });
     },
@@ -147,13 +150,13 @@ export default function SetNewPassword() {
                 title={t("auth.reset.completed")}
                 desc={t("auth.reset.completedDescription")}
               >
-                <a
-                  href={localizedPath("/dashboard")}
+                <Link
+                  to={localizedPath("/dashboard")}
                   className="flex w-full items-center justify-center gap-2 rounded-lg bg-orange-600 py-3 text-sm font-bold text-white hover:bg-orange-700"
                 >
                   {t("auth.reset.dashboard")}
                   <ArrowRight className="h-3.5 w-3.5" />
-                </a>
+                </Link>
               </ResetStateView>
             )}
 

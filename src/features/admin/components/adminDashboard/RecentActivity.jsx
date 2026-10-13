@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import ListItem from "./ListItem";
+import { useTranslation } from "react-i18next";
 
 
 export default function RecentActivity({
@@ -8,6 +9,7 @@ export default function RecentActivity({
   title = "Recent Activity",
   viewAllHref = "#",
 }) {
+  const { t } = useTranslation("common");
   return (
     <motion.section
       initial={{ opacity: 0, y: 16 }}
@@ -23,7 +25,7 @@ export default function RecentActivity({
           href={viewAllHref}
           className="text-[13px] font-semibold text-primary hover:underline inline-flex items-center gap-1"
         >
-          View all
+          {t("ui.adminActivity.viewAll")}
           <ArrowRight className="w-3.5 h-3.5" />
         </a>
       </div>

@@ -1,20 +1,21 @@
 import { useDispatch } from "react-redux";
-import { useApiMutation } from "@/hooks/useApiMutation";
 import { loginRequest, meRequest } from "../api/auth.api";
 import { setCredentials } from "../store/auth.slice";
-import { tokenStorage } from "@/lib/token";
+import { useApiMutation } from "./useApiMutation";
 
-
+// The login response sets the httpOnly session cookie, so there is nothing to
+// store client-side. Some deployments still echo { user } back; when they do not,
+// we read it from /auth/me instead — one extra call, always correct.
 export const useLoginMutation = ({ onAuthenticated } = {}) => {
   const dispatch = useDispatch();
 
   return useApiMutation({
-    mutationFn: loginRequest,
-    onSuccess: async (data) => {
-      tokenStorage.set(data.access_token);
-      const user = await meRequest(); // the request interceptor now has a token to attach
-      dispatch(setCredentials({ user, token: data.access_token }));
-      onAuthenticated?.(user);
+    mutationFn: async (variables) => {
+      const data = await loginRequest(variables);
+      const user = data?.user ?? (await meRequest());
+      dispatch(setCredentials({ user }));
+      return user;
     },
+    onSuccess: (user) => onAuthenticated?.(user),
   });
 };

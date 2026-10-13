@@ -13,4 +13,4 @@ export {
   INITIAL_ACTIVE_FILTERS,
   LOGS_RESULT_SUMMARY,
   LOGS_PAGINATION,
-} from "./auditLogsListData";
+} from "../../shared/auditLogsListData";

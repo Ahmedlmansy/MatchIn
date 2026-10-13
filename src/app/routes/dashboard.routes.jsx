@@ -10,7 +10,8 @@ import {
   BriefcaseBusiness,
   Users,
   List,
-  ShieldCheck, // أو أي أيقونة مناسبة للـ Auth Dashboard
+  ShieldCheck,
+  Building,
 } from "lucide-react";
 import AiChatPage from "@/features/candidate/pages/AiChatPage";
 import ApplicationDetail from "@/features/candidate/pages/ApplicationDetail";
@@ -33,11 +34,18 @@ import { JobDetailsPage } from "@/features/admin/pages/JobDetailsPage";
 import AuditLogsList from "@/features/admin/pages/AuditLogsPage";
 import AuditLogDetails from "@/features/admin/pages/AuditLogsDetailsPage";
 import CmsHomePage from "@/features/admin/pages/CmsHomePage";
-import DashBoardOathContent from "@/features/admin/components/dashBoardOuth/DashBoardOuth";
+import AuthSettingsPage from "@/features/admin/pages/AuthSettingsPage";
+import CompanyDetails from "@/features/admin/pages/CompaniesDetailsPage";
+import CompaniesPage from "@/features/admin/pages/CompaniesPage";
 
-const role = "admin";
+// No hardcoded role here anymore. Both trees are always defined; which one
+// renders is decided at request time by <RequireRole allow={[...]} /> in the
+// router file, reading the real role from Redux — not by picking an array
+// once at import time.
 
-const userDashboard = [
+const role = 'user'
+
+export const candidateDashboardRoutes = [
   {
     index: true,
     element: <Overview />,
@@ -133,10 +141,7 @@ const userDashboard = [
   },
 ];
 
-export const dashboard =
-  role !== "admin"
-    ? userDashboard
-    : [
+export const adminDashboardRoutes = [
         {
           index: true,
           element: <AdminOverview />,
@@ -156,6 +161,19 @@ export const dashboard =
             icon: BriefcaseBusiness,
             sidebar: true,
           },
+        },
+        {
+          path: "company-management",
+          handle: {
+            label: "Company Management",
+            labelKey: "navigation.companymanagement",
+            icon: Building,
+            sidebar: true,
+          },
+          children: [
+            { index: true, element: <CompaniesPage /> },
+            { path: ":id", element: <CompanyDetails /> },
+          ],
         },
         {
           path: "users/:id",
@@ -201,13 +219,18 @@ export const dashboard =
           },
         },
         {
-          path: "dashboard-auth", 
-          element: <DashBoardOathContent />,
+          path: "dashboard-auth",
+          element: <AuthSettingsPage />,
           handle: {
             label: "Auth CMS",
             labelKey: "navigation.authCms",
             icon: ShieldCheck,
-            sidebar: true, 
+            sidebar: true,
           },
         },
       ];
+
+export const dashboard =
+  role !== "super_admin"
+    ? candidateDashboardRoutes
+    : adminDashboardRoutes

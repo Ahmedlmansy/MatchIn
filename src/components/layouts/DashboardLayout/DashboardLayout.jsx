@@ -11,6 +11,9 @@ import { selectCurrentUser } from "@/features/auth/store/auth.selectors";
 export default function DashboardLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // The real user comes from Redux — the same session the route guards just
+  // verified against /auth/me. Never hardcoded, or every candidate sees the
+  // admin sidebar and Topbar shows the wrong name/role.
   const user = useSelector(selectCurrentUser);
 
   return (
@@ -20,6 +23,7 @@ export default function DashboardLayout() {
         onToggleCollapse={() => setCollapsed((v) => !v)}
         mobileOpen={mobileOpen}
         onCloseMobile={() => setMobileOpen(false)}
+        role={user?.role}
       />
 
       <div
@@ -30,8 +34,8 @@ export default function DashboardLayout() {
       >
         <Topbar
           onOpenMobileSidebar={() => setMobileOpen(true)}
-          userName={user?.name}
-          userRole={user?.role}
+          userName={user?.name ?? ""}
+          userRole={user?.role ?? ""}
         />
 
         <main className="w-full min-h-screen bg-background pb-12">

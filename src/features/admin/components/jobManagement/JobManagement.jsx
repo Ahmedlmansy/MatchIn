@@ -8,7 +8,7 @@ import JobRow from "./JobRow";
 import JobManagementSkeleton from "./JobManagementSkeleton";
 import JobManagementEmpty from "./JobManagementEmpty";
 import JobManagementError from "./JobManagementError";
-import { INITIAL_JOBS, JOB_COLUMNS } from "./jobManagementData";
+import { INITIAL_JOBS, JOB_COLUMNS } from "../../shared/jobManagementData";
 
 /**
  * JobManagement

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import ActionCard from "./ActionCard";
-import { containerVariants } from "./motionVariants";
+import { containerVariants } from "../../shared/motionVariants";
 
 
 export default function QuickActions({ actions = [], title = "Quick Actions" }) {

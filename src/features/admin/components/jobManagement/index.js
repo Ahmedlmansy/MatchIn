@@ -12,4 +12,4 @@ export {
   SOURCE_FILTERS,
   SORT_OPTIONS,
   JOB_COLUMNS,
-} from "./jobManagementData";
+} from "../../shared/jobManagementData";

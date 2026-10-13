@@ -4,7 +4,7 @@ import { Menu, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 
-import { NAV_LINKS } from "@/constants/navLinks";
+import { NAV_LINKS } from "@/features/public/shared/navLinks";
 import LogoNavy from "@/assets/logo/Full_logo_navy.svg";
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
@@ -111,7 +111,7 @@ export default function Header()
                   <SheetClose asChild key={link.id}>
                     <a
                       href={`${location.pathname}#${link.id}`}
-                      className="rounded-lg px-3 py-2.5 font-headline-sm text-[15px] font-medium text-ink transition-colors hover:bg-background hover:text-primary"
+                      className="rounded-lg px-4 py-3 font-headline-sm text-[15px] font-medium text-ink transition-colors hover:bg-background hover:text-primary"
                     >
                       {t(link.labelKey)}
                     </a>
@@ -119,12 +119,12 @@ export default function Header()
                 ))}
               </nav>
 
-              <div className="mt-6 flex flex-col gap-2 border-t border-border pt-6">
+              <div className="mt-6 flex flex-col gap-2 p-4 border-t border-border pt-6">
                 <SheetClose asChild>
                   <Button
                     asChild
                     variant="outline"
-                    className="justify-center rounded-xl border-border text-primary"
+                    className="justify-center rounded-xl border-border py-3 text-primary"
                   >
                     <Link to={localizedPath("/auth/login")}>{t("actions.signIn")}</Link>
                   </Button>
@@ -132,7 +132,7 @@ export default function Header()
                 <SheetClose asChild>
                   <Button
                     asChild
-                    className="justify-center rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
+                    className="justify-center rounded-xl bg-primary py-3 text-primary-foreground hover:bg-primary/90"
                   >
                     <Link to={localizedPath("/post-a-job")}>{t("actions.postJob")}</Link>
                   </Button>

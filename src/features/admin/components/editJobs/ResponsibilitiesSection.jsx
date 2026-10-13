@@ -3,8 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function ResponsibilitiesSection({ formData, onChange }) {
+  const { t } = useTranslation("common");
   const [newItem, setNewItem] = useState("");
   
   const responsibilities = Array.isArray(formData?.responsibilities)
@@ -31,20 +33,20 @@ export default function ResponsibilitiesSection({ formData, onChange }) {
   return (
     <Card className="bg-white border border-[#ECEAE5] shadow-none rounded-xl">
       <CardHeader>
-        <CardTitle className="text-slate-900">Key Responsibilities</CardTitle>
-        <CardDescription className="text-slate-500">Outline the core duties expected for this position.</CardDescription>
+        <CardTitle className="text-slate-900">{t("ui.responsibilities.title")}</CardTitle>
+        <CardDescription className="text-slate-500">{t("ui.responsibilities.description")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex gap-2">
           <Input
-            placeholder="Add a new responsibility..."
+            placeholder={t("ui.responsibilities.placeholder")}
             value={newItem}
             onChange={(e) => setNewItem(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAdd())}
             className="border-[#E4E4E7] focus-visible:ring-[#1D2A44]"
           />
           <Button type="button" onClick={handleAdd} className="bg-[#1D2A44] hover:bg-[#162034] text-white">
-            <Plus className="h-4 w-4 mr-1" /> Add
+            <Plus className="h-4 w-4 mr-1" /> {t("ui.responsibilities.add")}
           </Button>
         </div>
 

@@ -4,7 +4,7 @@ import {
   ACTION_FILTERS,
   ENTITY_FILTERS,
   ACTOR_FILTERS,
-} from "./auditLogsListData";
+} from "../../shared/auditLogsListData";
 
 /**
  * AuditLogsToolbar

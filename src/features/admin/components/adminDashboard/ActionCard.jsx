@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { itemVariants } from "./motionVariants";
+import { itemVariants } from "../../shared/motionVariants";
 
 
 export default function ActionCard({
