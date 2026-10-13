@@ -37,6 +37,11 @@ import CmsHomePage from "@/features/admin/pages/CmsHomePage";
 import AuthSettingsPage from "@/features/admin/pages/AuthSettingsPage";
 import CompanyDetails from "@/features/admin/pages/CompaniesDetailsPage";
 import CompaniesPage from "@/features/admin/pages/CompaniesPage";
+
+// No hardcoded role here anymore. Both trees are always defined; which one
+// renders is decided at request time by <RequireRole allow={[...]} /> in the
+// router file, reading the real role from Redux — not by picking an array
+// once at import time.
 import EditJobs from "@/features/admin/pages/EditJobs";
 
 // Which tree renders is decided at request time by <DashboardRoleTree /> in the

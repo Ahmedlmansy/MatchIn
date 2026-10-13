@@ -21,6 +21,11 @@ export const loginRequest = (payload) =>
 export const meRequest = () =>
   api.get("/api/auth/me").then((res) => res.data?.data ?? res.data);
 
+// POST /api/auth/refresh — exchanges a valid refresh token for a new access token.
+// The backend sets a new httpOnly cookie; resolves with the server payload.
+export const refreshTokenRequest = () =>
+  api.post("/api/auth/refresh").then((res) => res.data?.data ?? res.data);
+
 // Posts { email } to the reset endpoint; resolves with the normalized server payload, rejects with the axios error.
 export const forgotPassword = async (payload) => {
     const { data } = await api.post("/api/auth/forgot-password", payload)
@@ -57,3 +62,9 @@ export const resetPassword = async (payload) => {
     const { data } = await api.post("/api/auth/reset-password", { ...payload, reset_token: payload.token })
     return data;
 }
+
+// POST /api/auth/logout — clears the session cookie on the server.
+// Resolves with the server payload, rejects with the axios error.
+// If the endpoint doesn't exist (404/405), the caller should still clear local state.
+export const logoutRequest = () =>
+  api.post("/api/auth/logout").then((res) => res.data?.data ?? res.data);

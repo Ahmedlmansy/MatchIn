@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
 
-const RESEND_SECONDS = 30;
+const RESEND_SECONDS = 60;
 
 function formatTimer(seconds) {
   const m = String(Math.floor(seconds / 60)).padStart(2, "0");
