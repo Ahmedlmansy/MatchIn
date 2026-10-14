@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-
-
 @theme {
   /*     MatchIn palette */
   --color-primary: #1f365c; /* Midnight Blue */
@@ -28,4 +26,98 @@
   --font-dm-sans: "DM Sans", sans-serif;
   --font-alexandria: "Alexandria", sans-serif;
   --font-tajawal: "Tajawal", sans-serif;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   RTL support
+
+   `dir` is set on <html> by I18nSync. Most layout already mirrors for free:
+   CSS Grid/Flex reverse under `direction`, and Tailwind's logical utilities
+   (ms-/me-, ps-/pe-, start-/end-, rounded-ss/se/es/ee) map to CSS logical
+   properties. What does NOT mirror is anything physical: gradient angles,
+   translate transforms, and icon glyphs.
+
+   This file covers the glyphs so components don't each need an `rtl:` variant.
+   Lucide emits a `lucide-<name>` class on every icon at runtime, which lets
+   one selector handle all forward/back/next/previous indicators.
+   ───────────────────────────────────────────────────────────────────────── */
+
+@layer base {
+  /* Directional glyphs: in RTL, "next" points left and "previous" points
+     right, so the whole icon is mirrored on the inline axis.
+
+     Deliberately NOT included:
+       · ArrowLeftRight / ArrowUpDown — symmetric, mirroring is a no-op
+       · RotateCw / RefreshCw — circular, no direction to flip
+       · Chevrons used purely as decorative separators inside prose */
+  [dir="rtl"] .lucide-arrow-right,
+  [dir="rtl"] .lucide-arrow-left,
+  [dir="rtl"] .lucide-chevron-right,
+  [dir="rtl"] .lucide-chevron-left,
+  [dir="rtl"] .lucide-move-right,
+  [dir="rtl"] .lucide-move-left,
+  [dir="rtl"] .lucide-log-in,
+  [dir="rtl"] .lucide-log-out,
+  [dir="rtl"] .lucide-sign-in,
+  [dir="rtl"] .lucide-sign-out,
+  [dir="rtl"] .lucide-panel-left,
+  [dir="rtl"] .lucide-panel-right,
+  [dir="rtl"] .lucide-circle-arrow-right,
+  [dir="rtl"] .lucide-circle-arrow-left,
+  [dir="rtl"] .lucide-undo,
+  [dir="rtl"] .lucide-redo {
+    scale: -1 1;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Mobile density
+
+   Below `sm`, stacked full-width cards and multi-column stat rows turn into
+   long, cramped scroll columns. Sections that are reference content rather
+   than the page's primary task are hidden on phones, and carousel tracks get
+   peeking cards instead of one enormous column.
+   ───────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  /* Horizontal scroll strip used by the home-page carousels. Gutter lives
+     here so the first/last card isn't flush against the viewport edge. */
+  .carousel-track {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .carousel-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .carousel-item {
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+    width: 85%;
+    max-width: 21.25rem; /* 340px */
+  }
+
+  @media (min-width: 640px) {
+    .carousel-item {
+      width: 55%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .carousel-item {
+      width: 23.75rem; /* 380px */
+    }
+  }
+}
+
+/* Respect users who ask for less motion. Carousels scroll programmatically,
+   so this also suppresses the smooth-scroll animation. */
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track {
+    scroll-behavior: auto;
+  }
 }

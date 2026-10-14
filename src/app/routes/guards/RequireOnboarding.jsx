@@ -1,26 +1,49 @@
 // src/app/routes/guards/RequireOnboarding.jsx
 import { useSelector } from "react-redux";
-import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { useProfileQuery } from "@/features/candidate/hooks/useProfileQuery";
 import { selectUserRole } from "@/features/auth/store/auth.selectors";
+import { isCandidateRole } from "@/features/auth/store/auth.roles";
+import { useLocalizedPath } from "@/utils/routes";
+import Status from "@/components/shared/Status";
 
 /**
  * RequireOnboarding guard.
  *
- * Checks if the authenticated user has completed onboarding.
- * - While user role is still loading (null), shows a spinner.
- * - If user exists but hasn't completed onboarding, allows access to onboarding page.
- * - If user has completed onboarding, redirects to dashboard (or lets them through to other pages).
+ * Onboarding is a candidate-only flow, and completion is read from
+ * GET /api/candidate/profile rather than from a flag on the user.
  *
- * The onboarding completion status is expected to be on the user object as `onboardingCompleted` boolean.
+ * ── Why `enabled` matters here ────────────────────────────────────────────
+ * `useProfileQuery()` is a hook, so it must be called on every render — it
+ * cannot sit below the role check. Without `enabled` it fired for *everyone*,
+ * and because that endpoint is candidate-gated an admin got a 401, which the
+ * axios interceptor turned into a refresh, a failed refresh, and
+ * clearCredentials() — i.e. "admin logs in, fetches the candidate profile,
+ * gets bounced back to /login". Gating the query on the role removes the
+ * request entirely for staff.
+ *
+ * A disabled query reports `isPending: true`, which is harmless here: non-
+ * candidates return at the role check before the loading branch is reached.
  */
 export function RequireOnboarding() {
+  // Hooks are called unconditionally at the top: the early returns below must
+  // never skip one, or the hook order changes between renders.
   const role = useSelector(selectUserRole);
   const location = useLocation();
-  const { lang } = useParams();
+  const localizedPath = useLocalizedPath();
+  const isOnboardingPath = location.pathname.endsWith("/onboarding");
 
-  // Still waiting for the role to be determined (RequireAuth already passed).
-  // This happens on hard refresh while /auth/me is still in flight.
+  const isCandidate = isCandidateRole(role);
+
+  const {
+    data: profileData,
+    isPending: isProfileLoading,
+    isError: isProfileError,
+    error: profileError,
+    refetch,
+  } = useProfileQuery({ enabled: isCandidate });
+
   if (!role) {
     return (
       <div
@@ -33,31 +56,59 @@ export function RequireOnboarding() {
     );
   }
 
-  // Only apply onboarding check for candidate role
-  if (role !== "candidate") {
+  // Staff never onboard. They also skip the candidate-only profile request
+  // entirely (see the note above), so there is nothing left for them to hit a
+  // 401 on.
+  if (!isCandidate) {
     return <Outlet />;
   }
 
-  // Get the full user object to check onboarding status
-  const user = useSelector((state) => state.auth.user);
+  if (isProfileLoading) {
+    return (
+      <div
+        role="status"
+        aria-label="Loading"
+        className="flex min-h-screen items-center justify-center bg-background"
+      >
+        <Loader2 className="h-7 w-7 animate-spin text-primary" />
+      </div>
+    );
+  }
 
-  // If user doesn't have onboardingCompleted flag yet, allow onboarding
-  // The backend should set this flag when onboarding is complete
-  const hasCompletedOnboarding = user?.onboardingCompleted === true;
+  if (isProfileError) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-6">
+        <div className="w-full max-w-md rounded-3xl border border-border bg-surface shadow-sm">
+          <Status
+            icon={<AlertCircle className="h-5 w-5" />}
+            iconClassName="bg-error/10 text-error"
+            title="Couldn't load profile"
+            subtitle={profileError?.message ?? "Something went wrong. Please try again."}
+            primaryButton={{
+              label: "Try again",
+              onClick: () => refetch(),
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
 
-  // Allow access to onboarding page regardless of completion status
-  // (users might want to redo onboarding)
-  const isOnboardingPath = location.pathname.includes("/onboarding");
+  const hasCompletedOnboarding =
+    profileData?.profile_completed_at ||
+    profileData?.profile_exists === true;
 
   if (isOnboardingPath) {
+    if (hasCompletedOnboarding) {
+      return <Navigate to={localizedPath("/dashboard")} replace state={{ from: location }} />;
+    }
     return <Outlet />;
   }
 
-  // If onboarding not completed, redirect to onboarding
   if (!hasCompletedOnboarding) {
     return (
       <Navigate
-        to={`/${lang}/dashboard/onboarding`}
+        to={localizedPath("/dashboard/onboarding")}
         state={{ from: location }}
         replace
       />

@@ -16,7 +16,7 @@ export default function SortDropdown({
       <select
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
-        className="h-11 pl-4 pr-10 border border-border rounded-full bg-white text-[13px] font-medium outline-none focus:border-primary shadow-sm appearance-none cursor-pointer text-[#1B1C1A] w-full sm:w-auto"
+        className="h-11 ps-4 pe-10 border border-border rounded-full bg-white text-[13px] font-medium outline-none focus:border-primary shadow-sm appearance-none cursor-pointer text-[#1B1C1A] w-full sm:w-auto"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -24,7 +24,7 @@ export default function SortDropdown({
           </option>
         ))}
       </select>
-      <ChevronDown className="w-4 h-4 text-muted absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+      <ChevronDown className="w-4 h-4 text-muted absolute end-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
     </div>
   );
 }

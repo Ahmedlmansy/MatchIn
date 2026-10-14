@@ -1,9 +1,11 @@
 // src/features/auth/store/auth.slice.js
 import { createSlice } from "@reduxjs/toolkit";
 
-// The session token is an httpOnly cookie the backend sets — JS can neither
-// read nor write it, so `token` is always null here. It stays in the state
-// shape (convention §6) purely as the explicit "we hold no token" marker.
+// `token` holds the bearer access_token returned by /api/auth/login. It used
+// to be hardcoded to null on the assumption that the session lived entirely in
+// an httpOnly cookie — which meant the Authorization header was never sent and
+// every authenticated request 401'd. A cookie-based deployment simply leaves
+// this null and keeps working through `withCredentials`.
 const initialState = {
   user: null,
   token: null,
@@ -21,6 +23,15 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token ?? null;
       state.status = "authenticated";
+
+      // Loud in dev, silent in production. Getting here with no user is always
+      // a bug: every guard reads user.role, so a missing user turns into a
+      // spinner that never resolves rather than an obvious failure.
+      if (import.meta.env.DEV && !state.user) {
+        console.warn(
+          "[auth] setCredentials called without a user — role checks will fail.",
+        );
+      }
     },
     updateUser: (state, action) => {
       state.user = { ...state.user, ...action.payload };

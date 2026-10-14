@@ -1,5 +1,10 @@
 import { api } from "@/services/axios/axiosInstance";
 
+// Mirrors REFRESH_HEADER in axiosInstance, repeated here so this module does
+// not import the client it already depends on for something the client also
+// needs. A refresh response must never re-enter the refresh interceptor.
+const REFRESH_HEADER = "x-skillmatch-refresh-retry";
+
 
 
 // POST /api/auth/register
@@ -18,13 +23,49 @@ export const loginRequest = (payload) =>
 // GET /api/auth/me — the only way to read the session, since the cookie is httpOnly.
 // Resolves with the authenticated user, rejects with the axios error when the
 // cookie is absent or expired.
-export const meRequest = () =>
-  api.get("/api/auth/me").then((res) => res.data?.data ?? res.data);
+//
+// `config` is passed straight through so the boot-time session check in
+// useInitializeAuth can pass an AbortSignal — see the race-condition note
+// there for why cancelling it matters.
+//
+// ── Why this unwraps `.user` ────────────────────────────────────────────────
+// This endpoint nests the user one level deeper than every other auth call:
+// Laravel's default AuthResource serializes as { data: { user: { … } } }, and
+// loginRequest's consumers already read `data.user` accordingly. But the
+// previous version returned the whole `res.data.data`, so all four callers here
+// — useInitializeAuth (x2), useVerifyOtpMutation, useRefreshToken and the
+// axios refresh queue — stored `{ user: {...} }` *as the user*.
+//
+// The failure is silent and severe: auth.status still became "authenticated",
+// so RequireAuth let the route through, but user.role was undefined, so
+// DashboardRoleTree hit its `if (!role)` branch and rendered its spinner —
+// forever, with no error and no way forward. Signing in worked, because the
+// login hook reads data.user; reloading a signed-in session hung, because this
+// one did not. Normalizing here means the shape is fixed once (convention §4.5).
+export const meRequest = (config) =>
+  api.get("/api/auth/me", config).then((res) => {
+    const body = res.data?.data ?? res.data;
+    return body?.user ?? body;
+  });
 
-// POST /api/auth/refresh — exchanges a valid refresh token for a new access token.
-// The backend sets a new httpOnly cookie; resolves with the server payload.
-export const refreshTokenRequest = () =>
-  api.post("/api/auth/refresh").then((res) => res.data?.data ?? res.data);
+// POST /api/auth/refresh — exchanges the refresh token for a new access token.
+//
+// Returns the new access token when the server issues one, otherwise null. A
+// cookie-session backend answers 200/204 with an empty body and the browser
+// just updates its cookie, so "no token in the body" is a normal outcome and
+// must not be treated as a failure.
+//
+// Tagged with REFRESH_HEADER so its own 401 can never re-enter the refresh
+// queue in the axios response interceptor.
+export const refreshTokenRequest = async () => {
+  const { data } = await api.post(
+    "/api/auth/refresh",
+    null,
+    { headers: { [REFRESH_HEADER]: "true" } },
+  );
+  const body = data?.data ?? data ?? {};
+  return body.access_token ?? body.token ?? null;
+};
 
 // Posts { email } to the reset endpoint; resolves with the normalized server payload, rejects with the axios error.
 export const forgotPassword = async (payload) => {
@@ -65,6 +106,10 @@ export const resetPassword = async (payload) => {
 
 // POST /api/auth/logout — clears the session cookie on the server.
 // Resolves with the server payload, rejects with the axios error.
-// If the endpoint doesn't exist (404/405), the caller should still clear local state.
+// Tagged with skip-refresh header to prevent 401 refresh retry loops.
 export const logoutRequest = () =>
-  api.post("/api/auth/logout").then((res) => res.data?.data ?? res.data);
+  api
+    .post("/api/auth/logout", null, {
+      headers: { "x-skillmatch-refresh-retry": "true" },
+    })
+    .then((res) => res.data?.data ?? res.data);

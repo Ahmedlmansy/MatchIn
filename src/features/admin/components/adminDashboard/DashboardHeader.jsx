@@ -9,6 +9,7 @@ export default function DashboardHeader({
   subtitle,
   onRefresh,
   onNewCompany,
+  isRefreshing = false,
 }) {
   const { t } = useTranslation("dashboard");
   const headerTitle = title ?? t("pages.admin.overview.title");
@@ -29,9 +30,10 @@ export default function DashboardHeader({
         <Button
           variant="outline"
           onClick={onRefresh}
-          className="h-10 px-4 rounded-xl text-[13.5px] font-semibold bg-white text-[#222831] border border-border hover:bg-[#f5f2ec] hover:border-[#d9d4cb] transition-all shadow-sm"
+          disabled={isRefreshing}
+          className="h-10 px-4 rounded-xl text-[13.5px] font-semibold bg-white text-[#222831] border border-border hover:bg-[#f5f2ec] hover:border-[#d9d4cb] transition-all shadow-sm disabled:opacity-60"
         >
-          <RotateCw className="w-4 h-4 shrink-0" />
+          <RotateCw className={`w-4 h-4 shrink-0 ${isRefreshing ? "animate-spin" : ""}`} />
           Refresh
         </Button>
         <Button

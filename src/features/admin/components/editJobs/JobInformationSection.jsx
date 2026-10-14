@@ -4,7 +4,16 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
 
-export default function JobInformationSection({ formData, onChange }) {
+// Job sources are the same closed set the list screen filters on, so the
+// value stored is the API's own enum rather than a display label.
+const SOURCE_OPTIONS = [
+  { value: "internal", label: "Internal" },
+  { value: "linkedin", label: "LinkedIn" },
+  { value: "indeed", label: "Indeed" },
+  { value: "referral", label: "Referral" },
+];
+
+export default function JobInformationSection({ formData, onChange, companies = [] }) {
   const { t } = useTranslation("common");
   return (
     <Card className="bg-white border border-[#ECEAE5] shadow-none rounded-2xl overflow-hidden">
@@ -36,16 +45,19 @@ export default function JobInformationSection({ formData, onChange }) {
               {t("ui.jobInfo.company")} <span className="text-[#DC2626]">*</span>
             </Label>
             <Select
-              value={formData?.company || "BrightPath Inc."}
+              value={formData?.company || ""}
               onValueChange={(val) => onChange("company", val)}
+              disabled={!companies.length}
             >
               <SelectTrigger className="h-12 w-full bg-white border-[#E4E4E7] rounded-xl text-sm px-4 focus:ring-[#1D2A44]">
                 <SelectValue placeholder={t("ui.jobInfo.selectCompany")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="BrightPath Inc.">BrightPath Inc.</SelectItem>
-                <SelectItem value="TechCorp Solutions">TechCorp Solutions</SelectItem>
-                <SelectItem value="MatchIn Labs">MatchIn Labs</SelectItem>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={String(company.id)}>
+                    {company.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             <p className="text-[11px] text-[#A1A1AA]">{t("ui.jobInfo.linkedCompany")}</p>
@@ -57,17 +69,18 @@ export default function JobInformationSection({ formData, onChange }) {
               {t("ui.jobInfo.source")} <span className="text-[#A1A1AA] font-normal">{t("ui.jobInfo.optional")}</span>
             </Label>
             <Select
-              value={formData?.source || "Internal"}
+              value={formData?.source || "internal"}
               onValueChange={(val) => onChange("source", val)}
             >
               <SelectTrigger className="h-12 w-full bg-white border-[#E4E4E7] rounded-xl text-sm px-4 focus:ring-[#1D2A44]">
                 <SelectValue placeholder={t("ui.jobInfo.selectSource")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Internal">Internal</SelectItem>
-                <SelectItem value="External">External</SelectItem>
-                <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-                <SelectItem value="Referral">Referral</SelectItem>
+                {SOURCE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

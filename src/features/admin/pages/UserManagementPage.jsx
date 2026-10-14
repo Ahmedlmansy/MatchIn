@@ -1,11 +1,22 @@
-import * as React from "react";
+// src/features/admin/pages/UserManagementPage.jsx
+//
+// Admin user list. Reads through useAdminUsersQuery and writes through the
+// user mutations — every action is now a real request instead of a setTimeout
+// that rewrote local state.
+//
+// Dialogs that act on one specific user (edit / change role / activate /
+// deactivate) are small local components so each can own its own per-user
+// mutation hook. Hooks cannot be called conditionally, so the page only decides
+// *which* dialog is open.
+
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence } from "framer-motion";
 import {
-  Search,
   Download,
   Plus,
+  Search,
   Users as UsersIcon,
   CheckCircle2,
   Ban,
@@ -13,14 +24,12 @@ import {
   ShieldCheck,
   Trash2,
   X,
-  AlertTriangle,
   SearchX,
 } from "lucide-react";
 
 import Status from "@/components/shared/Status";
 import Modal from "@/components/shared/Modal";
 import { UsersTableSkeleton } from "@/components/layouts/skeleton/UsersTableSkeleton";
-import { StatsStripSkeleton } from "@/components/layouts/skeleton/StatsStripSkeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -30,163 +39,228 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RoleBadge, UserStatusBadge, ROLE_LABELS, STATUS_LABELS } from "@/features/admin/shared";
+import { useLocalizedPath } from "@/utils/routes";
+import {
+  useAdminUsersQuery,
+  useCreateAdminUserMutation,
+  useDeleteAdminUserMutation,
+  useSetAdminUserStatusMutation,
+  useUpdateAdminUserMutation,
+} from "@/features/admin/hooks";
+import {
+  ErrorState,
+  ResultsPagination,
+  RoleBadge,
+  UserStatusBadge,
+  ROLE_LABELS,
+  STATUS_LABELS,
+} from "@/features/admin/shared";
+import {
+  USER_ROLE_OPTIONS,
+  USER_SORT_OPTIONS,
+  USER_STATUS_OPTIONS,
+} from "@/features/admin/constants/admin.filters";
 import { TableHead, UserTable } from "@/features/admin/components/UserManagementPage/UserTable";
-import Pagination from "@/features/admin/components/UserManagementPage/Pagination";
-import { UserFormBody, ChangeRoleBody } from "@/features/admin/components/UserManagementPage/UserDialogs";
+import {
+  UserFormBody,
+  ChangeRoleBody,
+} from "@/features/admin/components/UserManagementPage/UserDialogs";
 
-const StatusPill = UserStatusBadge;
+const DEFAULT_FILTERS = { search: "", role: "all", status: "all", sort: "newest", page: 1 };
 
-// TODO: replace with a real fetch, e.g. GET /admin/users?search=&role=&status=&page=
-const MOCK_USERS = [
-  { id: "USR-4821", fullName: "Maya Khaled", email: "maya.k@matchin.io", role: "candidate", status: "active", createdLabel: "Sep 18, 2026", createdAgo: "4 days ago", createdDaysAgo: 4, activityLabel: "Sep 22, 2026", activityAgo: "1 hr ago", activityDaysAgo: 0 },
-  { id: "USR-3902", fullName: "Ahmed Hassan", email: "ahmed@brightpath.io", role: "recruiter", status: "active", createdLabel: "Aug 5, 2026", createdAgo: "48 days ago", createdDaysAgo: 48, activityLabel: "Sep 22, 2026", activityAgo: "3 hrs ago", activityDaysAgo: 0 },
-  { id: "USR-2214", fullName: "Youssef Nabil", email: "youssef.nabil@gmail.com", role: "admin", status: "active", createdLabel: "Jan 12, 2026", createdAgo: "255 days ago", createdDaysAgo: 255, activityLabel: "Sep 22, 2026", activityAgo: "10 min ago", activityDaysAgo: 0 },
-  { id: "USR-1788", fullName: "Karim Mostafa", email: "karim.m@yahoo.com", role: "candidate", status: "suspended", createdLabel: "Feb 8, 2026", createdAgo: "226 days ago", createdDaysAgo: 226, activityLabel: "Aug 30, 2026", activityAgo: "23 days ago", activityDaysAgo: 23 },
-  { id: "USR-4990", fullName: "Dina Saleh", email: "dina.saleh@icloud.com", role: "candidate", status: "active", createdLabel: "Sep 20, 2026", createdAgo: "2 days ago", createdDaysAgo: 2, activityLabel: "Sep 22, 2026", activityAgo: "20 min ago", activityDaysAgo: 0 },
-  { id: "USR-3355", fullName: "Laila Fathy", email: "laila.fathy@outlook.com", role: "recruiter", status: "inactive", createdLabel: "May 3, 2026", createdAgo: "141 days ago", createdDaysAgo: 141, activityLabel: "Jul 14, 2026", activityAgo: "70 days ago", activityDaysAgo: 70 },
-  { id: "USR-5011", fullName: "Omar Zaki", email: "omar.zaki@matchin.io", role: "candidate", status: "active", createdLabel: "Sep 1, 2026", createdAgo: "21 days ago", createdDaysAgo: 21, activityLabel: "Sep 21, 2026", activityAgo: "1 day ago", activityDaysAgo: 1 },
-  { id: "USR-0940", fullName: "Sara Adel", email: "sara.adel@nexuslabs.io", role: "recruiter", status: "active", createdLabel: "Mar 30, 2026", createdAgo: "175 days ago", createdDaysAgo: 175, activityLabel: "Sep 20, 2026", activityAgo: "2 days ago", activityDaysAgo: 2 },
+const STAT_CARDS = [
+  { key: "total", label: "Total Users", icon: UsersIcon, iconClass: "bg-primary/10 text-primary" },
+  { key: "active", label: "Active", icon: CheckCircle2, iconClass: "bg-success/12 text-success" },
+  { key: "inactiveOrSuspended", label: "Inactive / Suspended", icon: Ban, iconClass: "bg-muted/12 text-muted" },
+  { key: "admins", label: "Admins", icon: ShieldCheck, iconClass: "bg-secondary/12 text-secondary" },
 ];
 
-function fetchUsers() {
-  return new Promise((resolve) => setTimeout(() => resolve(MOCK_USERS), 800));
-}
+const EXPORT_COLUMNS = [
+  ["User ID", "id"],
+  ["Name", "fullName"],
+  ["Email", "email"],
+  ["Role", "role"],
+  ["Status", "status"],
+  ["Created", "createdLabel"],
+  ["Last activity", "activityLabel"],
+];
 
-const PAGE_SIZE = 8;
+function downloadCsv(rows, filename, columns) {
+  if (rows.length === 0) return;
+  const escape = (value) => `"${String(value ?? "").replaceAll('"', '""')}"`;
+  const csv = [
+    columns.map(([label]) => escape(label)).join(","),
+    ...rows.map((row) => columns.map(([, key]) => escape(row[key])).join(",")),
+  ].join("\r\n");
+
+  const url = URL.createObjectURL(new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+}
 
 export function UserManagementPage() {
   const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
   const { t } = useTranslation("dashboard");
 
-  const [pageState, setPageState] = React.useState("loading"); // loading | loaded | error
-  const [users, setUsers] = React.useState([]);
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [modal, setModal] = useState(null); // { type, user }
 
-  const [search, setSearch] = React.useState("");
-  const [roleFilter, setRoleFilter] = React.useState("");
-  const [statusFilter, setStatusFilter] = React.useState("");
-  const [sortBy, setSortBy] = React.useState("newest");
-  const [page, setPage] = React.useState(1);
+  // Any filter change resets to page 1 so the user is never stranded on a page
+  // the new result set doesn't have.
+  const setFilter = (key) => (value) => setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
 
-  const [modal, setModal] = React.useState(null); // { type, user }
-  const [modalBusy, setModalBusy] = React.useState(false);
+  const { data, isPending, isError, error, refetch, isFetching } = useAdminUsersQuery(filters);
+  const createUser = useCreateAdminUserMutation();
 
-  const load = React.useCallback(() => {
-    setPageState("loading");
-    fetchUsers()
-      .then((data) => {
-        setUsers(data);
-        setPageState("loaded");
-      })
-      .catch(() => setPageState("error"));
-  }, []);
+  const users = data?.items ?? [];
+  const total = data?.total ?? 0;
+  const perPage = data?.perPage ?? 0;
+  const page = data?.page ?? 1;
+  const pageCount = data?.pageCount ?? 1;
+  const firstRow = total === 0 ? 0 : (page - 1) * perPage + 1;
+  const lastRow = firstRow + users.length - 1;
 
-  React.useEffect(() => {
-    load();
-  }, [load]);
+  const hasActiveFilters =
+    Boolean(filters.search) || filters.role !== "all" || filters.status !== "all";
+  const clearFilters = () => setFilters(DEFAULT_FILTERS);
 
-  const filtered = React.useMemo(() => {
-    let list = users.filter((u) => {
-      const q = search.trim().toLowerCase();
-      const matchesSearch =
-        !q || u.fullName.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.id.toLowerCase().includes(q);
-      const matchesRole = !roleFilter || u.role === roleFilter;
-      const matchesStatus = !statusFilter || u.status === statusFilter;
-      return matchesSearch && matchesRole && matchesStatus;
-    });
-
-    list = [...list].sort((a, b) => {
-      if (sortBy === "newest") return a.createdDaysAgo - b.createdDaysAgo;
-      if (sortBy === "oldest") return b.createdDaysAgo - a.createdDaysAgo;
-      if (sortBy === "name") return a.fullName.localeCompare(b.fullName);
-      if (sortBy === "activity") return a.activityDaysAgo - b.activityDaysAgo;
-      return 0;
-    });
-
-    return list;
-  }, [users, search, roleFilter, statusFilter, sortBy]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  React.useEffect(() => setPage(1), [search, roleFilter, statusFilter]);
-
-  const stats = React.useMemo(() => {
-    const total = users.length;
-    const active = users.filter((u) => u.status === "active").length;
-    const inactiveOrSuspended = users.filter((u) => u.status !== "active").length;
-    const admins = users.filter((u) => u.role === "admin").length;
-    return { total, active, inactiveOrSuspended, admins };
-  }, [users]);
-
-  const hasActiveFilters = Boolean(search || roleFilter || statusFilter);
-  const clearFilters = () => {
-    setSearch("");
-    setRoleFilter("");
-    setStatusFilter("");
+  // Counts derive from the loaded rows, so the strip can never disagree with
+  // the table underneath it.
+  const stats = {
+    total,
+    active: users.filter((user) => user.status === "active").length,
+    inactiveOrSuspended: users.filter((user) => user.status !== "active").length,
+    admins: users.filter((user) => user.role === "admin").length,
   };
 
-  const openModal = (type, user) => setModal({ type, user });
-  const closeModal = () => {
-    if (modalBusy) return;
-    setModal(null);
+  const renderStats = () => (
+    <div className="mb-5.5 grid grid-cols-4 gap-3.5 max-[800px]:grid-cols-2 max-[440px]:grid-cols-1">
+      {STAT_CARDS.map((card) => {
+        const Icon = card.icon;
+        return (
+          <div
+            key={card.key}
+            className="flex items-center gap-3.5 rounded-2xl border border-border bg-surface p-4 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
+          >
+            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${card.iconClass}`}>
+              <Icon className="h-5 w-5" />
+            </div>
+            <div>
+              <div className="text-[22px] font-bold leading-tight tracking-tight text-ink">
+                {stats[card.key]}
+              </div>
+              <div className="mt-0.5 text-[12.5px] font-medium text-muted">{card.label}</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const renderTable = () => {
+    if (isError) {
+      return (
+        <ErrorState
+          title={t("pages.admin.userManagementStates.loadFailed")}
+          description={error?.message || "Something went wrong while fetching the users list."}
+          onRetry={() => refetch()}
+        />
+      );
+    }
+
+    if (isPending) {
+      return (
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[1000px] border-collapse">
+            <TableHead />
+            <UsersTableSkeleton rows={8} />
+          </table>
+        </div>
+      );
+    }
+
+    // "Empty" means two different things server-side now: nothing exists, or
+    // nothing matched the filters. They get different calls to action.
+    if (users.length === 0) {
+      return hasActiveFilters ? (
+        <Status
+          icon={<SearchX className="h-6 w-6" />}
+          iconClassName="bg-muted/12 text-muted"
+          title={t("pages.admin.userManagementStates.noResults")}
+          subtitle="Try adjusting your search or filters."
+          primaryButton={{ label: "Clear filters", onClick: clearFilters }}
+        />
+      ) : (
+        <Status
+          icon={<UsersIcon className="h-6 w-6" />}
+          iconClassName="bg-primary/10 text-primary"
+          title={t("pages.admin.userManagementStates.empty")}
+          subtitle="Once people sign up, they'll show up here."
+          primaryButton={{ label: "Add User", onClick: () => setModal({ type: "add" }) }}
+        />
+      );
+    }
+
+    return (
+      <>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[1000px] border-collapse">
+            <TableHead />
+            <UserTable
+              users={users}
+              onView={(user) => navigate(localizedPath(`/dashboard/user-management/${user.id}`))}
+              onEdit={(user) => setModal({ type: "edit", user })}
+              onChangeRole={(user) => setModal({ type: "changeRole", user })}
+              onActivate={(user) => setModal({ type: "activate", user })}
+              onDeactivate={(user) => setModal({ type: "deactivate", user })}
+              onDelete={(user) => setModal({ type: "delete", user })}
+            />
+          </table>
+        </div>
+
+        <ResultsPagination
+          page={page}
+          pageCount={pageCount}
+          onPageChange={(next) => setFilters((prev) => ({ ...prev, page: next }))}
+          label="User results pages"
+          summary={
+            total > 0 ? `Showing ${firstRow}–${lastRow} of ${total} users` : null
+          }
+        />
+      </>
+    );
   };
-
-  // ---------- Mutations (all mocked — TODO: wire to real endpoints) ----------
-  const runMutation = async (apply) => {
-    setModalBusy(true);
-    await new Promise((r) => setTimeout(r, 700));
-    setUsers((prev) => apply(prev));
-    setModalBusy(false);
-    setModal(null);
-  };
-
-  const handleAddUser = (form) =>
-    runMutation((prev) => [
-      {
-        id: `USR-${Math.floor(1000 + Math.random() * 9000)}`,
-        fullName: form.fullName,
-        email: form.email,
-        role: form.role,
-        status: "active",
-        createdLabel: "Just now",
-        createdAgo: "Just now",
-        createdDaysAgo: 0,
-        activityLabel: "—",
-        activityAgo: "Never",
-        activityDaysAgo: 9999,
-      },
-      ...prev,
-    ]);
-
-  const handleEditUser = (form) =>
-    runMutation((prev) => prev.map((u) => (u.id === modal.user.id ? { ...u, ...form } : u)));
-
-  const handleChangeRole = (newRole) =>
-    runMutation((prev) => prev.map((u) => (u.id === modal.user.id ? { ...u, role: newRole } : u)));
-
-  const handleSetStatus = (newStatus) =>
-    runMutation((prev) => prev.map((u) => (u.id === modal.user.id ? { ...u, status: newStatus } : u)));
-
-  const handleDelete = () =>
-    runMutation((prev) => prev.filter((u) => u.id !== modal.user.id));
 
   return (
-    <div className="min-h-screen bg-background px-7 py-8">
+    // px-4 on phones, easing to px-7 from sm up. A flat px-7 left only ~37%
+    // of a 375px viewport for content, which is what made the stat grid and
+    // toolbar chips feel cramped.
+    <div className="min-h-screen bg-background px-4 py-6 sm:px-7 sm:py-8">
       <div className="mx-auto max-w-[1280px]">
         {/* Header */}
         <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-[22px] font-bold tracking-tight text-ink">{t("pages.admin.userManagement")}</h1>
+            <h1 className="text-[22px] font-bold tracking-tight text-ink">
+              {t("pages.admin.userManagement")}
+            </h1>
             <p className="mt-1 text-sm text-muted">Search, view, and manage all platform users</p>
           </div>
           <div className="flex flex-wrap gap-2.5">
-            <Button variant="outline" className="h-10 gap-2 rounded-xl border-border text-ink">
+            <Button
+              variant="outline"
+              disabled={users.length === 0}
+              onClick={() => downloadCsv(users, "users.csv", EXPORT_COLUMNS)}
+              className="h-10 gap-2 rounded-xl border-border text-ink"
+            >
               <Download className="h-4 w-4" />
               Export
             </Button>
             <Button
-              onClick={() => openModal("add")}
+              onClick={() => setModal({ type: "add" })}
               className="h-10 gap-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="h-4 w-4" />
@@ -195,105 +269,55 @@ export function UserManagementPage() {
           </div>
         </div>
 
-        {/* Stats */}
-        {pageState === "loading" ? (
-          <StatsStripSkeleton />
-        ) : (
-          <div className="mb-5.5 grid grid-cols-4 gap-3.5 max-[800px]:grid-cols-2 max-[440px]:grid-cols-1">
-            <div className="flex items-center gap-3.5 rounded-2xl border border-border bg-surface p-4 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <UsersIcon className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-[22px] font-bold leading-tight tracking-tight text-ink">{stats.total}</div>
-                <div className="mt-0.5 text-[12.5px] font-medium text-muted">Total Users</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3.5 rounded-2xl border border-border bg-surface p-4 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-success/12 text-success">
-                <CheckCircle2 className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-[22px] font-bold leading-tight tracking-tight text-ink">{stats.active}</div>
-                <div className="mt-0.5 text-[12.5px] font-medium text-muted">Active</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3.5 rounded-2xl border border-border bg-surface p-4 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted/12 text-muted">
-                <Ban className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-[22px] font-bold leading-tight tracking-tight text-ink">{stats.inactiveOrSuspended}</div>
-                <div className="mt-0.5 text-[12.5px] font-medium text-muted">Inactive / Suspended</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3.5 rounded-2xl border border-border bg-surface p-4 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-secondary/12 text-secondary">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <div>
-                <div className="text-[22px] font-bold leading-tight tracking-tight text-ink">{stats.admins}</div>
-                <div className="mt-0.5 text-[12.5px] font-medium text-muted">Admins</div>
-              </div>
-            </div>
-          </div>
-        )}
+        {renderStats()}
 
         {/* Toolbar */}
         <div className="mb-4.5 flex flex-col gap-3">
           <div className="flex flex-wrap items-center gap-3">
             <div className="relative min-w-[220px] flex-1">
-              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-muted" />
+              <Search className="pointer-events-none absolute start-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-muted" />
               <Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={filters.search}
+                onChange={(event) => setFilter("search")(event.target.value)}
                 placeholder="Search by name, email, or user ID…"
-                className="h-[42px] rounded-xl border-border pl-10"
+                className="h-[42px] rounded-xl border-border ps-10"
               />
             </div>
 
-            <Select value={roleFilter || "all"} onValueChange={(v) => setRoleFilter(v === "all" ? "" : v)}>
-              <SelectTrigger className="h-[42px] min-w-[140px] rounded-xl border-border"><SelectValue placeholder="All Roles" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Roles</SelectItem>
-                <SelectItem value="candidate">Candidate</SelectItem>
-                <SelectItem value="recruiter">Recruiter</SelectItem>
-                <SelectItem value="admin">Admin</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={statusFilter || "all"} onValueChange={(v) => setStatusFilter(v === "all" ? "" : v)}>
-              <SelectTrigger className="h-[42px] min-w-[140px] rounded-xl border-border"><SelectValue placeholder="All Statuses" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="inactive">Inactive</SelectItem>
-                <SelectItem value="suspended">Suspended</SelectItem>
-              </SelectContent>
-            </Select>
+            <FilterSelectField
+              value={filters.role}
+              onValueChange={setFilter("role")}
+              options={USER_ROLE_OPTIONS}
+            />
+            <FilterSelectField
+              value={filters.status}
+              onValueChange={setFilter("status")}
+              options={USER_STATUS_OPTIONS}
+            />
           </div>
 
           {hasActiveFilters && (
             <div className="flex flex-wrap items-center gap-2">
-              {search && (
-                <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-primary/8 px-2.5 text-[12.5px] font-medium text-primary">
-                  Search: {search}
-                  <button type="button" onClick={() => setSearch("")} className="opacity-65 hover:opacity-100"><X className="h-3 w-3" /></button>
-                </span>
+              {filters.search && (
+                <FilterChip label={`Search: ${filters.search}`} onRemove={() => setFilter("search")("")} />
               )}
-              {roleFilter && (
-                <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-primary/8 px-2.5 text-[12.5px] font-medium text-primary">
-                  Role: {ROLE_LABELS[roleFilter]}
-                  <button type="button" onClick={() => setRoleFilter("")} className="opacity-65 hover:opacity-100"><X className="h-3 w-3" /></button>
-                </span>
+              {filters.role !== "all" && (
+                <FilterChip
+                  label={`Role: ${ROLE_LABELS[filters.role] ?? filters.role}`}
+                  onRemove={() => setFilter("role")("all")}
+                />
               )}
-              {statusFilter && (
-                <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-primary/8 px-2.5 text-[12.5px] font-medium text-primary">
-                  Status: {STATUS_LABELS[statusFilter]}
-                  <button type="button" onClick={() => setStatusFilter("")} className="opacity-65 hover:opacity-100"><X className="h-3 w-3" /></button>
-                </span>
+              {filters.status !== "all" && (
+                <FilterChip
+                  label={`Status: ${STATUS_LABELS[filters.status] ?? filters.status}`}
+                  onRemove={() => setFilter("status")("all")}
+                />
               )}
-              <button type="button" onClick={clearFilters} className="text-[12.5px] font-semibold text-muted hover:text-ink hover:underline">
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="text-[12.5px] font-semibold text-muted hover:text-ink hover:underline"
+              >
                 Clear all
               </button>
             </div>
@@ -301,21 +325,24 @@ export function UserManagementPage() {
         </div>
 
         {/* Results bar */}
-        {pageState === "loaded" && (
+        {!isPending && !isError && (
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
             <div className="text-[13.5px] text-muted">
-              Showing <strong className="font-semibold text-ink">{filtered.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)}</strong> of{" "}
-              <strong className="font-semibold text-ink">{filtered.length}</strong> users
+              Showing <strong className="font-semibold text-ink">{firstRow}–{lastRow}</strong> of{" "}
+              <strong className="font-semibold text-ink">{total}</strong> users
             </div>
             <div className="flex items-center gap-2 text-[13px] text-muted">
               <span>Sort by</span>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="h-[34px] min-w-[160px] rounded-lg border-border text-[13px]"><SelectValue /></SelectTrigger>
+              <Select value={filters.sort} onValueChange={setFilter("sort")}>
+                <SelectTrigger className="h-[34px] min-w-[160px] rounded-lg border-border text-[13px]">
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="newest">Newest first</SelectItem>
-                  <SelectItem value="oldest">Oldest first</SelectItem>
-                  <SelectItem value="name">Name A–Z</SelectItem>
-                  <SelectItem value="activity">Last activity</SelectItem>
+                  {USER_SORT_OPTIONS.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -324,73 +351,33 @@ export function UserManagementPage() {
 
         {/* Table / states */}
         <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-          {pageState === "error" ? (
-            <Status
-              icon={<AlertTriangle className="h-6 w-6" />}
-              iconClassName="bg-error/10 text-error"
-              title={t("pages.admin.userManagementStates.loadFailed")}
-              subtitle="Something went wrong while fetching the users list."
-              primaryButton={{ label: "Retry", onClick: load }}
-            />
-          ) : pageState === "loading" ? (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[1000px] border-collapse">
-                <TableHead />
-                <UsersTableSkeleton rows={8} />
-              </table>
-            </div>
-          ) : users.length === 0 ? (
-            <Status
-              icon={<UsersIcon className="h-6 w-6" />}
-              iconClassName="bg-primary/10 text-primary"
-              title={t("pages.admin.userManagementStates.empty")}
-              subtitle="Once people sign up, they'll show up here."
-              primaryButton={{ label: "Add User", onClick: () => openModal("add") }}
-            />
-          ) : filtered.length === 0 ? (
-            <Status
-              icon={<SearchX className="h-6 w-6" />}
-              iconClassName="bg-muted/12 text-muted"
-              title={t("pages.admin.userManagementStates.noResults")}
-              subtitle="Try adjusting your search or filters."
-              primaryButton={{ label: "Clear filters", onClick: clearFilters }}
-            />
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[1000px] border-collapse">
-                  <TableHead />
-                  <UserTable users={pageItems} onView={(user) => navigate(`/admin/users/${user.id}`)} onEdit={(user) => openModal("edit", user)} onChangeRole={(user) => openModal("changeRole", user)} onActivate={(user) => openModal("activate", user)} onDeactivate={(user) => openModal("deactivate", user)} onDelete={(user) => openModal("delete", user)} />
-                </table>
-              </div>
-
-              {/* Pagination */}
-              <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
-            </>
-          )}
+          {renderTable()}
         </div>
 
         {/* Legend */}
-        {pageState === "loaded" && (
+        {!isPending && !isError && users.length > 0 && (
           <div className="mt-3.5 flex flex-wrap items-center gap-4 text-[12.5px] text-muted">
             <RoleBadge role="candidate" />
             <RoleBadge role="recruiter" />
             <RoleBadge role="admin" />
-            <span className="ml-1"><StatusPill status="active" /></span>
-            <StatusPill status="inactive" />
-            <StatusPill status="suspended" />
+            <span className="ms-1">
+              <UserStatusBadge status="active" />
+            </span>
+            <UserStatusBadge status="inactive" />
+            <UserStatusBadge status="suspended" />
           </div>
         )}
       </div>
 
-      {/* Modals */}
+      {/* Dialogs */}
       <AnimatePresence>
         {modal?.type === "add" && (
-          <Modal onClose={closeModal}>
+          <Modal onClose={() => setModal(null)}>
             <UserFormBody
-              busy={modalBusy}
-              onCancel={closeModal}
-              onSubmit={handleAddUser}
+              busy={createUser.isPending}
+              error={createUser.error?.message}
+              onCancel={() => setModal(null)}
+              onSubmit={(form) => createUser.mutate(form, { onSuccess: () => setModal(null) })}
               title={t("pages.admin.userManagementStates.addUser")}
               subtitle="Create a new account on the platform."
               submitLabel="Add User"
@@ -399,65 +386,185 @@ export function UserManagementPage() {
         )}
 
         {modal?.type === "edit" && (
-          <Modal onClose={closeModal}>
-            <UserFormBody
-              busy={modalBusy}
-              onCancel={closeModal}
-              onSubmit={handleEditUser}
-              title={t("pages.admin.userManagementStates.editUser")}
-              subtitle={`Update ${modal.user.fullName}'s details.`}
-              submitLabel="Save Changes"
-              initialValues={{ fullName: modal.user.fullName, email: modal.user.email, role: modal.user.role }}
-            />
-          </Modal>
+          <EditUserDialog
+            user={modal.user}
+            title={t("pages.admin.userManagementStates.editUser")}
+            subtitle={`Update ${modal.user.fullName}'s details.`}
+            onClose={() => setModal(null)}
+          />
         )}
 
         {modal?.type === "changeRole" && (
-          <Modal onClose={closeModal} maxWidth="max-w-[400px]">
-            <ChangeRoleBody busy={modalBusy} user={modal.user} onCancel={closeModal} onConfirm={handleChangeRole} />
-          </Modal>
+          <ChangeRoleDialog user={modal.user} onClose={() => setModal(null)} />
         )}
 
         {modal?.type === "activate" && (
-          <Modal onClose={closeModal} maxWidth="max-w-[400px]">
-            <Status
-              icon={<Power className="h-6 w-6" />}
-              iconClassName="bg-success/10 text-success"
-              title={t("pages.admin.userManagementStates.activateUser")}
-              subtitle={`${modal.user.fullName} will regain full access to their account.`}
-              secondaryButton={{ label: "Cancel", onClick: closeModal, disabled: modalBusy }}
-              primaryButton={{ label: modalBusy ? "Activating…" : "Activate", onClick: () => handleSetStatus("active"), disabled: modalBusy }}
-            />
-          </Modal>
+          <SetStatusDialog
+            user={modal.user}
+            status="active"
+            title={t("pages.admin.userManagementStates.activateUser")}
+            subtitle={`${modal.user.fullName} will regain full access to their account.`}
+            confirmLabel="Activate"
+            busyLabel="Activating…"
+            icon={<Power className="h-6 w-6" />}
+            iconClassName="bg-success/10 text-success"
+            onClose={() => setModal(null)}
+          />
         )}
 
         {modal?.type === "deactivate" && (
-          <Modal onClose={closeModal} maxWidth="max-w-[400px]">
-            <Status
-              icon={<Ban className="h-6 w-6" />}
-              iconClassName="bg-error/10 text-error"
-              title={t("pages.admin.userManagementStates.deactivateUser")}
-              subtitle={`${modal.user.fullName} will lose access until reactivated.`}
-              secondaryButton={{ label: "Cancel", onClick: closeModal, disabled: modalBusy }}
-              primaryButton={{ label: modalBusy ? "Deactivating…" : "Deactivate", onClick: () => handleSetStatus("inactive"), disabled: modalBusy }}
-            />
-          </Modal>
+          <SetStatusDialog
+            user={modal.user}
+            status="inactive"
+            title={t("pages.admin.userManagementStates.deactivateUser")}
+            subtitle={`${modal.user.fullName} will lose access until reactivated.`}
+            confirmLabel="Deactivate"
+            busyLabel="Deactivating…"
+            icon={<Ban className="h-6 w-6" />}
+            iconClassName="bg-error/10 text-error"
+            onClose={() => setModal(null)}
+          />
         )}
 
         {modal?.type === "delete" && (
-          <Modal onClose={closeModal} maxWidth="max-w-[400px]">
-            <Status
-              icon={<Trash2 className="h-6 w-6" />}
-              iconClassName="bg-error/10 text-error"
-              title={t("pages.admin.userManagementStates.deleteUser")}
-              subtitle={`This permanently removes ${modal.user.fullName}'s account. This can't be undone.`}
-              secondaryButton={{ label: "Cancel", onClick: closeModal, disabled: modalBusy }}
-              primaryButton={{ label: modalBusy ? "Deleting…" : "Delete User", onClick: handleDelete, disabled: modalBusy }}
-            />
-          </Modal>
+          <DeleteUserDialog user={modal.user} onClose={() => setModal(null)} />
         )}
       </AnimatePresence>
+
+      {/* Subtle progress hint while a background refetch is in flight — the
+          rows stay visible rather than flashing the skeleton again. */}
+      {isFetching && !isPending && (
+        // Physical left on purpose: see AdminOverview — a centred element
+        // must not flip, or the physical translate pushes it off-centre.
+        <div className="pointer-events-none fixed bottom-4 left-1/2 h-1 w-24 -translate-x-1/2 overflow-hidden rounded-full bg-border">
+          <div className="h-full w-1/2 animate-[pulse_1s_ease-in-out_infinite] rounded-full bg-primary" />
+        </div>
+      )}
     </div>
   );
 }
 
+/**
+ * Activate / Deactivate share one dialog. It owns its own
+ * useSetAdminUserStatusMutation so the page never has to hold a per-user
+ * mutation hook for whichever row happens to be open.
+ */
+function SetStatusDialog({
+  user,
+  status,
+  title,
+  subtitle,
+  confirmLabel,
+  busyLabel,
+  icon,
+  iconClassName,
+  onClose,
+}) {
+  const { mutate, isPending, error } = useSetAdminUserStatusMutation(user.id);
+
+  return (
+    <Modal onClose={onClose} maxWidth="max-w-[400px]">
+      <Status
+        icon={icon}
+        iconClassName={iconClassName}
+        title={title}
+        subtitle={error?.message ?? subtitle}
+        secondaryButton={{ label: "Cancel", onClick: onClose, disabled: isPending }}
+        primaryButton={{
+          label: isPending ? busyLabel : confirmLabel,
+          onClick: () => mutate(status, { onSuccess: onClose }),
+          disabled: isPending,
+        }}
+      />
+    </Modal>
+  );
+}
+
+function EditUserDialog({ user, title, subtitle, onClose }) {
+  const { mutate, isPending, error } = useUpdateAdminUserMutation(user.id);
+
+  return (
+    <Modal onClose={onClose}>
+      <UserFormBody
+        busy={isPending}
+        error={error?.message}
+        onCancel={onClose}
+        onSubmit={(form) => mutate(form, { onSuccess: onClose })}
+        title={title}
+        subtitle={subtitle}
+        submitLabel="Save Changes"
+        initialValues={{ fullName: user.fullName, email: user.email, role: user.role }}
+      />
+    </Modal>
+  );
+}
+
+function ChangeRoleDialog({ user, onClose }) {
+  const { mutate, isPending, error } = useUpdateAdminUserMutation(user.id);
+
+  return (
+    <Modal onClose={onClose} maxWidth="max-w-[400px]">
+      <ChangeRoleBody
+        user={user}
+        busy={isPending}
+        error={error?.message}
+        onCancel={onClose}
+        onConfirm={(role) => mutate({ role }, { onSuccess: onClose })}
+      />
+    </Modal>
+  );
+}
+
+function DeleteUserDialog({ user, onClose }) {
+  const { mutate, isPending, error } = useDeleteAdminUserMutation(user.id);
+
+  return (
+    <Modal onClose={onClose} maxWidth="max-w-[400px]">
+      <Status
+        icon={<Trash2 className="h-6 w-6" />}
+        iconClassName="bg-error/10 text-error"
+        title="Delete user"
+        subtitle={error ? error.message : `This permanently removes ${user.fullName}'s account. This can't be undone.`}
+        secondaryButton={{ label: "Cancel", onClick: onClose, disabled: isPending }}
+        primaryButton={{
+          label: isPending ? "Deleting…" : "Delete User",
+          onClick: () => mutate(undefined, { onSuccess: onClose }),
+          disabled: isPending,
+        }}
+      />
+    </Modal>
+  );
+}
+
+function FilterSelectField({ value, onValueChange, options }) {
+  return (
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger className="h-[42px] min-w-[140px] rounded-xl border-border">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+function FilterChip({ label, onRemove }) {
+  return (
+    <span className="inline-flex h-7 items-center gap-1.5 rounded-full bg-primary/8 px-2.5 text-[12.5px] font-medium text-primary">
+      {label}
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Remove ${label}`}
+        className="opacity-65 hover:opacity-100"
+      >
+        <X className="h-3 w-3" />
+      </button>
+    </span>
+  );
+}

@@ -36,6 +36,7 @@ export default function AuditLogTable({
   page = 1,
   pageCount = 1,
   onPageChange,
+  range,
   emptyMessage = "No audit logs match your current filters.",
   className,
 }) {
@@ -49,7 +50,7 @@ export default function AuditLogTable({
       )}
     >
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-225">
+        <table className="w-full text-start border-collapse min-w-225">
           <thead>
             <tr className="bg-[#f7f4ef] border-b border-border text-[11px] font-bold uppercase tracking-wider text-muted">
               {COLUMNS.map((column) => (
@@ -93,7 +94,17 @@ export default function AuditLogTable({
       {/* Pagination */}
       <div className="p-3.5 px-4 border-t border-border flex items-center justify-between gap-3 flex-wrap">
         <div className="text-xs sm:text-sm text-muted">
-          Page {page} of {pageCount}
+          {range ? (
+            <>
+              Showing{" "}
+              <strong className="font-semibold text-[#222831]">
+                {range.from}–{range.to}
+              </strong>{" "}
+              of <strong className="font-semibold text-[#222831]">{range.total}</strong> logs
+            </>
+          ) : (
+            `Page ${page} of ${pageCount}`
+          )}
         </div>
         <div className="flex items-center gap-1.5">
           <button

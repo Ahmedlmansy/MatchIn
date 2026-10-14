@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 
 const SIZES = {
-  md: "h-10.5 px-3.5 pr-8 text-xs sm:text-sm font-medium rounded-xl min-w-35",
-  sm: "h-8 px-2 pr-6 text-xs rounded-lg",
+  md: "h-10.5 px-3.5 pe-8 text-xs sm:text-sm font-medium rounded-xl min-w-35",
+  sm: "h-8 px-2 pe-6 text-xs rounded-lg",
 };
 
 /**

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
  * Section
  * Titled panel used for every block on the company details page. Wraps the
  * shadcn `Card` primitives and normalises the admin surface look
- * (`bg-surface` + `border-border`), with an optional right-hand action node.
+ * (`bg-surface` + `border-border`), with an optional trailing action node.
  */
 export default function Section({
   title,

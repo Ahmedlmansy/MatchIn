@@ -1,27 +1,40 @@
 import { Link } from "react-router-dom";
-import { CheckCircle2, Eye } from "lucide-react";
+import { useLocalizedPath } from "@/utils/routes";
+import { CheckCircle2, Eye, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function CompanyRowActions({ company, onVerify, onReject }) {
+/**
+ * CompanyRowActions
+ * Verify / Reject call the PATCH mutation; Manage and the eye icon navigate to
+ * the real, localized company detail route.
+ */
+export default function CompanyRowActions({ company, onVerify, onReject, isUpdating }) {
+  const localizedPath = useLocalizedPath();
+
   return (
     <div className="flex items-center justify-end gap-1.5">
       {company.status === "verified" ? (
         <Button
-          type="button"
+          asChild
           variant="outline"
           size="sm"
           className="h-8 rounded-lg border-border bg-surface text-[12.5px] font-semibold text-ink hover:bg-background"
         >
-          Manage
+          <Link to={localizedPath(`/dashboard/company-management/${company.id}`)}>Manage</Link>
         </Button>
       ) : (
         <Button
           type="button"
           size="sm"
+          disabled={isUpdating}
           onClick={() => onVerify(company.id)}
-          className="h-8 gap-1.5 rounded-lg bg-success text-[12.5px] font-semibold text-success-foreground hover:bg-success/90"
+          className="h-8 gap-1.5 rounded-lg bg-success text-[12.5px] font-semibold text-success-foreground hover:bg-success/90 disabled:opacity-50"
         >
-          <CheckCircle2 className="h-[14px] w-[14px]" />
+          {isUpdating ? (
+            <Loader2 className="h-[14px] w-[14px] animate-spin" />
+          ) : (
+            <CheckCircle2 className="h-[14px] w-[14px]" />
+          )}
           Verify
         </Button>
       )}
@@ -31,14 +44,14 @@ export default function CompanyRowActions({ company, onVerify, onReject }) {
           type="button"
           variant="outline"
           size="sm"
+          disabled={isUpdating}
           onClick={() => onReject(company.id)}
-          className="h-8 rounded-lg border-error/35 bg-transparent text-[12.5px] font-semibold text-error hover:border-error hover:bg-error/10"
+          className="h-8 rounded-lg border-error/35 bg-transparent text-[12.5px] font-semibold text-error hover:border-error hover:bg-error/10 disabled:opacity-50"
         >
           Reject
         </Button>
       )}
 
-      {/* TODO: point to the real company detail route */}
       <Button
         asChild
         type="button"
@@ -46,7 +59,11 @@ export default function CompanyRowActions({ company, onVerify, onReject }) {
         size="icon"
         className="h-8 w-8 rounded-lg text-muted hover:bg-primary/10 hover:text-primary"
       >
-        <Link to={`/admin/companies/${company.id}`} title="View company">
+        <Link
+          to={localizedPath(`/dashboard/company-management/${company.id}`)}
+          title="View company"
+          aria-label={`View ${company.name}`}
+        >
           <Eye className="h-4 w-4" />
         </Link>
       </Button>

@@ -8,26 +8,30 @@ import { useTranslation } from "react-i18next";
 export default function ResponsibilitiesSection({ formData, onChange }) {
   const { t } = useTranslation("common");
   const [newItem, setNewItem] = useState("");
-  
+
+  // Always an array. This used to write a "• item\n• item" *string* back into
+  // formData, so the same field alternated between a string and an array
+  // depending on which screen produced it — and the API received whichever
+  // shape happened to be last. Normalising once here fixes both.
   const responsibilities = Array.isArray(formData?.responsibilities)
     ? formData.responsibilities
-    : (formData?.responsibilities || "")
+    : String(formData?.responsibilities ?? "")
         .split("\n")
         .map((item) => item.replace(/^•\s*/, "").trim())
         .filter(Boolean);
 
-  const handleUpdate = (newList) => {
-    onChange("responsibilities", newList.map((item) => `• ${item}`).join("\n"));
-  };
-
   const handleAdd = () => {
-    if (!newItem.trim()) return;
-    handleUpdate([...responsibilities, newItem.trim()]);
+    const item = newItem.trim();
+    if (!item) return;
+    onChange("responsibilities", [...responsibilities, item]);
     setNewItem("");
   };
 
   const handleRemove = (index) => {
-    handleUpdate(responsibilities.filter((_, i) => i !== index));
+    onChange(
+      "responsibilities",
+      responsibilities.filter((_, i) => i !== index),
+    );
   };
 
   return (
@@ -46,7 +50,7 @@ export default function ResponsibilitiesSection({ formData, onChange }) {
             className="border-[#E4E4E7] focus-visible:ring-[#1D2A44]"
           />
           <Button type="button" onClick={handleAdd} className="bg-[#1D2A44] hover:bg-[#162034] text-white">
-            <Plus className="h-4 w-4 mr-1" /> {t("ui.responsibilities.add")}
+            <Plus className="h-4 w-4 me-1" /> {t("ui.responsibilities.add")}
           </Button>
         </div>
 

@@ -25,7 +25,7 @@ export default function OnboardingCompletedSummary({ formData, onEdit }) {
       secondaryButton={{ label: "Edit Choices", onClick: onEdit }}
       primaryButton={{ label: "Go to Dashboard", onClick: () => navigate(localizedPath("/dashboard")) }}
     >
-      <div className="mb-5 rounded-2xl border border-border bg-background p-4 text-left">
+      <div className="mb-5 rounded-2xl border border-border bg-background p-4 text-start">
         <div className="mb-3 flex items-center gap-2 text-[12px] font-bold text-ink">
           <SlidersHorizontal className="h-4 w-4 text-primary" />
           {t("pages.onboarding.preferences")}

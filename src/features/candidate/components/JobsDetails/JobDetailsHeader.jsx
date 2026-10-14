@@ -59,7 +59,7 @@ export default function JobDetailsHeader({
           </div>
         </div>
 
-        <div className="bg-background border border-border p-4 rounded-xl min-w-70 shrink-0 text-right md:text-left">
+        <div className="bg-background border border-border p-4 rounded-xl min-w-70 shrink-0 text-end md:text-start">
           <span className="text-[11px] uppercase tracking-wider font-semibold text-muted block mb-0.5">
             Estimated Compensation
           </span>

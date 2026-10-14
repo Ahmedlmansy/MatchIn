@@ -139,7 +139,7 @@ export default function JobModalViews({
 
 function ApplicationSummary() {
   return (
-    <div className="mb-6 space-y-1.5 rounded-xl border border-border bg-background/50 p-3 text-left text-xs text-primary">
+    <div className="mb-6 space-y-1.5 rounded-xl border border-border bg-background/50 p-3 text-start text-xs text-primary">
       <div className="flex justify-between">
         <span className="text-muted">Method:</span>
         <span className="font-bold">Internal</span>

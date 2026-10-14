@@ -56,7 +56,7 @@ export default function ApplicationCard({
           {statusObj.label}
         </span>
         <MatchRing score={app.matchScore} />
-        <div className="hidden md:block text-[12px] text-muted w-20 text-right">
+        <div className="hidden md:block text-[12px] text-muted w-20 text-end">
           {new Date(app.appliedDate).toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
@@ -98,7 +98,7 @@ export default function ApplicationCard({
                     type="button"
                     variant="ghost"
                     onClick={() => onOpenDetails(app)}
-                    className="w-full text-left flex items-center gap-2 px-3 py-2 text-[12.5px] text-[#44474E] hover:bg-background transition-colors"
+                    className="w-full text-start flex items-center gap-2 px-3 py-2 text-[12.5px] text-[#44474E] hover:bg-background transition-colors"
                   >
                     <Briefcase className="w-4 h-4 text-muted" /> View Details
                   </Button>
@@ -107,7 +107,7 @@ export default function ApplicationCard({
                       type="button"
                       variant="ghost"
                       onClick={() => onWithdraw(app.id)}
-                      className="w-full text-left flex items-center gap-2 px-3 py-2 text-[12.5px] text-[#B3271E] hover:bg-[#B3271E]/5 transition-colors border-t border-border/50 mt-1 pt-1.5"
+                      className="w-full text-start flex items-center gap-2 px-3 py-2 text-[12.5px] text-[#B3271E] hover:bg-[#B3271E]/5 transition-colors border-t border-border/50 mt-1 pt-1.5"
                     >
                       <XCircle className="w-4 h-4" /> Withdraw Application
                     </Button>
