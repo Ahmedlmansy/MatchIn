@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { DEFAULT_COMPETENCY_RADAR } from "@/features/candidate/shared/competencyRadar";
 import { useTranslation } from "react-i18next";
+import { RefreshCw, AlertCircle } from "lucide-react";
 
 const RADIUS_OUTER = 50;
 const RADIUS_INNER = 38;
@@ -32,9 +33,133 @@ function ringOffset(circumference, percent) {
 export default function CompetencyRadarCard({
   data = DEFAULT_COMPETENCY_RADAR,
   onRecalibrate,
+  roadmapQuery,
 }) {
   const { t } = useTranslation("dashboard");
   const { overallScore, secondaryScore, comparisonLabel, benchmarkLabel, skills } = data;
+  
+  // Use passed query or fall back to defaults
+  const isLoading = roadmapQuery?.isLoading ?? false;
+  const isError = roadmapQuery?.isError ?? false;
+  const refetch = roadmapQuery?.refetch;
+
+  const handleRetry = () => {
+    if (refetch) {
+      refetch();
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <Card className="relative overflow-hidden rounded-2xl border-border/80 bg-surface p-6 shadow-sm">
+          <CardContent className="p-0">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <h2 className="font-serif text-[17px] font-bold text-primary">{t("overview.competency.title")}</h2>
+                <p className="text-[12px] text-muted">{benchmarkLabel}</p>
+              </div>
+              <span className="font-mono text-[16px] font-bold text-primary animate-pulse">--%</span>
+            </div>
+            <div className="relative my-3 flex items-center justify-center py-2">
+              <svg className="h-48 w-48 -rotate-90 transform" viewBox="0 0 120 120">
+                <circle
+                  cx="60"
+                  cy="60"
+                  r={RADIUS_OUTER}
+                  fill="none"
+                  stroke="var(--color-border)"
+                  strokeWidth="10"
+                />
+                <circle
+                  cx="60"
+                  cy="60"
+                  r={RADIUS_OUTER}
+                  fill="none"
+                  stroke="var(--color-border)"
+                  strokeWidth="10"
+                  strokeLinecap="round"
+                  strokeDasharray={CIRCUMFERENCE_OUTER}
+                  strokeDashoffset={CIRCUMFERENCE_OUTER}
+                  className="animate-pulse"
+                />
+                <circle
+                  cx="60"
+                  cy="60"
+                  r={RADIUS_INNER}
+                  fill="none"
+                  stroke="var(--color-border)"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  opacity="0.85"
+                  strokeDasharray={CIRCUMFERENCE_INNER}
+                  strokeDashoffset={CIRCUMFERENCE_INNER}
+                  className="animate-pulse"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                <span className="font-serif text-[26px] font-bold leading-none text-primary animate-pulse">--%</span>
+                <span className="mt-1 text-[11px] font-bold uppercase tracking-wider text-muted">{t("overview.competency.profileFit")}</span>
+              </div>
+            </div>
+            <div className="mt-2 space-y-2 border-t border-border/60 pt-3">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="animate-pulse flex items-center justify-between text-[12px]">
+                  <span className="flex items-center gap-1.5 text-muted">
+                    <span className="h-2 w-2 rounded-full bg-border" />
+                    <span className="w-24 h-4 bg-border rounded" />
+                  </span>
+                  <span className="font-bold w-12 h-4 bg-border rounded" />
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 animate-pulse h-10 w-full bg-border rounded-xl" />
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <Card className="relative overflow-hidden rounded-2xl border-border/80 bg-surface p-6 shadow-sm">
+          <CardContent className="p-0">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <h2 className="font-serif text-[17px] font-bold text-primary">{t("overview.competency.title")}</h2>
+                <p className="text-[12px] text-muted">{benchmarkLabel}</p>
+              </div>
+            </div>
+            <div className="text-center py-4">
+              <AlertCircle className="mx-auto mb-2 h-6 w-6 text-error" />
+              <p className="text-[12.5px] text-muted mb-3">
+                {t("overview.competency.error")}
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRetry}
+                className="gap-1.5"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                {t("overview.competency.retry")}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+  }
+
 
   return (
     <motion.div
