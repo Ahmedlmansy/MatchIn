@@ -35,7 +35,7 @@ export default function SavedJobsCard({
   // Use passed query or fall back to defaults
   const isLoading = savedJobsQuery?.isLoading ?? false;
   const isError = savedJobsQuery?.isError ?? false;
-  const error = savedJobsQuery?.error;
+  const _error = savedJobsQuery?.error;
   const refetch = savedJobsQuery?.refetch;
   
   // Determine if we have actual data from the query

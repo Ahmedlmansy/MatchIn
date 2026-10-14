@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next";
-import { motion } from "framer-motion";
 import UserDashboardHeader from "../components/Overview/UserDashboardHeader";
 import PipelineOverviewCard from "../components/Overview/PipelineOverviewCard";
 import RecommendedJobsCard from "../components/Overview/RecommendedJobsCard";
@@ -12,7 +10,6 @@ import PrioritySkillGapsCard from "../components/Overview/PrioritySkillGapsCard"
 import { useDashboardSummaryQuery } from "@/features/candidate/hooks/useDashboardSummaryQuery";
 
 export default function Overview() {
-  const { t } = useTranslation("dashboard");
   const {
     jobsQuery,
     savedJobsQuery,

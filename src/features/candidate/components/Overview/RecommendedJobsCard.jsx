@@ -62,7 +62,7 @@ const RECOMMENDED_JOBS = [
 
 export default function RecommendedJobsCard({
   jobs = RECOMMENDED_JOBS,
-  isLoading = false,
+  _isLoading = false,
   onApply,
   onBookmark,
   jobsQuery,
@@ -277,7 +277,4 @@ export default function RecommendedJobsCard({
   );
 }
 
-function handleRetry() {
-  // This will be overridden by the component's handleRetry if jobsQuery is passed
-  // But we need a default to avoid reference errors
-}
+
