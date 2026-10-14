@@ -44,7 +44,7 @@ export default function TypingIndicator() {
         initial="initial"
         animate="animate"
         exit="exit"
-        className="inline-flex items-center gap-1.5 rounded-2xl rounded-tl-md border border-border bg-surface px-5 py-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
+        className="inline-flex items-center gap-1.5 rounded-2xl rounded-ss-md border border-border bg-surface px-5 py-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"
       >
         {[0, 1, 2].map((i) => (
           <motion.span

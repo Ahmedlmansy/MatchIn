@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
@@ -28,21 +28,54 @@ import LoginHeading from "./LoginHeading";
 import PasswordInput from "@/features/auth/shared/PasswordInput";
 import SequentialFormMessage from "@/features/auth/shared/SequentialFormMessage";
 import { loginSchema } from "../../schema/login-schema";
+import { translateValidationMessage } from "@/components/shared/i18n/validationMessage";
 
 const FIELD_ORDER = ["email", "password"];
 
-export default function LoginForm({ onSubmit, isPending = false, serverError = null }) {
+// Maps backend field names to form field names
+const SERVER_TO_FORM_FIELD = {
+  email: "email",
+  password: "password",
+};
+
+export default function LoginForm({
+  onSubmit,
+  isPending = false,
+  serverError = null,
+  fieldErrors = null,
+}) {
+  const location = useLocation();
   const localizedPath = useLocalizedPath();
   const { t } = useTranslation("common");
 
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      email: location.state?.email || "",
       password: "",
       remember_me: false,
     },
   });
+
+  useEffect(() => {
+    if (location.state?.email) {
+      form.setValue("email", location.state.email);
+    }
+  }, [location.state?.email, form]);
+
+  // Map server field errors to RHF fields
+  useEffect(() => {
+    if (!fieldErrors) return;
+    Object.entries(fieldErrors).forEach(([field, messages]) => {
+      const name = SERVER_TO_FORM_FIELD[field] ?? field;
+      form.setError(name, {
+        type: "server",
+        message: translateValidationMessage(
+          Array.isArray(messages) ? messages[0] : messages,
+        ),
+      });
+    });
+  }, [fieldErrors, form]);
 
   const { errors } = form.formState;
   const firstErrorField = FIELD_ORDER.find((name) => errors[name]);
@@ -61,6 +94,12 @@ export default function LoginForm({ onSubmit, isPending = false, serverError = n
           subTitle={t("auth.login.subtitle")}
         />
         <FieldGroup className="gap-5">
+          {location.state?.successMessage && (
+            <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-[13px] font-medium text-emerald-700">
+              {location.state.successMessage}
+            </div>
+          )}
+
           {serverError && (
             <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-[13px] font-medium text-red-600">
               {serverError}

@@ -12,6 +12,7 @@ import {
   candidateDashboardRoutes,
   adminDashboardRoutes,
 } from "@/app/routes/dashboard.routes";
+import { isAdminRole } from "@/features/auth/store/auth.roles";
 
 
 
@@ -63,7 +64,7 @@ export default function Sidebar({
   const { t } = useTranslation("dashboard");
   const localizedPath = useLocalizedPath();
   const routes =
-  role === "super_admin" ? adminDashboardRoutes : candidateDashboardRoutes;
+    isAdminRole(role) ? adminDashboardRoutes : candidateDashboardRoutes;
   const navItems = buildSidebarNav(routes, localizedPath("/dashboard"));
   const { mutate: logout, isPending } = useLogoutMutation();
 

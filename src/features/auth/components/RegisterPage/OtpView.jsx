@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { Loader2 } from "lucide-react";
 
-const RESEND_SECONDS = 30;
+const RESEND_SECONDS = 60;
 
 function formatTimer(seconds) {
   const m = String(Math.floor(seconds / 60)).padStart(2, "0");
@@ -159,7 +159,9 @@ export function OtpView({
               disabled={!isComplete || isPending}
               className="h-[46px] flex-1 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 disabled:bg-muted/40"
             >
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {/* me-2, not me-2: the spinner sits before the label in DOM order,
+                  so the gap must follow the reading direction, not the left edge. */}
+              {isPending && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
               {t("auth.register.verify")}
             </Button>
           </div>

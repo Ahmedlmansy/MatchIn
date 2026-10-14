@@ -51,9 +51,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 text-center font-body-sm text-[13px] text-muted md:flex-row md:text-left">
+        <div className="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 text-center font-body-sm text-[13px] text-muted md:flex-row md:text-start">
           {/* Copyright */}
-          <p className="w-full text-center md:w-auto md:text-left">
+          <p className="w-full text-center md:w-auto md:text-start">
             {t("home.footer.copyright", { year })}
           </p>
 

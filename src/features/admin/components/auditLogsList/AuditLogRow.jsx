@@ -54,14 +54,14 @@ export default function AuditLogRow({ log, onSelect }) {
         {log.prev}
       </td>
       <td className="py-3.5 px-4 font-mono text-xs text-success font-semibold">
-        {log.new}
+        {log.newValue}
       </td>
 
       {/* IP / Meta */}
       <td className="py-3.5 px-4 font-mono text-xs text-muted">{log.ip}</td>
 
       {/* Preview action */}
-      <td className="py-3.5 px-4 text-right">
+      <td className="py-3.5 px-4 text-end">
         <button
           type="button"
           title="Preview log"

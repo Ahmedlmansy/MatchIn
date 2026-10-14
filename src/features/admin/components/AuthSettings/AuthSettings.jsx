@@ -435,12 +435,25 @@ export default function AuthSettings() {
       />
     ));
 
+  // NOTE: this screen has no backend. Like CmsHomePage it persists the document
+  // to localStorage and nothing else — there is no auth-settings endpoint in
+  // the API contract.
+  //
+  // The two buttons were byte-for-byte identical writes that both reported
+  // success, and the non-draft one said "Auth settings saved." as though the
+  // login and register screens had been changed for real users. They have not.
+  // Both now say what actually happened, in this browser.
   const save = async (asDraft = false) => {
     setSaving(true);
     try {
       localStorage.setItem(DRAFT_KEY, JSON.stringify(state));
       setDirty(false);
-      toast(asDraft ? "Draft saved." : "Auth settings saved.");
+      toast(
+        asDraft
+          ? "Draft saved in this browser."
+          : "Saved in this browser only — the live login and register screens are unchanged.",
+        "warn",
+      );
     } catch (error) {
       toast(`Save failed: ${error.message}`, "err");
     } finally {
@@ -452,7 +465,7 @@ export default function AuthSettings() {
     if (!window.confirm("Reset auth settings to their defaults?")) return;
     setState(clone(DEFAULTS));
     setDirty(true);
-    toast("Defaults restored — save to apply them.", "warn");
+    toast("Defaults restored — save to keep them.", "warn");
   };
 
   const renderImage = (section) => (

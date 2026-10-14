@@ -1,75 +1,138 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { RotateCcw, CheckCircle2, ArrowLeft } from 'lucide-react';
+// src/features/admin/pages/EditJobs.jsx
+//
+// Full-page job editor.
+//
+// The page is a thin loader; <JobEditor /> is keyed on the record id and owns
+// the form state. That way the form initialises once per job and never needs a
+// "sync state when the query resolves" effect — switching routes gives a new
+// key, and a refetch of the *same* job keeps the user's unsaved edits.
+
+import { useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { RotateCcw, CheckCircle2, ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useLocalizedPath } from "@/utils/routes";
+import { ErrorState } from "@/features/admin/shared";
+import {
+  useAdminCompaniesQuery,
+  useAdminJobQuery,
+  useUpdateAdminJobMutation,
+} from "@/features/admin/hooks";
 
-// استدعاء المكونات الفرعية
-import UnsavedChangesBanner from '../components/editJobs/UnsavedChangesBanner';
-import JobInformationSection from '../components/editJobs/JobInformationSection';
-import DescriptionSection from '../components/editJobs/DescriptionSection';
-import ResponsibilitiesSection from '../components/editJobs/ResponsibilitiesSection';
-import SkillsSection from '../components/editJobs/SkillsSection';
-import LocationWorkSection from '../components/editJobs/LocationWorkSection';
-import StatusSection from '../components/editJobs/StatusSection';
-import SkeletonLoader from '../components/editJobs/SkeletonLoader';
+import UnsavedChangesBanner from "../components/editJobs/UnsavedChangesBanner";
+import JobInformationSection from "../components/editJobs/JobInformationSection";
+import DescriptionSection from "../components/editJobs/DescriptionSection";
+import ResponsibilitiesSection from "../components/editJobs/ResponsibilitiesSection";
+import SkillsSection from "../components/editJobs/SkillsSection";
+import LocationWorkSection from "../components/editJobs/LocationWorkSection";
+import StatusSection from "../components/editJobs/StatusSection";
+import SkeletonLoader from "../components/editJobs/SkeletonLoader";
 
-const initialData = {
-  jobTitle: 'Senior Frontend Engineer',
-  company: 'BrightPath Inc.',
-  source: 'Internal',
-  description: 'We are looking for a Senior Frontend Engineer to join our product team and help build delightful, performant user experiences across our platform. You will work closely with design and backend teams to ship features that matter.',
-  responsibilities: '• Own and evolve core frontend modules using React & TypeScript\n• Collaborate with design to implement accessible, responsive UIs\n• Write clean, tested code and participate in code reviews\n• Mentor junior engineers and contribute to technical decisions\n• Improve performance and monitoring of critical user flows',
-  requiredSkills: ['React', 'TypeScript', 'CSS / Tailwind', 'Git'],
-  preferredSkills: ['Next.js', 'GraphQL', 'Framer Motion'],
-  location: 'Cairo, Egypt',
-  experienceLevel: 'Senior',
-  workMode: 'Hybrid',
-  jobType: 'Full-time',
-  status: 'Open'
-};
+/** The edited record -> the camelCase shape the section components bind to. */
+const toFormData = (job) => ({
+  jobTitle: job.title,
+  company: job.companyId ?? "",
+  source: job.source,
+  description: job.description,
+  responsibilities: job.responsibilities,
+  requiredSkills: job.requiredSkills,
+  preferredSkills: job.preferredSkills,
+  location: job.location,
+  experienceLevel: job.level,
+  workMode: job.workMode,
+  jobType: job.type,
+  status: job.status.charAt(0).toUpperCase() + job.status.slice(1),
+});
+
+/** The form's display-cased values -> the API's snake_case field names. */
+const toPayload = (form) => ({
+  title: form.jobTitle.trim(),
+  company_id: form.company || undefined,
+  source: form.source,
+  description: form.description,
+  responsibilities: form.responsibilities,
+  required_skills: form.requiredSkills,
+  preferred_skills: form.preferredSkills,
+  location: form.location,
+  work_mode: form.workMode,
+  employment_type: form.jobType,
+  experience_level: form.experienceLevel,
+  status: form.status.toLowerCase(),
+});
 
 export default function EditJob() {
-  const { t } = useTranslation("common");
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState(initialData);
-  const [savedData, setSavedData] = useState(initialData);
-  const [isDirty, setIsDirty] = useState(false);
+  const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
+  const { jobId } = useParams();
 
-  // محاكاة تحميل البيانات
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
+  const jobsPath = localizedPath("/dashboard/job-management");
 
-  // متابعة التغييرات غير المحفوظة
-  useEffect(() => {
-    const hasChanged = JSON.stringify(formData) !== JSON.stringify(savedData);
-    setIsDirty(hasChanged);
-  }, [formData, savedData]);
+  const { data: job, isPending, isError, error, refetch } = useAdminJobQuery(jobId);
+  // The company picker needs real companies, not the three hard-coded names
+  // this form used to render.
+  const { data: companiesData } = useAdminCompaniesQuery({ perPage: 100 });
 
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
+  if (isPending) return <SkeletonLoader />;
 
-  const handleReset = () => {
-    setFormData(savedData);
-  };
-
-  const handleSave = () => {
-    setIsSaving(true);
-    setTimeout(() => {
-      setSavedData(formData);
-      setIsSaving(false);
-      setIsDirty(false);
-    }, 1000);
-  };
-
-  if (isLoading) {
-    return <SkeletonLoader />;
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-[#FBF9F5] p-6 md:p-8">
+        <ErrorState
+          title="Couldn't load this job"
+          description={error?.message || "Something went wrong while fetching the job."}
+          onRetry={() => (error?.status === 404 ? navigate(jobsPath) : refetch())}
+        />
+      </div>
+    );
   }
+
+  return (
+    <JobEditor
+      key={job.id}
+      job={job}
+      companies={companiesData?.items ?? []}
+      onExit={() => navigate(jobsPath)}
+    />
+  );
+}
+
+function JobEditor({ job, companies, onExit }) {
+  const { t } = useTranslation("common");
+  const { mutate: saveJob, isPending: isSaving, error: saveError, isSuccess } =
+    useUpdateAdminJobMutation(job.id);
+
+  // Both start from the same value: the pristine snapshot IS the saved data.
+  const [formData, setFormData] = useState(() => toFormData(job));
+  const [savedSnapshot, setSavedSnapshot] = useState(() => toFormData(job));
+
+  // Derived, not stored — the previous version kept an `isDirty` boolean in
+  // state and had to sync it with a JSON.stringify effect.
+  const isDirty = useMemo(
+    () => JSON.stringify(formData) !== JSON.stringify(savedSnapshot),
+    [formData, savedSnapshot],
+  );
+
+  const handleChange = (field, value) => setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleReset = () => setFormData(savedSnapshot);
+
+  const handleSave = () =>
+    saveJob(toPayload(formData), {
+      onSuccess: (saved) => {
+        // Re-seed both sides of the comparison from the saved record.
+        //
+        // normalizeJobDetail substitutes placeholders for anything the PATCH
+        // response omits ("—", "Untitled job", "Full-time", []). Updating only
+        // the snapshot therefore made it a *different shape* from formData,
+        // which still held the user's real values — so isDirty stayed true
+        // forever after a successful save, the "Unsaved changes" banner and the
+        // enabled Save/Reset buttons never went away, and Reset then
+        // overwrote the real server values with those placeholders.
+        const next = toFormData(saved);
+        setFormData(next);
+        setSavedSnapshot(next);
+      },
+    });
 
   return (
     <div className="min-h-screen bg-[#FBF9F5] p-6 md:p-8 text-[#18181B] font-sans">
@@ -78,9 +141,11 @@ export default function EditJob() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#E8E6E1] pb-5">
           <div>
             <div className="flex items-center gap-1.5 text-xs text-[#71717A] mb-2">
-              <span>{t("ui.editJob.jobs")}</span>
+              <button type="button" onClick={onExit} className="hover:text-[#09090B]">
+                {t("ui.editJob.jobs")}
+              </button>
               <span>/</span>
-              <span>JOB-2841</span>
+              <span>{job.id}</span>
               <span>/</span>
               <span className="text-[#09090B] font-medium">{t("ui.editJob.edit")}</span>
             </div>
@@ -88,7 +153,7 @@ export default function EditJob() {
               {t("ui.editJob.title")}
             </h1>
             <p className="text-xs text-[#71717A] mt-1.5">
-              ID: JOB-2841 <span className="mx-1">•</span> {t("ui.editJob.updated", { time: "3 hours" })} <span className="mx-1">•</span> {t("ui.editJob.by")} BrightPath Inc.
+              ID: {job.id} <span className="mx-1">•</span> {t("ui.editJob.by")} {job.company}
             </p>
           </div>
 
@@ -96,7 +161,7 @@ export default function EditJob() {
           <div className="flex items-center gap-2.5">
             <button
               type="button"
-              onClick={handleReset}
+              onClick={onExit}
               className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-[#52525B] hover:text-[#09090B] hover:bg-white/60 rounded-lg transition cursor-pointer"
             >
               <ArrowLeft size={14} />
@@ -113,17 +178,12 @@ export default function EditJob() {
               {t("ui.editJob.reset")}
             </button>
 
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={!isDirty || isSaving}
-              className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-[#1D2A44] rounded-lg hover:bg-[#162034] disabled:opacity-40 transition shadow-xs cursor-pointer"
-            >
-              <CheckCircle2 size={14} />
-              {isSaving ? t("ui.editJob.saving") : t("ui.editJob.saveChanges")}
-            </button>
+            <SaveButton onClick={handleSave} disabled={!isDirty || isSaving} isSaving={isSaving} />
           </div>
         </div>
+
+        {/* Save feedback */}
+        <SaveFeedback error={saveError} isSuccess={isSuccess} />
 
         {/* Unsaved Changes Banner */}
         <AnimatePresence>
@@ -141,7 +201,7 @@ export default function EditJob() {
 
         {/* Sections */}
         <div className="space-y-6">
-          <JobInformationSection formData={formData} onChange={handleChange} />
+          <JobInformationSection formData={formData} onChange={handleChange} companies={companies} />
           <DescriptionSection formData={formData} onChange={handleChange} />
           <ResponsibilitiesSection formData={formData} onChange={handleChange} />
           <SkillsSection formData={formData} onChange={handleChange} />
@@ -164,24 +224,53 @@ export default function EditJob() {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              onClick={handleReset}
+              onClick={onExit}
               className="px-4 py-2 text-xs font-medium text-[#09090B] bg-white border border-[#E4E4E7] rounded-lg hover:bg-[#F4F4F5] transition shadow-xs cursor-pointer"
             >
               {t("ui.editJob.cancel")}
             </button>
-            <button
-              type="button"
-              onClick={handleSave}
-              disabled={!isDirty || isSaving}
-              className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-[#1D2A44] rounded-lg hover:bg-[#162034] disabled:opacity-40 transition shadow-xs cursor-pointer"
-            >
-              <CheckCircle2 size={14} />
-              {isSaving ? t("ui.editJob.saving") : t("ui.editJob.saveChanges")}
-            </button>
+            <SaveButton onClick={handleSave} disabled={!isDirty || isSaving} isSaving={isSaving} />
           </div>
         </div>
-
       </div>
     </div>
   );
+}
+
+function SaveButton({ onClick, disabled, isSaving }) {
+  const { t } = useTranslation("common");
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-[#1D2A44] rounded-lg hover:bg-[#162034] disabled:opacity-40 transition shadow-xs cursor-pointer"
+    >
+      {isSaving ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />}
+      {isSaving ? t("ui.editJob.saving") : t("ui.editJob.saveChanges")}
+    </button>
+  );
+}
+
+/** Success / error note for the save mutation. */
+function SaveFeedback({ error, isSuccess }) {
+  if (error) {
+    return (
+      <div className="flex items-center gap-2 rounded-xl bg-error/10 px-4 py-3 text-xs font-semibold text-error">
+        <AlertTriangle className="h-4 w-4" />
+        {error.message}
+      </div>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="flex items-center gap-2 rounded-xl bg-success/10 px-4 py-3 text-xs font-semibold text-success">
+        <CheckCircle2 className="h-4 w-4" />
+        Changes saved successfully.
+      </div>
+    );
+  }
+
+  return null;
 }

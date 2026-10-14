@@ -85,7 +85,7 @@ export default function ForgetPasswordPage() {
           <form
             onSubmit={handleSubmit}
             noValidate
-            className="w-full text-left space-y-4"
+            className="w-full text-start space-y-4"
           >
             <div className="space-y-1.5">
               <Label htmlFor="email" className="text-xs font-bold text-primary">

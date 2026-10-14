@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { VERIFICATION_STATUS, VERIFICATION_TONES } from "../../shared/companiesDetailsData";
+import { VERIFICATION_STATUS, VERIFICATION_TONES } from "@/features/admin/constants/companyVerification";
 
 /**
  * VerificationBadge

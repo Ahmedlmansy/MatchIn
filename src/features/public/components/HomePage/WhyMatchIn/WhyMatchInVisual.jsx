@@ -75,7 +75,7 @@ export default function WhyMatchInVisual() {
               <button
                 type="button"
                 onClick={() => setIsVideoOpen(false)}
-                className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
+                className="absolute end-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
                 aria-label="Close video"
               >
                 <X className="h-4 w-4" />

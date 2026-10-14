@@ -31,7 +31,7 @@ export default function SavedJobsHeader({ jobsCount }) {
 function Stat({ value, label, last = false }) {
   return (
     <div
-      className={`px-3 py-2 text-center ${last ? "" : "border-r border-border"}`}
+      className={`px-3 py-2 text-center ${last ? "" : "border-e border-border"}`}
     >
       <span className="block text-xl font-bold text-primary">{value}</span>
       <span className="text-[11px] font-semibold text-muted uppercase tracking-wide">

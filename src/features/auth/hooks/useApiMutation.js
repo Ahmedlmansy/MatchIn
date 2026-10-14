@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
+import { normalizeApiError } from "@/lib/normalizeApiError";
 
 /**
  * Thin wrapper around useMutation. Adds nothing except one shared job:
  * normalize every backend error response into { status, message, fieldErrors }
- * so every feature hook (auth, candidate, admin...) gets the same error shape
+ * so every feature hook (auth, admin, candidate...) gets the same error shape
  * for free instead of parsing error.response.data.errors itself.
  *
  * No redirect / toast logic here on purpose — each feature hook decides what
@@ -25,31 +26,6 @@ export const useApiMutation = ({ mutationFn, ...options }) => {
   });
 };
 
-
-
-/**
- * Axios failure → { status, message, fieldErrors }.
- * Idempotent: an error already in that shape (thrown enriched by useAuthApiMutation)
- * passes through untouched, so a second pass cannot wipe message/fieldErrors.
- */
-export function normalizeApiError(error) {
-  if (
-    error &&
-    typeof error === "object" &&
-    !error.response &&
-    "fieldErrors" in error &&
-    "status" in error
-  ) {
-    return error;
-  }
-
-  const status = error?.response?.status;
-  const data = error?.response?.data;
-
-  return {
-    status,
-    message: data?.message ?? error.message ?? "Something went wrong",
-    // Laravel 422 shape: { errors: { email: ["..."], password: ["..."] } }
-    fieldErrors: data?.errors ?? null,
-  };
-}
+// Re-exported so existing `from "@/features/auth/hooks/useApiMutation"` imports
+// keep working while the implementation lives in lib/ (shared by every domain).
+export { normalizeApiError };

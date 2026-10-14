@@ -8,10 +8,3 @@ export { default as ListItem } from "./ListItem";
 export { default as AdminDashboardSkeleton } from "./AdminDashboardSkeleton";
 
 export { containerVariants, itemVariants } from "../../shared/motionVariants";
-
-export {
-  overviewStats,
-  quickActions,
-  recentActivity,
-  auditLogs,
-} from "../../shared/adminDashboardData";

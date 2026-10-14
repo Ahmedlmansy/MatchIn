@@ -479,15 +479,25 @@ export default function CmsHomePage() {
     else setOpenSecs(new Set());
   };
 
+  // NOTE: this page has no backend. It writes the whole document to
+  // localStorage under DRAFT_KEY and nothing else — there is no CMS endpoint in
+  // the API contract, so nothing is sent and nothing is published.
+  //
+  // The copy matters because this is an admin-facing control panel: it used to
+  // toast "Changes saved and published" after a 700ms sleep, which asserted a
+  // publish that never happened. An admin who edited the homepage copy would be
+  // told it was live when the public site was untouched.
+  //
+  // Everything below therefore describes what actually happened, in this
+  // browser. Wire this to the CMS API — and only then restore the word
+  // "publish" — before showing this screen to anyone as a publishing tool.
   const doSave = async () => {
     setSaving(true);
-    // Mock API publish
     await new Promise((r) => setTimeout(r, 700));
     try {
       localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...state, updatedAt: new Date().toISOString() }));
-      // In real app: POST /api/cms/home
       setDirty(false);
-      toast("Changes saved and published");
+      toast("Saved in this browser only — not published to the live site.", "warn");
     } catch (err) {
       toast("Save failed: " + err.message, "err");
     } finally {
@@ -497,14 +507,14 @@ export default function CmsHomePage() {
 
   const doDraft = () => {
     localStorage.setItem(DRAFT_KEY, JSON.stringify(state));
-    toast("Draft saved (preview with cms_preview=draft)", "warn");
+    toast("Draft saved in this browser (preview with cms_preview=draft)", "warn");
   };
 
   const doReset = () => {
     if (!window.confirm("Reset everything to the default content?")) return;
     setState(clone(DEFAULTS));
     markDirty();
-    toast("Defaults restored — press Save to publish", "warn");
+    toast("Defaults restored — press Save to keep them", "warn");
   };
 
   const matchesQuery = (key) => {

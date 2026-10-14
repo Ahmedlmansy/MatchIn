@@ -10,13 +10,13 @@ const chatBubbleVariants = cva(
       variant: {
         user: [
           "bg-primary text-primary-foreground",
-          "rounded-2xl rounded-tr-md",
+          "rounded-2xl rounded-se-md",
           "px-4 py-2.5",
           "shadow-[0_2px_8px_rgba(31,54,92,0.15)]",
         ],
         assistant: [
           "bg-surface border border-border",
-          "rounded-2xl rounded-tl-md",
+          "rounded-2xl rounded-ss-md",
           "px-4 py-3",
           "shadow-[0_1px_4px_rgba(0,0,0,0.04)]",
         ],

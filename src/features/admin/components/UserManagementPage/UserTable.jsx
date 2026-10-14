@@ -13,7 +13,7 @@ export function TableHead() {
     <thead className="border-b border-border bg-[#f7f4ef]">
       <tr>
         {['User', 'Email', 'Role', 'Status', 'Created', 'Last Activity', 'Actions'].map((label) => (
-          <th key={label} className={cn("whitespace-nowrap px-4 py-3 text-left text-[11.5px] font-bold uppercase tracking-wide text-muted", label === "Actions" && "text-right")}>{label}</th>
+          <th key={label} className={cn("whitespace-nowrap px-4 py-3 text-start text-[11.5px] font-bold uppercase tracking-wide text-muted", label === "Actions" && "text-end")}>{label}</th>
         ))}
       </tr>
     </thead>
