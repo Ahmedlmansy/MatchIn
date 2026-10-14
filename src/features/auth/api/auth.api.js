@@ -103,13 +103,7 @@ export const resetPassword = async (payload) => {
     const { data } = await api.post("/api/auth/reset-password", { ...payload, reset_token: payload.token })
     return data;
 }
-
-// POST /api/auth/logout — clears the session cookie on the server.
-// Resolves with the server payload, rejects with the axios error.
-// Tagged with skip-refresh header to prevent 401 refresh retry loops.
+// POST /api/auth/logout - invalidates the server session/refresh token; 
+// resolves with the normalized server response, rejects with the axios error.
 export const logoutRequest = () =>
-  api
-    .post("/api/auth/logout", null, {
-      headers: { "x-skillmatch-refresh-retry": "true" },
-    })
-    .then((res) => res.data?.data ?? res.data);
+  api.post("/api/auth/logout").then((res) => res.data?.data ?? res.data);

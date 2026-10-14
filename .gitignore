@@ -4,6 +4,9 @@ dist/
 .env
 PROJECT_CODEBASE_GUIDE.md
 AUTH_LOGIC_CONVENTION.md
+pnpm-lock.yaml
+pnpm-workspace.yaml
+refactoring_guidelines.md
 refactoring_guidelines.md
 BACKEND_INTEGRATION_AUDIT.md
 
