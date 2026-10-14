@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import ItemCard from "./ItemCard";
 import TabSaveActions from "./TabSaveActions";
+import { useProfileQuery } from "@/features/candidate/hooks/useProfileQuery";
 
 const DEFAULT_EDUCATION = [
   {
@@ -14,10 +15,12 @@ const DEFAULT_EDUCATION = [
   },
 ];
 
-export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
+export default function EducationTab({ profile }) {
   const { t } = useTranslation("dashboard");
-  const [educationList, setEducationList] = useState(initialEducation);
+  const { data: profileData, isLoading } = useProfileQuery();
 
+  const currentProfile = profile || profileData;
+  const [educationList, setEducationList] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -31,6 +34,15 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+
+  // Load education from profile data when available
+  useEffect(() => {
+    if (currentProfile?.education) {
+      setEducationList(currentProfile.education);
+    } else if (!isLoading) {
+      setEducationList(DEFAULT_EDUCATION);
+    }
+  }, [currentProfile, isLoading]);
 
   const handleOpenAdd = () => {
     setEditingId(null);
@@ -102,6 +114,20 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
     }, 1000);
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="flex items-center justify-between">
+          <div className="h-6 w-48 bg-gray-200 rounded" />
+          <div className="h-10 w-32 bg-gray-200 rounded-xl" />
+        </div>
+        <div className="space-y-4">
+          <div className="h-20 bg-gray-100 rounded-xl" />
+          <div className="h-20 bg-gray-100 rounded-xl" />
+        </div>
+      </div>
+    );
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -113,7 +139,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
           className="inline-flex items-center gap-2 bg-[#1E325C] hover:bg-[#162545] text-white px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Education</span>
+          <span>{t("pages.profile.addEducation")}</span>
         </button>
       </div>
 
@@ -133,16 +159,16 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
       <TabSaveActions
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={editingId ? "Edit Education" : "Add Education"}
-        confirmLabel="Save"
+        title={editingId ? t("pages.profile.editEducation") : t("pages.profile.addEducation")}
+        confirmLabel={t("common.save")}
         isLoading={isSaving}
-        loadingLabel="Saving..."
+        loadingLabel={t("common.saving")}
         onConfirm={handleSave}
       >
         <div className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              Degree / Field of Study *
+              {t("pages.profile.degree")} *
             </label>
             <input
               type="text"
@@ -156,7 +182,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
 
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              School / Institution *
+              {t("pages.profile.institution")} *
             </label>
             <input
               type="text"
@@ -171,7 +197,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-700 block">
-                Start Year
+                {t("pages.profile.startYear")}
               </label>
               <input
                 type="text"
@@ -185,7 +211,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-700 block">
-                End Year
+                {t("pages.profile.endYear")}
               </label>
               <input
                 type="text"
@@ -209,11 +235,12 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
             : "Are you sure you want to delete this education item?"
         }
         variant="danger"
-        confirmLabel="Delete"
+        confirmLabel={t("common.delete")}
         isLoading={isDeleting}
-        loadingLabel="Deleting..."
+        loadingLabel={t("common.deleting")}
         onConfirm={handleConfirmDelete}
       />
     </div>
   );
+}
 }

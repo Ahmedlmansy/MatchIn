@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus, ExternalLink } from "lucide-react";
 import ItemCard from "./ItemCard";
 import TabSaveActions from "./TabSaveActions";
+import { useProfileQuery } from "@/features/candidate/hooks/useProfileQuery";
 
 const DEFAULT_PROJECTS = [
   {
@@ -21,10 +22,12 @@ const DEFAULT_PROJECTS = [
   },
 ];
 
-export default function ProjectsTab({ initialProjects = DEFAULT_PROJECTS }) {
+export default function ProjectsTab({ profile }) {
   const { t } = useTranslation("dashboard");
-  const [projects, setProjects] = useState(initialProjects);
+  const { data: profileData, isLoading } = useProfileQuery();
 
+  const currentProfile = profile || profileData;
+  const [projects, setProjects] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -37,6 +40,15 @@ export default function ProjectsTab({ initialProjects = DEFAULT_PROJECTS }) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+
+  // Load projects from profile data when available
+  useEffect(() => {
+    if (currentProfile?.projects) {
+      setProjects(currentProfile.projects);
+    } else if (!isLoading) {
+      setProjects(DEFAULT_PROJECTS);
+    }
+  }, [currentProfile, isLoading]);
 
   const handleOpenAdd = () => {
     setEditingId(null);
@@ -105,6 +117,20 @@ export default function ProjectsTab({ initialProjects = DEFAULT_PROJECTS }) {
     }, 1000);
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="flex items-center justify-between">
+          <div className="h-6 w-48 bg-gray-200 rounded" />
+          <div className="h-10 w-32 bg-gray-200 rounded-xl" />
+        </div>
+        <div className="space-y-4">
+          <div className="h-20 bg-gray-100 rounded-xl" />
+          <div className="h-20 bg-gray-100 rounded-xl" />
+        </div>
+      </div>
+    );
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -114,7 +140,7 @@ export default function ProjectsTab({ initialProjects = DEFAULT_PROJECTS }) {
           className="inline-flex items-center gap-2 bg-[#1E325C] hover:bg-[#162545] text-white px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Project</span>
+          <span>{t("pages.profile.addProject")}</span>
         </button>
       </div>
 
@@ -147,10 +173,10 @@ export default function ProjectsTab({ initialProjects = DEFAULT_PROJECTS }) {
       <TabSaveActions
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={editingId ? "Edit Project" : "Add Project"}
-        confirmLabel="Save"
+        title={editingId ? t("pages.profile.editProject") : t("pages.profile.addProject")}
+        confirmLabel={t("common.save")}
         isLoading={isSaving}
-        loadingLabel="Saving..."
+        loadingLabel={t("common.saving")}
         onConfirm={handleSave}
       >
         <div className="space-y-4">
@@ -201,11 +227,12 @@ export default function ProjectsTab({ initialProjects = DEFAULT_PROJECTS }) {
             : "Are you sure you want to delete this project?"
         }
         variant="danger"
-        confirmLabel="Delete"
+        confirmLabel={t("common.delete")}
         isLoading={isDeleting}
-        loadingLabel="Deleting..."
+        loadingLabel={t("common.deleting")}
         onConfirm={handleConfirmDelete}
       />
     </div>
   );
+}
 }

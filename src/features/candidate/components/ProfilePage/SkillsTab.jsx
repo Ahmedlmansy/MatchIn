@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import ItemCard from "./ItemCard";
 import TabSaveActions from "./TabSaveActions";
+import { useProfileQuery } from "@/features/candidate/hooks/useProfileQuery";
 
 const DEFAULT_SKILLS = [
   {
@@ -19,10 +20,12 @@ const DEFAULT_SKILLS = [
   },
 ];
 
-export default function SkillsTab({ initialSkills = DEFAULT_SKILLS }) {
+export default function SkillsTab({ profile }) {
   const { t } = useTranslation("dashboard");
-  const [skills, setSkills] = useState(initialSkills);
+  const { data: profileData, isLoading } = useProfileQuery();
 
+  const currentProfile = profile || profileData;
+  const [skills, setSkills] = useState([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [newSkill, setNewSkill] = useState({
@@ -34,6 +37,15 @@ export default function SkillsTab({ initialSkills = DEFAULT_SKILLS }) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [skillToDelete, setSkillToDelete] = useState(null);
+
+  // Load skills from profile data when available
+  useEffect(() => {
+    if (currentProfile?.skills) {
+      setSkills(currentProfile.skills);
+    } else if (!isLoading) {
+      setSkills(DEFAULT_SKILLS);
+    }
+  }, [currentProfile, isLoading]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -77,6 +89,21 @@ export default function SkillsTab({ initialSkills = DEFAULT_SKILLS }) {
     }, 1000);
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="flex items-center justify-between">
+          <div className="h-6 w-48 bg-gray-200 rounded" />
+          <div className="h-10 w-32 bg-gray-200 rounded-xl" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="h-20 bg-gray-100 rounded-xl" />
+          <div className="h-20 bg-gray-100 rounded-xl" />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -88,7 +115,7 @@ export default function SkillsTab({ initialSkills = DEFAULT_SKILLS }) {
           className="inline-flex items-center gap-2 bg-[#1E325C] hover:bg-[#162545] text-white px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Skill</span>
+          <span>{t("pages.profile.addSkill")}</span>
         </button>
       </div>
 
@@ -125,9 +152,9 @@ export default function SkillsTab({ initialSkills = DEFAULT_SKILLS }) {
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         title={t("pages.profile.addSkill")}
-        confirmLabel="Save"
+        confirmLabel={t("common.save")}
         isLoading={isAdding}
-        loadingLabel="Saving..."
+        loadingLabel={t("common.saving")}
         onConfirm={handleConfirmAdd}
       >
         <div className="space-y-4">
@@ -161,7 +188,7 @@ export default function SkillsTab({ initialSkills = DEFAULT_SKILLS }) {
         </div>
       </TabSaveActions>
 
-    
+     
       <TabSaveActions
         isOpen={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
@@ -171,9 +198,9 @@ export default function SkillsTab({ initialSkills = DEFAULT_SKILLS }) {
             : "Are you sure you want to delete this skill?"
         }
         variant="danger"
-        confirmLabel="Delete"
+        confirmLabel={t("common.delete")}
         isLoading={isDeleting}
-        loadingLabel="Deleting..."
+        loadingLabel={t("common.deleting")}
         onConfirm={handleConfirmDelete}
       />
     </div>

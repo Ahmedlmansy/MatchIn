@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import ItemCard from "./ItemCard";
 import TabSaveActions from "./TabSaveActions";
+import { useProfileQuery } from "@/features/candidate/hooks/useProfileQuery";
 
 const DEFAULT_EXPERIENCES = [
   {
@@ -15,10 +16,12 @@ const DEFAULT_EXPERIENCES = [
   },
 ];
 
-export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES }) {
+export default function ExperienceTab({ profile }) {
   const { t } = useTranslation("dashboard");
-  const [experiences, setExperiences] = useState(initialExperiences);
+  const { data: profileData, isLoading } = useProfileQuery();
 
+  const currentProfile = profile || profileData;
+  const [experiences, setExperiences] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editingId, setEditingId] = useState(null); 
@@ -33,6 +36,15 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+
+  // Load experiences from profile data when available
+  useEffect(() => {
+    if (currentProfile?.experiences) {
+      setExperiences(currentProfile.experiences);
+    } else if (!isLoading) {
+      setExperiences(DEFAULT_EXPERIENCES);
+    }
+  }, [currentProfile, isLoading]);
 
   const handleOpenAdd = () => {
     setEditingId(null);
@@ -104,6 +116,21 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
     }, 1000);
   };
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="flex items-center justify-between">
+          <div className="h-6 w-48 bg-gray-200 rounded" />
+          <div className="h-10 w-32 bg-gray-200 rounded-xl" />
+        </div>
+        <div className="space-y-4">
+          <div className="h-20 bg-gray-100 rounded-xl" />
+          <div className="h-20 bg-gray-100 rounded-xl" />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -113,7 +140,7 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
           className="inline-flex items-center gap-2 bg-[#1E325C] hover:bg-[#162545] text-white px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Experience</span>
+          <span>{t("pages.profile.addExperience")}</span>
         </button>
       </div>
 
@@ -133,10 +160,10 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
       <TabSaveActions
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={editingId ? "Edit Work Experience" : "Add Work Experience"}
-        confirmLabel="Save"
+        title={editingId ? t("pages.profile.editExperience") : t("pages.profile.addExperience")}
+        confirmLabel={t("common.save")}
         isLoading={isSaving}
-        loadingLabel="Saving..."
+        loadingLabel={t("common.saving")}
         onConfirm={handleSave}
       >
         <div className="space-y-4">
@@ -201,9 +228,9 @@ export default function ExperienceTab({ initialExperiences = DEFAULT_EXPERIENCES
             : "Are you sure you want to delete this item?"
         }
         variant="danger"
-        confirmLabel="Delete"
+        confirmLabel={t("common.delete")}
         isLoading={isDeleting}
-        loadingLabel="Deleting..."
+        loadingLabel={t("common.deleting")}
         onConfirm={handleConfirmDelete}
       />
     </div>
