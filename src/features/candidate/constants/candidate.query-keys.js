@@ -32,5 +32,6 @@ export const candidateKeys = {
   aiChat: {
     conversations: () => [...candidateKeys.all, "aiChat", "conversations"],
     conversation: (conversationId) => [...candidateKeys.all, "aiChat", "conversation", conversationId],
+    contextPreview: () => [...candidateKeys.all, "aiChat", "contextPreview"],
   },
 };

@@ -1,44 +1,51 @@
 // src/features/candidate/api/aiChat.api.js
-import { apiAi } from "@/services/axios/axiosInsranceAi";
+import { api } from "@/services/axios/axiosInstance";
 
 const unwrapServerData = (response) => response?.data?.data ?? response?.data ?? response;
 
 /**
- * GET /api/ai/chat/conversations
+ * GET /api/mentor/conversations
  * Returns: { data: Conversation[] }
  */
 export const fetchConversationsRequest = () =>
-  apiAi.get("/api/ai/chat/conversations").then(unwrapServerData);
+  api.get("/api/mentor/conversations").then(unwrapServerData);
 
 /**
- * POST /api/ai/chat/conversations
+ * POST /api/mentor/conversations
  * Body: { title?, context? }
  * Returns: { data: Conversation }
  */
 export const createConversationRequest = (payload) =>
-  apiAi.post("/api/ai/chat/conversations", payload).then((res) => res.data);
+  api.post("/api/mentor/conversations", payload).then((res) => res.data);
 
 /**
- * GET /api/ai/chat/conversations/{conversationId}
+ * GET /api/mentor/conversations/{conversationId}
  * Returns: { data: ConversationWithMessages }
  */
 export const fetchConversationRequest = (conversationId) =>
-  apiAi.get(`/api/ai/chat/conversations/${conversationId}`).then(unwrapServerData);
+  api.get(`/api/mentor/conversations/${conversationId}`).then(unwrapServerData);
 
 /**
- * POST /api/ai/chat/conversations/{conversationId}/messages
+ * POST /api/mentor/conversations/{conversationId}/messages
  * Body: { content, context? }
  * Returns: { data: Message } - AI response
  */
 export const sendMessageRequest = (conversationId, payload) =>
-  apiAi.post(`/api/ai/chat/conversations/${conversationId}/messages`, payload).then((res) => res.data);
+  api.post(`/api/mentor/conversations/${conversationId}/messages`, payload).then((res) => res.data);
 
 /**
- * DELETE /api/ai/chat/conversations/{conversationId}
+ * DELETE /api/mentor/conversations/{conversationId}
  * Returns: { data: { deleted: true } }
  */
 export const deleteConversationRequest = (conversationId) =>
-  apiAi.delete(`/api/ai/chat/conversations/${conversationId}`).then((res) => res.data);
+  api.delete(`/api/mentor/conversations/${conversationId}`).then((res) => res.data);
+
+/**
+ * GET /api/mentor/context-preview
+ * Returns: { data: ContextPreview } - Preview of the candidate context used by AI mentor
+ */
+export const fetchContextPreviewRequest = () =>
+  api.get("/api/mentor/context-preview").then(unwrapServerData);
 
 /**
  * Normalize conversation list item
@@ -102,4 +109,20 @@ export const normalizeSendMessageResponse = (response) => {
   const data = unwrapServerData(response);
   if (!data) return null;
   return normalizeMessage(data);
+};
+
+/**
+ * Normalize context preview response
+ */
+export const normalizeContextPreview = (response) => {
+  const data = unwrapServerData(response);
+  if (!data) return null;
+  return {
+    profile: data.profile ?? {},
+    careerPreferences: data.careerPreferences ?? {},
+    applications: data.applications ?? [],
+    savedJobs: data.savedJobs ?? [],
+    skillGaps: data.skillGaps ?? [],
+    roadmap: data.roadmap ?? null,
+  };
 };

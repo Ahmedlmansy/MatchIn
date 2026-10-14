@@ -50,6 +50,20 @@ export const fetchCvHistoryRequest = () =>
 /**
  * GET /api/cv/status/{cvDocument}
  * Returns { data: {...} } - single CV document with extractions
+ * Backend response (new schema):
+ * {
+ *   status: "success",
+ *   data: {
+ *     id: 42,
+ *     file_name: "resume.pdf",
+ *     parsing_status: "completed",
+ *     parsed_data: {
+ *       headline: "Senior Full-Stack Engineer",
+ *       extracted_skills: ["Node.js", "Express", "Sequelize", "Docker"],
+ *       confidence_score: 0.94
+ *     }
+ *   }
+ * }
  */
 export const fetchCvStatusRequest = (cvDocumentId) =>
   api.get(`/api/cv/status/${cvDocumentId}`).then(unwrapServerData);
@@ -65,7 +79,7 @@ export const retryCvRequest = (cvDocumentId) =>
 /**
  * POST /api/cv/extractions/{extraction}/verify
  * Verify an extraction (merge into profile)
- * Body: { skills: [...], experiences: [...] }
+ * Body: { verified_skills: [{ skill_name, proficiency, years_of_experience }], update_profile: true/false }
  * Returns envelope: { status, message, data: null }
  */
 export const verifyCvExtractionRequest = (extractionId, payload) =>
@@ -81,10 +95,10 @@ export const normalizeCvHistory = (response) => {
 
   return data.map((item) => ({
     id: item.id,
-    original_filename: item.original_filename,
+    original_filename: item.original_filename ?? item.file_name,
     version: item.version,
     is_current: item.is_current,
-    status: item.status,
+    status: item.status ?? item.parsing_status,
     file_size: item.file_size,
     mime_type: item.mime_type,
     processed_at: item.processed_at,
@@ -94,7 +108,21 @@ export const normalizeCvHistory = (response) => {
 };
 
 /**
- * Normalize CV status response
+ * Normalize CV status response (new backend schema)
+ * Backend response:
+ * {
+ *   status: "success",
+ *   data: {
+ *     id: 42,
+ *     file_name: "resume.pdf",
+ *     parsing_status: "completed",
+ *     parsed_data: {
+ *       headline: "Senior Full-Stack Engineer",
+ *       extracted_skills: ["Node.js", "Express", "Sequelize", "Docker"],
+ *       confidence_score: 0.94
+ *     }
+ *   }
+ * }
  */
 export const normalizeCvStatus = (response) => {
   const data = unwrapServerData(response);
@@ -103,16 +131,26 @@ export const normalizeCvStatus = (response) => {
 
   return {
     id: data.id,
-    original_filename: data.original_filename,
+    original_filename: data.original_filename ?? data.file_name,
+    file_name: data.file_name,
     mime_type: data.mime_type,
     file_size: data.file_size,
     version: data.version,
     is_current: data.is_current,
-    status: data.status,
+    // Support both old `status` and new `parsing_status`
+    status: data.parsing_status ?? data.status,
+    parsing_status: data.parsing_status ?? data.status,
     processed_at: data.processed_at,
     created_at: data.created_at,
     updated_at: data.updated_at,
-    extractions: Array.isArray(data.extractions) ? data.extractions : [],
+    // New parsed data structure
+    parsed_data: data.parsed_data ? {
+      headline: data.parsed_data.headline,
+      extracted_skills: data.parsed_data.extracted_skills ?? [],
+      confidence_score: data.parsed_data.confidence_score ?? 0,
+    } : null,
+    // Legacy extractions for backward compatibility
+    extractions: [],
     ...data,
   };
 };

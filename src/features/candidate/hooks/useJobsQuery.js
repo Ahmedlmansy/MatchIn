@@ -3,7 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import {
   fetchJobsRequest,
+  fetchJobDetailsRequest,
+  fetchSavedJobsRequest,
   normalizeJobsResponse,
+  normalizeJobDetails,
+  normalizeSavedJobsResponse,
 } from "@/features/candidate/api/jobs.api";
 import { candidateKeys } from "@/features/candidate/constants/candidate.query-keys";
 import { normalizeApiError } from "@/features/auth/hooks/useApiMutation";
