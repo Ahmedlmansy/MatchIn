@@ -29,7 +29,7 @@ export function EmptyProfileState({ onUploadCv, onCompleteProfile }) {
   );
 }
 
-export function NoRoadmapState({ onGenerate }) {
+export function NoRoadmapState({ onGenerate, hasCV, hasProfile }) {
   const { t } = useTranslation("dashboard");
   return (
     <motion.div
@@ -53,16 +53,26 @@ export function NoRoadmapState({ onGenerate }) {
       </div>
 
       <div className="mb-7 flex flex-wrap items-center gap-4 text-[12px] text-muted sm:gap-6">
-        <span className="flex items-center gap-1.5"><User className="size-4 text-primary" /> Current profile</span>
+        <span className={`flex items-center gap-1.5 ${hasProfile ? "text-primary" : "text-muted"}`}>
+          <User className="size-4" /> Current profile {hasProfile ? "✓" : ""}
+        </span>
         <ArrowRight className="size-3.5 text-border" />
-        <span className="flex items-center gap-1.5"><LineChart className="size-4 text-primary" /> Skill gap analysis</span>
+        <span className={`flex items-center gap-1.5 ${hasCV ? "text-primary" : "text-muted"}`}>
+          <LineChart className="size-4" /> Skill gap analysis {hasCV ? "✓" : ""}
+        </span>
         <ArrowRight className="size-3.5 text-border" />
         <span className="flex items-center gap-1.5"><Map className="size-4 text-primary" /> Phased roadmap</span>
       </div>
 
-      <Button onClick={onGenerate} className="h-11 gap-2 px-6 text-[14px]">
+      <Button onClick={() => onGenerate("Senior Frontend Engineer")} className="h-11 gap-2 px-6 text-[14px]" disabled={!hasProfile || !hasCV}>
         <Sparkles className="size-4" /> Generate Roadmap
       </Button>
+      {!hasProfile && (
+        <p className="mt-3 text-xs text-muted">Complete your profile first to enable roadmap generation.</p>
+      )}
+      {!hasCV && hasProfile && (
+        <p className="mt-3 text-xs text-muted">Upload a CV to enable skill gap analysis.</p>
+      )}
     </motion.div>
   );
 }

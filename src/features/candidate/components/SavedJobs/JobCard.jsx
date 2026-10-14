@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 export function JobCardSkeleton() {
   return (
-    <div className="animate-pulse rounded-2xl border border-border bg-surface p-4 shadow-xs sm:p-6">
+    <div className="animate-pulse rounded-2xl border border-border bg-surface p-4 sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex min-w-0 items-start gap-3 sm:gap-4">
           <div className="mt-4 size-4 shrink-0 rounded bg-border" />
@@ -33,6 +33,41 @@ export function JobCardSkeleton() {
   );
 }
 
+// Transform API job to SavedJobs JobCard format
+function transformJobForSavedJobs(job) {
+  const fitScore = job.fitScore ?? job.matchPercent ?? 0;
+  const totalSkills = (job.tags?.length ?? 0) + (job.extraSkillsCount ?? 0);
+  const matchedSkills = Math.round((fitScore / 100) * totalSkills) || Math.min(totalSkills, 9);
+  
+  return {
+    ...job,
+    // Map fields to expected format
+    logo: job.initial ?? job.company?.[0]?.toUpperCase() ?? "J",
+    badge: job.postedAgo ?? "Recent",
+    salary: job.salaryRange ?? "$0 - $0 / yr",
+    verification: job.verification,
+    fitScore,
+    fitFraction: `${matchedSkills}/${totalSkills} Fit`,
+    fitLabel: job.fitLabel ?? (fitScore >= 75 ? "High Confidence Match" : fitScore >= 50 ? "Moderate Match" : "Low Match"),
+    skills: job.tags ?? job.skills ?? [],
+    extraSkillsCount: job.extraSkillsCount ?? 0,
+    description: job.description ?? "",
+    responsibilities: job.responsibilities ?? [],
+    source: job.source ?? "MatchIn",
+    method: job.method ?? "Internal",
+    experience: job.experience ?? "Not specified",
+    rationaleTitle: job.rationaleTitle,
+    rationaleSub: job.rationaleSub,
+    strength: job.strength,
+    gap: job.gap,
+    gapActionText: job.gapActionText,
+    note: job.note,
+    deadline: job.deadline ?? job.postedAgo ?? "",
+    status: job.status ?? "default",
+    appliedText: job.appliedText,
+  };
+}
+
 export default function JobCard({
   job,
   aiState,
@@ -48,9 +83,15 @@ export default function JobCard({
   onCancelNote,
   onNoteChange,
   onAction,
+  onSave,
 }) {
   const { t } = useTranslation("common");
-  const isDimmed = aiState === "low" && job.fitScore < 75;
+  
+  // Transform job data if it's in API format
+  const isApiFormat = job.matchPercent !== undefined || job.initial !== undefined;
+  const displayJob = isApiFormat ? transformJobForSavedJobs(job) : job;
+  
+  const isDimmed = aiState === "low" && displayJob.fitScore < 75;
 
   return (
     <motion.div
@@ -68,26 +109,26 @@ export default function JobCard({
             className="mt-4"
           />
           <div className="w-13 h-13 rounded-xl bg-background border border-border flex items-center justify-center p-2.5 text-primary font-bold text-lg shrink-0">
-            {job.logo}
+            {displayJob.logo}
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
               <h3 className="font-dm-sans text-lg sm:text-xl font-bold text-primary wrap-break-word">
-                {job.title}
+                {displayJob.title}
               </h3>
               <span className="bg-background text-accent border border-border text-[11px] font-semibold px-2 py-0.5 rounded-md">
-                {job.badge}
+                {displayJob.badge}
               </span>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 text-xs text-muted flex-wrap">
-              <span className="font-semibold text-primary">{job.company}</span>
+              <span className="font-semibold text-primary">{displayJob.company}</span>
               <span>•</span>
-              <span>{job.location}</span>
+              <span>{displayJob.location}</span>
               <span>•</span>
-              <span className="font-medium text-primary">{job.salary}</span>
-              {job.verification && (
+              <span className="font-medium text-primary">{displayJob.salary}</span>
+              {displayJob.verification && (
                 <span className="text-[11px] bg-background border border-border px-2 py-0.5 rounded wrap-break-word">
-                  {job.verification}
+                  {displayJob.verification}
                 </span>
               )}
             </div>
@@ -95,17 +136,17 @@ export default function JobCard({
         </div>
         <div className="text-left lg:text-right shrink-0 self-end lg:self-auto">
           <div className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
-            <Check className="w-3.5 h-3.5" /> {job.fitFraction} ({job.fitScore}
+            <Check className="w-3.5 h-3.5" /> {displayJob.fitFraction} ({displayJob.fitScore}
             %)
           </div>
           <span className="block text-[10px] text-muted mt-1">
-            {job.fitLabel}
+            {displayJob.fitLabel}
           </span>
         </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-1.5 mb-4">
-        {job.skills.map((skill) => (
+        {displayJob.skills.map((skill) => (
           <span
             key={skill}
             className="bg-background border border-border text-primary text-xs font-semibold px-2.5 py-1 rounded-md"
@@ -113,9 +154,9 @@ export default function JobCard({
             {skill}
           </span>
         ))}
-        {job.extraSkillsCount > 0 && (
+        {displayJob.extraSkillsCount > 0 && (
           <span className="text-muted text-xs px-2 py-1 rounded-md">
-            +{job.extraSkillsCount} {t("ui.savedJobCard.bonusSkills")}
+            +{displayJob.extraSkillsCount} {t("ui.savedJobCard.bonusSkills")}
           </span>
         )}
       </div>
@@ -130,49 +171,49 @@ export default function JobCard({
           >
             <div>
               <strong className="text-primary block mb-1">{t("ui.savedJobCard.description")}</strong>
-              <p className="text-muted wrap-break-word">{job.description}</p>
+              <p className="text-muted wrap-break-word">{displayJob.description}</p>
             </div>
             <div>
               <strong className="text-primary block mb-1">
                 {t("ui.savedJobCard.responsibilities")}
               </strong>
               <ul className="text-muted list-disc ps-4">
-                {job.responsibilities.map((item) => (
+                {displayJob.responsibilities.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
             </div>
             <div className="flex flex-wrap gap-2 pt-2 border-t border-border">
-              <span className="text-muted">{t("ui.savedJobCard.source")}: {job.source}</span>
-              <span className="text-muted">{t("ui.savedJobCard.method")}: {job.method}</span>
-              <span className="text-muted">{t("ui.savedJobCard.experience")}: {job.experience}</span>
+              <span className="text-muted">{t("ui.savedJobCard.source")}: {displayJob.source}</span>
+              <span className="text-muted">{t("ui.savedJobCard.method")}: {displayJob.method}</span>
+              <span className="text-muted">{t("ui.savedJobCard.experience")}: {displayJob.experience}</span>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {job.rationaleTitle && (
+      {displayJob.rationaleTitle && (
         <div className="bg-background border border-border rounded-xl p-3.5 mb-4 text-xs">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-border pb-2">
             <strong className="text-primary wrap-break-word">
-              {job.rationaleTitle}
+              {displayJob.rationaleTitle}
             </strong>
             <span className="text-muted wrap-break-word">
-              {job.rationaleSub}
+              {displayJob.rationaleSub}
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2">
             <p className="bg-surface p-2.5 text-muted wrap-break-word">
-              {job.strength}
+              {displayJob.strength}
             </p>
             <div className="bg-surface p-2.5 flex flex-col sm:flex-row sm:items-center gap-2 min-w-0">
-              <p className="text-muted wrap-break-word">{job.gap}</p>
-              {job.gapActionText && (
+              <p className="text-muted wrap-break-word">{displayJob.gap}</p>
+              {displayJob.gapActionText && (
                 <Button
-                  onClick={() => onAction(job)}
+                  onClick={() => onAction(displayJob)}
                   className="text-[11px] text-secondary shrink-0"
                 >
-                  {job.gapActionText}
+                  {displayJob.gapActionText}
                 </Button>
               )}
             </div>
@@ -191,17 +232,17 @@ export default function JobCard({
           />
           <div className="flex flex-wrap justify-end gap-2 mt-2">
             <Button onClick={onCancelNote}>{t("ui.savedJobCard.cancel")}</Button>
-            <Button onClick={() => onSaveNote(job.id)}>{t("ui.savedJobCard.saveNote")}</Button>
+            <Button onClick={() => onSaveNote(displayJob.id)}>{t("ui.savedJobCard.saveNote")}</Button>
           </div>
         </div>
-      ) : job.note ? (
+      ) : displayJob.note ? (
         <div className="bg-background border border-border rounded-xl p-3 mb-4 text-xs flex items-center justify-between gap-2">
           <span className="min-w-0 flex-1 truncate">
             <Edit3 className="w-3.5 h-3.5 inline me-2" />
-            <strong>{t("ui.savedJobCard.candidateNote")}:</strong> {job.note}
+            <strong>{t("ui.savedJobCard.candidateNote")}:</strong> {displayJob.note}
           </span>
           <Button
-            onClick={() => onStartEdit(job)}
+            onClick={() => onStartEdit(displayJob)}
             className="text-[11px] text-secondary shrink-0"
           >
             {t("ui.savedJobCard.edit")}
@@ -209,7 +250,7 @@ export default function JobCard({
         </div>
       ) : (
         <Button
-          onClick={() => onStartEdit(job)}
+          onClick={() => onStartEdit(displayJob)}
           className="h-auto min-h-14 w-full items-start justify-between gap-3 whitespace-normal border border-dashed border-border rounded-xl p-3 mb-4 text-left text-xs text-muted"
         >
           <span className="min-w-0 flex-1 italic wrap-break-word">
@@ -223,9 +264,9 @@ export default function JobCard({
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-3 border-t border-border text-xs gap-3">
         <span
-          className={`wrap-break-word ${job.status === "applied" ? "text-success font-semibold" : "text-muted"}`}
+          className={`wrap-break-word ${displayJob.status === "applied" ? "text-success font-semibold" : "text-muted"}`}
         >
-          {job.status === "applied" ? job.appliedText : job.deadline}
+          {displayJob.status === "applied" ? displayJob.appliedText : displayJob.deadline}
         </span>
         <div className="flex w-full sm:w-auto flex-wrap gap-2.5">
           <Button
@@ -234,7 +275,7 @@ export default function JobCard({
           >
             {expanded ? t("ui.savedJobCard.hideDetails") : t("ui.savedJobCard.viewDetails")}
           </Button>
-          {job.status === "applied" ? (
+          {displayJob.status === "applied" ? (
             <Button
               disabled
               className="flex-1 sm:flex-none bg-success text-success-foreground"
@@ -244,11 +285,26 @@ export default function JobCard({
             </Button>
           ) : (
             <Button
-              onClick={() => onApply(job.id)}
+              onClick={() => onApply(displayJob.id)}
               className="flex-1 sm:flex-none bg-secondary text-secondary-foreground"
             >
               <Zap className="w-3.5 h-3.5" />
               {t("ui.savedJobCard.applyFast")}
+            </Button>
+          )}
+          {onSave && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => onSave(displayJob)}
+              className="h-8 w-8 rounded-full border-border text-muted hover:text-primary"
+              aria-label="Save job"
+            >
+              {displayJob.isBookmarked ? (
+                <svg className="h-4.5 w-4.5 fill-current" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              ) : (
+                <svg className="h-4.5 w-4.5" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+              )}
             </Button>
           )}
         </div>

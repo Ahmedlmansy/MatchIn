@@ -1,33 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import JobDetailsContent from "../components/JobsDetails/JobDetailsContent";
 import JobDetailsModals from "../components/JobsDetails/JobDetailsModals";
 import JobDetailsStateViews from "../components/JobsDetails/JobDetailsStateViews";
 import JobModalViews from "../components/JobsPage/JobModalViews";
-
-const ACTIVE_JOB = {
-  title: "Senior Frontend Developer",
-  company: "TechNova Labs",
-};
+import { useJobDetailsQuery } from "@/features/candidate/hooks/useJobsQuery";
+import { useApplyJobMutation } from "@/features/candidate/hooks/useJobMutations";
+import { useSaveJobMutation } from "@/features/candidate/hooks/useJobMutations";
 
 export default function JobDetailsPage() {
-  const [pageState, setPageState] = useState("loaded");
-  const [matchState, setMatchState] = useState("success");
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { jobId } = useParams();
+
+  const [matchState, setMatchState] = useState("not_analyzed");
   const [isInRoadmap, setIsInRoadmap] = useState(false);
   const [activeModal, setActiveModal] = useState(null);
   const [applyStep, setApplyStep] = useState("form");
   const [toast, setToast] = useState(null);
-  const [mentorMessages, setMentorMessages] = useState([
-    {
-      sender: "mentor",
-      text: "I've reviewed this role's requirements. Your React 19 and TypeScript depth are strong selling points, but TechNova's hiring bar emphasizes testing culture. Want a focused prep plan?",
-    },
-  ]);
+  const [mentorMessages, setMentorMessages] = useState([]);
+
   const applicationForm = useForm({
-    defaultValues: { cv: "resume-2026.pdf", authorized: "", startDate: "" },
+    defaultValues: { cv: "", authorized: "", startDate: "" },
   });
+
+  const { data: job, isLoading, isError, refetch } = useJobDetailsQuery(jobId);
+  const applyMutation = useApplyJobMutation();
+  const saveMutation = useSaveJobMutation();
+
+  // Initialize mentor messages when job loads
+  useEffect(() => {
+    if (job) {
+      setMentorMessages([
+        {
+          sender: "mentor",
+          text: `I've reviewed ${job.title} at ${job.company}. Your profile shows strong alignment with the core requirements. Want a focused prep plan?`,
+        },
+      ]);
+    }
+  }, [job]);
 
   function showToast(message) {
     setToast(message);
@@ -44,7 +55,6 @@ export default function JobDetailsPage() {
       "ai_failure",
     ];
     if (matchStates.includes(stateKey)) {
-      setPageState("loaded");
       setMatchState(stateKey);
       if (stateKey === "analyzing") {
         setTimeout(() => setMatchState("success"), 2500);
@@ -52,14 +62,9 @@ export default function JobDetailsPage() {
       return;
     }
     if (stateKey === "retry") {
-      setPageState("retry");
-      setTimeout(() => {
-        setPageState("loaded");
-        setMatchState("success");
-      }, 1800);
+      refetch();
       return;
     }
-    setPageState(stateKey);
   }
 
   function openApplication() {
@@ -68,9 +73,14 @@ export default function JobDetailsPage() {
     setActiveModal("apply");
   }
 
-  function submitApplication() {
+  async function submitApplication(data) {
     setApplyStep("submitting");
-    setTimeout(() => setApplyStep("success"), 1500);
+    try {
+      await applyMutation.mutateAsync({ jobId: job.id, payload: data });
+      setApplyStep("success");
+    } catch {
+      setApplyStep("servererror");
+    }
   }
 
   function askMentor(question) {
@@ -79,50 +89,83 @@ export default function JobDetailsPage() {
       { sender: "user", text: question },
       {
         sender: "mentor",
-        text: "Great question — based on TN-882, emphasize your multi-tenant dashboard work and be ready for a live React 19 + testing exercise. Want a mock interview drill?",
+        text: `Great question about ${job?.title}. Based on the requirements, I'd recommend focusing on the core skills mentioned. Want me to elaborate on any specific area?`,
       },
     ]);
   }
+
+  function handleToggleBookmark() {
+    if (!job) return;
+    const currentlySaved = job.isBookmarked ?? false;
+    saveMutation.mutate({ jobId: job.id, saved: currentlySaved });
+  }
+
+  function handleRoadmapToggle() {
+    setIsInRoadmap((value) => !value);
+    showToast(
+      isInRoadmap
+        ? "Removed from your roadmap"
+        : "Added to your roadmap — AI will generate a skill plan",
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background font-sans text-ink antialiased">
+        <main className="mx-auto w-full max-w-340 flex-1 px-6 py-8">
+          <JobDetailsStateViews pageState="loading" onStateChange={handlePageState} />
+        </main>
+      </div>
+    );
+  }
+
+  if (isError || !job) {
+    return (
+      <div className="min-h-screen bg-background font-sans text-ink antialiased">
+        <main className="mx-auto w-full max-w-340 flex-1 px-6 py-8">
+          <JobDetailsStateViews
+            pageState="not_found"
+            onStateChange={handlePageState}
+          />
+        </main>
+      </div>
+    );
+  }
+
+  const isBookmarked = job.isBookmarked ?? false;
 
   return (
     <div className="min-h-screen bg-background font-sans text-ink antialiased">
       <main className="mx-auto w-full max-w-340 flex-1 px-6 py-8">
         <JobDetailsStateViews
-          pageState={pageState}
+          pageState={job.expired ? "expired_stale" : "loaded"}
           onStateChange={handlePageState}
         />
-        {(pageState === "loaded" || pageState === "expired_stale") && (
-          <>
-            <JobDetailsContent
-              isExpired={pageState === "expired_stale"}
-              isBookmarked={isBookmarked}
-              matchState={matchState}
-              isInRoadmap={isInRoadmap}
-              onApply={openApplication}
-              onAnalysis={() =>
-                showToast(
-                  "Full market compensation analysis loaded for Cairo Tech Center",
-                )
-              }
-              onShare={() => showToast("Job link copied to clipboard!")}
-              onToggleBookmark={() => setIsBookmarked((value) => !value)}
-              onRoadmapToggle={() => setIsInRoadmap((value) => !value)}
-              onOpenMentor={() => setActiveModal("mentor")}
-              onAnalyze={() => handlePageState("analyzing")}
-              onSync={() =>
-                showToast("Connecting GitHub & portfolio analyzer...")
-              }
-              onRetry={() => handlePageState("retry")}
-              onToast={showToast}
-            />
-          </>
-        )}
+        <JobDetailsContent
+          isExpired={job.expired ?? false}
+          isBookmarked={isBookmarked}
+          matchState={matchState}
+          isInRoadmap={isInRoadmap}
+          onApply={openApplication}
+          onAnalysis={() => showToast("Full market compensation analysis loaded")}
+          onShare={() => {
+            navigator.clipboard.writeText(window.location.href);
+            showToast("Job link copied to clipboard!");
+          }}
+          onToggleBookmark={handleToggleBookmark}
+          onRoadmapToggle={handleRoadmapToggle}
+          onOpenMentor={() => setActiveModal("mentor")}
+          onAnalyze={() => handlePageState("analyzing")}
+          onSync={() => showToast("Connecting GitHub & portfolio analyzer...")}
+          onRetry={() => refetch()}
+          onToast={showToast}
+        />
       </main>
 
       {activeModal === "apply" && (
         <JobModalViews
           view={applyStep}
-          activeJob={ACTIVE_JOB}
+          activeJob={{ title: job.title, company: job.company }}
           form={applicationForm}
           onClose={() => setActiveModal(null)}
           onRetry={() => setApplyStep("form")}
