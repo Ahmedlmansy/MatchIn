@@ -22,7 +22,7 @@ export default function CompanyDates({ dates }) {
             <dt className="text-muted">
               {t(`pages.admin.companyDetails.dateLabels.${item.label}`)}
             </dt>
-            <dd className="text-right font-semibold text-ink">
+            <dd className="text-end font-semibold text-ink">
               {item.date}
               <span className="mt-0.5 block text-xs font-normal text-muted">
                 {item.sub}

@@ -345,12 +345,24 @@
         "otp": {
           "verifiedSuccessLogin": "Email verified successfully! Please log in to continue."
         },
+        "verifyEmail": {
+          "badge": "Smart Career Platform",
+          "title": "Verify your email",
+          "description": "We sent a 6-digit code to {{email}}. Enter it below to activate your account.",
+          "backLabel": "Back to login",
+          "missingEmail": "This verification request has expired. Please log in again to request a new code.",
+          "requestNew": "Back to login"
+        },
         "errors": {
           "invalidOrExpired": "This code is invalid or has expired. Request a new one and try again.",
           "noAccount": "We couldn't find an account with that email address. Please check it or create an account.",
           "sessionExpired": "Your session has expired. Please start the password reset again.",
           "tooManyAttempts": "Too many attempts. Please wait a moment before trying again.",
-          "serverUnavailable": "We couldn't reach the server. Check your connection and try again."
+          "serverUnavailable": "We couldn't reach the server. Check your connection and try again.",
+          "noRoleTitle": "We couldn't work out your access level",
+          "noRoleBody": "You're signed in, but this account isn't assigned a role yet, so there's no workspace to open. Ask an administrator to set one, or sign in with a different account.",
+          "signOut": "Sign out",
+          "signingOut": "Signing out…"
         },
         "forgot": {
           "back": "Back to Login",

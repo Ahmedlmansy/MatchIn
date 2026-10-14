@@ -20,7 +20,7 @@ export const useLogoutMutation = () => {
     mutationFn: async () => {
       try {
         return await logoutRequest();
-      } catch (error) {
+      } catch {
         // Network errors, 401, 404, 405 should not prevent client cleanup
         return null;
       }

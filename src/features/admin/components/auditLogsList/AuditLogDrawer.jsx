@@ -63,7 +63,7 @@ export default function AuditLogDrawer({ log, onClose }) {
                 label="Value Change"
                 field="status"
                 previous={log.prev}
-                next={log.new}
+                next={log.newValue}
               />
             </div>
           </div>

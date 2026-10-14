@@ -68,7 +68,7 @@ export default function AIMentorCard() {
             <ArrowRight className="h-[17px] w-[17px] text-primary" />
           </Link>
         </Button>
-        <span className="text-center font-body-sm text-[12px] text-primary-foreground/70 lg:text-right">
+        <span className="text-center font-body-sm text-[12px] text-primary-foreground/70 lg:text-end">
           {t("home.aiMentor.availability")}
         </span>
       </div>

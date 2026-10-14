@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * OverviewStats
- * Renders the four headline counters from the mock dataset. `small` switches
- * from the large numeric style to the date style for the two date tiles.
+ * The four headline counters for one company. `small` switches from the large
+ * numeric style to the date style for the two date tiles.
  */
 export default function OverviewStats({ stats }) {
   const { t } = useTranslation("dashboard");

@@ -1,4 +1,4 @@
-import { VERIFICATION_STATUS, VERIFICATION_TONES } from "../../shared/companiesDetailsData";
+import { VERIFICATION_STATUS, VERIFICATION_TONES } from "@/features/admin/constants/companyVerification";
 
 /**
  * VerificationBanner

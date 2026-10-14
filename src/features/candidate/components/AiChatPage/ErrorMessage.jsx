@@ -38,7 +38,7 @@ export default function ErrorMessage({ onRetry }) {
         exit="exit"
         className="max-w-[85%]"
       >
-        <div className="rounded-2xl rounded-tl-md border border-error/30 bg-error/5 px-4 py-3">
+        <div className="rounded-2xl rounded-ss-md border border-error/30 bg-error/5 px-4 py-3">
           <p className="flex items-center gap-1.5 text-[13px] font-semibold text-error">
             <AlertCircle className="size-4" />
             {t("ui.chat.couldNotRespond")}

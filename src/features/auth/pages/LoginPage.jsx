@@ -16,17 +16,26 @@ export default function LoginPage() {
   const emailRef = useRef("");
 
   const { mutate, isPending, isError, error, reset } = useLoginMutation({
-    onAuthenticated: (user) => {
+    onAuthenticated: () => {
       const from = location.state?.from?.pathname ?? localizedPath("/dashboard");
       navigate(from, { replace: true });
     },
   });
 
-  // Handle 403 (unverified email) - redirect to OTP verification with email
+  // A 403 from /auth/login means the credentials were right but the account is
+  // not verified yet — the one failure the user can fix without retyping a
+  // password. Send them to the *email* OTP step so they can, and carry the
+  // email across so the code field is already addressed.
+  //
+  // This used to point at the password-recovery OTP, which asks for a different
+  // code from a different endpoint (POST /auth/forgot-password/verify-otp) and
+  // continues into a password reset. A candidate who had simply never clicked
+  // their verification link was therefore pushed into resetting a password
+  // they had not forgotten, and the code they were asked for was the wrong one.
   useEffect(() => {
     if (isError && error?.status === 403 && emailRef.current) {
       navigate(localizedPath("/auth/forgot-password/verify-otp"), {
-        state: { email: emailRef.current },
+        state: { email: emailRef.current, mode: "verify-email" },
         replace: true,
       });
       reset(); // Clear error so form can be used again

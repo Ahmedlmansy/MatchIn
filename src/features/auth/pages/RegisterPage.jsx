@@ -1,6 +1,6 @@
 import AuthLayout from "@/components/layouts/AuthLayout";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { StepProgress } from "@/features/auth/components/RegisterPage/step-progress";
 import { RegisterStep } from "@/features/auth/components/RegisterPage/RegisterStep";
 import { BriefcaseBusiness } from "lucide-react";
@@ -13,7 +13,6 @@ export default function RegisterPage() {
   const { t } = useTranslation("common");
 
   const [step, setStep] = useState(0); // 0 = form+otp, 1 = done
-  const [registerData, setRegisterData] = useState(null);
 
   const handleAccountPhaseChange = (phase) => {
     // Step 0 is the account form, step 1 is the OTP screen — both live inside
@@ -21,10 +20,9 @@ export default function RegisterPage() {
     setStep(phase === "otp" ? 1 : 0);
   };
 
-  const handleAccountComplete = (data) => {
+  const handleAccountComplete = () => {
     // Account + OTP verified. Register wizard ends here.
     // Onboarding page (guarded by RequireOnboarding) handles profile completion.
-    setRegisterData(data);
     setStep(2);
   };
 

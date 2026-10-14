@@ -10,6 +10,7 @@ export { default as FilterSelect } from "./FilterSelect";
 export { default as SortDropdown } from "./SortDropdown";
 export { default as PageHeader } from "./PageHeader";
 export { default as ReadOnlyBanner } from "./ReadOnlyBanner";
+export { default as ResultsPagination } from "./ResultsPagination";
 export { default as EmptyState } from "./EmptyState";
 export { default as ErrorState } from "./ErrorState";
 export {

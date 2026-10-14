@@ -5,7 +5,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SORT_OPTIONS } from "@/features/admin/shared/filterOptions";
 
 export default function CompaniesResultsBar({
   total,
@@ -13,6 +12,7 @@ export default function CompaniesResultsBar({
   end,
   sort,
   onSortChange,
+  sortOptions,
 }) {
   return (
     <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
@@ -31,7 +31,7 @@ export default function CompaniesResultsBar({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {SORT_OPTIONS.map((option) => (
+            {sortOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
               </SelectItem>

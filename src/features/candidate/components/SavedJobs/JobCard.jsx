@@ -134,7 +134,7 @@ export default function JobCard({
             </div>
           </div>
         </div>
-        <div className="text-left lg:text-right shrink-0 self-end lg:self-auto">
+        <div className="text-start lg:text-end shrink-0 self-end lg:self-auto">
           <div className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
             <Check className="w-3.5 h-3.5" /> {displayJob.fitFraction} ({displayJob.fitScore}
             %)
@@ -250,8 +250,8 @@ export default function JobCard({
         </div>
       ) : (
         <Button
-          onClick={() => onStartEdit(displayJob)}
-          className="h-auto min-h-14 w-full items-start justify-between gap-3 whitespace-normal border border-dashed border-border rounded-xl p-3 mb-4 text-left text-xs text-muted"
+          onClick={() => onStartEdit(job)}
+          className="h-auto min-h-14 w-full items-start justify-between gap-3 whitespace-normal border border-dashed border-border rounded-xl p-3 mb-4 text-start text-xs text-muted"
         >
           <span className="min-w-0 flex-1 italic wrap-break-word">
             {t("ui.savedJobCard.addPlaceholder")}

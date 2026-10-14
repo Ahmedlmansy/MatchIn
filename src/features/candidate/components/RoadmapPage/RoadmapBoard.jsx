@@ -75,7 +75,7 @@ function PhaseAccordion({ phase, onToggleTask, isUpdating }) {
 
   return (
     <div className={cn("overflow-hidden rounded-xl border border-border", isOpen ? "bg-surface" : "bg-transparent")}>
-      <button onClick={() => setIsOpen(!isOpen)} className="flex w-full items-center gap-3 p-4 text-left cursor-pointer">
+      <button onClick={() => setIsOpen(!isOpen)} className="flex w-full items-center gap-3 p-4 text-start cursor-pointer">
         <div className={cn("flex size-8 flex-shrink-0 items-center justify-center rounded-full text-[12px] font-bold", colorClass.icon)}>
           {phase.phaseNumber}
         </div>

@@ -7,17 +7,21 @@ import ApplicationList from "../components/ApplicationPage/ApplicationList";
 import ApplicationStateViews from "../components/ApplicationPage/ApplicationStateViews";
 import ApplicationStats from "../components/ApplicationPage/ApplicationStats";
 import ApplicationToast from "../components/ApplicationPage/ApplicationToast";
-import { INITIAL_APPLICATIONS } from "@/features/candidate/shared/application";
+import { useApplicationsQuery, useWithdrawApplicationMutation } from "../hooks/useApplicationsQuery";
 
 export default function ApplicationTracker() {
   const { t } = useTranslation("dashboard");
-  const [viewState, setViewState] = useState("loaded");
-  const [applications, setApplications] = useState(INITIAL_APPLICATIONS);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("recent");
   const [activeModalApp, setActiveModalApp] = useState(null);
   const [toastMessage, setToastMessage] = useState(null);
+
+  // جلب الطلبات الحقيقية باستخدام TanStack Query
+  const { data: applications = [], isLoading, isError, refetch } = useApplicationsQuery();
+  
+  // تفعيل mutation الخاصة بسحب الطلب
+  const withdrawMutation = useWithdrawApplicationMutation();
 
   const showToast = (message) => {
     setToastMessage(message);
@@ -25,41 +29,46 @@ export default function ApplicationTracker() {
   };
 
   const handleWithdraw = (id) => {
-    setApplications((previous) =>
-      previous.map((app) =>
-        app.id === id ? { ...app, status: "withdrawn" } : app,
-      ),
-    );
-    showToast("Application marked as withdrawn.");
+    withdrawMutation.mutate(id, {
+      onSuccess: () => {
+        showToast("Application marked as withdrawn successfully.");
+      },
+      onError: () => {
+        showToast("Failed to withdraw application.");
+      }
+    });
   };
 
   const filteredApplications = useMemo(() => {
-    return applications
+    const list = Array.isArray(applications) ? applications : [];
+    
+    return list
       .filter((app) => {
         const normalizedQuery = searchQuery.toLowerCase();
         const matchesQuery =
-          app.title.toLowerCase().includes(normalizedQuery) ||
-          app.company.toLowerCase().includes(normalizedQuery);
+          app.title?.toLowerCase().includes(normalizedQuery) ||
+          app.company?.toLowerCase().includes(normalizedQuery);
         const matchesStatus =
           statusFilter === "all" || app.status === statusFilter;
         return matchesQuery && matchesStatus;
       })
       .sort((first, second) => {
-        if (sortBy === "match") return second.matchScore - first.matchScore;
-        return new Date(second.appliedDate) - new Date(first.appliedDate);
+        if (sortBy === "match") return (second.matchScore || 0) - (first.matchScore || 0);
+        return new Date(second.appliedDate || 0) - new Date(first.appliedDate || 0);
       });
   }, [applications, searchQuery, statusFilter, sortBy]);
 
   const stats = useMemo(
-    () => ({
-      total: applications.length,
-      underReview: applications.filter((app) => app.status === "under-review")
-        .length,
-      interview: applications.filter((app) => app.status === "interview")
-        .length,
-      offer: applications.filter((app) => app.status === "offer").length,
-      rejected: applications.filter((app) => app.status === "rejected").length,
-    }),
+    () => {
+      const list = Array.isArray(applications) ? applications : [];
+      return {
+        total: list.length,
+        underReview: list.filter((app) => app.status === "under-review").length,
+        interview: list.filter((app) => app.status === "interview").length,
+        offer: list.filter((app) => app.status === "offer").length,
+        rejected: list.filter((app) => app.status === "rejected").length,
+      };
+    },
     [applications],
   );
 
@@ -67,6 +76,9 @@ export default function ApplicationTracker() {
     setSearchQuery("");
     setStatusFilter("all");
   };
+
+  // تحديد حالة العرض بناءً على حالة الـ Query
+  const viewState = isLoading ? "loading" : isError ? "error" : "loaded";
 
   return (
     <div className="min-h-screen bg-background text-[#1B1C1A] font-inter antialiased selection:bg-primary selection:text-white pb-12">
@@ -85,7 +97,7 @@ export default function ApplicationTracker() {
             <ApplicationStateViews
               key={viewState}
               viewState={viewState}
-              onLoaded={() => setViewState("loaded")}
+              onRetry={refetch}
             />
           )}
 

@@ -1,13 +1,27 @@
-import { useState } from "react";
+// src/features/admin/pages/CompaniesDetailsPage.jsx
+//
+// Single company, admin view. Reads through useAdminCompanyQuery; the
+// verification switch / reject button write through
+// useUpdateAdminCompanyMutation and the page re-reads the record from the
+// query cache after a successful save.
+
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { useLocalizedPath } from "@/utils/routes";
+import { ArrowLeft, AlertTriangle, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { ErrorState } from "@/features/admin/shared";
 import {
-  COMPANY,
-  COMPANY_ACTIVITY,
-  COMPANY_JOBS,
+  useAdminCompanyQuery,
+  useUpdateAdminCompanyMutation,
+} from "@/features/admin/hooks";
+import { formatDisplayDate, getRelativeLabel } from "@/features/admin/shared/companyDateFormat";
+import {
+  VERIFICATION_STATUS,
+  DEFAULT_VERIFICATION_STATUS,
+} from "@/features/admin/constants/companyVerification";
+import {
   CompanyActivity,
   CompanyBreadcrumbs,
   CompanyDates,
@@ -16,94 +30,182 @@ import {
   CompanyJobs,
   CompanyQuickLinks,
   ContactInformation,
-  DEFAULT_VERIFICATION_STATUS,
   OverviewStats,
-  VERIFICATION_STATUS,
   VerificationBanner,
   VerificationCard,
 } from "@/features/admin/components/CompaniesDetailsPage";
 
-const COMPANIES_PATH = "/admin/company-management";
+const BASE_KEY = "pages.admin.companyDetails";
 
-/**
- * CompaniesDetailsPage
- * Thin composition shell for a single company. Owns only the verification
- * state; every visual block lives in the co-located component folder.
- */
 export default function CompanyDetails() {
   const { t } = useTranslation("dashboard");
-  const [verificationStatus, setVerificationStatus] = useState(
-    DEFAULT_VERIFICATION_STATUS,
-  );
+  const navigate = useNavigate();
+  const localizedPath = useLocalizedPath();
+  const { id } = useParams();
 
+  const companiesPath = localizedPath("/dashboard/company-management");
+
+  const { data: company, isPending, isError, error, refetch } = useAdminCompanyQuery(id);
+  const {
+    mutate: setStatus,
+    isPending: isSaving,
+    error: saveError,
+  } = useUpdateAdminCompanyMutation(id);
+
+  // The detail screen and the list speak different vocabularies for
+  // verification — this one renders pending | verified | rejected, the list
+  // collapses rejected into "not-verified". That mapping is for display only;
+  // the wire value is always the list's vocabulary.
+  //
+  // Sending "rejected" straight through was a latent 422: the backend validates
+  // `status in:verified,pending,not-verified`, so the Reject button failed
+  // against the same endpoint the list used successfully — and, since the
+  // mutation's error was never rendered, it failed silently.
+  const handleStatusChange = (status) =>
+    setStatus({ status: status === "rejected" ? "not-verified" : status });
+
+  if (isPending) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 className="h-7 w-7 animate-spin text-muted" />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-background px-4 py-7 sm:px-7">
+        <div className="mx-auto max-w-275">
+          <ErrorState
+            title="Couldn't load this company"
+            description={error?.message || "The company may have been deleted or merged."}
+            onRetry={() => (error?.status === 404 ? navigate(companiesPath) : refetch())}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // The details page models verification as pending | verified | rejected,
+  // while the list collapses it to verified | pending | not-verified. Map the
+  // two vocabularies so the switch reflects what the list would show.
+  const verificationStatus =
+    company.status === "not-verified" ? "rejected" : company.status || DEFAULT_VERIFICATION_STATUS;
   const statusConfig =
-    VERIFICATION_STATUS[verificationStatus] ?? VERIFICATION_STATUS.pending;
-  const base = "pages.admin.companyDetails";
+    VERIFICATION_STATUS[verificationStatus] ?? VERIFICATION_STATUS[DEFAULT_VERIFICATION_STATUS];
 
   return (
     <div className="min-h-screen bg-background px-4 py-7 pb-16 sm:px-7">
       <div className="mx-auto max-w-275 space-y-0">
-        <CompanyBreadcrumbs companyId={COMPANY.id} backTo={COMPANIES_PATH} />
+        <CompanyBreadcrumbs companyId={company.id} backTo={companiesPath} />
 
-        <CompanyHeader
-          company={{ ...COMPANY, name: COMPANY.name }}
-          backTo={COMPANIES_PATH}
-        />
+        <CompanyHeader company={company} backTo={companiesPath} />
 
         <div className="mb-5.5">
           <VerificationBanner
             status={verificationStatus}
-            title={t(`${base}.${statusConfig.bannerKey}`)}
-            description={t(`${base}.bannerDescriptions.${verificationStatus}`)}
+            title={t(`${BASE_KEY}.${statusConfig.bannerKey}`)}
+            description={t(`${BASE_KEY}.bannerDescriptions.${verificationStatus}`)}
           />
         </div>
 
-        <OverviewStats stats={COMPANY.stats} />
+        <OverviewStats
+          stats={[
+            {
+              label: "openJobs",
+              value: company.stats.openJobs,
+              sub: `${company.stats.drafts} drafts`,
+            },
+            {
+              label: "totalApplications",
+              value: company.stats.totalApplications,
+              sub: `${company.stats.applicationsThisWeek} this week`,
+            },
+            {
+              label: "created",
+              value: formatDisplayDate(company.dates.created),
+              sub: getRelativeLabel(company.dates.created),
+              small: true,
+            },
+            {
+              label: "lastUpdated",
+              value: formatDisplayDate(company.dates.updated),
+              sub: getRelativeLabel(company.dates.updated),
+              small: true,
+            },
+          ]}
+        />
 
         <div className="grid grid-cols-[1fr_340px] items-start gap-5 max-[900px]:grid-cols-1">
           <div className="space-y-5">
-            <CompanyInformation
-              profile={{ ...COMPANY.profile, companyName: COMPANY.name }}
+            <CompanyInformation profile={{ ...company.profile, companyName: company.name }} />
+            <ContactInformation contact={company.contact} />
+            {/* "View all jobs" is on the jobs panel, so it belongs on the job
+                list — it was navigating to the *companies* list with
+                ?status=active, which is a company-status filter and showed the
+                admin a list of companies instead of this company's jobs. */}
+            <CompanyJobs
+              jobs={company.jobs}
+              onViewAll={() =>
+                navigate(
+                  `${localizedPath("/dashboard/job-management")}?search=${encodeURIComponent(company.name)}`,
+                )
+              }
             />
-            <ContactInformation contact={COMPANY.contact} />
-            <CompanyJobs jobs={COMPANY_JOBS} />
-            <CompanyActivity activity={COMPANY_ACTIVITY} />
+            <CompanyActivity activity={company.activity} />
           </div>
 
           <aside className="sticky top-6 space-y-5">
             <VerificationCard
               status={verificationStatus}
-              onStatusChange={setVerificationStatus}
+              onStatusChange={handleStatusChange}
+              isSaving={isSaving}
             />
-            <CompanyDates dates={COMPANY.dates} />
-            <CompanyQuickLinks />
+            <CompanyDates
+              dates={[
+                {
+                  label: "created",
+                  date: formatDisplayDate(company.dates.created),
+                  sub: getRelativeLabel(company.dates.created),
+                },
+                {
+                  label: "lastUpdated",
+                  date: formatDisplayDate(company.dates.updated),
+                  sub: getRelativeLabel(company.dates.updated),
+                },
+                {
+                  label: "submitted",
+                  date: formatDisplayDate(company.submittedAt ?? company.dates.created),
+                  sub: getRelativeLabel(company.submittedAt ?? company.dates.created),
+                },
+              ]}
+            />
+            <CompanyQuickLinks companyName={company.name} />
           </aside>
         </div>
 
         {/* Footer */}
         <div className="mt-2 flex flex-wrap items-center justify-between gap-3 pt-2">
-          <Button
-            variant="ghost"
-            asChild
-            className="h-10 gap-2 rounded-xl text-muted hover:text-ink"
-          >
-            <Link to={COMPANIES_PATH}>
+          <Button variant="ghost" asChild className="h-10 gap-2 rounded-xl text-muted hover:text-ink">
+            <Link to={companiesPath}>
               <ArrowLeft className="h-4 w-4" />
-              {t(`${base}.backToCompanies`)}
+              {t(`${BASE_KEY}.backToCompanies`)}
             </Link>
           </Button>
-          <div className="flex flex-wrap items-center gap-2.5">
-            <Button
-              variant="outline"
-              className="h-10 rounded-xl border-border bg-surface text-ink"
-            >
-              {t(`${base}.editCompany`)}
-            </Button>
-            <Button className="h-10 gap-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90">
-              <CheckCircle2 className="h-4 w-4" />
-              {t(`${base}.saveChanges`)}
-            </Button>
-          </div>
+
+          {/*
+            This slot used to render `error`, which is the *query* error — and
+            the query error is always null here, because the isError branch
+            above already returned an ErrorState. So a failed Verify or Reject
+            produced no message anywhere on the page and the switch just
+            snapped back.
+          */}
+          {saveError ? (
+            <span className="flex items-center gap-2 text-[13px] font-semibold text-error">
+              <AlertTriangle className="h-4 w-4" />
+              {saveError.message}
+            </span>
+          ) : null}
         </div>
       </div>
     </div>

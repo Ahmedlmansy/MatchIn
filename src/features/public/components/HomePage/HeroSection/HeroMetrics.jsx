@@ -55,7 +55,12 @@ export default function HeroMetrics() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="mb-8 w-full max-w-4xl"
+      // Hidden below sm: four count-up figures wrapped into two cramped rows
+      // on a phone. The hero already has a badge, headline, search bar and a
+      // scroll cue — the stats strip was the element that made it feel
+      // crowded, so it now starts at the sm breakpoint alongside the popular
+      // searches.
+      className="mb-8 hidden w-full max-w-4xl sm:block"
     >
       <Card className="rounded-2xl border-primary-foreground/15 bg-primary-foreground/[0.07] shadow-2xl backdrop-blur-xl">
         <CardContent className="flex flex-wrap items-center justify-around gap-4 p-4 text-center sm:p-5">
