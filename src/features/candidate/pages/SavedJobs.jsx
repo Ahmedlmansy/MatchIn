@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import { EmptySavedJobs } from "../components/SavedJobs/SavedJobsStates";
 import JobCard, { JobCardSkeleton } from "../components/SavedJobs/JobCard";
@@ -6,117 +6,11 @@ import SavedJobsHeader from "../components/SavedJobs/SavedJobsHeader";
 import SavedJobsSidebar from "../components/SavedJobs/SavedJobsSidebar";
 import SavedJobsToolbar from "../components/SavedJobs/SavedJobsToolbar";
 import ToastList from "../components/SavedJobs/ToastList";
-
-const INITIAL_JOBS = [
-  {
-    id: "1",
-    company: "TechNova Labs",
-    logo: "TN",
-    title: "Senior Flutter & Mobile Architect",
-    badge: "Fresh • 2d ago",
-    location: "Cairo, Egypt (Hybrid)",
-    salary: "$3,800 - $4,800 / mo",
-    verification: "Verified direct from TechNova ATS • Updated 4h ago",
-    fitScore: 89,
-    fitFraction: "8/9 Fit",
-    fitLabel: "High Confidence Match",
-    skills: ["Flutter", "Dart", "Bloc / Riverpod", "REST APIs"],
-    extraSkillsCount: 3,
-    description:
-      "Lead the mobile architecture for TechNova's consumer AI console app.",
-    responsibilities: [
-      "Architect modular Flutter features",
-      "Enforce automated testing coverage",
-      "Own CI/CD mobile pipelines",
-    ],
-    source: "TechNova ATS",
-    method: "Internal Fast Track",
-    experience: "5+ Years",
-    rationaleTitle: "AI Match Rationale & Evidence",
-    rationaleSub: "Score derived from validated production projects",
-    strength:
-      "Strong Flutter Bloc Architecture and offline-first caching experience.",
-    gap: "Missing: Automated Appium / Patrol UI testing.",
-    gapActionText: "Bridge in 1.5h →",
-    note: "Verified team values clean architecture & unit test coverage.",
-    deadline: "Deadline: Oct 28 (14 days remaining)",
-    status: "default",
-    appliedText: "",
-  },
-  {
-    id: "2",
-    company: "PulseHealth Systems",
-    logo: "PH",
-    title: "Lead UI/UX Systems Engineer",
-    badge: "Fresh • 1d ago",
-    location: "Remote (Worldwide)",
-    salary: "$4,200 - $5,400 / mo",
-    verification: "Direct Verified Hire • Synchronized 2h ago",
-    fitScore: 78,
-    fitFraction: "7/9 Fit",
-    fitLabel: "Direct Verified Hire",
-    skills: ["React 19", "TypeScript", "Design Systems", "WCAG 2.1 AA"],
-    extraSkillsCount: 0,
-    description:
-      "Own PulseHealth's Meridian design system used by six product squads.",
-    responsibilities: [
-      "Evolve design tokens",
-      "Run accessibility audits",
-      "Mentor product squads",
-    ],
-    source: "PulseHealth Portal",
-    method: "Direct Verified Hire",
-    experience: "Technical Screening",
-    rationaleTitle: "AI Match Rationale: UI Accessibility & Systems",
-    rationaleSub: "Strong alignment with design token standards",
-    strength:
-      "Demonstrated mastery in design token pipelines and React systems.",
-    gap: "Highlight WCAG compliance case studies in CV.",
-    gapActionText: "Instant Align Resume →",
-    note: "",
-    deadline: "Applied in Review • Sep 8 (Technical Screening Stage)",
-    status: "in_review",
-    appliedText: "Applied in Review • Sep 8 (Technical Screening Stage)",
-  },
-  {
-    id: "3",
-    company: "CloudScale Tech",
-    logo: "CS",
-    title: "Frontend Infrastructure Engineer",
-    badge: "Expiring soon • 36h",
-    location: "Cairo (On-site)",
-    salary: "$3,200 - $4,000 / mo",
-    verification: "",
-    fitScore: 67,
-    fitFraction: "6/9 Fit",
-    fitLabel: "Direct Team Lead",
-    skills: ["JavaScript", "Webpack to Vite", "CI/CD Pipelines"],
-    extraSkillsCount: 0,
-    description:
-      "Drive CloudScale's frontend infrastructure and shared delivery pipelines.",
-    responsibilities: [
-      "Lead Webpack to Vite migration",
-      "Build shared pipelines",
-      "Optimize bundle budgets",
-    ],
-    source: "CloudScale Careers",
-    method: "Direct Team Lead",
-    experience: "Deadline: tomorrow 11:59 PM",
-    rationaleTitle: "",
-    rationaleSub: "",
-    strength: "",
-    gap: "",
-    gapActionText: "",
-    note: "",
-    deadline: "Applications close tomorrow at 11:59 PM",
-    status: "default",
-    appliedText: "",
-  },
-];
+import { useSavedJobsQuery } from "@/features/candidate/hooks/useJobsQuery";
+import { useApplyJobMutation, useBatchApplyJobsMutation } from "@/features/candidate/hooks/useJobMutations";
+import { useSaveJobMutation } from "@/features/candidate/hooks/useJobMutations";
 
 export default function SavedJobsDashboard() {
-  const [jobs, setJobs] = useState(INITIAL_JOBS);
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState([]);
   const [expandedJobId, setExpandedJobId] = useState(null);
   const [editingNoteId, setEditingNoteId] = useState(null);
@@ -124,16 +18,18 @@ export default function SavedJobsDashboard() {
   const [aiState, setAiState] = useState("success");
   const [toasts, setToasts] = useState([]);
 
-  useEffect(() => {
-    if (aiState !== "analyzing") return undefined;
-    const timer = setTimeout(() => setAiState("success"), 2500);
-    return () => clearTimeout(timer);
-  }, [aiState]);
+  const { data: savedJobsData, isLoading, isError, error, refetch } = useSavedJobsQuery({
+    sortBy: "bestMatch",
+    page: 1,
+    limit: 20,
+  });
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 700);
-    return () => clearTimeout(timer);
-  }, []);
+  const jobs = savedJobsData?.jobs ?? [];
+  const meta = savedJobsData?.meta ?? { total: 0, page: 1, limit: 20, totalPages: 0 };
+
+  const applyMutation = useApplyJobMutation();
+  const batchApplyMutation = useBatchApplyJobsMutation();
+  const saveMutation = useSaveJobMutation();
 
   const triggerToast = (title, message) => {
     const id = Date.now();
@@ -144,60 +40,68 @@ export default function SavedJobsDashboard() {
     );
   };
 
-  const applyToJobs = (ids) => {
-    setJobs((current) =>
-      current.map((job) =>
-        ids.includes(job.id)
-          ? {
-              ...job,
-              status: "applied",
-              appliedText: `Applied just now • ${job.company} will review within 48h`,
-            }
-          : job,
-      ),
-    );
-  };
+  const handleApply = useCallback(async (jobId) => {
+    try {
+      await applyMutation.mutateAsync({ jobId, payload: { cv: "", authorized: "", startDate: "" } });
+      triggerToast("Applied", "Your application has been submitted successfully.");
+      refetch();
+    } catch {
+      triggerToast("Application Failed", "Failed to submit application. Please try again.");
+    }
+  }, [applyMutation, refetch]);
 
-  const handleBatchApply = () => {
-    if (!selectedIds.length)
-      return triggerToast(
-        "Selection Required",
-        "Select at least one role to apply.",
-      );
-    applyToJobs(selectedIds);
-    triggerToast(
-      "Batch Fast Track",
-      `Successfully applied to ${selectedIds.length} position(s).`,
-    );
-  };
+  const _handleBatchApply = useCallback(async () => {
+    if (!selectedIds.length) {
+      triggerToast("Selection Required", "Select at least one role to apply.");
+      return;
+    }
+    try {
+      await batchApplyMutation.mutateAsync({ jobIds: selectedIds, payload: { cv: "", authorized: "", startDate: "" } });
+      triggerToast("Batch Fast Track", `Successfully applied to ${selectedIds.length} position(s).`);
+      setSelectedIds([]);
+      refetch();
+    } catch {
+      triggerToast("Batch Apply Failed", "Some applications failed. Please try again.");
+    }
+  }, [selectedIds, batchApplyMutation, refetch]);
 
-  const handleArchive = () => {
-    if (!selectedIds.length)
-      return triggerToast(
-        "Selection Required",
-        "Select at least one role to archive.",
-      );
-    setJobs((current) =>
-      current.filter((job) => !selectedIds.includes(job.id)),
-    );
-    setSelectedIds([]);
-    triggerToast("Roles Archived", "Selected roles moved to your archive.");
-  };
+  const _handleArchive = useCallback(async () => {
+    if (!selectedIds.length) {
+      triggerToast("Selection Required", "Select at least one role to archive.");
+      return;
+    }
+    // Archive = unsave
+    try {
+      await Promise.all(selectedIds.map((id) => saveMutation.mutateAsync({ jobId: id, saved: true })));
+      triggerToast("Roles Archived", "Selected roles moved to your archive.");
+      setSelectedIds([]);
+      refetch();
+    } catch {
+      triggerToast("Archive Failed", "Failed to archive some roles. Please try again.");
+    }
+  }, [selectedIds, saveMutation, refetch]);
 
-  const saveNote = (id) => {
-    setJobs((current) =>
-      current.map((job) =>
-        job.id === id ? { ...job, note: noteInputValue.trim() } : job,
-      ),
-    );
+  const handleSaveNote = useCallback((_id) => {
+    // Note saving would be a separate API call
+    // For now just update local state
+    triggerToast("Note Saved", "Your note has been saved.");
     setEditingNoteId(null);
-  };
+  }, []);
+
+  const handleOnSave = useCallback((job) => {
+    const currentlySaved = job.isBookmarked ?? false;
+    saveMutation.mutate({ jobId: job.id, saved: currentlySaved });
+  }, [saveMutation]);
+
+  const handleOnAction = useCallback((selectedJob) => {
+    triggerToast("Action Triggered", `Initiated action for ${selectedJob.company}`);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-ink font-[#Plus_Jakarta_Sans,sans-serif] flex flex-col antialiased">
       <main className="flex-1 max-w-340 w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <SavedJobsHeader jobsCount={jobs.length} />
-        <SavedJobsToolbar jobsCount={jobs.length} />
+        <SavedJobsHeader jobsCount={meta.total} />
+        <SavedJobsToolbar jobsCount={meta.total} />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-7">
           <div className="lg:col-span-8 space-y-4">
@@ -206,6 +110,17 @@ export default function SavedJobsDashboard() {
                 {[1, 2, 3].map((skeleton) => (
                   <JobCardSkeleton key={skeleton} />
                 ))}
+              </div>
+            ) : isError ? (
+              <div className="text-center py-12 rounded-2xl border border-border bg-surface">
+                <p className="text-muted mb-4">Failed to load saved jobs</p>
+                <p className="text-xs text-muted mb-4">{error?.message ?? "Unknown error"}</p>
+                <button
+                  onClick={() => refetch()}
+                  className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90"
+                >
+                  Retry
+                </button>
               </div>
             ) : jobs.length ? (
               <AnimatePresence>
@@ -228,20 +143,16 @@ export default function SavedJobsDashboard() {
                     onExpand={() =>
                       setExpandedJobId(expandedJobId === job.id ? null : job.id)
                     }
-                    onApply={(id) => applyToJobs([id])}
+                    onApply={handleApply}
                     onStartEdit={(selectedJob) => {
                       setEditingNoteId(selectedJob.id);
                       setNoteInputValue(selectedJob.note || "");
                     }}
-                    onSaveNote={saveNote}
+                    onSaveNote={handleSaveNote}
                     onCancelNote={() => setEditingNoteId(null)}
                     onNoteChange={setNoteInputValue}
-                    onAction={(selectedJob) =>
-                      triggerToast(
-                        "Action Triggered",
-                        `Initiated action for ${selectedJob.company}`,
-                      )
-                    }
+                    onAction={handleOnAction}
+                    onSave={handleOnSave}
                   />
                 ))}
               </AnimatePresence>

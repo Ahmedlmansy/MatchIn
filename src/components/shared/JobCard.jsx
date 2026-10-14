@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BadgeCheck, Globe, MapPin, Zap, Bookmark } from "lucide-react";
+import { BadgeCheck, Globe, MapPin, Zap, Bookmark, BookmarkCheck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,9 +8,16 @@ import { useLocalizedPath } from "@/utils/routes";
 
 const LOCATION_ICONS = { globe: Globe, pin: MapPin };
 
-export default function JobCard({ job, index = 0, onApply }) {
+export default function JobCard({ job, index = 0, onApply, onSave }) {
   const localizedPath = useLocalizedPath();
   const LocationIcon = LOCATION_ICONS[job.locationIcon] ?? Globe;
+  const isBookmarked = job.isBookmarked ?? false;
+
+  const handleSaveClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onSave?.(job);
+  };
 
   return (
     <motion.div
@@ -26,7 +33,7 @@ export default function JobCard({ job, index = 0, onApply }) {
       className="h-full"
     >
       <Card className="cursor-pointer group flex h-full flex-col justify-between rounded-2xl border-border bg-surface p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all hover:border-primary/40 hover:shadow-md">
-        <Link to={localizedPath(`/dashboard/jobs/${job.id}`)}>
+        <Link to={localizedPath(`/dashboard/jobs/${job.id}`)} onClick={(e) => e.stopPropagation()}>
           <CardContent className="flex flex-col gap-3 p-0">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -90,13 +97,28 @@ export default function JobCard({ job, index = 0, onApply }) {
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 rounded-full border-border text-muted hover:text-primary"
+              onClick={handleSaveClick}
+              className={`h-8 w-8 rounded-full border-border transition-colors ${
+                isBookmarked
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted hover:text-primary hover:bg-primary/5"
+              }`}
+              aria-label={isBookmarked ? "Remove from saved" : "Save job"}
+              aria-pressed={isBookmarked}
             >
-              <Bookmark className="h-4.5 w-4.5" />
+              {isBookmarked ? (
+                <BookmarkCheck className="h-4.5 w-4.5 fill-current" />
+              ) : (
+                <Bookmark className="h-4.5 w-4.5" />
+              )}
             </Button>
             <Button
               size="sm"
-              onClick={() => onApply?.(job)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onApply?.(job);
+              }}
               className="rounded-lg bg-primary px-4 py-1.5 font-headline-sm text-[12px] font-semibold text-primary-foreground hover:bg-primary/90"
             >
               Quick Apply

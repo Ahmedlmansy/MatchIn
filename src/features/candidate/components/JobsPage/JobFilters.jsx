@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { ListFilter, Search } from "lucide-react";
+import { ListFilter, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,8 +9,42 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 
-export default function JobFilters({ open, onToggle }) {
+export default function JobFilters({
+  open,
+  onToggle,
+  filters,
+  onFilterChange,
+  onSearch,
+}) {
+  const { t } = useTranslation("dashboard");
+
+  const activeFilterCount = [
+    filters.search,
+    filters.location !== "All Locations",
+    filters.workType !== "All Types",
+    filters.experienceLevel !== "Junior",
+  ].filter(Boolean).length;
+
+  const handleSearchChange = (e) => {
+    onSearch(e.target.value);
+  };
+
+  const handleFilterSelectChange = (key, value) => {
+    onFilterChange({ [key]: value });
+  };
+
+  const clearAllFilters = () => {
+    onFilterChange({
+      search: "",
+      location: "All Locations",
+      workType: "All Types",
+      experienceLevel: "Junior",
+      sortBy: "match",
+    });
+  };
+
   return (
     <div className="space-y-3 rounded-2xl border border-border bg-white p-4 shadow-sm">
       <div className="mb-0 flex flex-col gap-3 md:flex-row">
@@ -20,8 +54,20 @@ export default function JobFilters({ open, onToggle }) {
             type="search"
             aria-label="Search jobs"
             placeholder="Search by job title, skill, or company..."
+            value={filters.search}
+            onChange={handleSearchChange}
             className="h-11 rounded-xl border-border bg-background ps-10 pe-3 text-sm focus-visible:border-primary focus-visible:ring-primary/10"
           />
+          {filters.search && (
+            <button
+              type="button"
+              onClick={() => onSearch("")}
+              className="absolute inset-e-3 h-5 w-5 text-muted hover:text-primary"
+              aria-label="Clear search"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
         </div>
         <Button
           type="button"
@@ -37,11 +83,17 @@ export default function JobFilters({ open, onToggle }) {
             }`}
           />
           Filters
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-white">
-            2
-          </span>
+          {activeFilterCount > 0 && (
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-white">
+              {activeFilterCount}
+            </span>
+          )}
         </Button>
-        <Button type="button" className="h-11 rounded-xl px-6 font-bold">
+        <Button
+          type="button"
+          onClick={() => onFilterChange({ sortBy: "match" })}
+          className="h-11 rounded-xl px-6 font-bold"
+        >
           Search
         </Button>
       </div>
@@ -58,18 +110,37 @@ export default function JobFilters({ open, onToggle }) {
           >
             <div className="mt-3 flex flex-col gap-4 border-t border-border pt-3 md:flex-row">
               <FilterSelect
-                label="Location"
-                options={["All Locations", "Cairo, Egypt", "Remote"]}
+                label={t("ui.jobFilters.location") || "Location"}
+                value={filters.location}
+                onChange={(value) => handleFilterSelectChange("location", value)}
+                options={["All Locations", "Cairo, Egypt", "Remote", "Alexandria, Egypt", "Giza, Egypt", "Riyadh, KSA", "Dubai, UAE", "Remote Worldwide"]}
               />
               <FilterSelect
-                label="Work Type"
+                label={t("ui.jobFilters.workType") || "Work Type"}
+                value={filters.workType}
+                onChange={(value) => handleFilterSelectChange("workType", value)}
                 options={["All Types", "Remote", "Hybrid", "On-site"]}
               />
               <FilterSelect
-                label="Experience Level"
+                label={t("ui.jobFilters.experienceLevel") || "Experience Level"}
+                value={filters.experienceLevel}
+                onChange={(value) => handleFilterSelectChange("experienceLevel", value)}
                 options={["Junior", "Mid-Senior", "Lead"]}
               />
+              <FilterSelect
+                label={t("ui.jobFilters.sortBy") || "Sort By"}
+                value={filters.sortBy}
+                onChange={(value) => handleFilterSelectChange("sortBy", value)}
+                options={[
+                  { value: "match", label: "Best Match" },
+                  { value: "recent", label: "Most Recent" },
+                  { value: "salary", label: "Highest Salary" },
+                ]}
+              />
               <div className="flex flex-1 items-end gap-2">
+                <Button type="button" size="sm" className="w-full font-bold" onClick={clearAllFilters} variant="outline">
+                  Clear All
+                </Button>
                 <Button type="button" size="sm" className="w-full font-bold">
                   Apply Filters
                 </Button>
@@ -82,20 +153,22 @@ export default function JobFilters({ open, onToggle }) {
   );
 }
 
-function FilterSelect({ label, options }) {
+function FilterSelect({ label, value, onChange, options }) {
+  const isArrayOfObjects = options.length > 0 && typeof options[0] === "object";
+
   return (
     <div className="flex-1">
       <label className="mb-1 block text-xs font-bold text-secondary">
         {label}
       </label>
-      <Select defaultValue={options[0]}>
+      <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="h-9 w-full rounded-lg border-border bg-background text-xs">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
           {options.map((option) => (
-            <SelectItem key={option} value={option}>
-              {option}
+            <SelectItem key={isArrayOfObjects ? option.value : option} value={isArrayOfObjects ? option.value : option}>
+              {isArrayOfObjects ? option.label : option}
             </SelectItem>
           ))}
         </SelectContent>

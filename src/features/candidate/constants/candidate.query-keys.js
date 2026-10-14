@@ -15,9 +15,22 @@ export const candidateKeys = {
     status: (id) => [...candidateKeys.all, "cv", "status", id],
   },
 
-  // Placeholders for the rest of the candidate domain, added as each screen is
-  // migrated off its mock data — keeps every key defined in exactly one place.
-  savedJobs: (filters) => [...candidateKeys.all, "saved-jobs", filters ?? {}],
+  jobs: {
+    list: (filters) => [...candidateKeys.all, "jobs", "list", filters ?? {}],
+    details: (jobId) => [...candidateKeys.all, "jobs", "details", jobId],
+    saved: (filters) => [...candidateKeys.all, "jobs", "saved", filters ?? {}],
+  },
+
   applications: (filters) => [...candidateKeys.all, "applications", filters ?? {}],
+
   roadmap: (roleId) => [...candidateKeys.all, "roadmap", roleId ?? {}],
+
+  notifications: {
+    list: (filters) => [...candidateKeys.all, "notifications", "list", filters ?? {}],
+  },
+
+  aiChat: {
+    conversations: () => [...candidateKeys.all, "aiChat", "conversations"],
+    conversation: (conversationId) => [...candidateKeys.all, "aiChat", "conversation", conversationId],
+  },
 };
