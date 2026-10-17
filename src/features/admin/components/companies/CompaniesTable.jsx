@@ -1,7 +1,14 @@
+import { useTranslation } from "react-i18next";
 import { Building2 } from "lucide-react";
 import CompanyRow from "./CompanyRow";
 
-const COLUMNS = ["Company", "Verification", "Contact", "Created", "Last Updated"];
+const COLUMN_KEYS = [
+  "company",
+  "verification",
+  "contact",
+  "created",
+  "lastUpdated",
+];
 
 export default function CompaniesTable({
   companies = [],
@@ -10,6 +17,8 @@ export default function CompaniesTable({
   onReject,
   isUpdating = false,
 }) {
+  const { t } = useTranslation("dashboard");
+
   if (isLoading) {
     return (
       <div className="space-y-3 p-5">
@@ -24,16 +33,16 @@ export default function CompaniesTable({
     <table className="w-full min-w-[920px] border-collapse">
       <thead className="border-b border-border bg-background">
         <tr>
-          {COLUMNS.map((col) => (
+          {COLUMN_KEYS.map((column) => (
             <th
-              key={col}
+              key={column}
               className="px-4 py-3 text-start text-[11.5px] font-bold uppercase tracking-wider text-muted"
             >
-              {col}
+              {t(`pages.admin.companyList.columns.${column}`)}
             </th>
           ))}
           <th className="px-4 py-3 pe-5 text-end text-[11.5px] font-bold uppercase tracking-wider text-muted">
-            Actions
+            {t("pages.admin.companyList.columns.actions")}
           </th>
         </tr>
       </thead>
@@ -49,9 +58,11 @@ export default function CompaniesTable({
         ))}
         {companies.length === 0 && (
           <tr>
-            <td colSpan={COLUMNS.length + 1} className="px-4 py-12 text-center">
+            <td colSpan={COLUMN_KEYS.length + 1} className="px-4 py-12 text-center">
               <Building2 className="mx-auto mb-2 h-8 w-8 text-muted" />
-              <p className="text-[13.5px] text-muted">No companies match these filters.</p>
+              <p className="text-[13.5px] text-muted">
+                {t("pages.admin.companyList.noMatches")}
+              </p>
             </td>
           </tr>
         )}

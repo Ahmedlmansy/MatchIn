@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
 export default function ApplicationErrorState({ onRetry }) {
+  const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("dashboard");
   return (
     <motion.div
@@ -19,14 +20,14 @@ export default function ApplicationErrorState({ onRetry }) {
         {t("pages.applicationDetail.loadFailed")}
       </h2>
       <p className="text-[13.5px] text-muted max-w-sm mx-auto mb-7">
-        Something went wrong on our end. Your data is safe — please try again.
+        {t("pages.applicationDetail.errorState")}
       </p>
       <button
         onClick={onRetry}
         className="bg-primary text-white text-[13px] font-semibold px-6 h-11 rounded-full inline-flex items-center gap-2 shadow-sm hover:bg-[#0F2036] transition-colors"
       >
         <RefreshCw className="h-4 w-4" />
-        Retry
+            {tCommon("actions.retry")}
       </button>
     </motion.div>
   );

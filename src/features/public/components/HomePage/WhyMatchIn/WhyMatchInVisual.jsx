@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Play, ShieldCheck, X } from "lucide-react";
@@ -7,6 +8,7 @@ import Modal from "@/components/shared/Modal";
 const YOUTUBE_VIDEO_ID = "wsLIkM7f_YY";
 
 export default function WhyMatchInVisual() {
+  const { t } = useTranslation(["dashboard", "common"]);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
   return (
@@ -21,7 +23,7 @@ export default function WhyMatchInVisual() {
       >
         <div className="relative h-full w-full overflow-hidden rounded-2xl">
           <img
-            alt="MatchIn Interactive Platform Preview"
+            alt={t("public.whyMatchIn.platformPreview")}
             src="https://cdn.arabsstock.com/uploads/images/316068/discussion-and-dialogue-between-colleagues-thumbnail-316068.webp"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -34,7 +36,7 @@ export default function WhyMatchInVisual() {
                 <Play className="h-[18px] w-[18px] fill-current" />
               </div>
               <span className="font-headline-sm text-[13px] font-bold text-ink">
-                Watch How We Work (2 min video)
+                {t("public.whyMatchIn.watch")} {t("public.whyMatchIn.howWeWork")} {t("public.whyMatchIn.videoLength", { minutes: 2 })}
               </span>
             </motion.div>
           </div>
@@ -55,7 +57,7 @@ export default function WhyMatchInVisual() {
         </div>
         <div className="flex flex-col">
           <span className="font-headline-sm text-[13px] font-bold text-ink">
-            Enterprise-Grade Security
+            {t("public.whyMatchIn.enterpriseSecurity")}
           </span>
           <span className="font-body-sm text-[12px] text-muted">
             SOC2 Type II Certified &amp; End-to-End Encryption
@@ -76,7 +78,7 @@ export default function WhyMatchInVisual() {
                 type="button"
                 onClick={() => setIsVideoOpen(false)}
                 className="absolute end-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
-                aria-label="Close video"
+                aria-label={t("public.whyMatchIn.closeVideo")}
               >
                 <X className="h-4 w-4" />
               </button>
@@ -84,7 +86,7 @@ export default function WhyMatchInVisual() {
                 <iframe
                   className="h-full w-full"
                   src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1`}
-                  title="How We Work"
+                  title={t("public.whyMatchIn.howWeWork")}
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen

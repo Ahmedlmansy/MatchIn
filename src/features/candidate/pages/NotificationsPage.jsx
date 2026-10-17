@@ -6,6 +6,7 @@ import NotificationsList from "../components/NotificationsPage/NotificationsList
 import { useNotificationsQuery, useMarkNotificationReadMutation, useMarkAllNotificationsReadMutation } from "@/features/candidate/hooks/useNotificationsQuery";
 
 export default function NotificationsPage() {
+  const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("dashboard");
   const [page, setPage] = useState(1);
   const limit = 20;
@@ -59,32 +60,32 @@ export default function NotificationsPage() {
           {markAllReadMutation.isPending ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Marking...
+              {t("pages.notifications.marking")}
             </>
           ) : (
             <>
               <CheckCheck className="h-4 w-4" />
-              Mark all as read
+              {t("pages.notifications.markAllRead")}
             </>
           )}
         </Button>
       </div>
 
       {isLoading ? (
-        <div className="space-y-4" aria-label="Loading notifications">
+        <div className="space-y-4" aria-label={t("pages.notifications.loading")}>
           {[1, 2, 3].map((i) => (
             <NotificationSkeleton key={i} />
           ))}
         </div>
       ) : isError ? (
         <div className="text-center py-12 rounded-2xl border border-border bg-surface">
-          <p className="text-muted mb-4">Failed to load notifications</p>
+          <p className="text-muted mb-4">{t("pages.notifications.loadFailed")}</p>
           <p className="text-xs text-muted mb-4">{error?.message ?? "Unknown error"}</p>
           <button
             onClick={handleRetry}
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90"
           >
-            Retry
+                  {tCommon("actions.retry")}
           </button>
         </div>
       ) : notifications.length > 0 ? (
@@ -104,7 +105,7 @@ export default function NotificationsPage() {
                 {isFetching ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Loading...
+                    {t("pages.notifications.loadingShort")}
                   </>
                 ) : (
                   `Load more (${notifications.length} of ${meta.total})`
@@ -115,8 +116,8 @@ export default function NotificationsPage() {
         </>
       ) : (
         <div className="text-center py-12 rounded-2xl border border-border bg-surface">
-          <p className="text-muted">No notifications yet</p>
-          <p className="text-xs text-muted mt-1">You're all caught up!</p>
+          <p className="text-muted">{t("pages.notifications.empty")}</p>
+          <p className="text-xs text-muted mt-1">{t("pages.notifications.caughtUp")}</p>
         </div>
       )}
     </main>

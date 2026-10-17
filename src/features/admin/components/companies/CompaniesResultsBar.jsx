@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import {
   Select,
   SelectContent,
@@ -14,18 +15,21 @@ export default function CompaniesResultsBar({
   onSortChange,
   sortOptions,
 }) {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
+
   return (
     <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
       <div className="text-[13.5px] text-muted">
-        Showing{" "}
-        <strong className="font-semibold text-ink">
-          {start}–{end}
-        </strong>{" "}
-        of <strong className="font-semibold text-ink">{total}</strong>{" "}
-        {total === 1 ? "company" : "companies"}
+        {t("pages.admin.companyList.resultsCount", {
+          count: total,
+          start,
+          end,
+          total,
+        })}
       </div>
       <div className="flex items-center gap-2 text-[13px] text-muted">
-        <span>Sort by</span>
+        <span>{t("pages.admin.companyList.sortBy")}</span>
         <Select value={sort} onValueChange={onSortChange}>
           <SelectTrigger className="h-[34px] min-w-[160px] rounded-xl border-border bg-surface text-[13px] font-medium text-ink">
             <SelectValue />
@@ -33,7 +37,7 @@ export default function CompaniesResultsBar({
           <SelectContent>
             {sortOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
-                {option.label}
+                {tCommon(option.labelKey)}
               </SelectItem>
             ))}
           </SelectContent>

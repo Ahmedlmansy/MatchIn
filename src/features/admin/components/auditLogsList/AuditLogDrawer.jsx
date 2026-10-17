@@ -1,6 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
 import { Badge, ReadOnlyBanner } from "@/features/admin/shared";
+import {
+  formatDateTime,
+  translateAdminAuditAction,
+  translateAdminEntity,
+  translateAdminValue,
+} from "@/features/admin/shared/formatting/locale";
 import { DiffViewer } from "../auditLogDetails";
 
 /** Small labeled field used inside the drawer grid. */
@@ -21,6 +28,7 @@ function DrawerField({ label, children }) {
  * Framer Motion (AnimatePresence + motion.div) drives the slide-in/out.
  */
 export default function AuditLogDrawer({ log, onClose }) {
+  const { t } = useTranslation("dashboard");
   return (
     <AnimatePresence>
       {log && (
@@ -33,11 +41,11 @@ export default function AuditLogDrawer({ log, onClose }) {
           {/* Header */}
           <div className="flex items-center justify-between p-4 px-5 border-b border-border bg-[#f7f4ef]">
             <h2 className="font-semibold text-sm sm:text-base">
-              Log Details · #{log.id}
+              {t("pages.admin.logDetails", { id: log.id })}
             </h2>
             <button
               type="button"
-              aria-label="Close log details"
+              aria-label={t("pages.admin.auditLogs.drawer.close")}
               onClick={onClose}
               className="p-1 hover:bg-stone-200 rounded-lg text-muted"
             >
@@ -47,20 +55,27 @@ export default function AuditLogDrawer({ log, onClose }) {
 
           {/* Fields */}
           <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
-            <DrawerField label="Timestamp">{log.time} EEST</DrawerField>
-            <DrawerField label="Actor">
-              {log.actor} ({log.role})
+            <DrawerField label={t(`pages.admin.auditLogs.table.timestamp`)}>
+              {log.createdAt ? formatDateTime(log.createdAt) : log.time}{" "}
+              {t("pages.admin.auditLogs.drawer.timeZone")}
             </DrawerField>
-            <DrawerField label="Action">
-              <Badge type={log.actionType} text={log.action} />
+            <DrawerField label={t(`pages.admin.auditLogs.table.actor`)}>
+              {log.actor} ({translateAdminValue(log.role)})
             </DrawerField>
-            <DrawerField label="Entity">
-              {log.entity} · <span className="font-mono">{log.entityId}</span>
+            <DrawerField label={t(`pages.admin.auditLogs.table.action`)}>
+              <Badge
+                type={log.actionType}
+                text={translateAdminAuditAction(log.action, log.actionType)}
+              />
+            </DrawerField>
+            <DrawerField label={t(`pages.admin.auditLogs.table.entity`)}>
+              {translateAdminEntity(log.entity)} ·{" "}
+              <span className="font-mono">{log.entityId}</span>
             </DrawerField>
             <div className="col-span-full">
               <DiffViewer
                 variant="compact"
-                label="Value Change"
+                label={t("pages.admin.auditLogs.drawer.valueChange")}
                 field="status"
                 previous={log.prev}
                 next={log.newValue}
@@ -70,8 +85,7 @@ export default function AuditLogDrawer({ log, onClose }) {
 
           {/* Read-only footer */}
           <ReadOnlyBanner variant="strip">
-            Audit logs are immutable read-only records. They cannot be edited
-            or deleted.
+            {t("pages.admin.auditLogsImmutable")}
           </ReadOnlyBanner>
         </motion.div>
       )}

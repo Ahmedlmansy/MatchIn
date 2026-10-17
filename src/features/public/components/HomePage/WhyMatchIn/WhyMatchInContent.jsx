@@ -37,10 +37,13 @@ export default function WhyMatchInContent() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
+        // `self-*` lives on the flex child, not the Badge inside it — the
+        // heading block is centred on phones, everything below it is not.
+        className="self-center lg:self-start"
       >
         <Badge
           variant="outline"
-          className="w-fit self-start rounded-full border-border bg-surface px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-secondary"
+          className="w-fit rounded-full border-border bg-surface px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-secondary"
         >
           {t("home.benefits.badge")}
         </Badge>
@@ -51,7 +54,7 @@ export default function WhyMatchInContent() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="font-headline-xl text-[34px] font-bold tracking-tight text-ink sm:text-[42px]"
+        className="text-center font-headline-xl text-[34px] font-bold tracking-tight text-ink sm:text-[42px] lg:text-start"
       >
         {t("home.benefits.title")}
       </motion.h2>
@@ -61,7 +64,7 @@ export default function WhyMatchInContent() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.15 }}
-        className="font-body-lg leading-relaxed text-muted"
+        className="hidden text-center font-body-lg leading-relaxed text-muted md:block lg:text-start"
       >
         {t("home.benefits.description")}
       </motion.p>

@@ -1,6 +1,9 @@
 import CompanyStatusBadge from "./CompanyStatusBadge";
 import CompanyRowActions from "./CompanyRowActions";
-import { getRelativeLabel, formatDisplayDate } from "../../shared/companyDateFormat";
+import {
+  formatDate,
+  relativeDayLabel,
+} from "../../shared/formatting/locale";
 
 export default function CompanyRow({ company, onVerify, onReject, isUpdating }) {
   return (
@@ -26,12 +29,12 @@ export default function CompanyRow({ company, onVerify, onReject, isUpdating }) 
         <div className="mt-0.5 text-[12.5px] text-muted">{company.phone || "—"}</div>
       </td>
       <td className="whitespace-nowrap px-4 py-3.5">
-        <div className="text-[13.5px] text-ink">{formatDisplayDate(company.createdAt)}</div>
-        <div className="text-[12px] text-muted">{getRelativeLabel(company.createdAt)}</div>
+        <div className="text-[13.5px] text-ink">{formatDate(company.createdAt)}</div>
+        <div className="text-[12px] text-muted">{relativeDayLabel(company.createdAt)}</div>
       </td>
       <td className="whitespace-nowrap px-4 py-3.5">
-        <div className="text-[13.5px] text-ink">{formatDisplayDate(company.updatedAt)}</div>
-        <div className="text-[12px] text-muted">{getRelativeLabel(company.updatedAt)}</div>
+        <div className="text-[13.5px] text-ink">{formatDate(company.updatedAt)}</div>
+        <div className="text-[12px] text-muted">{relativeDayLabel(company.updatedAt)}</div>
       </td>
       <td className="px-4 py-3.5 pe-5">
         <CompanyRowActions

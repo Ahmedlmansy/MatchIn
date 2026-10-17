@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import {
   Search,
@@ -24,33 +25,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { useTranslation } from "react-i18next";
-
+// labelKey rather than label: this array is built at module scope, so calling
+// t() here would bind the English text once at import time and never re-render
+// in the other language. The component resolves each key per render.
 const SUGGESTED_ROLES = [
-  {
-    label: "Frontend Dev",
-    count: "940+ open",
-    icon: Code2,
-    color: "text-accent",
-  },
-  {
-    label: "Data Scientist",
-    count: "620+ open",
-    icon: LineChart,
-    color: "text-success",
-  },
-  {
-    label: "Product Manager",
-    count: "410+ open",
-    icon: Layers,
-    color: "text-secondary",
-  },
-  {
-    label: "Backend Engineer",
-    count: "830+ open",
-    icon: Database,
-    color: "text-warning",
-  },
+  { labelKey: "public.heroSearch.frontendDev", openings: 940, icon: Code2, color: "text-accent" },
+  { labelKey: "public.heroSearch.dataScientist", openings: 620, icon: LineChart, color: "text-success" },
+  { labelKey: "public.heroSearch.productManager", openings: 410, icon: Layers, color: "text-secondary" },
+  { labelKey: "public.heroSearch.backendEngineer", openings: 830, icon: Database, color: "text-warning" },
 ];
 
 export default function HeroSearchBar({
@@ -65,7 +47,7 @@ export default function HeroSearchBar({
   const inputRef = useRef(null);
 
   const filteredRoles = SUGGESTED_ROLES.filter((r) =>
-    r.label.toLowerCase().includes(query.trim().toLowerCase()),
+    t(r.labelKey).toLowerCase().includes(query.trim().toLowerCase()),
   );
 
   return (
@@ -126,10 +108,11 @@ export default function HeroSearchBar({
                     heading={t("home.hero.suggestedRoles")}
                     className="[&_[cmdk-group-heading]]:px-1 [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:font-semibold [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-primary-foreground/50"
                   >
-                    {filteredRoles.map(
-                      ({ label, count, icon: Icon, color }) => (
+                    {filteredRoles.map(({ labelKey, openings, icon: Icon, color }) => {
+                      const label = t(labelKey);
+                      return (
                         <CommandItem
-                          key={label}
+                          key={labelKey}
                           value={label}
                           onSelect={() => {
                             onQueryChange(label);
@@ -142,11 +125,11 @@ export default function HeroSearchBar({
                             {label}
                           </span>
                           <span className="text-[11px] text-primary-foreground/50">
-                            {count}
+                            {t("public.heroSearch.openCount", { count: openings })}
                           </span>
                         </CommandItem>
-                      ),
-                    )}
+                      );
+                    })}
                   </CommandGroup>
                 </CommandList>
               </Command>

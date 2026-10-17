@@ -2,6 +2,7 @@ import { FileText } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export default function ApplicationDetailInfoGrid() {
+  const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("dashboard");
   return (
     <div className="grid sm:grid-cols-2 gap-5 mb-5">
@@ -41,13 +42,15 @@ export default function ApplicationDetailInfoGrid() {
             <div className="text-[13px] font-semibold truncate">
               resume_2026.pdf
             </div>
-            <div className="text-[11px] text-muted">Submitted Aug 24, 2026</div>
+            <div className="text-[11px] text-muted">
+              {t("pages.applicationDetail.submittedOn", { date: "Aug 24, 2026" })}
+            </div>
           </div>
           <a
             href="#view"
             className="text-[12px] font-semibold text-primary shrink-0"
           >
-            View
+            {tCommon("actions.view")}
           </a>
         </div>
       </div>

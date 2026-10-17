@@ -42,6 +42,10 @@ const toFormData = (job) => ({
   experienceLevel: job.level,
   workMode: job.workMode,
   jobType: job.type,
+  // The English display-cased word is an internal form value, never rendered:
+  // StatusSection shows t(st.labelKey) and only compares this against st.name.
+  // Translating it here would break that comparison and post a translated label
+  // to the server — see toPayload's `.toLowerCase()`.
   status: job.status.charAt(0).toUpperCase() + job.status.slice(1),
 });
 
@@ -65,6 +69,7 @@ export default function EditJob() {
   const navigate = useNavigate();
   const localizedPath = useLocalizedPath();
   const { jobId } = useParams();
+  const { t } = useTranslation("dashboard");
 
   const jobsPath = localizedPath("/dashboard/job-management");
 
@@ -79,8 +84,10 @@ export default function EditJob() {
     return (
       <div className="min-h-screen bg-[#FBF9F5] p-6 md:p-8">
         <ErrorState
-          title="Couldn't load this job"
-          description={error?.message || "Something went wrong while fetching the job."}
+          title={t("pages.admin.jobList.loadFailed.title")}
+          description={
+            error?.message || t("pages.admin.jobList.loadFailed.description")
+          }
           onRetry={() => (error?.status === 404 ? navigate(jobsPath) : refetch())}
         />
       </div>
@@ -238,7 +245,7 @@ function JobEditor({ job, companies, onExit }) {
 }
 
 function SaveButton({ onClick, disabled, isSaving }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("dashboard");
   return (
     <button
       type="button"
@@ -254,6 +261,8 @@ function SaveButton({ onClick, disabled, isSaving }) {
 
 /** Success / error note for the save mutation. */
 function SaveFeedback({ error, isSuccess }) {
+  const { t } = useTranslation("dashboard");
+
   if (error) {
     return (
       <div className="flex items-center gap-2 rounded-xl bg-error/10 px-4 py-3 text-xs font-semibold text-error">
@@ -267,7 +276,7 @@ function SaveFeedback({ error, isSuccess }) {
     return (
       <div className="flex items-center gap-2 rounded-xl bg-success/10 px-4 py-3 text-xs font-semibold text-success">
         <CheckCircle2 className="h-4 w-4" />
-        Changes saved successfully.
+        {t("ui.editJob.saveSuccess")}
       </div>
     );
   }

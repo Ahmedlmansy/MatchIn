@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { GraduationCap, School, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -9,10 +10,11 @@ export default function CvEducationCard({
   educations = [],
   onConfirmEducation,
 }) {
+  const { t } = useTranslation("dashboard");
   if (!educations || educations.length === 0) {
     return (
       <div className="rounded-2xl border border-border bg-surface p-5 text-center text-sm text-muted">
-        No education records detected in CV.
+        {t("pages.cvManagement.noEducation")}
       </div>
     );
   }
@@ -33,14 +35,14 @@ export default function CvEducationCard({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-bold text-primary">
-                Education & Academics
+                {t("pages.cvManagement.educationAcademics")}
               </h3>
               <Badge className="bg-accent/15 text-ink hover:bg-accent/15 border-0 text-[11px] font-semibold">
                 {educations.length} Degree{educations.length > 1 ? "s" : ""}
               </Badge>
             </div>
             <p className="text-xs text-muted">
-              Academic credentials, degrees, and university programs
+              {t("pages.cvManagement.education")}
             </p>
           </div>
         </div>
@@ -65,7 +67,7 @@ export default function CvEducationCard({
                     {edu.field_of_study ? ` in ${edu.field_of_study}` : ""}
                   </h4>
                   <Badge className="bg-primary/5 text-primary border border-primary/20 text-[10px] font-semibold">
-                    Degree
+            {t("pages.cvManagement.degree")}
                   </Badge>
                 </div>
 
@@ -79,7 +81,7 @@ export default function CvEducationCard({
                 {edu.confirmed ? (
                   <span className="flex items-center gap-1 text-xs font-bold text-success">
                     <CheckCircle2 className="h-4 w-4" />
-                    Confirmed
+        {t("pages.cvManagement.confirmed")}
                   </span>
                 ) : (
                   <Button
@@ -91,7 +93,7 @@ export default function CvEducationCard({
                     }
                     className="rounded-lg bg-success px-3 py-1 text-xs font-bold text-success-foreground hover:bg-success/90"
                   >
-                    Confirm
+        {t("pages.cvManagement.confirmItem")}
                   </Button>
                 )}
               </div>

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { translateAdminValue } from "./formatting/locale";
 
 const SOURCE_VARIANTS = {
   internal: "bg-primary/10 text-primary",
@@ -18,7 +19,7 @@ export default function SourceBadge({ source, label, className }) {
         className,
       )}
     >
-      {label}
+      {translateAdminValue(label ?? source)}
     </span>
   );
 }

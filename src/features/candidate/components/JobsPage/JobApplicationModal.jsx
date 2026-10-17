@@ -168,7 +168,7 @@ export default function JobApplicationModal({ job, form, onClose, onSubmit }) {
 }
 
 function ApplicantDetails() {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("dashboard");
   const localizedPath = useLocalizedPath();
 
   return (
@@ -203,7 +203,7 @@ function ProfileInput({ label, placeholder }) {
 }
 
 function ResumeField({ control }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("dashboard");
   return (
     <FormField
       control={control}
@@ -253,7 +253,7 @@ function ResumeField({ control }) {
 }
 
 function SelectField({ control, label, options }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("dashboard");
   return (
     <FormField
       control={control}

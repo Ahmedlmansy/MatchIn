@@ -10,26 +10,27 @@ export function EmptySavedJobs() {
         icon={<Briefcase className="h-7 w-7 text-muted" />}
         iconClassName="border border-border bg-background"
         title={t("pages.savedJobs.empty")}
-        subtitle="Your saved opportunities will appear here when you bookmark a role."
+        subtitle={t("pages.savedJobs.emptyDescription")}
       />
     </div>
   );
 }
 
 export function PortfolioHealth() {
+  const { t } = useTranslation("dashboard");
   return (
     <div className="bg-surface border border-border rounded-2xl p-6 shadow-xs">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
         <h4 className="font-dm-sans text-lg font-bold text-primary">
-          Portfolio Health
+          {t("pages.savedJobs.portfolioHealth")}
         </h4>
         <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-background border border-border text-primary">
-          Strong Affinity
+          {t("pages.savedJobs.strongAffinity")}
         </span>
       </div>
       <div className="mb-4">
         <div className="flex justify-between text-xs mb-1.5">
-          <span className="text-muted">Overall Match Fit</span>
+          <span className="text-muted">{t("pages.savedJobs.overallMatchFit")}</span>
           <span className="font-bold text-primary">79% Average</span>
         </div>
         <div className="w-full bg-border h-2.5 rounded-full overflow-hidden">

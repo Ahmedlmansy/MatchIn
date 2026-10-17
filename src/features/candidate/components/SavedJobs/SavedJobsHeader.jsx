@@ -6,10 +6,10 @@ export default function SavedJobsHeader({ jobsCount }) {
     <div className="bg-surface border border-border rounded-2xl p-5 sm:p-6 lg:p-7 mb-8 shadow-[0_2px_12px_-4px_rgba(31,54,92,0.04)] flex flex-col lg:flex-row lg:items-center justify-between gap-5 lg:gap-6">
       <div className="order-1 max-w-2xl min-w-0">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold uppercase tracking-wider text-muted mb-2">
-          <span>Candidate Workspace</span>
+          <span>{t("pages.savedJobs.candidateWorkspace")}</span>
           <span className="text-border">•</span>
           <span className="text-secondary font-bold">
-            Bookmarked Opportunities
+            {t("pages.savedJobs.bookmarkedOpportunities")}
           </span>
         </div>
         <h1 className="font-dm-sans text-2xl sm:text-3xl md:text-4xl text-primary font-bold tracking-tight mb-2 wrap-break-word">
@@ -20,8 +20,8 @@ export default function SavedJobsHeader({ jobsCount }) {
         </p>
       </div>
       <div className="order-2 grid w-full grid-cols-3 gap-1.5 sm:gap-3 bg-background border border-border p-2.5 sm:p-3 rounded-xl lg:w-auto lg:min-w-85">
-        <Stat value={jobsCount} label="Saved Roles" />
-        <Stat value="5" label="High Fit" />
+        <Stat value={jobsCount} label={t("pages.savedJobs.savedRoles")} />
+        <Stat value="5" label={t("pages.savedJobs.highFit")} />
         <Stat value="2" label="Expiring" last />
       </div>
     </div>

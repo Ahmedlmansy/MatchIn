@@ -16,7 +16,7 @@ import {
   useAdminCompanyQuery,
   useUpdateAdminCompanyMutation,
 } from "@/features/admin/hooks";
-import { formatDisplayDate, getRelativeLabel } from "@/features/admin/shared/companyDateFormat";
+import { formatDate, relativeDayLabel } from "@/features/admin/shared/formatting/locale";
 import {
   VERIFICATION_STATUS,
   DEFAULT_VERIFICATION_STATUS,
@@ -77,8 +77,10 @@ export default function CompanyDetails() {
       <div className="min-h-screen bg-background px-4 py-7 sm:px-7">
         <div className="mx-auto max-w-275">
           <ErrorState
-            title="Couldn't load this company"
-            description={error?.message || "The company may have been deleted or merged."}
+            title={t("pages.admin.companyDetails.loadFailed.title")}
+            description={
+              error?.message || t("pages.admin.companyDetails.loadFailed.description")
+            }
             onRetry={() => (error?.status === 404 ? navigate(companiesPath) : refetch())}
           />
         </div>
@@ -123,14 +125,14 @@ export default function CompanyDetails() {
             },
             {
               label: "created",
-              value: formatDisplayDate(company.dates.created),
-              sub: getRelativeLabel(company.dates.created),
+              value: formatDate(company.dates.created),
+              sub: relativeDayLabel(company.dates.created),
               small: true,
             },
             {
               label: "lastUpdated",
-              value: formatDisplayDate(company.dates.updated),
-              sub: getRelativeLabel(company.dates.updated),
+              value: formatDate(company.dates.updated),
+              sub: relativeDayLabel(company.dates.updated),
               small: true,
             },
           ]}
@@ -165,18 +167,18 @@ export default function CompanyDetails() {
               dates={[
                 {
                   label: "created",
-                  date: formatDisplayDate(company.dates.created),
-                  sub: getRelativeLabel(company.dates.created),
+                  date: formatDate(company.dates.created),
+                  sub: relativeDayLabel(company.dates.created),
                 },
                 {
                   label: "lastUpdated",
-                  date: formatDisplayDate(company.dates.updated),
-                  sub: getRelativeLabel(company.dates.updated),
+                  date: formatDate(company.dates.updated),
+                  sub: relativeDayLabel(company.dates.updated),
                 },
                 {
                   label: "submitted",
-                  date: formatDisplayDate(company.submittedAt ?? company.dates.created),
-                  sub: getRelativeLabel(company.submittedAt ?? company.dates.created),
+                  date: formatDate(company.submittedAt ?? company.dates.created),
+                  sub: relativeDayLabel(company.submittedAt ?? company.dates.created),
                 },
               ]}
             />

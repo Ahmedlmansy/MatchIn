@@ -50,8 +50,13 @@ import {
   AppStatusBadge,
   RoleBadge,
   UserStatusBadge,
-  STATUS_LABELS,
 } from "@/features/admin/components/UsersDetailsPage/DetailSections";
+import { enumLabel, USER_STATUS_LABEL_KEYS } from "@/features/admin/shared";
+import {
+  formatDate,
+  relativeActivityLabel,
+  translateAdminValue,
+} from "@/features/admin/shared/formatting/locale";
 
 // This page is scoped to account/profile/activity data only — a user's AI
 // mentorship conversations are a different feature/scope and are intentionally
@@ -65,6 +70,23 @@ const EXPERIENCE_OPTIONS = [
   "10+ years",
 ];
 
+const experienceLabel = (value, t) => {
+  switch (value) {
+    case "Less than 1 year":
+      return t("pages.admin.userDetails.experienceOptions.lessThanYear");
+    case "1–2 years":
+      return t("pages.admin.userDetails.experienceOptions.oneToTwo");
+    case "3–5 years":
+      return t("pages.admin.userDetails.experienceOptions.threeToFive");
+    case "6–10 years":
+      return t("pages.admin.userDetails.experienceOptions.sixToTen");
+    case "10+ years":
+      return t("pages.admin.userDetails.experienceOptions.tenPlus");
+    default:
+      return translateAdminValue(value);
+  }
+};
+
 const EDITABLE_FIELDS = [
   "fullName",
   "email",
@@ -77,25 +99,34 @@ const EDITABLE_FIELDS = [
 
 /** The loaded record -> the editable draft shape. */
 const toForm = (user) =>
-  Object.fromEntries(EDITABLE_FIELDS.map((field) => [field, user[field] ?? ""]));
+  Object.fromEntries(
+    EDITABLE_FIELDS.map((field) => [field, user[field] ?? ""]),
+  );
 
 /** Stat tile captions (the API returns camelCase keys). */
-const STAT_CAPTIONS = {
-  applications: "Applications",
-  savedJobs: "Saved Jobs",
-  cvStatus: "CV Status",
-  profile: "Profile",
+const STAT_CAPTION_KEYS = {
+  applications: "applications",
+  savedJobs: "savedJobs",
+  cvStatus: "cvStatus",
+  profile: "profile",
 };
 
 export function UsersDetailsPage() {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const navigate = useNavigate();
   const localizedPath = useLocalizedPath();
   const { id: userId } = useParams();
 
   const usersPath = localizedPath("/dashboard/user-management");
 
-  const { data: user, isPending, isError, error, refetch } = useAdminUserQuery(userId);
+  const {
+    data: user,
+    isPending,
+    isError,
+    error,
+    refetch,
+  } = useAdminUserQuery(userId);
   const updateUser = useUpdateAdminUserMutation(userId);
   const setStatus = useSetAdminUserStatusMutation(userId);
   const deleteUser = useDeleteAdminUserMutation(userId);
@@ -114,7 +145,13 @@ export function UsersDetailsPage() {
   };
 
   const handleDelete = () => {
-    if (window.confirm(`Delete ${user.fullName}? This can't be undone.`)) {
+    if (
+      window.confirm(
+        t(`pages.admin.userDetails.actions.deleteConfirm`, {
+          name: user.fullName,
+        }),
+      )
+    ) {
       deleteUser.mutate(undefined, { onSuccess: () => navigate(usersPath) });
     }
   };
@@ -124,7 +161,9 @@ export function UsersDetailsPage() {
       <div className="flex min-h-screen items-center justify-center bg-background">
         <div className="flex items-center gap-2.5 text-muted">
           <Loader2 className="h-5 w-5 animate-spin" />
-          <span className="text-sm font-medium">Loading user…</span>
+          <span className="text-sm font-medium">
+            {t(`pages.admin.userDetails.loadingUser`)}
+          </span>
         </div>
       </div>
     );
@@ -143,17 +182,24 @@ export function UsersDetailsPage() {
               : t("pages.admin.userLoadFailed")}
           </h1>
           <p className="mb-5 text-sm text-muted">
-            {error?.message || "Something went wrong. Please try again."}
+            {error?.message || tCommon("ui.adminShared.errorDescription")}
           </p>
-          <Button asChild className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90">
-            <Link to={usersPath}>Back to Users</Link>
+          <Button
+            asChild
+            className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            <Link to={usersPath}>
+              {t(`pages.admin.userDetails.actions.backToUsers`)}
+            </Link>
           </Button>
           <Button
             variant="outline"
-            onClick={() => (error?.status === 404 ? navigate(usersPath) : refetch())}
+            onClick={() =>
+              error?.status === 404 ? navigate(usersPath) : refetch()
+            }
             className="ms-2.5 rounded-xl"
           >
-            Retry
+            {tCommon("actions.retry")}
           </Button>
         </div>
       </div>
@@ -171,7 +217,7 @@ export function UsersDetailsPage() {
         {/* Breadcrumb */}
         <div className="mb-3.5 flex flex-wrap items-center gap-1.5 text-[13px] text-muted">
           <Link to={usersPath} className="hover:text-primary">
-            Users
+            {t("pages.admin.backToUsers")}
           </Link>
           <ChevronRight className="h-3.5 w-3.5 opacity-55" />
           <span>{user.id}</span>
@@ -189,7 +235,9 @@ export function UsersDetailsPage() {
               {user.initials}
             </div>
             <div>
-              <h1 className="text-[22px] font-bold tracking-tight text-ink">{user.fullName}</h1>
+              <h1 className="text-[22px] font-bold tracking-tight text-ink">
+                {user.fullName}
+              </h1>
               <div className="mt-1 flex flex-wrap items-center gap-2 text-[13.5px] text-muted">
                 <span className="font-mono text-[13px]">{user.id}</span>
                 <span className="h-[3px] w-[3px] rounded-full bg-border" />
@@ -201,10 +249,14 @@ export function UsersDetailsPage() {
           </div>
 
           <div className="flex flex-wrap gap-2.5">
-            <Button variant="ghost" asChild className="h-10 gap-2 rounded-xl text-muted hover:text-ink">
+            <Button
+              variant="ghost"
+              asChild
+              className="h-10 gap-2 rounded-xl text-muted hover:text-ink"
+            >
               <Link to={usersPath}>
                 <ArrowLeft className="h-4 w-4" />
-                Back
+                {tCommon("actions.back")}
               </Link>
             </Button>
             {!isEditing && (
@@ -214,7 +266,7 @@ export function UsersDetailsPage() {
                 className="h-10 gap-2 rounded-xl border-border text-ink"
               >
                 <PencilLine className="h-4 w-4" />
-                Edit User
+                {t("pages.admin.editUser")}
               </Button>
             )}
           </div>
@@ -249,10 +301,12 @@ export function UsersDetailsPage() {
                   user.status === "suspended" && "text-error",
                 )}
               >
-                Account {STATUS_LABELS[user.status]}
+                {t("pages.admin.accountStatus")}{" "}
+                {enumLabel(tCommon, USER_STATUS_LABEL_KEYS, user.status)}
               </div>
               <div className="mt-0.5 text-[13px] text-muted">
-                Last activity · {user.dates.lastActivity.sub}
+                {t("pages.admin.lastActivity", { value: "" })}
+                {relativeActivityLabel(user.dates.lastActivity)}
               </div>
             </div>
           </div>
@@ -269,8 +323,14 @@ export function UsersDetailsPage() {
                 : "border-success/35 text-success hover:border-success hover:bg-success/10",
             )}
           >
-            {isActive ? <Ban className="h-3.5 w-3.5" /> : <Power className="h-3.5 w-3.5" />}
-            {isActive ? "Suspend" : "Activate"}
+            {isActive ? (
+              <Ban className="h-3.5 w-3.5" />
+            ) : (
+              <Power className="h-3.5 w-3.5" />
+            )}
+            {isActive
+              ? t(`pages.admin.userDetails.actions.suspend`)
+              : t(`pages.admin.userDetails.actions.activate`)}
           </Button>
         </div>
 
@@ -282,10 +342,16 @@ export function UsersDetailsPage() {
               className="rounded-2xl border border-border bg-surface p-4.5 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
             >
               <div className="text-[12.5px] font-medium text-muted">
-                {STAT_CAPTIONS[key] ?? key}
+                {t(
+                  `pages.admin.userDetails.stats.${STAT_CAPTION_KEYS[key] ?? key}`,
+                )}
               </div>
-              <div className="mt-1 text-[22px] font-bold tracking-tight text-ink">{stat.value}</div>
-              {stat.sub && <div className="mt-0.5 text-xs text-muted">{stat.sub}</div>}
+              <div className="mt-1 text-[22px] font-bold tracking-tight text-ink">
+                {stat.value}
+              </div>
+              {stat.sub && (
+                <div className="mt-0.5 text-xs text-muted">{stat.sub}</div>
+              )}
             </div>
           ))}
         </div>
@@ -305,7 +371,11 @@ export function UsersDetailsPage() {
                 key={editSession}
                 user={user}
                 isSaving={updateUser.isPending}
-                onSave={(payload) => updateUser.mutate(payload, { onSuccess: () => setIsEditing(false) })}
+                onSave={(payload) =>
+                  updateUser.mutate(payload, {
+                    onSuccess: () => setIsEditing(false),
+                  })
+                }
                 onCancel={cancelEditing}
               />
             ) : (
@@ -316,7 +386,7 @@ export function UsersDetailsPage() {
             <Section title={t("pages.admin.userDetails.cvStatus")}>
               <div className="grid grid-cols-2 gap-x-6 gap-y-4.5 max-[560px]:grid-cols-1">
                 <Field
-                  label="Status"
+                  label={t(`pages.admin.userDetails.fields.status`)}
                   value={
                     <span
                       className={cn(
@@ -327,12 +397,14 @@ export function UsersDetailsPage() {
                       )}
                     >
                       <CheckCircle2 className="h-3.5 w-3.5" />
-                      {user.cv.uploaded ? "Uploaded" : "Missing"}
+                      {translateAdminValue(
+                        user.cv.uploaded ? "uploaded" : "missing",
+                      )}
                     </span>
                   }
                 />
                 <Field
-                  label="File"
+                  label={t(`pages.admin.userDetails.fields.file`)}
                   value={
                     user.cv.fileName
                       ? `${user.cv.fileName}${user.cv.fileSize ? ` · ${user.cv.fileSize}` : ""}`
@@ -340,8 +412,16 @@ export function UsersDetailsPage() {
                   }
                   muted
                 />
-                <Field label="Uploaded" value={user.cv.uploadedAt ?? "—"} muted />
-                <Field label="Last parsed" value={user.cv.lastParsed ?? "—"} muted />
+                <Field
+                  label={t(`pages.admin.userDetails.fields.uploaded`)}
+                  value={user.cv.uploadedAt ?? "—"}
+                  muted
+                />
+                <Field
+                  label={t(`pages.admin.userDetails.fields.lastParsed`)}
+                  value={user.cv.lastParsed ?? "—"}
+                  muted
+                />
               </div>
             </Section>
 
@@ -349,13 +429,16 @@ export function UsersDetailsPage() {
             <Section
               title={t("pages.admin.userDetails.applications")}
               action={{
-                label: "View all →",
-                onClick: () => navigate(localizedPath("/dashboard/applications")),
+                label: t(`pages.admin.userDetails.actions.viewAll`),
+                onClick: () =>
+                  navigate(localizedPath("/dashboard/applications")),
               }}
               className="px-5 pb-1 pt-1"
             >
               {user.applications.length === 0 ? (
-                <p className="py-3 text-[13.5px] text-muted">No applications yet.</p>
+                <p className="py-3 text-[13.5px] text-muted">
+                  {t(`pages.admin.userDetails.empty.applications`)}
+                </p>
               ) : (
                 user.applications.map((application) => (
                   <div
@@ -363,7 +446,9 @@ export function UsersDetailsPage() {
                     className="flex items-center justify-between gap-3 border-b border-border py-3 last:border-b-0"
                   >
                     <div>
-                      <div className="text-[13.5px] font-semibold text-ink">{application.title}</div>
+                      <div className="text-[13.5px] font-semibold text-ink">
+                        {application.title}
+                      </div>
                       <div className="mt-0.5 text-xs text-muted">
                         {application.company} · Applied {application.appliedOn}
                       </div>
@@ -375,7 +460,10 @@ export function UsersDetailsPage() {
             </Section>
 
             {/* Saved Jobs Summary */}
-            <Section title={t("pages.admin.userDetails.savedJobs")} className="px-5 pb-1 pt-1">
+            <Section
+              title={t("pages.admin.userDetails.savedJobs")}
+              className="px-5 pb-1 pt-1"
+            >
               {[
                 ["Total saved", user.savedJobs.total],
                 ["Still open", user.savedJobs.open],
@@ -385,12 +473,16 @@ export function UsersDetailsPage() {
                   key={label}
                   className="flex items-center justify-between gap-3 border-b border-border py-3"
                 >
-                  <span className="text-[13.5px] font-medium text-ink">{label}</span>
+                  <span className="text-[13.5px] font-medium text-ink">
+                    {label}
+                  </span>
                   <span className="text-sm font-bold text-ink">{value}</span>
                 </div>
               ))}
               <div className="flex items-center justify-between gap-3 py-3">
-                <span className="text-[13.5px] font-medium text-ink">Last saved</span>
+                <span className="text-[13.5px] font-medium text-ink">
+                  {t(`pages.admin.userDetails.lastSaved`)}
+                </span>
                 <span className="text-[13.5px] font-medium text-muted">
                   {user.savedJobs.lastSaved}
                 </span>
@@ -403,13 +495,13 @@ export function UsersDetailsPage() {
             <Section title={t("pages.admin.userDetails.roleStatus")}>
               <div className="mb-3.5">
                 <div className="mb-1.5 text-[11.5px] font-bold uppercase tracking-wide text-muted">
-                  Role
+                  {t("pages.admin.userDetails.fields.role")}
                 </div>
                 <RoleBadge role={user.role} />
               </div>
               <div className="mb-4">
                 <div className="mb-1.5 text-[11.5px] font-bold uppercase tracking-wide text-muted">
-                  Status
+                  {t("pages.admin.userDetails.fields.status")}
                 </div>
                 <UserStatusBadge status={user.status} />
               </div>
@@ -434,7 +526,9 @@ export function UsersDetailsPage() {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => setStatus.mutate(isActive ? "suspended" : "active")}
+                  onClick={() =>
+                    setStatus.mutate(isActive ? "suspended" : "active")
+                  }
                   disabled={setStatus.isPending}
                   className={cn(
                     "h-10 w-full justify-center gap-2 rounded-xl disabled:opacity-60",
@@ -443,8 +537,14 @@ export function UsersDetailsPage() {
                       : "border-success/35 text-success hover:border-success hover:bg-success/10",
                   )}
                 >
-                  {isActive ? <Ban className="h-4 w-4" /> : <Power className="h-4 w-4" />}
-                  {isActive ? "Suspend" : "Activate"}
+                  {isActive ? (
+                    <Ban className="h-4 w-4" />
+                  ) : (
+                    <Power className="h-4 w-4" />
+                  )}
+                  {isActive
+                    ? t(`pages.admin.userDetails.actions.suspend`)
+                    : t(`pages.admin.userDetails.actions.activate`)}
                 </Button>
                 <Button
                   variant="outline"
@@ -453,29 +553,43 @@ export function UsersDetailsPage() {
                   className="h-10 w-full justify-center gap-2 rounded-xl border-error/35 text-error hover:border-error hover:bg-error/10 disabled:opacity-60"
                 >
                   <Trash2 className="h-4 w-4" />
-                  Delete User
+                  {t("pages.admin.userDetails.actions.deleteUser")}
                 </Button>
               </div>
             </Section>
 
-            <Section title={t("pages.admin.userDetails.dates")} className="px-5 pb-1.5 pt-1.5">
+            <Section
+              title={t("pages.admin.userDetails.dates")}
+              className="px-5 pb-1.5 pt-1.5"
+            >
               {[
-                ["Created", user.dates.created],
-                ["Last Activity", user.dates.lastActivity],
-                ["Last Login", user.dates.lastLogin],
-              ].map(([label, date]) => (
+                {
+                  label: t("pages.admin.userList.columns.created"),
+                  at: user.dates.created,
+                },
+                {
+                  label: t("pages.admin.userList.columns.lastActivity"),
+                  at: user.dates.lastActivity,
+                },
+                {
+                  label: t("pages.admin.userDetails.dateLabels.lastLogin"),
+                  at: user.dates.lastLogin,
+                  // The last-login row shows the IP instead of a relative time.
+                  sub: () =>
+                    user.dates.lastLoginIp ||
+                    relativeActivityLabel(user.dates.lastLogin),
+                },
+              ].map(({ label, at, sub }) => (
                 <div
                   key={label}
                   className="flex items-start justify-between gap-3 border-b border-border py-2.5 text-[13.5px] last:border-b-0"
                 >
                   <span className="text-muted">{label}</span>
                   <div className="text-end font-semibold text-ink">
-                    {date.date}
-                    {date.sub && (
-                      <small className="mt-0.5 block text-xs font-normal text-muted">
-                        {date.sub}
-                      </small>
-                    )}
+                    {formatDate(at)}
+                    <small className="mt-0.5 block text-xs font-normal text-muted">
+                      {(sub ? sub() : relativeActivityLabel(at)) || ""}
+                    </small>
                   </div>
                 </div>
               ))}
@@ -485,10 +599,14 @@ export function UsersDetailsPage() {
 
         {/* Footer */}
         <div className="mt-2 flex flex-wrap items-center justify-between gap-3 pt-2">
-          <Button variant="ghost" asChild className="h-10 gap-2 rounded-xl text-muted hover:text-ink">
+          <Button
+            variant="ghost"
+            asChild
+            className="h-10 gap-2 rounded-xl text-muted hover:text-ink"
+          >
             <Link to={usersPath}>
               <ArrowLeft className="h-4 w-4" />
-              Back to Users
+              {t("pages.admin.backToUsers")}
             </Link>
           </Button>
         </div>
@@ -499,7 +617,8 @@ export function UsersDetailsPage() {
 
 /** candidate -> recruiter -> admin -> candidate */
 const ROLE_CYCLE = ["candidate", "recruiter", "admin"];
-const nextRole = (role) => ROLE_CYCLE[(ROLE_CYCLE.indexOf(role) + 1) % ROLE_CYCLE.length];
+const nextRole = (role) =>
+  ROLE_CYCLE[(ROLE_CYCLE.indexOf(role) + 1) % ROLE_CYCLE.length];
 
 /** Read-only identity + account + career blocks. */
 function ReadOnlyProfile({ user }) {
@@ -507,52 +626,95 @@ function ReadOnlyProfile({ user }) {
 
   return (
     <>
-      <Section title={t("pages.admin.userDetails.personalInformation")} hint="Identity & contact">
+      <Section
+        title={t("pages.admin.userDetails.personalInformation")}
+        hint={t("pages.admin.userDetails.hints.identity")}
+      >
         <div className="grid grid-cols-2 gap-x-6 gap-y-4.5 max-[560px]:grid-cols-1">
-          <Field label="Full Name" value={user.fullName} />
           <Field
-            label="Email"
+            label={t(`pages.admin.userDetails.fields.fullName`)}
+            value={user.fullName}
+          />
+          <Field
+            label={t(`pages.admin.userDetails.fields.email`)}
             value={
-              <a href={`mailto:${user.email}`} className="font-semibold text-primary hover:underline">
+              <a
+                href={`mailto:${user.email}`}
+                className="font-semibold text-primary hover:underline"
+              >
                 {user.email}
               </a>
             }
           />
-          <Field label="Phone" value={user.phone || "—"} />
-          <Field label="Location" value={user.location || "—"} />
+          <Field
+            label={t(`pages.admin.userDetails.fields.phone`)}
+            value={user.phone || "—"}
+          />
+          <Field
+            label={t(`pages.admin.userDetails.fields.location`)}
+            value={user.location || "—"}
+          />
         </div>
       </Section>
 
       <Section title={t("pages.admin.userDetails.accountInformation")}>
         <div className="grid grid-cols-2 gap-x-6 gap-y-4.5 max-[560px]:grid-cols-1">
-          <Field label="User ID" value={user.id} mono />
-          <Field label="Role" value={<RoleBadge role={user.role} />} />
-          <Field label="Account Status" value={<UserStatusBadge status={user.status} />} />
-          <Field label="Auth Provider" value={user.authProvider} muted />
           <Field
-            label="Email Verified"
-            value={user.emailVerified ? "Yes" : "No"}
+            label={t(`pages.admin.userDetails.fields.userId`)}
+            value={user.id}
+            mono
+          />
+          <Field
+            label={t(`pages.admin.userDetails.fields.role`)}
+            value={<RoleBadge role={user.role} />}
+          />
+          <Field
+            label={t(`pages.admin.userDetails.fields.accountStatus`)}
+            value={<UserStatusBadge status={user.status} />}
+          />
+          <Field
+            label={t(`pages.admin.userDetails.fields.authProvider`)}
+            value={translateAdminValue(user.authProvider)}
+            muted
+          />
+          <Field
+            label={t(`pages.admin.userDetails.fields.emailVerified`)}
+            value={translateAdminValue(user.emailVerified ? "yes" : "no")}
             valueClassName={user.emailVerified ? "text-success" : "text-error"}
           />
-          <Field label="Language" value={user.language} muted />
+          <Field
+            label={t(`pages.admin.userDetails.fields.language`)}
+            value={translateAdminValue(user.language)}
+            muted
+          />
         </div>
       </Section>
 
       <Section title={t("pages.admin.userDetails.careerProfile")}>
         <div className="grid grid-cols-2 gap-x-6 gap-y-4.5 max-[560px]:grid-cols-1">
-          <Field label="Job Title" value={user.jobTitle} />
-          <Field label="Experience" value={user.experience} />
           <Field
-            full
-            label="Bio"
-            value={<p className="leading-[1.55] text-muted">{user.bio || "—"}</p>}
+            label={t(`pages.admin.userDetails.fields.jobTitle`)}
+            value={user.jobTitle}
+          />
+          <Field
+            label={t(`pages.admin.userDetails.fields.experience`)}
+            value={experienceLabel(user.experience, t)}
           />
           <Field
             full
-            label="Skills"
+            label={t(`pages.admin.userDetails.fields.bio`)}
+            value={
+              <p className="leading-[1.55] text-muted">{user.bio || "—"}</p>
+            }
+          />
+          <Field
+            full
+            label={t(`pages.admin.userDetails.fields.skills`)}
             value={
               user.skills.length === 0 ? (
-                <span className="text-muted">No skills added yet.</span>
+                <span className="text-muted">
+                  {t(`pages.admin.userDetails.empty.skills`)}
+                </span>
               ) : (
                 <div className="mt-1 flex flex-wrap gap-2">
                   {user.skills.map((skill) => (
@@ -580,37 +742,63 @@ function ReadOnlyProfile({ user }) {
  * draft from `user` on mount — no effect, and Cancel is just an unmount.
  */
 function EditableProfile({ user, isSaving, onSave, onCancel }) {
+  const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("dashboard");
   const [form, setForm] = useState(() => toForm(user));
 
-  const set = (name) => (value) => setForm((prev) => ({ ...prev, [name]: value }));
+  const set = (name) => (value) =>
+    setForm((prev) => ({ ...prev, [name]: value }));
 
   return (
     <>
-      <Section title={t("pages.admin.userDetails.personalInformation")} hint="Identity & contact">
+      <Section
+        title={t("pages.admin.userDetails.personalInformation")}
+        hint={t("pages.admin.userDetails.hints.identity")}
+      >
         <div className="grid grid-cols-2 gap-x-6 gap-y-4.5 max-[560px]:grid-cols-1">
-          <EditableField label="Full Name" value={form.fullName} onChange={set("fullName")} />
-          <EditableField label="Email" type="email" value={form.email} onChange={set("email")} />
-          <EditableField label="Phone" value={form.phone} onChange={set("phone")} />
-          <EditableField label="Location" value={form.location} onChange={set("location")} />
+          <EditableField
+            label={t(`pages.admin.userDetails.fields.fullName`)}
+            value={form.fullName}
+            onChange={set("fullName")}
+          />
+          <EditableField
+            label={t(`pages.admin.userDetails.fields.email`)}
+            type="email"
+            value={form.email}
+            onChange={set("email")}
+          />
+          <EditableField
+            label={t(`pages.admin.userDetails.fields.phone`)}
+            value={form.phone}
+            onChange={set("phone")}
+          />
+          <EditableField
+            label={t(`pages.admin.userDetails.fields.location`)}
+            value={form.location}
+            onChange={set("location")}
+          />
         </div>
       </Section>
 
       <Section title={t("pages.admin.userDetails.careerProfile")}>
         <div className="grid grid-cols-2 gap-x-6 gap-y-4.5 max-[560px]:grid-cols-1">
-          <EditableField label="Job Title" value={form.jobTitle} onChange={set("jobTitle")} />
+          <EditableField
+            label={t(`pages.admin.userDetails.fields.jobTitle`)}
+            value={form.jobTitle}
+            onChange={set("jobTitle")}
+          />
           <div>
             <label className="mb-1 block text-[11.5px] font-bold uppercase tracking-wide text-muted">
-              Experience
+              {t("pages.admin.userDetails.fields.experience")}
             </label>
             <Select value={form.experience} onValueChange={set("experience")}>
               <SelectTrigger className="h-10 rounded-lg border-border">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {EXPERIENCE_OPTIONS.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
+                {EXPERIENCE_OPTIONS.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {experienceLabel(value, t)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -618,7 +806,7 @@ function EditableProfile({ user, isSaving, onSave, onCancel }) {
           </div>
           <div className="col-span-2 max-[560px]:col-span-1">
             <label className="mb-1 block text-[11.5px] font-bold uppercase tracking-wide text-muted">
-              Bio
+              {t("pages.admin.userDetails.fields.bio")}
             </label>
             <Textarea
               value={form.bio}
@@ -628,7 +816,7 @@ function EditableProfile({ user, isSaving, onSave, onCancel }) {
           </div>
           <Field
             full
-            label="Skills"
+            label={t(`pages.admin.userDetails.fields.skills`)}
             muted
             value="Managed from the candidate profile — not editable here."
           />
@@ -643,15 +831,21 @@ function EditableProfile({ user, isSaving, onSave, onCancel }) {
           className="h-10 gap-2 rounded-xl border-border text-ink"
         >
           <X className="h-4 w-4" />
-          Cancel
+          {tCommon("actions.cancel")}
         </Button>
         <Button
           onClick={() => onSave(form)}
           disabled={isSaving}
           className="h-10 gap-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
         >
-          {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
-          {isSaving ? "Saving…" : "Save Changes"}
+          {isSaving ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <CheckCircle2 className="h-4 w-4" />
+          )}
+          {isSaving
+            ? t(`pages.admin.userDetails.actions.saving`)
+            : t(`pages.admin.userDetails.actions.saveChanges`)}
         </Button>
       </div>
     </>

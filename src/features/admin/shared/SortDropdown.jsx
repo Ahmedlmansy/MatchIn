@@ -1,9 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { ChevronDown } from "lucide-react";
 
 /**
  * SortDropdown
  * Native select styled as a rounded pill with a custom chevron.
- * `options` is a list of `{ value, label }`.
+ * `options` is a list of `{ value, label }` or `{ value, labelKey }`.
  */
 export default function SortDropdown({
   value,
@@ -11,6 +12,8 @@ export default function SortDropdown({
   options = [],
   className,
 }) {
+  const { t } = useTranslation("common");
+
   return (
     <div className={`relative ${className ?? ""}`}>
       <select
@@ -20,7 +23,7 @@ export default function SortDropdown({
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
-            {option.label}
+            {option.labelKey ? t(option.labelKey) : option.label}
           </option>
         ))}
       </select>

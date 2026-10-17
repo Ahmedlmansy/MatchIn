@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 /**
  * SearchInput
@@ -7,9 +8,11 @@ import { Search } from "lucide-react";
 export default function SearchInput({
   value,
   onChange,
-  placeholder = "Search…",
+  placeholder,
   className,
 }) {
+  const { t } = useTranslation("common");
+
   return (
     <div
       className={`flex-1 flex items-center gap-2 border border-border rounded-full bg-white h-11 px-4 shadow-sm focus-within:border-primary transition-colors ${
@@ -21,7 +24,7 @@ export default function SearchInput({
         type="text"
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
-        placeholder={placeholder}
+        placeholder={placeholder ?? t("ui.adminShared.searchPlaceholder")}
         className="flex-1 outline-none text-[13.5px] placeholder:text-muted bg-transparent"
       />
     </div>

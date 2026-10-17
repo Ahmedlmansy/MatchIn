@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -17,6 +18,7 @@ export default function JobDetailsHeader({
   onShare,
   onToggleBookmark,
 }) {
+  const { t } = useTranslation("dashboard");
   return (
     <motion.div
       initial={{ opacity: 0, y: -18 }}
@@ -37,7 +39,7 @@ export default function JobDetailsHeader({
               </span>
               <span className="bg-secondary/10 text-secondary border border-secondary/20 text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                Fresh · Published 3 days ago
+                {t("pages.jobDetails.freshPublishedAgo", { count: 3 })}
               </span>
             </div>
             <h1 className="font-dm-sans text-3xl md:text-4xl text-primary font-bold tracking-tight mb-3">
@@ -61,7 +63,7 @@ export default function JobDetailsHeader({
 
         <div className="bg-background border border-border p-4 rounded-xl min-w-70 shrink-0 text-end md:text-start">
           <span className="text-[11px] uppercase tracking-wider font-semibold text-muted block mb-0.5">
-            Estimated Compensation
+            {t("pages.jobDetails.estimatedCompensation")}
           </span>
           <div className="text-2xl font-bold text-primary tracking-tight mb-1">
             $3,200 – $4,500{" "}
@@ -70,14 +72,14 @@ export default function JobDetailsHeader({
           <div className="text-[11px] text-muted flex items-center gap-2 mb-3">
             <span>0.15% Equity Option</span>
             <span>•</span>
-            <span>Annual Tech Stipend</span>
+            <span>{t("pages.jobDetails.annualTechStipend")}</span>
           </div>
           <div className="pt-2.5 border-t border-border flex items-center gap-2">
             <Button
               variant="ghost"
               onClick={onShare}
-              aria-label="Share job"
-              title="Share job"
+              aria-label={t("pages.jobDetails.shareJob")}
+              title={t("pages.jobDetails.shareJob")}
               className="h-10 w-10 rounded-lg border border-border bg-surface p-0 text-primary hover:bg-background"
             >
               <Share2 className="h-4 w-4" />
@@ -101,7 +103,7 @@ export default function JobDetailsHeader({
               className={`flex-1 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold py-2.5 px-3 rounded-lg shadow-xs transition-colors flex items-center justify-center gap-1.5 group ${isExpired ? "opacity-45 pointer-events-none" : ""}`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-              Apply Now <ArrowRight className="h-4 w-4" />
+              {t("pages.jobDetails.applyNow")} <ArrowRight className="h-4 w-4" />
             </Button>
             <Button
               variant="ghost"
@@ -109,7 +111,7 @@ export default function JobDetailsHeader({
               className="bg-surface hover:bg-background text-primary border border-border text-xs font-semibold py-2.5 px-3 rounded-lg transition-colors flex items-center gap-1"
             >
               <Zap className="h-3.5 w-3.5 text-secondary" />
-              Analysis
+            {t("pages.jobDetails.aiMatchAnalysis")}
             </Button>
           </div>
         </div>

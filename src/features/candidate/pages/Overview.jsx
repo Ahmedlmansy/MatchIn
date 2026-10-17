@@ -12,6 +12,7 @@ import PrioritySkillGapsCard from "../components/Overview/PrioritySkillGapsCard"
 import { useDashboardSummaryQuery } from "@/features/candidate/hooks/useDashboardSummaryQuery";
 
 export default function Overview() {
+  const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("dashboard");
   const {
     isLoading,
@@ -31,7 +32,7 @@ export default function Overview() {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-3">
-          <UserDashboardHeader userName={t("overview.loading.user")} />
+          <UserDashboardHeader />
         </div>
         <div className="lg:col-span-2 flex flex-col gap-6">
           <DashboardSkeleton />
@@ -53,13 +54,13 @@ export default function Overview() {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-3 text-center py-12 rounded-2xl border border-border bg-surface">
-          <p className="text-muted mb-4">Failed to load dashboard</p>
+          <p className="text-muted mb-4">{t("pages.overview.loadFailed")}</p>
           <p className="text-xs text-muted mb-4">{error?.message ?? "Unknown error"}</p>
           <button
             onClick={() => refetch()}
             className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90"
           >
-            Retry
+                  {tCommon("actions.retry")}
           </button>
         </div>
       </div>

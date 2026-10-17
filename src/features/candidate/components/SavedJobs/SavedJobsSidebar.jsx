@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { ChevronRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PortfolioHealth } from "./SavedJobsStates";
 
 export function AiAdvisor({ aiState, onStateChange, onToast }) {
+  const { t } = useTranslation("dashboard");
   const content = {
     success: [
       "Bridge 2 Missing Skills for TechNova",
@@ -30,13 +32,13 @@ export function AiAdvisor({ aiState, onStateChange, onToast }) {
       <div className="rounded-2xl p-6 shadow-md bg-primary text-primary-foreground">
         <div className="flex items-center gap-2 text-[11px] uppercase font-bold mb-3">
           <span className="w-4 h-4 border-2 border-surface/30 border-t-secondary rounded-full animate-spin" />
-          AI Match Gap Optimizer
+          {t("pages.savedJobs.gapOptimizer")}
         </div>
         <h4 className="font-dm-sans text-lg font-bold mb-3">
-          Re-scoring bookmarks...
+          {t("pages.savedJobs.rescoring")}
         </h4>
         <p className="text-[11px] text-surface/70">
-          Cross-validating repo evidence against ATS requirements...
+          {t("pages.savedJobs.crossValidating")}
         </p>
       </div>
     );
@@ -47,7 +49,7 @@ export function AiAdvisor({ aiState, onStateChange, onToast }) {
     >
       <div className="flex items-center gap-2 text-[11px] uppercase text-accent font-bold mb-3">
         <Sparkles className="w-4 h-4 text-secondary" />
-        AI Match Gap Optimizer
+        {t("pages.savedJobs.gapOptimizer")}
       </div>
       <h4 className="font-dm-sans text-lg font-bold mb-2">{title}</h4>
       <p className="text-xs text-surface/80 leading-relaxed mb-4">
@@ -76,6 +78,7 @@ export default function SavedJobsSidebar({
   onAiStateChange,
   onToast,
 }) {
+  const { t } = useTranslation("dashboard");
   return (
     <div className="lg:col-span-4 space-y-5">
       <PortfolioHealth />
@@ -87,10 +90,10 @@ export default function SavedJobsSidebar({
       <div className="bg-surface border border-border rounded-2xl p-4 sm:p-6 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
           <h4 className="font-dm-sans text-base font-bold text-primary">
-            Target Preferences
+            {t("pages.savedJobs.targetPreferences")}
           </h4>
           <Button className="text-xs font-semibold text-secondary">
-            Edit Preferences
+            {t("pages.savedJobs.editPreferences")}
           </Button>
         </div>
         <div className="space-y-3 text-xs">

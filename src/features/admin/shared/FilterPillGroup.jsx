@@ -20,6 +20,7 @@ export default function FilterPillGroup({
         <FilterPill
           key={pill.id}
           label={pill.label}
+          labelKey={pill.labelKey}
           active={value === pill.id}
           onClick={() => onChange?.(pill.id)}
         />

@@ -7,10 +7,10 @@ import { useTranslation } from "react-i18next";
 // Job sources are the same closed set the list screen filters on, so the
 // value stored is the API's own enum rather than a display label.
 const SOURCE_OPTIONS = [
-  { value: "internal", label: "Internal" },
-  { value: "linkedin", label: "LinkedIn" },
-  { value: "indeed", label: "Indeed" },
-  { value: "referral", label: "Referral" },
+  { value: "internal", labelKey: "ui.jobSources.internal" },
+  { value: "linkedin", labelKey: "ui.jobSources.linkedin" },
+  { value: "indeed", labelKey: "ui.jobSources.indeed" },
+  { value: "referral", labelKey: "ui.jobSources.referral" },
 ];
 
 export default function JobInformationSection({ formData, onChange, companies = [] }) {
@@ -33,7 +33,7 @@ export default function JobInformationSection({ formData, onChange, companies = 
             value={formData?.jobTitle || ""}
             onChange={(e) => onChange("jobTitle", e.target.value)}
             className="h-12 w-full bg-white border-[#E4E4E7] rounded-xl text-sm px-4 focus-visible:ring-[#1D2A44] transition-all"
-            placeholder="Senior Frontend Engineer"
+            placeholder={t("ui.editJob.jobTitlePlaceholder")}
           />
         </div>
 
@@ -78,7 +78,7 @@ export default function JobInformationSection({ formData, onChange, companies = 
               <SelectContent>
                 {SOURCE_OPTIONS.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                    {t(option.labelKey)}
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -147,12 +147,47 @@ function normalizeCompanyJob(raw) {
 }
 
 /**
+ * Component-facing field names -> the backend's wire names for
+ * POST /api/admin/companies.
+ *
+ * These five keys are the endpoint's contract. They are all single words, so
+ * they happen to read the same on both sides today — the map exists so the wire
+ * format is defined in exactly one place instead of being implied by whichever
+ * form happens to build the object, and so a future multi-word field has an
+ * obvious home. See the equivalent note on USER_FIELD_ALIASES for why this is
+ * not optional: Laravel drops unknown keys silently, so a create can report
+ * success and save nothing at all.
+ */
+const COMPANY_FIELD_ALIASES = {
+  name: "name",
+  website: "website",
+  industry: "industry",
+  description: "description",
+  location: "location",
+};
+
+/**
+ * Renames aliased keys, trims strings, and omits empty optional fields so a
+ * blank input never reaches the backend as "".
+ */
+const toCompanyPayload = (payload = {}) =>
+  Object.fromEntries(
+    Object.entries(payload)
+      .map(([key, value]) => [
+        COMPANY_FIELD_ALIASES[key] ?? key,
+        typeof value === "string" ? value.trim() : value,
+      ])
+      .filter(([, value]) => value !== undefined && value !== null && value !== ""),
+  );
+
+/**
  * POST /api/admin/companies
- * `payload` uses the backend's own field names; the api layer does not rename
- * on the way out.
+ * The payload is mapped to backend-native names here rather than being posted
+ * verbatim, so the form can keep using the camelCase shape the rest of the app
+ * reads.
  */
 export const createAdminCompanyRequest = async (payload) => {
-  const response = await api.post("/api/admin/companies", payload);
+  const response = await api.post("/api/admin/companies", toCompanyPayload(payload));
   return normalizeCompany(unwrap(response));
 };
 

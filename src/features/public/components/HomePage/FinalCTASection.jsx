@@ -23,7 +23,7 @@ export default function FinalCTASection() {
   const { t } = useTranslation("common");
   return (
     <section
-      className="mx-auto w-full max-w-[1280px] px-6 py-16 md:px-10 lg:px-16 lg:py-24"
+      className="mx-auto w-full max-w-[1280px] px-6 py-14 md:px-10 md:py-16 lg:px-16 lg:py-24"
       id="get-started"
     >
       <motion.div
@@ -49,7 +49,7 @@ export default function FinalCTASection() {
             {t("home.cta.title")}
           </h2>
 
-          <p className="mb-8 max-w-2xl font-body-lg leading-relaxed text-muted">
+          <p className="mb-6 hidden max-w-2xl font-body-lg leading-relaxed text-muted md:mb-8 md:block">
             {t("home.cta.description")}
           </p>
 

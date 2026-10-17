@@ -21,9 +21,7 @@ export default function ApplicationDetailInsight() {
             CURRENT STATUS EXPLANATION
           </div>
           <p className="text-[13px] text-[#44474E] leading-relaxed">
-            Your application has been viewed by the hiring team and moved to
-            Under Review. This typically means your profile passed the initial
-            screening — no action is required from you right now.
+            {t("pages.applicationDetail.insightUnderReview")}
           </p>
         </div>
 
@@ -33,9 +31,7 @@ export default function ApplicationDetailInsight() {
             RECOMMENDED NEXT ACTION
           </div>
           <p className="text-[13px] text-[#44474E] leading-relaxed">
-            Interviews for this role often start within a week of reaching Under
-            Review. Use the time to close your System Design gap so you're ready
-            if one is scheduled.
+            {t("pages.applicationDetail.insightPrepare", { gap: "System Design" })}
           </p>
         </div>
 
@@ -66,11 +62,11 @@ export default function ApplicationDetailInsight() {
           <ul className="space-y-1.5">
             <li className="flex items-start gap-2 text-[13px] text-[#44474E]">
               <Check className="h-4 w-4 text-success mt-0.5" />
-              Review system design fundamentals — scaling, caching, trade-offs
+              {t("pages.applicationDetail.reviewInsight")}
             </li>
             <li className="flex items-start gap-2 text-[13px] text-[#44474E]">
               <Check className="h-4 w-4 text-success mt-0.5" />
-              Practice explaining your Next.js migration project end-to-end
+              {t("pages.applicationDetail.practiceInsight")}
             </li>
           </ul>
         </div>

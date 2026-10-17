@@ -1,6 +1,7 @@
 // src/app/routes/guards/RequireOnboarding.jsx
 import { useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { useProfileQuery } from "@/features/candidate/hooks/useProfileQuery";
 import { selectUserRole } from "@/features/auth/store/auth.selectors";
@@ -29,6 +30,7 @@ import Status from "@/components/shared/Status";
 export function RequireOnboarding() {
   // Hooks are called unconditionally at the top: the early returns below must
   // never skip one, or the hook order changes between renders.
+  const { t } = useTranslation("common");
   const role = useSelector(selectUserRole);
   const location = useLocation();
   const localizedPath = useLocalizedPath();
@@ -82,10 +84,10 @@ export function RequireOnboarding() {
           <Status
             icon={<AlertCircle className="h-5 w-5" />}
             iconClassName="bg-error/10 text-error"
-            title="Couldn't load profile"
-            subtitle={profileError?.message ?? "Something went wrong. Please try again."}
+            title={t("onboarding.loadFailed")}
+            subtitle={profileError?.message ?? t("onboarding.loadFailedDesc")}
             primaryButton={{
-              label: "Try again",
+              label: t("onboarding.tryAgain"),
               onClick: () => refetch(),
             }}
           />

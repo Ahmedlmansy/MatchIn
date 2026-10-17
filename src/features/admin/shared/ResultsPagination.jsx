@@ -51,7 +51,7 @@ export default function ResultsPagination({
   onPageChange,
   /** Rendered on the left, e.g. "Showing 1–8 of 340 users". */
   summary = null,
-  label = "Results pages",
+  label,
 }) {
   const { t } = useTranslation("common");
 
@@ -61,7 +61,7 @@ export default function ResultsPagination({
 
   return (
     <nav
-      aria-label={label}
+      aria-label={label ?? t("ui.a11y.resultsPages")}
       className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3.5"
     >
       <div className="text-[13px] text-muted">

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import StatPill from "./StatPill";
 import { Building2, CheckCircle2, Clock, Ban } from "lucide-react";
 
@@ -7,13 +8,15 @@ import { Building2, CheckCircle2, Clock, Ban } from "lucide-react";
  * tile), so the strip can never disagree with the table underneath it.
  */
 const STAT_CONFIG = [
-  { key: "total", label: "Total Companies", icon: Building2, iconClass: "bg-primary/10 text-primary" },
-  { key: "verified", label: "Verified", icon: CheckCircle2, iconClass: "bg-success/10 text-success" },
-  { key: "pending", label: "Pending Review", icon: Clock, iconClass: "bg-warning/10 text-warning" },
-  { key: "not-verified", label: "Not Verified", icon: Ban, iconClass: "bg-muted/10 text-muted" },
+  { key: "total", labelKey: "total", icon: Building2, iconClass: "bg-primary/10 text-primary" },
+  { key: "verified", labelKey: "verified", icon: CheckCircle2, iconClass: "bg-success/10 text-success" },
+  { key: "pending", labelKey: "pending", icon: Clock, iconClass: "bg-warning/10 text-warning" },
+  { key: "not-verified", labelKey: "notVerified", icon: Ban, iconClass: "bg-muted/10 text-muted" },
 ];
 
 export default function CompanyStatsStrip({ companies = [], total = companies.length }) {
+  const { t } = useTranslation("dashboard");
+
   const counts = companies.reduce(
     (acc, company) => {
       acc[company.status] = (acc[company.status] ?? 0) + 1;
@@ -30,6 +33,7 @@ export default function CompanyStatsStrip({ companies = [], total = companies.le
           index={index}
           stat={{
             ...stat,
+            label: t(`pages.admin.companyList.stats.${stat.labelKey}`),
             value: stat.key === "total" ? total : (counts[stat.key] ?? 0),
           }}
         />

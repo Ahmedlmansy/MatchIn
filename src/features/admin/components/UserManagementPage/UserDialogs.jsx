@@ -14,6 +14,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 const ROLES = ["candidate", "recruiter", "admin"];
 
+// The role enum is rendered in two places, so the enum -> key mapping lives
+// here once rather than being title-cased inline at each.
+const ROLE_LABEL_KEYS = {
+  candidate: "ui.adminEnums.roles.candidate",
+  recruiter: "ui.adminEnums.roles.recruiter",
+  admin: "ui.adminEnums.roles.admin",
+};
+
+const ROLE_OPTIONS = ROLES.map((role) => ({ role, labelKey: ROLE_LABEL_KEYS[role] }));
+
 export function UserFormBody({
   title,
   subtitle,
@@ -24,6 +34,8 @@ export function UserFormBody({
   onCancel,
   onSubmit,
 }) {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const [form, setForm] = React.useState(
     initialValues ?? { fullName: "", email: "", role: "candidate" },
   );
@@ -35,7 +47,11 @@ export function UserFormBody({
       iconClassName="bg-primary/10 text-primary"
       title={title}
       subtitle={error ? null : subtitle}
-      secondaryButton={{ label: "Cancel", onClick: onCancel, disabled: busy }}
+      secondaryButton={{
+        label: tCommon("ui.adminShared.cancel"),
+        onClick: onCancel,
+        disabled: busy,
+      }}
       primaryButton={{
         label: busy ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : submitLabel,
         onClick: () => onSubmit(form),
@@ -44,14 +60,14 @@ export function UserFormBody({
     >
       {error && <ErrorNote message={error} />}
       <div className="mb-5 flex flex-col gap-3 text-start">
-        <FormField label="Full Name">
+        <FormField label={t("pages.admin.userList.form.fullName")}>
           <Input
             value={form.fullName}
             onChange={(event) => set("fullName")(event.target.value)}
             className="h-10 rounded-lg border-border"
           />
         </FormField>
-        <FormField label="Email">
+        <FormField label={t("pages.admin.userList.form.email")}>
           <Input
             type="email"
             value={form.email}
@@ -59,15 +75,15 @@ export function UserFormBody({
             className="h-10 rounded-lg border-border"
           />
         </FormField>
-        <FormField label="Role">
+        <FormField label={t("pages.admin.userList.form.role")}>
           <Select value={form.role} onValueChange={set("role")}>
             <SelectTrigger className="h-10 rounded-lg border-border">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {ROLES.map((role) => (
+              {ROLE_OPTIONS.map(({ role, labelKey }) => (
                 <SelectItem key={role} value={role}>
-                  {role[0].toUpperCase() + role.slice(1)}
+                  {tCommon(labelKey)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -80,17 +96,23 @@ export function UserFormBody({
 
 export function ChangeRoleBody({ user, busy, error, onCancel, onConfirm }) {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const [role, setRole] = React.useState(user.role);
+  const key = "pages.admin.userList.form.changeRole";
 
   return (
     <Status
       icon={<ArrowLeftRight className="h-6 w-6" />}
       iconClassName="bg-primary/10 text-primary"
       title={t("pages.admin.userManagementStates.changeRole")}
-      subtitle={error ? null : `Choose a new role for ${user.fullName}.`}
-      secondaryButton={{ label: "Cancel", onClick: onCancel, disabled: busy }}
+      subtitle={error ? null : t(`${key}Subtitle`, { name: user.fullName })}
+      secondaryButton={{
+        label: tCommon("ui.adminShared.cancel"),
+        onClick: onCancel,
+        disabled: busy,
+      }}
       primaryButton={{
-        label: busy ? "Saving…" : "Confirm",
+        label: busy ? <Loader2 className="mx-auto h-4 w-4 animate-spin" /> : t(`${key}Submit`),
         onClick: () => onConfirm(role),
         disabled: busy || role === user.role,
       }}
@@ -98,14 +120,10 @@ export function ChangeRoleBody({ user, busy, error, onCancel, onConfirm }) {
       {error && <ErrorNote message={error} />}
       <div className="mb-5 text-start">
         <Select value={role} onValueChange={setRole}>
-          <SelectTrigger className="h-10 rounded-lg border-border">
-            <SelectValue />
-          </SelectTrigger>
+          <SelectTrigger className="h-10 rounded-lg border-border"><SelectValue /></SelectTrigger>
           <SelectContent>
-            {ROLES.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option[0].toUpperCase() + option.slice(1)}
-              </SelectItem>
+            {ROLE_OPTIONS.map(({ role: option, labelKey }) => (
+              <SelectItem key={option} value={option}>{tCommon(labelKey)}</SelectItem>
             ))}
           </SelectContent>
         </Select>

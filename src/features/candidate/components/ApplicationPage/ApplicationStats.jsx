@@ -1,37 +1,38 @@
+import { useTranslation } from "react-i18next";
 import { Award, Briefcase, MessageSquare, Send, XCircle } from "lucide-react";
 
 const statItems = [
   {
     key: "total",
-    label: "Total",
+    labelKey: "ui.applicationStats.total",
     icon: Briefcase,
     color: "text-primary",
     iconBg: "bg-primary/10",
   },
   {
     key: "underReview",
-    label: "Under Review",
+    labelKey: "ui.applicationStats.underReview",
     icon: Send,
     color: "text-primary",
     iconBg: "bg-primary/10",
   },
   {
     key: "interview",
-    label: "Interview",
+    labelKey: "ui.applicationStats.interview",
     icon: MessageSquare,
     color: "text-warning",
     iconBg: "bg-warning/10",
   },
   {
     key: "offer",
-    label: "Offer",
+    labelKey: "ui.applicationStats.offer",
     icon: Award,
     color: "text-success",
     iconBg: "bg-success/10",
   },
   {
     key: "rejected",
-    label: "Rejected",
+    labelKey: "ui.applicationStats.rejected",
     icon: XCircle,
     color: "text-[#B3271E]",
     iconBg: "bg-[#B3271E]/10",
@@ -39,9 +40,10 @@ const statItems = [
 ];
 
 export default function ApplicationStats({ stats }) {
+  const { t: tCommon } = useTranslation("common");
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-      {statItems.map(({ key, label, icon: Icon, color, iconBg }) => (
+      {statItems.map(({ key, labelKey, icon: Icon, color, iconBg }) => (
         <div
           key={key}
           className="bg-white border border-border rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow"
@@ -57,7 +59,7 @@ export default function ApplicationStats({ stats }) {
             {stats[key]}
           </div>
           <div className="text-[11px] font-semibold text-muted mt-1.5">
-            {label}
+            {tCommon(labelKey)}
           </div>
         </div>
       ))}

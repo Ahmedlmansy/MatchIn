@@ -16,6 +16,7 @@ const DEFAULT_EDUCATION = [
 
 export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const [educationList, setEducationList] = useState(initialEducation);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -113,7 +114,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
           className="inline-flex items-center gap-2 bg-[#1E325C] hover:bg-[#162545] text-white px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Education</span>
+          <span>{t(`pages.profile.addEducation`)}</span>
         </button>
       </div>
 
@@ -133,8 +134,8 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
       <TabSaveActions
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={editingId ? "Edit Education" : "Add Education"}
-        confirmLabel="Save"
+        title={editingId ? "Edit Education" : t("pages.profile.addEducation")}
+        confirmLabel={tCommon("actions.save")}
         isLoading={isSaving}
         loadingLabel="Saving..."
         onConfirm={handleSave}
@@ -142,7 +143,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              Degree / Field of Study *
+              {t("pages.profile.degreeFieldOfStudy")}
             </label>
             <input
               type="text"
@@ -156,7 +157,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
 
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              School / Institution *
+              {t("pages.profile.schoolInstitution")}
             </label>
             <input
               type="text"
@@ -171,7 +172,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-700 block">
-                Start Year
+                {t("pages.profile.startYear")}
               </label>
               <input
                 type="text"
@@ -185,7 +186,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-gray-700 block">
-                End Year
+                {t("pages.profile.endYear")}
               </label>
               <input
                 type="text"
@@ -209,7 +210,7 @@ export default function EducationTab({ initialEducation = DEFAULT_EDUCATION }) {
             : "Are you sure you want to delete this education item?"
         }
         variant="danger"
-        confirmLabel="Delete"
+        confirmLabel={tCommon("actions.delete")}
         isLoading={isDeleting}
         loadingLabel="Deleting..."
         onConfirm={handleConfirmDelete}
