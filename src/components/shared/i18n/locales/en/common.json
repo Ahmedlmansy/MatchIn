@@ -6,9 +6,17 @@
     "edit": "Edit",
     "apply": "Apply",
     "signIn": "Sign In",
-    "postJob": "Post a Job"
+    "postJob": "Post a Job",
+    "close": "Close",
+    "retry": "Retry",
+    "saveChanges": "Save Changes",
+    "back": "Back",
+    "view": "View",
+    "open": "Open",
+    "confirm": "Confirm",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
   },
-
   "navigation": {
     "home": "Home",
     "jobs": "Jobs",
@@ -26,76 +34,187 @@
     "title": "This page could not be found",
     "description": "The link may be incorrect, or the page may have moved somewhere else.",
     "home": "Back to home",
-    "back": "Go back"
+    "back": "Go back",
+    "backHome": "Back home"
   },
   "ui": {
     "editJob": {
-      "jobs": "Jobs", "edit": "Edit", "title": "Edit Job", "cancel": "Cancel", "reset": "Reset",
-      "saving": "Saving...", "saveChanges": "Save Changes", "resetChanges": "Reset Changes",
-      "updated": "Last updated · {{time}} ago", "by": "by"
+      "jobs": "Jobs",
+      "edit": "Edit",
+      "title": "Edit Job",
+      "cancel": "Cancel",
+      "reset": "Reset",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes",
+      "resetChanges": "Reset Changes",
+      "updated": "Last updated · {{time}} ago",
+      "by": "by",
+      "unsavedChanges": "You have unsaved changes",
+      "discard": "Discard",
+      "saveNow": "Save now",
+      "saveSuccess": "Changes saved successfully.",
+      "onePerLine": "One item per line.",
+      "commaSeparated": "Comma-separated.",
+      "removeSkill": "Remove {{skill}}",
+      "jobTitlePlaceholder": "Senior Frontend Engineer"
     },
     "jobInfo": {
-      "title": "Job Information", "description": "Core details visible to candidates", "jobTitle": "Job Title",
-      "company": "Company", "selectCompany": "Select company", "linkedCompany": "Linked company account",
-      "source": "Source", "optional": "(optional)", "selectSource": "Select source"
+      "title": "Job Information",
+      "description": "Core details visible to candidates",
+      "jobTitle": "Job Title",
+      "company": "Company",
+      "selectCompany": "Select company",
+      "linkedCompany": "Linked company account",
+      "source": "Source",
+      "optional": "(optional)",
+      "selectSource": "Select source"
     },
-    "jobDescription": { "title": "Description", "summary": "Main job overview", "field": "Job Description" },
+    "jobDescription": {
+      "title": "Description",
+      "summary": "Main job overview",
+      "field": "Job Description"
+    },
     "responsibilities": {
-      "title": "Key Responsibilities", "description": "Outline the core duties expected for this position.",
-      "placeholder": "Add a new responsibility...", "add": "Add"
+      "title": "Key Responsibilities",
+      "description": "Outline the core duties expected for this position.",
+      "placeholder": "Add a new responsibility...",
+      "add": "Add"
     },
     "skills": {
-      "title": "Skills", "description": "Required vs preferred", "required": "Required Skills",
-      "preferred": "Preferred Skills", "optional": "(optional)", "placeholder": "Add skill and press Enter"
+      "title": "Skills",
+      "description": "Required vs preferred",
+      "required": "Required Skills",
+      "preferred": "Preferred Skills",
+      "optional": "(optional)",
+      "placeholder": "Add skill and press Enter"
     },
     "locationWork": {
-      "title": "Location & Work Details", "location": "Location", "experience": "Experience Level",
-      "selectLevel": "Select level", "workMode": "Work Mode", "jobType": "Job Type",
-      "onSite": "On-site", "hybrid": "Hybrid", "remote": "Remote", "junior": "Junior",
-      "midLevel": "Mid-Level", "senior": "Senior", "lead": "Lead", "fullTime": "Full-time",
-      "partTime": "Part-time", "contract": "Contract", "internship": "Internship"
+      "title": "Location & Work Details",
+      "location": "Location",
+      "experience": "Experience Level",
+      "selectLevel": "Select level",
+      "workMode": "Work Mode",
+      "jobType": "Job Type",
+      "onSite": "On-site",
+      "hybrid": "Hybrid",
+      "remote": "Remote",
+      "junior": "Junior",
+      "midLevel": "Mid-Level",
+      "senior": "Senior",
+      "lead": "Lead",
+      "fullTime": "Full-time",
+      "partTime": "Part-time",
+      "contract": "Contract",
+      "internship": "Internship"
     },
     "status": {
-      "title": "Status", "description": "Visibility & lifecycle", "jobStatus": "Job Status",
-      "open": "Open", "draft": "Draft", "closed": "Closed", "suspended": "Suspended",
+      "title": "Status",
+      "description": "Visibility & lifecycle",
+      "jobStatus": "Job Status",
+      "open": "Open",
+      "draft": "Draft",
+      "closed": "Closed",
+      "suspended": "Suspended",
       "auditStart": "All changes made by Super Admin are automatically recorded in",
-      "auditLogs": "Audit Logs", "auditEnd": "(who, what, when). Status changes and field updates are fully traceable."
+      "auditLogs": "Audit Logs",
+      "auditEnd": "(who, what, when). Status changes and field updates are fully traceable."
     },
     "jobApplication": {
-      "title": "Job Application", "at": "at", "close": "Close", "method": "Method", "source": "Source",
-      "correctErrors": "Please correct the highlighted errors before submitting.", "additionalNote": "Additional Note",
-      "optional": "(Optional)", "notePlaceholder": "Add a short note for the hiring team — why are you a great fit?",
-      "workAuthorization": "Are you legally authorized to work in this location?", "yes": "Yes", "no": "No", "selectAnswer": "Select an answer",
-      "sponsorship": "Require Sponsorship", "earliestStart": "Earliest Start Date", "cancel": "Cancel",
-      "submit": "Submit Application", "applicantDetails": "Applicant Details", "fullName": "Full Name",
-      "email": "Email Address", "profileFetched": "Fetched from your profile —", "editProfile": "Edit Profile",
-      "resume": "Select Resume (CV)", "uploadCv": "Upload another CV", "required": "This field is required by the employer.",
-      "selectResumeRequired": "Please select a resume to continue.", "startDateRequired": "Please select your earliest start date."
+      "title": "Job Application",
+      "at": "at",
+      "close": "Close",
+      "method": "Method",
+      "source": "Source",
+      "correctErrors": "Please correct the highlighted errors before submitting.",
+      "additionalNote": "Additional Note",
+      "optional": "(Optional)",
+      "notePlaceholder": "Add a short note for the hiring team — why are you a great fit?",
+      "workAuthorization": "Are you legally authorized to work in this location?",
+      "yes": "Yes",
+      "no": "No",
+      "selectAnswer": "Select an answer",
+      "sponsorship": "Require Sponsorship",
+      "earliestStart": "Earliest Start Date",
+      "cancel": "Cancel",
+      "submit": "Submit Application",
+      "applicantDetails": "Applicant Details",
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "profileFetched": "Fetched from your profile —",
+      "editProfile": "Edit Profile",
+      "resume": "Select Resume (CV)",
+      "uploadCv": "Upload another CV",
+      "required": "This field is required by the employer.",
+      "selectResumeRequired": "Please select a resume to continue.",
+      "startDateRequired": "Please select your earliest start date."
     },
-    "notifications": { "title": "Notifications", "markAllRead": "Mark all read", "viewAll": "View all notifications" },
+    "notifications": {
+      "title": "Notifications",
+      "markAllRead": "Mark all read",
+      "viewAll": "View all notifications"
+    },
     "applicationFilters": {
-      "search": "Search by job title or company…", "recent": "Most recent update", "date": "Application date", "match": "Match level (high–low)"
+      "search": "Search by job title or company…",
+      "recent": "Most recent update",
+      "date": "Application date",
+      "match": "Match level (high–low)"
     },
-    "notificationGroups": { "today": "TODAY", "earlier": "EARLIER" },
-    "profileCompletion": { "title": "Profile Completion", "cvLink": "Manage your CV file" },
+    "notificationGroups": {
+      "today": "TODAY",
+      "earlier": "EARLIER"
+    },
+    "profileCompletion": {
+      "title": "Profile Completion",
+      "cvLink": "Manage your CV file"
+    },
     "savedJobCard": {
-      "bonusSkills": "bonus skills", "description": "Description", "responsibilities": "Key Responsibilities",
-      "source": "Source", "method": "Method", "experience": "Experience", "notePlaceholder": "Write a private note or salary target...",
-      "cancel": "Cancel", "saveNote": "Save Note", "candidateNote": "Candidate Note", "edit": "Edit",
-      "addPlaceholder": "+ Add a private note or salary target for this position...", "addNote": "Add Note",
-      "hideDetails": "Hide Details", "viewDetails": "View Details", "applied": "Applied", "applyFast": "Apply Fast Track"
+      "bonusSkills": "bonus skills",
+      "description": "Description",
+      "responsibilities": "Key Responsibilities",
+      "source": "Source",
+      "method": "Method",
+      "experience": "Experience",
+      "notePlaceholder": "Write a private note or salary target...",
+      "cancel": "Cancel",
+      "saveNote": "Save Note",
+      "candidateNote": "Candidate Note",
+      "edit": "Edit",
+      "addPlaceholder": "+ Add a private note or salary target for this position...",
+      "addNote": "Add Note",
+      "hideDetails": "Hide Details",
+      "viewDetails": "View Details",
+      "applied": "Applied",
+      "applyFast": "Apply Fast Track"
     },
     "applicationDetailHero": {
-      "applied": "Applied", "updated": "Updated", "source": "Source", "underReview": "Under Review", "match": "match",
-      "viewJob": "View Job", "viewCv": "View CV", "openSource": "Open Source", "askMentor": "Ask Mentor",
-      "addNote": "Add Note", "addToRoadmap": "Add to Roadmap", "withdraw": "Withdraw"
+      "applied": "Applied",
+      "updated": "Updated",
+      "source": "Source",
+      "underReview": "Under Review",
+      "match": "match",
+      "viewJob": "View Job",
+      "viewCv": "View CV",
+      "openSource": "Open Source",
+      "askMentor": "Ask Mentor",
+      "addNote": "Add Note",
+      "addToRoadmap": "Add to Roadmap",
+      "withdraw": "Withdraw"
     },
     "roadmapPhase": {
-      "phase": "PHASE {{current}} OF {{total}}", "goal": "Goal:", "askMentor": "Ask Mentor",
-      "completion": "COMPLETION", "tasksComplete": "{{completed}} of {{total}} tasks complete"
+      "phase": "PHASE {{current}} OF {{total}}",
+      "goal": "Goal:",
+      "askMentor": "Ask Mentor",
+      "completion": "COMPLETION",
+      "tasksComplete": "{{completed}} of {{total}} tasks complete"
     },
-    "pagination": { "page": "Page {{page}} of {{total}}", "previous": "Previous", "next": "Next" },
-    "adminActivity": { "viewAll": "View all" },
+    "pagination": {
+      "page": "Page {{page}} of {{total}}",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "adminActivity": {
+      "viewAll": "View all"
+    },
     "onboarding": {
       "previous": "Previous",
       "continue": "Continue",
@@ -110,59 +229,339 @@
       "incompleteError": "Your onboarding details were saved, but the backend did not mark the profile as complete yet. Please retry or contact support.",
       "submitError": "Something went wrong while saving your profile.",
       "jobTitle": {
-        "title": "What job title are you looking for?", "subtitle": "We'll customize AI algorithms to suggest jobs most relevant to your career path.",
-        "inputLabel": "Target Job Title", "placeholder": "Search for a job title...",
-        "suggestions": ["Product Manager", "Frontend Developer", "UX/UI Designer", "Data Engineer", "Digital Marketing Specialist"]
+        "title": "What job title are you looking for?",
+        "subtitle": "We'll customize AI algorithms to suggest jobs most relevant to your career path.",
+        "inputLabel": "Target Job Title",
+        "placeholder": "Search for a job title...",
+        "suggestions": [
+          "Product Manager",
+          "Frontend Developer",
+          "UX/UI Designer",
+          "Data Engineer",
+          "Digital Marketing Specialist"
+        ]
       },
       "jobType": {
-        "title": "What type of job are you looking for?", "subtitle": "Select the employment types that fit your current availability.",
-        "inputLabel": "Job Type", "placeholder": "Select job type...", "suggestionsLabel": "Employment types:",
-        "suggestions": ["Full-time", "Part-time", "Contract", "Freelance", "Internship"]
+        "title": "What type of job are you looking for?",
+        "subtitle": "Select the employment types that fit your current availability.",
+        "inputLabel": "Job Type",
+        "placeholder": "Select job type...",
+        "suggestionsLabel": "Employment types:",
+        "suggestions": [
+          "Full-time",
+          "Part-time",
+          "Contract",
+          "Freelance",
+          "Internship"
+        ]
       },
       "workStyle": {
-        "title": "What is your preferred work style?", "subtitle": "Choose how and where you prefer to deliver your daily work.",
-        "inputLabel": "Work Style", "placeholder": "Select work style...", "suggestionsLabel": "Work styles:",
+        "title": "What is your preferred work style?",
+        "subtitle": "Choose how and where you prefer to deliver your daily work.",
+        "inputLabel": "Work Style",
+        "placeholder": "Select work style...",
+        "suggestionsLabel": "Work styles:",
         "suggestions": ["On-site", "Remote", "Hybrid"]
       },
       "location": {
-        "title": "Where would you like to work?", "subtitle": "Specify your preferred target location or city.",
-        "inputLabel": "Location / City", "placeholder": "Enter city or country...", "suggestionsLabel": "Popular locations:",
-        "suggestions": ["Cairo, Egypt", "Riyadh, KSA", "Dubai, UAE", "Remote Worldwide"]
+        "title": "Where would you like to work?",
+        "subtitle": "Specify your preferred target location or city.",
+        "inputLabel": "Location / City",
+        "placeholder": "Enter city or country...",
+        "suggestionsLabel": "Popular locations:",
+        "suggestions": [
+          "Cairo, Egypt",
+          "Riyadh, KSA",
+          "Dubai, UAE",
+          "Remote Worldwide"
+        ]
       },
       "experience": {
-        "title": "What is your experience level?", "subtitle": "Help us match you with roles that match your expertise.",
-        "inputLabel": "Experience Level", "placeholder": "Select experience level...", "suggestionsLabel": "Experience levels:",
-        "suggestions": ["Entry Level / Junior", "Mid Level", "Senior", "Lead / Manager"]
+        "title": "What is your experience level?",
+        "subtitle": "Help us match you with roles that match your expertise.",
+        "inputLabel": "Experience Level",
+        "placeholder": "Select experience level...",
+        "suggestionsLabel": "Experience levels:",
+        "suggestions": [
+          "Entry Level / Junior",
+          "Mid Level",
+          "Senior",
+          "Lead / Manager"
+        ]
       },
       "goals": {
-        "title": "What are your primary career goals?", "subtitle": "Tell us what matters most to you in your next move.",
-        "inputLabel": "Primary Goal", "placeholder": "Select or type your goal...", "suggestionsLabel": "Career goals:",
-        "suggestions": ["Higher Salary", "Career Growth", "Better Work-Life Balance", "Learning New Tech"]
+        "title": "What are your primary career goals?",
+        "subtitle": "Tell us what matters most to you in your next move.",
+        "inputLabel": "Primary Goal",
+        "placeholder": "Select or type your goal...",
+        "suggestionsLabel": "Career goals:",
+        "suggestions": [
+          "Higher Salary",
+          "Career Growth",
+          "Better Work-Life Balance",
+          "Learning New Tech"
+        ]
       }
     },
     "roadmapTask": {
-      "targetSkill": "TARGET SKILL: {{skill}}", "description": "DESCRIPTION", "why": "WHY THIS TASK MATTERS",
-      "outcome": "EXPECTED OUTCOME", "completionState": "COMPLETION STATE", "completed": "Completed",
-      "notCompleted": "Not completed yet", "askMentor": "Ask Mentor", "undo": "Undo completion", "markComplete": "Mark as complete"
+      "targetSkill": "TARGET SKILL: {{skill}}",
+      "description": "DESCRIPTION",
+      "why": "WHY THIS TASK MATTERS",
+      "outcome": "EXPECTED OUTCOME",
+      "completionState": "COMPLETION STATE",
+      "completed": "Completed",
+      "notCompleted": "Not completed yet",
+      "askMentor": "Ask Mentor",
+      "undo": "Undo completion",
+      "markComplete": "Mark as complete"
     },
     "savedJobs": {
-      "allSaved": "All Saved", "highFit": "High Fit (≥75%)", "freshAdded": "Fresh Added", "applied": "Applied",
+      "allSaved": "All Saved",
+      "highFit": "High Fit (≥75%)",
+      "freshAdded": "Fresh Added",
+      "applied": "Applied",
       "sortBestMatch": "Sort: Best Match"
     },
     "chat": {
-      "mentor": "AI Career Mentor", "description": "Answers using your profile, CV, jobs, and roadmap", "online": "Online",
-      "inputPlaceholder": "Ask about your profile, a job, or your roadmap…", "grounded": "Mentor responses are grounded in your account data — not generic advice.",
-      "couldNotRespond": "Couldn't get a response", "responseError": "Something went wrong on our end. Your question wasn't lost.", "retry": "Retry",
-      "noTarget": "No target role set yet.", "generalHelp": "I can still help with general profile questions, but for role-specific advice,",
-      "setTarget": "set a target role", "orOpenSaved": "or open a saved job first.",
-      "promptWeek": "What should I focus on this week?", "promptWeakMatch": "Why am I a weak match for this job?",
-      "promptSkill": "Which skill should I learn first?", "promptProfile": "How can I improve my profile for this role?",
-      "promptSavedJob": "Which saved job should I prioritize?", "demoQuestion": "Why am I a weak match for the Vercel frontend role?",
+      "mentor": "AI Career Mentor",
+      "description": "Answers using your profile, CV, jobs, and roadmap",
+      "online": "Online",
+      "inputPlaceholder": "Ask about your profile, a job, or your roadmap…",
+      "grounded": "Mentor responses are grounded in your account data — not generic advice.",
+      "couldNotRespond": "Couldn't get a response",
+      "responseError": "Something went wrong on our end. Your question wasn't lost.",
+      "retry": "Retry",
+      "noTarget": "No target role set yet.",
+      "generalHelp": "I can still help with general profile questions, but for role-specific advice,",
+      "setTarget": "set a target role",
+      "orOpenSaved": "or open a saved job first.",
+      "promptWeek": "What should I focus on this week?",
+      "promptWeakMatch": "Why am I a weak match for this job?",
+      "promptSkill": "Which skill should I learn first?",
+      "promptProfile": "How can I improve my profile for this role?",
+      "promptSavedJob": "Which saved job should I prioritize?",
+      "demoQuestion": "Why am I a weak match for the Vercel frontend role?",
       "demoAnswer": "Your match score for that role is 98%, so you're actually a strong candidate overall. The one gap pulling it down is System Design — it's listed as a core requirement and isn't confirmed on your profile yet. Everything else (React, TypeScript, Next.js) lines up well.",
-      "demoQuestionWeek": "What should I focus on this week?", "demoAnswerWeek": "You're 75% through Phase 1 of your roadmap — one task left. Finishing it closes out the System Design foundations before you move into GraphQL and testing next week.",
-      "sourceJob": "Senior Frontend Engineer · Vercel", "sourceSkillGap": "Skill gap: System Design", "sourceTask": "Task: Design a rate limiter",
-      "sourcePhase": "Phase 1: Foundations", "responsePrefix": "Thanks for asking! Here's some AI-grounded guidance based on your profile and saved jobs. This is a demo response for: {{question}}",
-      "relatedJob": "Related job match", "retryResponse": "Here's the response after retrying. Everything looks good now!", "emptyTitle": "Ask your Mentor anything"
+      "demoQuestionWeek": "What should I focus on this week?",
+      "demoAnswerWeek": "You're 75% through Phase 1 of your roadmap — one task left. Finishing it closes out the System Design foundations before you move into GraphQL and testing next week.",
+      "sourceJob": "Senior Frontend Engineer · Vercel",
+      "sourceSkillGap": "Skill gap: System Design",
+      "sourceTask": "Task: Design a rate limiter",
+      "sourcePhase": "Phase 1: Foundations",
+      "responsePrefix": "Thanks for asking! Here's some AI-grounded guidance based on your profile and saved jobs. This is a demo response for: {{question}}",
+      "relatedJob": "Related job match",
+      "retryResponse": "Here's the response after retrying. Everything looks good now!",
+      "emptyTitle": "Ask your Mentor anything"
+    },
+    "adminDates": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "never": "Never",
+      "justNow": "Just now",
+      "notPublished": "Not published",
+      "fresh": "Fresh",
+      "stale": "Stale"
+    },
+    "adminEnums": {
+      "roles": {
+        "candidate": "Candidate",
+        "recruiter": "Recruiter",
+        "admin": "Admin"
+      },
+      "userStatus": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "suspended": "Suspended"
+      },
+      "companyStatus": {
+        "verified": "Verified",
+        "pending": "Pending",
+        "not-verified": "Not Verified"
+      },
+      "appStatus": {
+        "submitted": "Submitted",
+        "review": "In Review",
+        "offer": "Offer",
+        "rejected": "Rejected"
+      },
+      "jobStatus": {
+        "active": "Active",
+        "draft": "Draft",
+        "expired": "Expired",
+        "closed": "Closed"
+      },
+      "auditActions": {
+        "verified": "Verified",
+        "updated": "Updated",
+        "rejected": "Rejected",
+        "created": "Created",
+        "status": "Status changed",
+        "login": "Authentication",
+        "deleted": "Deleted",
+        "merged": "Merged"
+      },
+      "entities": {
+        "company": "Company",
+        "job": "Job",
+        "application": "Application",
+        "user": "User",
+        "record": "Record"
+      },
+      "languages": {
+        "en": "English",
+        "ar": "Arabic"
+      },
+      "authProviders": {
+        "emailPassword": "Email / Password",
+        "google": "Google",
+        "github": "GitHub",
+        "other": "Other"
+      },
+      "cvStatus": {
+        "uploaded": "Uploaded",
+        "missing": "Missing"
+      },
+      "defaults": {
+        "untitled": "Untitled",
+        "untitledJob": "Untitled job"
+      }
+    },
+    "adminShared": {
+      "searchPlaceholder": "Search…",
+      "errorTitle": "Something went wrong",
+      "errorDescription": "Something went wrong on our end. Please try again.",
+      "retry": "Retry",
+      "cancel": "Cancel",
+      "refresh": "Refresh",
+      "removeItem": "Remove {{label}}"
+    },
+    "adminFilters": {
+      "clearAll": "Clear all",
+      "statusChip": "Status: {{label}}",
+      "roleChip": "Role: {{label}}",
+      "searchChip": "Search: {{label}}",
+      "removeChip": "Remove {{label}} filter",
+      "companyStatus": {
+        "all": "All Statuses",
+        "verified": "Verified",
+        "pending": "Pending",
+        "notVerified": "Not Verified"
+      },
+      "companyDate": {
+        "any": "Any time",
+        "d7": "Last 7 days",
+        "d30": "Last 30 days",
+        "d90": "Last 90 days"
+      },
+      "companySort": {
+        "newest": "Newest first",
+        "oldest": "Oldest first",
+        "nameAsc": "Name A–Z",
+        "nameDesc": "Name Z–A",
+        "updated": "Last updated"
+      },
+      "userRole": {
+        "all": "All Roles",
+        "candidate": "Candidate",
+        "recruiter": "Recruiter",
+        "admin": "Admin"
+      },
+      "userStatus": {
+        "all": "All Statuses",
+        "active": "Active",
+        "inactive": "Inactive",
+        "suspended": "Suspended"
+      },
+      "userSort": {
+        "newest": "Newest first",
+        "oldest": "Oldest first",
+        "name": "Name A–Z",
+        "activity": "Last activity"
+      }
+    },
+    "jobSources": {
+      "internal": "Internal",
+      "external": "External",
+      "linkedin": "LinkedIn",
+      "indeed": "Indeed",
+      "referral": "Referral"
+    },
+    "jobPickers": {
+      "location": {
+        "remote": "Remote",
+        "hybrid": "Hybrid",
+        "onsite": "Onsite"
+      },
+      "type": {
+        "fullTime": "Full-time",
+        "partTime": "Part-time",
+        "contract": "Contract",
+        "internship": "Internship"
+      },
+      "level": {
+        "entry": "Entry level",
+        "mid": "Mid level",
+        "senior": "Senior level",
+        "lead": "Lead / Principal"
+      }
+    },
+    "adminJobFilters": {
+      "allStatuses": "All statuses",
+      "allSources": "All sources",
+      "external": "External sources"
+    },
+    "adminJobSort": {
+      "createdDesc": "Newest created",
+      "publishedDesc": "Recently published",
+      "freshness": "Freshness (newest first)"
+    },
+    "jobFilters": {
+      "location": "Location",
+      "workType": "Work Type",
+      "experienceLevel": "Experience Level",
+      "sortBy": "Sort By",
+      "searchAria": "Search jobs",
+      "searchPlaceholder": "Search by job title, skill, or company...",
+      "clearSearchAria": "Clear search",
+      "bestMatch": "Best Match",
+      "mostRecent": "Most Recent",
+      "highestSalary": "Highest Salary",
+      "clearAll": "Clear All",
+      "applyFilters": "Apply Filters",
+      "filters": "Filters",
+      "search": "Search"
+    },
+    "roadmap": {
+      "refresh": "Refresh",
+      "changeRole": "Change target role",
+      "askMentor": "Ask Mentor",
+      "phases": "Phases",
+      "tasksDone": "Tasks done",
+      "estRemaining": "Est. remaining"
+    },
+    "jobStatus": {
+      "underReview": "Under Review"
+    },
+    "applicationStats": {
+      "total": "Total",
+      "underReview": "Under Review",
+      "interview": "Interview",
+      "offer": "Offer",
+      "rejected": "Rejected"
+    },
+    "jobCard": {
+      "quickApply": "Quick Apply"
+    },
+    "footer": {
+      "platformIntegrity": "Platform Integrity",
+      "privacyArchitecture": "Privacy Architecture",
+      "termsOfService": "Terms of Service",
+      "talentApi": "Talent API",
+      "logoAlt": "MatchIn logo"
+    },
+    "a11y": {
+      "breadcrumb": "Breadcrumb",
+      "resultsPages": "Results pages"
     }
   },
   "home": {
@@ -218,8 +617,14 @@
       "title": "Hiring shouldn't be a game of buzzwords.",
       "description": "MatchIn eliminates inflated resumes and keyword-stuffed applicant pipelines. By replacing guesswork with verifiable skill telemetry, we create mutual trust and match speed for high-impact teams.",
       "tiles": {
-        "telemetry": { "title": "Verifiable Skill Telemetry", "description": "Deep-dive objective competency scores evaluated by graph neural benchmarks." },
-        "compensation": { "title": "Upfront Compensation Parity", "description": "Guaranteed verified salary bands and clear expectations before either side commits." }
+        "telemetry": {
+          "title": "Verifiable Skill Telemetry",
+          "description": "Deep-dive objective competency scores evaluated by graph neural benchmarks."
+        },
+        "compensation": {
+          "title": "Upfront Compensation Parity",
+          "description": "Guaranteed verified salary bands and clear expectations before either side commits."
+        }
       },
       "benefits": {
         "accuracy": "Neural match accuracy across verified engineering & design proficiencies",
@@ -236,14 +641,38 @@
       "viewRoles": "View Roles"
     },
     "categoryData": {
-      "development": { "title": "Development", "tags": "Frontend, Back, AI" },
-      "creative-design": { "title": "Creative Design", "tags": "UI/UX, Motion, 3D" },
-      "digital-marketing": { "title": "Digital Marketing", "tags": "Growth, SEO, Brand" },
-      "data-science": { "title": "Data Science", "tags": "MLOps, BI, Analytics" },
-      "finance-tax": { "title": "Finance & Tax", "tags": "FinOps, Audit, FP&A" },
-      "human-resources": { "title": "Human Resources", "tags": "Talent, People Ops" },
-      "customer-support": { "title": "Customer Support", "tags": "Success, Escalations" },
-      "health-science": { "title": "Health & Science", "tags": "Clinical, BioTech" }
+      "development": {
+        "title": "Development",
+        "tags": "Frontend, Back, AI"
+      },
+      "creative-design": {
+        "title": "Creative Design",
+        "tags": "UI/UX, Motion, 3D"
+      },
+      "digital-marketing": {
+        "title": "Digital Marketing",
+        "tags": "Growth, SEO, Brand"
+      },
+      "data-science": {
+        "title": "Data Science",
+        "tags": "MLOps, BI, Analytics"
+      },
+      "finance-tax": {
+        "title": "Finance & Tax",
+        "tags": "FinOps, Audit, FP&A"
+      },
+      "human-resources": {
+        "title": "Human Resources",
+        "tags": "Talent, People Ops"
+      },
+      "customer-support": {
+        "title": "Customer Support",
+        "tags": "Success, Escalations"
+      },
+      "health-science": {
+        "title": "Health & Science",
+        "tags": "Clinical, BioTech"
+      }
     },
     "benefits": {
       "badge": "Why MatchIn",
@@ -252,10 +681,22 @@
       "button": "Why MatchIn"
     },
     "benefitData": {
-      "verifiedJobs": { "title": "Verified Jobs", "description": "Every role is reviewed for quality and trust." },
-      "aiMatching": { "title": "AI-Powered Matching", "description": "Find opportunities based on skills, experience, and goals." },
-      "fastResults": { "title": "Fast Results", "description": "Apply quickly and stay on top of your progress." },
-      "privacyFirst": { "title": "Privacy First", "description": "Protect user data with modern security standards." }
+      "verifiedJobs": {
+        "title": "Verified Jobs",
+        "description": "Every role is reviewed for quality and trust."
+      },
+      "aiMatching": {
+        "title": "AI-Powered Matching",
+        "description": "Find opportunities based on skills, experience, and goals."
+      },
+      "fastResults": {
+        "title": "Fast Results",
+        "description": "Apply quickly and stay on top of your progress."
+      },
+      "privacyFirst": {
+        "title": "Privacy First",
+        "description": "Protect user data with modern security standards."
+      }
     },
     "cta": {
       "badge": "Start Your Journey",
@@ -276,141 +717,231 @@
       "emailPlaceholder": "Enter your work email",
       "join": "Join",
       "confirmation": "You're in — check your inbox to confirm.",
-      "columns": { "platform": "Platform", "resources": "Resources", "company": "Company" },
+      "columns": {
+        "platform": "Platform",
+        "resources": "Resources",
+        "company": "Company"
+      },
       "links": {
-        "jobSearch": "Job Search Engine", "copilot": "AI Career Copilot", "sourcing": "Talent Sourcing", "plans": "Subscription Plans", "status": "Platform Status",
-        "salary": "Tech Salary Benchmark", "resume": "Resume Score Analyzer", "interview": "Interview Intelligence", "ladders": "Engineering Career Ladders", "community": "Developer Community",
-        "about": "About Us", "leadership": "Leadership Team", "careers": "Careers at MatchIn", "security": "Security & Trust", "privacy": "Privacy Policy", "terms": "Terms of Service", "cookies": "Cookie Settings"
+        "jobSearch": "Job Search Engine",
+        "copilot": "AI Career Copilot",
+        "sourcing": "Talent Sourcing",
+        "plans": "Subscription Plans",
+        "status": "Platform Status",
+        "salary": "Tech Salary Benchmark",
+        "resume": "Resume Score Analyzer",
+        "interview": "Interview Intelligence",
+        "ladders": "Engineering Career Ladders",
+        "community": "Developer Community",
+        "about": "About Us",
+        "leadership": "Leadership Team",
+        "careers": "Careers at MatchIn",
+        "security": "Security & Trust",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "cookies": "Cookie Settings"
       }
     }
   },
   "auth": {
     "language": "English",
-        "switchLanguage": "العربية",
-        "side": {
-          "badge": "Better Opportunities",
-          "title": "Great companies hire great people",
-          "description": "Build your career with the right opportunities and take the next step toward your future."
-        },
-        "login": {
-          "welcome": "Welcome Back",
-          "subtitle": "Log in to your account to continue",
-          "email": "Email Address",
-          "emailPlaceholder": "you@example.com",
-          "password": "Password",
-          "passwordPlaceholder": "Enter your password",
-          "showPassword": "Show password",
-          "hidePassword": "Hide password",
-          "remember": "Remember me",
-          "forgot": "Forgot password?",
-          "submit": "Log In",
-          "submitting": "Logging in...",
-          "or": "or continue with",
-          "google": "Continue with Google",
-          "terms": "By signing in, you agree to MatchIn's",
-          "termsLink": "Terms",
-          "privacyLink": "Privacy Policy",
-          "noAccount": "Don't have an account?",
-          "create": "Create an account →"
-        },
-        "register": {
-          "steps": ["Create account", "Verify email"],
-          "step": "STEP {{current}} OF 2",
-          "createTitle": "Create your account",
-          "createDescription": "Start with the basics — you can round out your profile next.",
-          "fullName": "Full name",
-          "fullNamePlaceholder": "e.g. Sara Ahmed",
-          "email": "Email address",
-          "emailPlaceholder": "you@company.com",
-          "password": "Password",
-          "passwordPlaceholder": "At least 8 characters",
-          "confirmPassword": "Confirm password",
-          "confirmPasswordPlaceholder": "Re-enter your password",
-          "agree": "I agree to MatchIn",
-          "terms": "Terms",
-          "privacy": "Privacy Policy",
-          "submit": "Create account",
-          "submitting": "Creating account...",
-          "haveAccount": "Already have an account?",
-          "signIn": "Sign in",
-          "verifyTitle": "Verify your email",
-          "verifyDescription": "We sent a 6-digit code to {{email}}. Enter it below to continue.",
-          "yourEmail": "your email",
-          "resendIn": "Resend code in",
-          "resend": "Resend code",
-          "back": "Back",
-          "verify": "Verify & continue",
-          "redirecting": "Redirecting to dashboard..."
-        },
-        "otp": {
-          "verifiedSuccessLogin": "Email verified successfully! Please log in to continue."
-        },
-        "verifyEmail": {
-          "badge": "Smart Career Platform",
-          "title": "Verify your email",
-          "description": "We sent a 6-digit code to {{email}}. Enter it below to activate your account.",
-          "backLabel": "Back to login",
-          "missingEmail": "This verification request has expired. Please log in again to request a new code.",
-          "requestNew": "Back to login"
-        },
-        "errors": {
-          "invalidOrExpired": "This code is invalid or has expired. Request a new one and try again.",
-          "noAccount": "We couldn't find an account with that email address. Please check it or create an account.",
-          "sessionExpired": "Your session has expired. Please start the password reset again.",
-          "tooManyAttempts": "Too many attempts. Please wait a moment before trying again.",
-          "serverUnavailable": "We couldn't reach the server. Check your connection and try again.",
-          "noRoleTitle": "We couldn't work out your access level",
-          "noRoleBody": "You're signed in, but this account isn't assigned a role yet, so there's no workspace to open. Ask an administrator to set one, or sign in with a different account.",
-          "signOut": "Sign out",
-          "signingOut": "Signing out…"
-        },
-        "forgot": {
-          "back": "Back to Login",
-          "badge": "Smart Career Platform",
-          "title": "Forgot Password?",
-          "description": "Enter your account's email address and we will send you a secure link to reset your password immediately.",
-          "email": "Professional Email",
-          "emailPlaceholder": "tariq.mansour@company.com",
-          "send": "Send Reset Link",
-          "sending": "Sending Link...",
-          "retry": "Retry Sending",
-          "success": "A password reset link has been sent to your email.",
-          "failure": "Server connection failed. Please try again later.",
-          "security": "Advanced protection for your professional data. Saved with highest certified digital identity security standards.",
-          "invalidEmail": "Please enter a valid email address.",
-          "otpTitle": "Verify your email",
-          "otpDescription": "We sent a 6-digit code to {{email}}. Enter it below to reset your password.",
-          "otpBack": "Back to reset request",
-          "otpMissingEmail": "This reset request has expired. Request a new link to continue.",
-          "otpRequestNew": "Request a new link"
-        },
-        "reset": {
-          "back": "Back to Login",
-          "badge": "Smart Career Path Platform",
-          "title": "Set New Password",
-          "description": "Please enter a strong password and confirm it to protect your professional account on MatchIn",
-          "newPassword": "New Password",
-          "newPasswordPlaceholder": "Enter new password",
-          "confirmPassword": "Confirm Password",
-          "confirmPasswordPlaceholder": "Confirm new password",
-          "showPassword": "Show password",
-          "hidePassword": "Hide password",
-          "save": "Save & Set Password",
-          "verifying": "Verifying Security Link...",
-          "verifyingDescription": "Please wait a moment while we validate your reset link security token.",
-          "proceed": "Proceed to Form Manually",
-          "expired": "Link Has Expired",
-          "expiredDescription": "This password reset link is invalid or has expired for security reasons. Please request a new one.",
-          "request": "Request New Link",
-          "saving": "Saving New Password...",
-          "savingDescription": "Please wait while we securely update your password.",
-          "completed": "Onboarding Completed!",
-          "completedDescription": "Your password has been successfully updated, and your account set-up is now complete. You can access your personalized dashboard now.",
-          "dashboard": "Go to Dashboard",
-          "error": "Something Went Wrong",
-          "errorDescription": "We encountered an issue updating your password. Please check your network connection and try again.",
-          "tryAgain": "Try Again",
-          "security": "Advanced protection for your career data and application history adhering to top digital identity security standards and AES-256-bit encryption."
-        }
-      }
+    "switchLanguage": "العربية",
+    "side": {
+      "badge": "Better Opportunities",
+      "title": "Great companies hire great people",
+      "description": "Build your career with the right opportunities and take the next step toward your future."
+    },
+    "login": {
+      "welcome": "Welcome Back",
+      "subtitle": "Log in to your account to continue",
+      "email": "Email Address",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "remember": "Remember me",
+      "forgot": "Forgot password?",
+      "submit": "Log In",
+      "submitting": "Logging in...",
+      "or": "or continue with",
+      "google": "Continue with Google",
+      "terms": "By signing in, you agree to MatchIn's",
+      "termsLink": "Terms",
+      "privacyLink": "Privacy Policy",
+      "noAccount": "Don't have an account?",
+      "create": "Create an account →"
+    },
+    "register": {
+      "steps": ["Create account", "Verify email"],
+      "step": "STEP {{current}} OF 2",
+      "createTitle": "Create your account",
+      "createDescription": "Start with the basics — you can round out your profile next.",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "e.g. Sara Ahmed",
+      "email": "Email address",
+      "emailPlaceholder": "you@company.com",
+      "password": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Re-enter your password",
+      "agree": "I agree to MatchIn",
+      "terms": "Terms",
+      "privacy": "Privacy Policy",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "verifyTitle": "Verify your email",
+      "verifyDescription": "We sent a 6-digit code to {{email}}. Enter it below to continue.",
+      "yourEmail": "your email",
+      "resendIn": "Resend code in",
+      "resend": "Resend code",
+      "back": "Back",
+      "verify": "Verify & continue",
+      "redirecting": "Redirecting to dashboard...",
+      "uploadTitle": "Upload your CV",
+      "uploadDescription": "Add your CV so we can match you with the right roles.",
+      "uploadLabel": "CV file",
+      "uploadHelp": "PDF or DOCX, up to 5 MB.",
+      "drop": "Drag and drop your file here, or",
+      "browse": "browse",
+      "fileLimit": "Maximum 5 MB. PDF and DOCX only.",
+      "reading": "Reading…",
+      "ready": "Ready",
+      "remove": "Remove",
+      "browseJobs": "Browse jobs",
+      "completeProfile": "Complete your profile",
+      "profileTitle": "Your profile",
+      "profileDescription": "Tell us where you want to go. We handle the rest.",
+      "profileReading": "Reading your profile",
+      "profileReadingDescription": "Pulling your details out of the CV you uploaded.",
+      "analyzing": "Analysing {{file}}…",
+      "yourProfile": "your profile",
+      "cvAnalyzed": "CV analysed",
+      "extracting": "Extracting skills…",
+      "extracted": "Skills extracted",
+      "skillsSummary": "{{count}} skills identified",
+      "matchedSkills": "Matched skills",
+      "growth": "Growth areas",
+      "profile": "Profile",
+      "jobTitle": "Target job title",
+      "jobTitlePlaceholder": "e.g. Senior Frontend Engineer",
+      "location": "Location",
+      "locationPlaceholder": "e.g. Cairo, Egypt",
+      "experience": "Experience level",
+      "select": "Select…",
+      "bio": "Professional bio",
+      "optional": "optional",
+      "bioPlaceholder": "A short summary of your experience and goals.",
+      "dashboard": "Go to dashboard"
+    },
+    "otp": {
+      "verifiedSuccessLogin": "Email verified successfully! Please log in to continue."
+    },
+    "verifyEmail": {
+      "badge": "Smart Career Platform",
+      "title": "Verify your email",
+      "description": "We sent a 6-digit code to {{email}}. Enter it below to activate your account.",
+      "backLabel": "Back to login",
+      "missingEmail": "This verification request has expired. Please log in again to request a new code.",
+      "requestNew": "Back to login"
+    },
+    "errors": {
+      "invalidOrExpired": "This code is invalid or has expired. Request a new one and try again.",
+      "noAccount": "We couldn't find an account with that email address. Please check it or create an account.",
+      "sessionExpired": "Your session has expired. Please start the password reset again.",
+      "tooManyAttempts": "Too many attempts. Please wait a moment before trying again.",
+      "serverUnavailable": "We couldn't reach the server. Check your connection and try again.",
+      "noRoleTitle": "We couldn't work out your access level",
+      "noRoleBody": "You're signed in, but this account isn't assigned a role yet, so there's no workspace to open. Ask an administrator to set one, or sign in with a different account.",
+      "signOut": "Sign out",
+      "signingOut": "Signing out…"
+    },
+    "forgot": {
+      "back": "Back to Login",
+      "badge": "Smart Career Platform",
+      "title": "Forgot Password?",
+      "description": "Enter your account's email address and we will send you a secure link to reset your password immediately.",
+      "email": "Professional Email",
+      "emailPlaceholder": "tariq.mansour@company.com",
+      "send": "Send Reset Link",
+      "sending": "Sending Link...",
+      "retry": "Retry Sending",
+      "success": "A password reset link has been sent to your email.",
+      "failure": "Server connection failed. Please try again later.",
+      "security": "Advanced protection for your professional data. Saved with highest certified digital identity security standards.",
+      "invalidEmail": "Please enter a valid email address.",
+      "otpTitle": "Verify your email",
+      "otpDescription": "We sent a 6-digit code to {{email}}. Enter it below to reset your password.",
+      "otpBack": "Back to reset request",
+      "otpMissingEmail": "This reset request has expired. Request a new link to continue.",
+      "otpRequestNew": "Request a new link"
+    },
+    "reset": {
+      "back": "Back to Login",
+      "badge": "Smart Career Path Platform",
+      "title": "Set New Password",
+      "description": "Please enter a strong password and confirm it to protect your professional account on MatchIn",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm new password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "save": "Save & Set Password",
+      "verifying": "Verifying Security Link...",
+      "verifyingDescription": "Please wait a moment while we validate your reset link security token.",
+      "proceed": "Proceed to Form Manually",
+      "expired": "Link Has Expired",
+      "expiredDescription": "This password reset link is invalid or has expired for security reasons. Please request a new one.",
+      "request": "Request New Link",
+      "saving": "Saving New Password...",
+      "savingDescription": "Please wait while we securely update your password.",
+      "completed": "Onboarding Completed!",
+      "completedDescription": "Your password has been successfully updated, and your account set-up is now complete. You can access your personalized dashboard now.",
+      "dashboard": "Go to Dashboard",
+      "error": "Something Went Wrong",
+      "errorDescription": "We encountered an issue updating your password. Please check your network connection and try again.",
+      "tryAgain": "Try Again",
+      "security": "Advanced protection for your career data and application history adhering to top digital identity security standards and AES-256-bit encryption."
+    }
+  },
+  "errors": {
+    "network": "Could not reach the server. Check your connection and that the API is running.",
+    "timeout": "The server took too long to respond. It may be slow or overloaded — please try again.",
+    "generic": "Something went wrong"
+  },
+  "onboarding": {
+    "loadFailed": "Couldn't load profile",
+    "loadFailedDesc": "Something went wrong. Please try again.",
+    "tryAgain": "Try again"
+  },
+  "admin": {
+    "companyDetails": {
+      "noContacts": "No contact details yet."
+    }
+  },
+  "public": {
+    "whyMatchIn": {
+      "closeVideo": "Close video",
+      "howWeWork": "How We Work",
+      "platformPreview": "MatchIn Interactive Platform Preview",
+      "enterpriseSecurity": "Enterprise-Grade Security",
+      "watch": "Watch",
+      "videoLength": "({{minutes}} min video)"
+    },
+    "philosophy": {
+      "evaluationWorkspace": "MatchIn Verified Evaluation Workspace",
+      "liveEngine": "Live Evaluation Engine",
+      "staffArchitect": "Staff Systems Architect"
+    },
+    "heroSearch": {
+      "frontendDev": "Frontend Dev",
+      "dataScientist": "Data Scientist",
+      "productManager": "Product Manager",
+      "backendEngineer": "Backend Engineer",
+      "openCount": "{{count}}+ open"
+    }
   }
+}

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,9 @@ import {
  * Search + status + date filters with the active-filter chip row.
  * Filter options are passed in from the page rather than imported from a
  * hard-coded list, so the toolbar stays a dumb control.
+ *
+ * Options arrive as `{ value, labelKey }`; the label is resolved here so the
+ * constants module stays free of i18n (AUTH_LOGIC_CONVENTION.md §5).
  */
 export default function CompaniesToolbar({
   filters,
@@ -24,21 +28,38 @@ export default function CompaniesToolbar({
   statusOptions,
   dateOptions,
 }) {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
+
+  const labelOf = (options, value) => {
+    const option = options?.find((candidate) => candidate.value === value);
+    return option?.labelKey
+      ? tCommon(option.labelKey)
+      : (option?.label ?? value);
+  };
+
   const activeChips = [];
 
+  if (filters.search) {
+    activeChips.push({
+      key: "search",
+      label: tCommon("ui.adminFilters.searchChip", { label: filters.search }),
+      onRemove: () => onSearchChange(""),
+    });
+  }
   if (filters.status !== "all") {
-    const option = statusOptions.find((o) => o.value === filters.status);
     activeChips.push({
       key: "status",
-      label: `Status: ${option?.label ?? filters.status}`,
+      label: tCommon("ui.adminFilters.statusChip", {
+        label: labelOf(statusOptions, filters.status),
+      }),
       onRemove: () => onStatusFilterChange("all"),
     });
   }
   if (filters.date !== "any") {
-    const option = dateOptions.find((o) => o.value === filters.date);
     activeChips.push({
       key: "date",
-      label: option?.label ?? filters.date,
+      label: labelOf(dateOptions, filters.date),
       onRemove: () => onDateFilterChange("any"),
     });
   }
@@ -52,7 +73,7 @@ export default function CompaniesToolbar({
             type="search"
             value={filters.search}
             onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Search by company name, email, or ID…"
+            placeholder={t("pages.admin.companyList.searchPlaceholder")}
             className="h-[42px] rounded-xl border-border bg-surface ps-10 text-[14px] text-ink shadow-none placeholder:text-muted focus-visible:border-primary focus-visible:ring-0"
           />
         </div>
@@ -64,7 +85,7 @@ export default function CompaniesToolbar({
           <SelectContent>
             {statusOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
-                {option.label}
+                {tCommon(option.labelKey)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -77,7 +98,7 @@ export default function CompaniesToolbar({
           <SelectContent>
             {dateOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
-                {option.label}
+                {tCommon(option.labelKey)}
               </SelectItem>
             ))}
           </SelectContent>
@@ -95,7 +116,9 @@ export default function CompaniesToolbar({
               <button
                 type="button"
                 onClick={chip.onRemove}
-                aria-label={`Remove ${chip.label} filter`}
+                aria-label={tCommon("ui.adminFilters.removeChip", {
+                  label: chip.label,
+                })}
                 className="opacity-65 hover:opacity-100"
               >
                 <X className="w-3 h-3" />
@@ -108,7 +131,7 @@ export default function CompaniesToolbar({
             onClick={onClearFilters}
             className="h-auto px-1 text-[12.5px] font-semibold text-muted hover:bg-transparent hover:text-ink hover:underline"
           >
-            Clear all
+            {tCommon("ui.adminFilters.clearAll")}
           </Button>
         </div>
       )}

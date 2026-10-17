@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import { FilterX } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ export default function ApplicationList({
   onWithdraw,
   onClearFilters,
 }) {
+  const { t } = useTranslation("dashboard");
   const [openMenuId, setOpenMenuId] = useState(null);
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export default function ApplicationList({
         >
           <FilterX className="w-8 h-8 text-muted mx-auto mb-2" />
           <p className="text-[13.5px] text-muted">
-            No applications match your search or filter settings.
+            {t("pages.applicationDetail.noMatches")}
           </p>
           <Button
             type="button"
@@ -63,7 +65,7 @@ export default function ApplicationList({
             onClick={onClearFilters}
             className="mt-3 text-[12.5px] font-semibold text-primary hover:underline"
           >
-            Clear filters
+            {t("pages.applicationDetail.clearFilters")}
           </Button>
         </motion.div>
       )}

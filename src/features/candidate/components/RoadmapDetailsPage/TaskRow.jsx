@@ -1,7 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 
 export default function TaskRow({ task, index = 0, onToggle, onOpen }) {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -30,8 +33,10 @@ export default function TaskRow({ task, index = 0, onToggle, onOpen }) {
       <div className="min-w-0 flex-1 cursor-pointer" onClick={() => onOpen(task.id)}>
         <div className="text-[13.5px] font-semibold text-ink">{task.title}</div>
         <div className="mt-0.5 text-[11px] text-muted">
-          Target skill: {task.targetSkill} ·{" "}
-          {task.done ? `Done ${task.completedDate}` : "Not started"}
+          {t("pages.roadmap.targetSkill", { skill: task.targetSkill })}{" "}
+          {task.done
+              ? t("pages.roadmap.doneOn", { date: task.completedDate })
+              : t("pages.roadmap.notStarted")}
         </div>
       </div>
 
@@ -40,7 +45,7 @@ export default function TaskRow({ task, index = 0, onToggle, onOpen }) {
         onClick={() => onOpen(task.id)}
         className="shrink-0 px-2 text-[12px] font-semibold text-primary"
       >
-        Open
+          {tCommon("actions.open")}
       </button>
     </motion.div>
   );

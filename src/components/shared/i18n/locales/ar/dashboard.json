@@ -12,7 +12,8 @@
     "companymanagement": "إدارة الشركات",
     "usermanagement": "إدارة المستخدمين",
     "auditLogs": "سجلات التدقيق",
-    "cms": "إدارة الصفحة الرئيسية"
+    "cms": "إدارة الصفحة الرئيسية",
+    "authCms": "إدارة المصادقة"
   },
   "actions": {
     "collapseSidebar": "طي الشريط الجانبي",
@@ -97,9 +98,69 @@
   },
   "pages": {
     "admin": {
+      "title": "سجلات التدقيق",
       "overview": {
         "title": "لوحة تحكم المسؤول",
-        "subtitle": "نظرة عامة على المنصة وملخص العمليات"
+        "subtitle": "نظرة عامة على المنصة وملخص العمليات",
+        "loadFailed": {
+          "title": "تعذّر تحميل لوحة التحكم",
+          "description": "حدث خطأ لدينا. يُرجى المحاولة مرة أخرى."
+        },
+        "empty": {
+          "title": "لا يوجد شيء لعرضه بعد",
+          "description": "بمجرد بدء وصول الشركات والوظائف والطلبات، ستظهر هنا."
+        },
+        "stats": {
+          "companies": "الشركات",
+          "pendingCompanies": "شركات قيد المراجعة",
+          "jobs": "الوظائف",
+          "applications": "الطلبات",
+          "users": "المستخدمون"
+        },
+        "statSubs": {
+          "companies": "{{active}} نشطة · {{inactive}} غير نشطة",
+          "submittedToday": "{{count}} مُرسلة اليوم",
+          "jobs": "{{open}} مفتوحة · {{closed}} مغلقة",
+          "applications": "{{count}} هذا الأسبوع",
+          "users": "مرشحون وموظّفو توظيف"
+        },
+        "badges": {
+          "approved": "معتمدة",
+          "pending": "قيد المراجعة",
+          "suspended": "موقوفة",
+          "user": "مستخدم",
+          "job": "وظيفة",
+          "auth": "مصادقة",
+          "delete": "حذف",
+          "permission": "صلاحيات",
+          "status": "حالة",
+          "config": "إعدادات"
+        },
+        "by": "بواسطة {{name}}",
+        "sections": {
+          "quickActions": "إجراءات سريعة",
+          "recentActivity": "النشاط الأخير",
+          "auditLogs": "سجلات التدقيق",
+          "open": "فتح"
+        },
+        "quickActions": {
+          "manage-companies": {
+            "title": "إدارة الشركات",
+            "description": "استعرض حسابات الشركات وعدّلها وأوقفها"
+          },
+          "review-pending": {
+            "title": "مراجعة المعلّقة",
+            "description": "اعتمد أو ارفض طلبات الشركات الجديدة"
+          },
+          "manage-jobs": {
+            "title": "إدارة الوظائف",
+            "description": "راجع الإعلانات والوظائف المميزة"
+          },
+          "audit-logs": {
+            "title": "عرض سجلات التدقيق",
+            "description": "تابع إجراءات المسؤولين وأحداث النظام"
+          }
+        }
       },
       "jobManagement": {
         "title": "إدارة الوظائف",
@@ -110,7 +171,71 @@
         "subtitle": "استعرض الشركات المسجلة على المنصة وتحقق منها وأدرها"
       },
       "userManagement": "إدارة المستخدمين",
-      "auditLogs": "سجلات التدقيق",
+      "auditLogs": {
+        "title": "سجلات التدقيق",
+        "loadFailed": {
+          "title": "تعذّر تحميل سجلات التدقيق",
+          "description": "حدث خطأ أثناء جلب قائمة سجلات التدقيق."
+        },
+        "notFound": "سجل التدقيق غير موجود",
+        "subtitle": "سجل كامل بالإجراءات الإدارية عبر المنصة",
+        "readOnly": "للقراءة فقط",
+        "readOnlyBody": "هذا سجل غير قابل للتعديل. لا يمكن تعديل سجلات التدقيق أو حذفها. فهي موجودة لضمان التتبّع الإداري الكامل.",
+        "records_zero": "لا توجد سجلات",
+        "records_one": "{{count}} سجل",
+        "records_two": "{{count}} سجلان",
+        "records_few": "{{count}} سجلات",
+        "records_many": "{{count}} سجلًا",
+        "records_other": "{{count}} سجل",
+        "pagesLabel": "صفحات نتائج سجلات التدقيق",
+        "export": "تصدير",
+        "refresh": "تحديث",
+        "filters": {
+          "allActions": "كل الإجراءات",
+          "allEntities": "كل الكيانات",
+          "allActors": "كل المنفذين",
+          "clearAll": "مسح الكل"
+        },
+        "toolbar": {
+          "searchPlaceholder": "ابحث بالمنفّذ أو الإجراء أو معرّف الكيان أو IP…",
+          "actionAria": "تصفية حسب الإجراء",
+          "entityAria": "تصفية حسب الكيان",
+          "actorAria": "تصفية حسب المنفّذ",
+          "sortAria": "ترتيب سجلات التدقيق",
+          "chips": {
+            "search": "بحث: {{label}}",
+            "action": "إجراء: {{label}}",
+            "entity": "كيان: {{label}}",
+            "actor": "منفّذ: {{label}}"
+          }
+        },
+        "table": {
+          "timestamp": "الطابع الزمني",
+          "actor": "المنفّذ",
+          "action": "الإجراء",
+          "entity": "الكيان",
+          "previous": "السابق",
+          "new": "الجديد",
+          "ip": "IP / بيانات",
+          "id": "المعرّف",
+          "entityId": "معرّف الكيان",
+          "role": "الدور",
+          "empty": "لا توجد سجلات تدقيق مطابقة لفلاترك الحالية.",
+          "preview": "معاينة السجل",
+          "showing_zero": "لا توجد سجلات",
+          "showing_one": "عرض {{from}}–{{to}} من {{total}} سجل",
+          "showing_two": "عرض {{from}}–{{to}} من {{total}} سجلان",
+          "showing_few": "عرض {{from}}–{{to}} من {{total}} سجلات",
+          "showing_many": "عرض {{from}}–{{to}} من {{total}} سجلًا",
+          "showing_other": "عرض {{from}}–{{to}} من {{total}} سجل",
+          "pageOf": "صفحة {{page}} من {{total}}"
+        },
+        "drawer": {
+          "close": "إغلاق تفاصيل السجل",
+          "valueChange": "تغيّر القيمة",
+          "timeZone": "بتوقيت شرق أوروبا"
+        }
+      },
       "companies": "الشركات",
       "companyManagement": "إدارة الشركات",
       "auditLogDetails": "تفاصيل سجل التدقيق",
@@ -127,13 +252,90 @@
         "savedJobs": "ملخص الوظائف المحفوظة",
         "roleStatus": "الدور والحالة",
         "dates": "التواريخ",
-        "quickLinks": "روابط سريعة"
+        "quickLinks": "روابط سريعة",
+        "dateLabels": {
+          "created": "تاريخ الإنشاء",
+          "lastActivity": "آخر نشاط",
+          "lastLogin": "آخر تسجيل دخول"
+        },
+        "fields": {
+          "email": "البريد الإلكتروني",
+          "phone": "الهاتف",
+          "location": "الموقع",
+          "accountStatus": "حالة الحساب",
+          "authProvider": "مصدر المصادقة",
+          "emailVerified": "البريد موثّق",
+          "language": "اللغة",
+          "jobTitle": "المسمى الوظيفي",
+          "experience": "الخبرة",
+          "bio": "النبذة",
+          "skills": "المهارات",
+          "status": "الحالة",
+          "lastParsed": "آخر تحليل",
+          "file": "الملف",
+          "uploaded": "تاريخ الرفع",
+          "fullName": "الاسم الكامل",
+          "userId": "معرّف المستخدم",
+          "role": "الدور"
+        },
+        "actions": {
+          "deleteUser": "حذف المستخدم",
+          "deleteConfirm": "هل تريد حذف {{name}}؟ لا يمكن التراجع عن ذلك.",
+          "saveChanges": "حفظ التغييرات",
+          "saving": "جارٍ الحفظ…",
+          "suspend": "إيقاف",
+          "activate": "تفعيل",
+          "backToUsers": "العودة إلى المستخدمين",
+          "viewAll": "عرض الكل ←"
+        },
+        "empty": {
+          "applications": "لا توجد طلبات بعد.",
+          "skills": "لم تُضف مهارات بعد."
+        },
+        "stats": {
+          "applications": "الطلبات",
+          "savedJobs": "الوظائف المحفوظة",
+          "cvStatus": "حالة السيرة الذاتية",
+          "profile": "الملف الشخصي"
+        },
+        "lastSaved": "آخر حفظ",
+        "loadingUser": "جارٍ تحميل المستخدم…",
+        "hints": {
+          "identity": "الهوية وبيانات التواصل"
+        },
+        "experienceOptions": {
+          "lessThanYear": "أقل من سنة",
+          "oneToTwo": "من سنة إلى سنتين",
+          "threeToFive": "من 3 إلى 5 سنوات",
+          "sixToTen": "من 6 إلى 10 سنوات",
+          "tenPlus": "أكثر من 10 سنوات"
+        }
       },
       "auditDetails": {
         "actor": "المسؤول / المنفذ",
         "entity": "العنصر",
         "changes": "التغييرات",
-        "relatedEntities": "العناصر المرتبطة"
+        "relatedEntities": "العناصر المرتبطة",
+        "loadFailed": "تعذّر تحميل سجل التدقيق هذا",
+        "by": "بواسطة {{name}}",
+        "readOnly": "للقراءة فقط",
+        "returnToLogs": "العودة إلى سجلات التدقيق",
+        "hints": {
+          "actor": "من قام بهذا الإجراء",
+          "entity": "ما الذي تأثّر",
+          "changes": "القيمة السابقة ← القيمة الجديدة",
+          "related": "الانتقال إلى السجلات المرتبطة"
+        },
+        "fields": {
+          "entityType": "نوع الكيان",
+          "entityId": "معرّف الكيان",
+          "entityTitle": "عنوان الكيان"
+        },
+        "viewRelated": {
+          "job": "عرض الوظيفة المرتبطة",
+          "company": "عرض الشركة المرتبطة"
+        },
+        "dismiss": "إغلاق"
       },
       "jobManagementStates": {
         "empty": "لا توجد وظائف على المنصة بعد",
@@ -155,6 +357,7 @@
         "contactInformation": "معلومات التواصل",
         "coreProfileDetails": "بيانات الملف الأساسي",
         "jobs": "الوظائف",
+        "jobsEmpty": "لا توجد وظائف منشورة بعد.",
         "activity": "النشاط",
         "dates": "التواريخ",
         "quickLinks": "روابط سريعة",
@@ -212,7 +415,12 @@
           "jobs": "عرض وظائف الشركة",
           "activity": "عرض النشاط",
           "auditLogs": "سجلات التدقيق"
-        }
+        },
+        "loadFailed": {
+          "title": "تعذّر تحميل هذه الشركة",
+          "description": "ربما حُذفت الشركة أو تم دمجها."
+        },
+        "noContacts": "لا توجد بيانات تواصل بعد."
       },
       "jobDetails": {
         "loadFailed": "تعذر تحميل هذه الوظيفة",
@@ -221,8 +429,525 @@
         "requiredSkills": "المهارات المطلوبة",
         "preferredSkills": "المهارات المفضلة",
         "sourceAndMethod": "المصدر وطريقة التقديم",
-        "status": "حالة الوظيفة"
-      }
+        "status": "حالة الوظيفة",
+        "notFoundDescription": "ربما حُذفت هذه الوظيفة، أو أن الرابط الذي اتبعته لم يعد صالحًا.",
+        "returnToJobs": "العودة إلى الوظائف",
+        "staleTitle": "هذا الإعلان قديم — آخر نشر {{days}}",
+        "staleDescription": "فكّر في تحديث حالته أو التواصل مع المصدر قبل أن يواصل المرشحون رؤيته.",
+        "savedSuccessfully": "تم حفظ التغييرات بنجاح.",
+        "fixFields": "يُرجى تصحيح الحقول المميّزة قبل الحفظ.",
+        "titleRequired": "المسمى الوظيفي مطلوب.",
+        "published": "نُشرت {{date}}",
+        "preservedNote": "محفوظة من المصدر — غير قابلة للتعديل",
+        "preservedTitle": "محفوظة — غير قابلة للتعديل",
+        "saveChanges": "حفظ التغييرات",
+        "saving": "جارٍ حفظ التغييرات…",
+        "cancel": "إلغاء",
+        "editJob": "تعديل الوظيفة",
+        "viewCompany": "عرض الشركة",
+        "updateStatus": "تحديث الحالة",
+        "openSource": "فتح المصدر",
+        "noResponsibilities": "لا توجد مسؤوليات مدرجة.",
+        "noneListed": "لا يوجد.",
+        "dismiss": "إغلاق",
+        "rows": {
+          "source": "المصدر",
+          "applicationMethod": "طريقة التقديم",
+          "postedBy": "نشرها",
+          "originalListing": "الإعلان الأصلي"
+        },
+        "statusHints": {
+          "active": "ظاهرة للمرشحين في البحث والتوصيات.",
+          "draft": "لم تظهر للمرشحين بعد.",
+          "closed": "لم تعد تقبل الطلبات.",
+          "expired": "لم تعد تقبل الطلبات.",
+          "suspended": "مخفية مؤقتًا عن المرشحين."
+        }
+      },
+      "companyList": {
+        "addCompany": "إضافة شركة",
+        "export": "تصدير",
+        "refresh": "تحديث",
+        "searchPlaceholder": "ابحث باسم الشركة أو البريد أو المعرّف…",
+        "sortBy": "ترتيب حسب",
+        "columns": {
+          "company": "الشركة",
+          "verification": "التوثيق",
+          "contact": "التواصل",
+          "created": "تاريخ الإنشاء",
+          "lastUpdated": "آخر تحديث",
+          "actions": "الإجراءات"
+        },
+        "noMatches": "لا توجد شركات مطابقة لهذه الفلاتر.",
+        "resultsCount_zero": "لا توجد شركات",
+        "resultsCount_one": "{{start}}–{{end}} من {{total}} شركة",
+        "resultsCount_two": "{{start}}–{{end}} من {{total}} شركتين",
+        "resultsCount_few": "{{start}}–{{end}} من {{total}} شركات",
+        "resultsCount_many": "{{start}}–{{end}} من {{total}} شركة",
+        "resultsCount_other": "{{start}}–{{end}} من {{total}} شركة",
+        "pagesLabel": "صفحات نتائج الشركات",
+        "actions": {
+          "verify": "توثيق",
+          "reject": "رفض",
+          "manage": "إدارة",
+          "view": "عرض الشركة",
+          "viewAria": "عرض {{name}}"
+        },
+        "stats": {
+          "total": "إجمالي الشركات",
+          "verified": "موثّقة",
+          "pending": "قيد المراجعة",
+          "notVerified": "غير موثّقة"
+        },
+        "legend": {
+          "verified": "معتمدة ونشطة",
+          "pending": "بانتظار مراجعة المسؤول",
+          "notVerified": "ناقصة أو مرفوضة"
+        },
+        "loadFailed": {
+          "title": "تعذّر تحميل الشركات",
+          "description": "حدث خطأ أثناء جلب قائمة الشركات."
+        },
+        "form": {
+          "title": "إضافة شركة",
+          "subtitle": "أنشئ سجل شركة جديدًا.",
+          "submit": "إضافة شركة",
+          "fields": {
+            "name": "اسم الشركة",
+            "industry": "القطاع",
+            "website": "الموقع الإلكتروني",
+            "location": "الموقع",
+            "description": "الوصف"
+          },
+          "placeholders": {
+            "name": "Acronym Corp",
+            "industry": "برمجيات سحابية",
+            "website": "https://example.com",
+            "location": "دبي، الإمارات",
+            "description": "ما الذي تقوم به الشركة."
+          }
+        },
+        "resultsCount": "عرض {{start}}–{{end}} من {{count}} شركة"
+      },
+      "userList": {
+        "subtitle": "ابحث في المستخدمين واطّلع عليهم وأدِر حساباتهم",
+        "addUser": "إضافة مستخدم",
+        "export": "تصدير",
+        "searchPlaceholder": "ابحث بالاسم أو البريد أو معرّف المستخدم…",
+        "noResultsHint": "جرّب تعديل البحث أو الفلاتر.",
+        "emptyHint": "بمجرد تسجيل أشخاص، سيظهرون هنا.",
+        "clearFilters": "مسح الفلاتر",
+        "sortBy": "ترتيب حسب",
+        "pagesLabel": "صفحات نتائج المستخدمين",
+        "loadFailed": "حدث خطأ أثناء جلب قائمة المستخدمين.",
+        "resultsCount_zero": "لا يوجد مستخدمون",
+        "resultsCount_one": "{{start}}–{{end}} من {{total}} مستخدم",
+        "resultsCount_two": "{{start}}–{{end}} من {{total}} مستخدمين",
+        "resultsCount_few": "{{start}}–{{end}} من {{total}} مستخدمين",
+        "resultsCount_many": "{{start}}–{{end}} من {{total}} مستخدمًا",
+        "resultsCount_other": "{{start}}–{{end}} من {{total}} مستخدم",
+        "stats": {
+          "total": "إجمالي المستخدمين",
+          "active": "نشط",
+          "inactiveOrSuspended": "غير نشط / موقوف",
+          "admins": "المسؤولون"
+        },
+        "columns": {
+          "user": "المستخدم",
+          "email": "البريد الإلكتروني",
+          "role": "الدور",
+          "status": "الحالة",
+          "created": "تاريخ الإنشاء",
+          "lastActivity": "آخر نشاط",
+          "actions": "الإجراءات"
+        },
+        "rowActions": {
+          "view": "عرض المستخدم",
+          "edit": "تعديل المستخدم",
+          "changeRole": "تغيير الدور",
+          "activate": "تفعيل المستخدم",
+          "deactivate": "إيقاف",
+          "delete": "حذف المستخدم"
+        },
+        "form": {
+          "fullName": "الاسم الكامل",
+          "email": "البريد الإلكتروني",
+          "role": "الدور",
+          "changeRoleSubtitle": "اختر دورًا جديدًا لـ {{name}}.",
+          "changeRoleSubmit": "تأكيد",
+          "add": "أنشئ حسابًا جديدًا على المنصة.",
+          "edit": "حدّث بيانات {{name}}.",
+          "editSubmit": "حفظ التغييرات",
+          "activateSub": "سيستعيد {{name}} وصوله الكامل إلى حسابه.",
+          "deactivateSub": "سيفقد {{name}} الوصول حتى إعادة التفعيل.",
+          "deleteTitle": "حذف المستخدم",
+          "deleteSub": "سيؤدي هذا إلى حذف حساب {{name}} نهائيًا. لا يمكن التراجع.",
+          "deleting": "جارٍ الحذف…",
+          "activating": "جارٍ التفعيل…",
+          "deactivating": "جارٍ الإيقاف…",
+          "saving": "جارٍ الحفظ…"
+        }
+      },
+      "jobList": {
+        "loadFailed": {
+          "title": "تعذّر تحميل الوظائف",
+          "description": "حدث خطأ أثناء جلب قائمة الوظائف."
+        },
+        "emptyDescription": "ستظهر الوظائف هنا بمجرد أن تنشر الشركات وظائف داخلية أو تبدأ المصادر الخارجية في المزامنة.",
+        "noMatches": "لا توجد وظائف مطابقة لبحثك أو فلاترك.",
+        "clearFilters": "مسح الفلاتر",
+        "pagesLabel": "صفحات نتائج الوظائف",
+        "resultsCount_zero": "لا توجد وظائف",
+        "resultsCount_one": "{{start}}–{{end}} من {{total}} وظيفة",
+        "resultsCount_two": "{{start}}–{{end}} من {{total}} وظيفتين",
+        "resultsCount_few": "{{start}}–{{end}} من {{total}} وظائف",
+        "resultsCount_many": "{{start}}–{{end}} من {{total}} وظيفة",
+        "resultsCount_other": "{{start}}–{{end}} من {{total}} وظيفة",
+        "toolbar": {
+          "searchPlaceholder": "ابحث بالمسمى الوظيفي أو الشركة…",
+          "clearFilters": "مسح الفلاتر"
+        },
+        "columns": {
+          "jobCompany": "الوظيفة / الشركة",
+          "locationMode": "الموقع ونمط العمل",
+          "status": "الحالة",
+          "sourceFreshness": "المصدر والتحديث",
+          "dates": "التواريخ",
+          "actions": "الإجراءات"
+        },
+        "row": {
+          "published": "النشر",
+          "created": "الإنشاء",
+          "view": "عرض الوظيفة",
+          "edit": "تعديل الوظيفة"
+        },
+        "menu": {
+          "actionsFor": "إجراءات {title}",
+          "openCompany": "فتح الشركة",
+          "setStatus": "تعيين الحالة"
+        },
+        "resultsCount": "عرض {{start}}–{{end}} من {{count}} وظيفة"
+      },
+      "cmsEditor": {
+        "searchPlaceholder": "ابحث في الأقسام والمحتوى…",
+        "saveBrowserOnly": "تم الحفظ في هذا المتصفح فقط — لم يُنشر على الموقع المباشر.",
+        "saveFailed": "فشل الحفظ: {{message}}",
+        "draftSaved": "تم حفظ المسودة في هذا المتصفح. عاينها باستخدام cms_preview=draft.",
+        "draftRestored": "تمت استعادة المسودة غير المحفوظة.",
+        "resetConfirm": "هل تريد إعادة كل شيء إلى المحتوى الافتراضي؟",
+        "defaultsRestored": "تمت استعادة الإعدادات الافتراضية — اضغط حفظ للاحتفاظ بها.",
+        "languagesTitle": "اللغات التي تظهر",
+        "langOnly": "{{name}} فقط",
+        "expandAll": "توسيع الكل",
+        "collapseAll": "طي الكل",
+        "groups": {
+          "top": "أعلى الصفحة",
+          "main": "المحتوى الرئيسي",
+          "bottom": "أسفل الصفحة",
+          "settings": "إعدادات الصفحة"
+        },
+        "sections": {
+          "sections": {
+            "label": "الأقسام العامة",
+            "description": "عنوان تبويب المتصفح والصور المشتركة وإظهار الأقسام وترتيبها."
+          },
+          "navbar": {
+            "label": "شريط التنقل",
+            "description": "الشعار واسم العلامة وروابط القائمة وأزرار أعلى اليمين."
+          },
+          "hero": {
+            "label": "الترويسة",
+            "description": "الشريط العلوي: الشارة والعنوان ومربع البحث والوسوم الشائعة."
+          },
+          "stats": {
+            "label": "الإحصائيات",
+            "description": "عدّادات متحركة أسفل مربع البحث في الترويسة."
+          },
+          "jobs": {
+            "label": "أحدث الوظائف",
+            "description": "أزرار التصفية وبطاقات الوظائف."
+          },
+          "philosophy": {
+            "label": "الفلسفة",
+            "description": "قسم عمودين مع بطاقات وبطاقة مرشح."
+          },
+          "features": {
+            "label": "شبكة المزايا",
+            "description": "بطاقات المسارات المهنية."
+          },
+          "mentor": {
+            "label": "بطاقة المرشد الذكي",
+            "description": "شريط داكن للمرشد الذكي للمسارات المهنية."
+          },
+          "why": {
+            "label": "لماذا SkillMatch",
+            "description": "المزايا وبطاقة الفيديو."
+          },
+          "howItWorks": {
+            "label": "كيف يعمل",
+            "description": "قسم اختياري خطوة بخطوة (مخفي افتراضيًا)."
+          },
+          "testimonials": {
+            "label": "آراء العملاء",
+            "description": "اقتباسات اختيارية من العملاء (مخفية افتراضيًا)."
+          },
+          "blocks": {
+            "label": "أقسام مخصصة",
+            "description": "أضف أقسامًا حرة: نص وصورة وزر."
+          },
+          "cta": {
+            "label": "شريط الدعوة للإجراء",
+            "description": "الدعوة النهائية للإجراء قبل التذييل."
+          },
+          "footer": {
+            "label": "التذييل",
+            "description": "الوصف والنشرة البريدية وأعمدة الروابط والروابط القانونية."
+          }
+        },
+        "list": {
+          "add": "إضافة",
+          "search": "ابحث…",
+          "empty": "لا يوجد شيء هنا بعد — اضغط «+ إضافة».",
+          "untitled": "(بلا عنوان)",
+          "hidden": "مخفي",
+          "live": "ظاهر",
+          "moveUp": "تحريك لأعلى",
+          "moveDown": "تحريك لأسفل",
+          "toggleVisible": "إظهار / إخفاء",
+          "delete": "حذف",
+          "confirmDelete": "حذف هذا العنصر؟"
+        },
+        "layout": {
+          "title": "تخطيط الصفحة",
+          "section": "القسم",
+          "show": "إظهار",
+          "order": "الترتيب"
+        },
+        "fields": {
+          "browserTabTitle": "عنوان تبويب المتصفح",
+          "philosophyImage": "رابط صورة قسم الفلسفة",
+          "whyImage": "رابط صورة قسم لماذا SkillMatch",
+          "brandName": "اسم العلامة",
+          "logoUrl": "رابط صورة الشعار",
+          "signInLabel": "نص تسجيل الدخول",
+          "signInUrl": "رابط تسجيل الدخول",
+          "buttonLabel": "نص الزر",
+          "buttonUrl": "رابط الزر",
+          "navLinks": "روابط القائمة",
+          "popularChips": "الوسوم الشائعة",
+          "counters": "العدّادات",
+          "badge": "الشارة",
+          "headline": "العنوان",
+          "highlightedWord": "الكلمة المميّزة",
+          "subtitle": "العنوان الفرعي",
+          "backgroundImage": "رابط صورة الخلفية",
+          "searchPlaceholder": "نص البحث",
+          "defaultLocation": "الموقع الافتراضي",
+          "searchButtonLabel": "نص زر البحث",
+          "popularLabel": "نص «شائع»",
+          "scrollCue": "نص إشارة التمرير",
+          "number": "الرقم",
+          "suffix": "اللاحقة (K+، %، ×)",
+          "decimals": "الخانات العشرية (0/1)",
+          "label": "النص",
+          "linkUrl": "رابط",
+          "href": "رابط",
+          "applyLabel": "نص زر التقديم",
+          "benefits": "المزايا",
+          "body": "النص الأساسي",
+          "button": "الزر",
+          "candidate": "بطاقة المرشح",
+          "checks": "عناصر القائمة",
+          "chips": "الوسوم",
+          "columns": "أعمدة الروابط",
+          "company": "الشركة",
+          "copyright": "نص حقوق النشر",
+          "description": "الوصف",
+          "features": "الميزات",
+          "filters": "عوامل التصفية",
+          "fit": "درجة التوافق",
+          "icon": "الأيقونة",
+          "items": "العناصر",
+          "legal": "الروابط القانونية",
+          "link": "الرابط",
+          "livePill": "نص الحالة المباشرة",
+          "location": "الموقع",
+          "match": "درجة المطابقة",
+          "more": "رابط المزيد",
+          "name": "الاسم",
+          "newsletterButton": "زر النشرة البريدية",
+          "newsletterPlaceholder": "نص حقل النشرة البريدية",
+          "newsletterTitle": "عنوان النشرة البريدية",
+          "note": "ملاحظة",
+          "points": "النقاط الرئيسية",
+          "posted": "نص تاريخ النشر",
+          "primary": "الزر الأساسي",
+          "role": "الدور",
+          "salary": "الراتب",
+          "secondary": "الزر الثانوي",
+          "security": "بطاقة الأمان",
+          "skills": "المهارات",
+          "steps": "الخطوات",
+          "tag": "وسم",
+          "tag1": "الوسم الأول",
+          "tag2": "الوسم الثاني",
+          "text": "النص",
+          "tiles": "البطاقات",
+          "title": "العنوان",
+          "unit": "الوحدة",
+          "updatedText": "نص التحديث",
+          "videoHref": "رابط الفيديو",
+          "videoLabel": "نص الفيديو",
+          "customField": "حقل مخصص: {{field}}",
+          "noFields": "لا توجد حقول قابلة للتعديل في «{{section}}»."
+        }
+      },
+      "authSettings": {
+        "title": "إدارة تسجيل الدخول والتسجيل",
+        "subtitle": "أدر محتوى صفحات المصادقة وصور اللوحة الجانبية بالعربية والإنجليزية.",
+        "searchPlaceholder": "ابحث في الأقسام والمحتوى...",
+        "languagesTitle": "اللغات التي تظهر",
+        "expandAll": "توسيع الكل",
+        "collapseAll": "طي الكل",
+        "resetDefaults": "استعادة الافتراضي",
+        "saveDraft": "حفظ المسودة",
+        "saveChanges": "حفظ التغييرات",
+        "unsaved": "● تغييرات غير محفوظة",
+        "loadFailed": "تعذّر تحميل إعدادات المصادقة المحفوظة. تُعرض القيم الافتراضية.",
+        "restored": "تمت استعادة إعدادات المصادقة المحفوظة سابقًا.",
+        "draftSaved": "تم حفظ المسودة في هذا المتصفح.",
+        "draftSavedDetail": "الحفظ في هذا المتصفح فقط — شاشتا تسجيل الدخول والتسجيل لم تتغيّرا.",
+        "saveFailed": "فشل الحفظ: {{message}}",
+        "resetConfirm": "هل تريد استعادة إعدادات المصادقة إلى الافتراضي؟",
+        "defaultsRestored": "تمت استعادة الافتراضي — احفظ للاحتفاظ به.",
+        "noMatches": "لم يتم العثور على حقول مطابقة.",
+        "uploadError": {
+          "notImage": "يُرجى اختيار ملف صورة.",
+          "tooLarge": "يجب ألا يزيد حجم الصورة على 2 ميجابايت.",
+          "unreadable": "تعذّرت قراءة الصورة المحددة."
+        },
+        "upload": "رفع صورة (بحد أقصى 2 ميجابايت)",
+        "urlLabel": "رابط {{label}}",
+        "previewLabel": "معاينة {{label}}",
+        "sidePanelImage": "صورة اللوحة الجانبية لصفحة {{page}}",
+        "sections": {
+          "shared": {
+            "label": "اللوحة الجانبية المشتركة",
+            "description": "نص مترجم يظهر بجانب نموذجي تسجيل الدخول."
+          },
+          "login": {
+            "label": "صفحة تسجيل الدخول",
+            "description": "نموذج الدخول والدخول الاجتماعي ونص التذييل."
+          },
+          "register": {
+            "label": "صفحة إنشاء الحساب",
+            "description": "إنشاء الحساب وتأكيد البريد ورفع السيرة الذاتية."
+          }
+        },
+        "tabs": {
+          "loginLabel": "صفحة تسجيل الدخول",
+          "loginSub": "محتوى الدخول",
+          "registerLabel": "صفحة إنشاء الحساب",
+          "registerSub": "الحساب والإعداد"
+        },
+        "fields": {
+          "shared": {
+            "badge": "شارة اللوحة الجانبية",
+            "title": "عنوان اللوحة الجانبية",
+            "description": "وصف اللوحة الجانبية"
+          },
+          "login": {
+            "welcome": "عنوان الترحيب",
+            "subtitle": "وصف الترحيب",
+            "remember": "نص «تذكّرني»",
+            "forgot": "رابط نسيت كلمة المرور",
+            "submit": "زر تسجيل الدخول",
+            "or": "فاصل الدخول الاجتماعي",
+            "google": "زر جوجل",
+            "terms": "إشعار الشروط",
+            "termsLink": "رابط الشروط",
+            "privacyLink": "رابط الخصوصية",
+            "noAccount": "نص «ليس لديك حساب»",
+            "create": "رابط إنشاء الحساب"
+          },
+          "register": {
+            "step": "مؤشر الخطوة",
+            "createTitle": "عنوان إنشاء الحساب",
+            "createDescription": "وصف إنشاء الحساب",
+            "agree": "نص الموافقة على الشروط",
+            "terms": "رابط الشروط",
+            "privacy": "رابط الخصوصية",
+            "submit": "زر إنشاء الحساب",
+            "submitting": "زر الإرسال",
+            "haveAccount": "نص «لديك حساب بالفعل»",
+            "signIn": "رابط تسجيل الدخول",
+            "verifyTitle": "عنوان تأكيد البريد",
+            "verifyDescription": "وصف تأكيد البريد",
+            "yourEmail": "نص البريد الافتراضي",
+            "resendIn": "نص عدّاد إعادة الإرسال",
+            "resend": "رابط إعادة إرسال الرمز",
+            "back": "زر الرجوع",
+            "verify": "زر التأكيد",
+            "uploadTitle": "عنوان رفع السيرة الذاتية",
+            "uploadDescription": "وصف رفع السيرة الذاتية",
+            "uploadLabel": "نص زر رفع السيرة",
+            "uploadHelp": "مساعدة رفع السيرة الذاتية",
+            "drop": "نص منطقة إفلات السيرة",
+            "browse": "رابط التصفح",
+            "fileLimit": "حد حجم ملف السيرة",
+            "reading": "حالة قراءة السيرة",
+            "ready": "حالة جاهزية السيرة",
+            "remove": "زر إزالة السيرة",
+            "browseJobs": "زر تصفح الوظائف",
+            "completeProfile": "زر إكمال الملف الشخصي",
+            "profileReading": "عنوان تحليل الملف",
+            "profileTitle": "عنوان الملف الشخصي",
+            "profileReadingDescription": "وصف تحليل الملف الشخصي",
+            "profileDescription": "وصف الملف الشخصي",
+            "analyzing": "حالة التحليل ({{file}})",
+            "yourProfile": "نص اسم الملف الافتراضي",
+            "cvAnalyzed": "حالة اكتمال التحليل",
+            "extracting": "حالة الاستخراج",
+            "extracted": "حالة اكتمال الاستخراج",
+            "skillsSummary": "ملخص المهارات ({{found}}، {{matched}})",
+            "matchedSkills": "عنوان المهارات المطابقة",
+            "growth": "عنوان مهارات التطوير",
+            "profile": "عنوان تفاصيل الملف",
+            "jobTitle": "نص المسمى الوظيفي المستهدف",
+            "jobTitlePlaceholder": "نص المسمى الوظيفي المستهدف",
+            "location": "نص الموقع",
+            "locationPlaceholder": "نص الموقع",
+            "experience": "نص الخبرة",
+            "select": "نص اختيار الخبرة",
+            "bio": "نص الملخّص المهني",
+            "optional": "نص «اختياري»",
+            "bioPlaceholder": "نص الملخّص المهني",
+            "dashboard": "زر إنهاء الملف الشخصي"
+          }
+        }
+      },
+      "admin": {
+        "userDetails": {
+          "fields": {
+            "file": "الملف",
+            "uploaded": "تاريخ الرفع",
+            "fullName": "الاسم الكامل",
+            "userId": "معرّف المستخدم",
+            "role": "الدور"
+          }
+        }
+      },
+      "returnToAuditLogs": "العودة إلى سجلات التدقيق",
+      "fieldLevelChanges": "التغييرات على مستوى الحقل",
+      "logDetails": "تفاصيل السجل · #{{id}}",
+      "newCompany": "شركة جديدة",
+      "editUser": "تعديل المستخدم",
+      "backToUsers": "العودة إلى المستخدمين",
+      "resetDefaults": "استعادة الافتراضي",
+      "saveDraft": "حفظ المسودة",
+      "auditLogsImmutable": "سجلات التدقيق سجلات ثابتة للقراءة فقط. لا يمكن تعديلها أو حذفها.",
+      "accountStatus": "الحساب",
+      "lastActivity": "آخر نشاط · {{value}}"
     },
     "applicationTracker": {
       "title": "متابعة الطلبات",
@@ -258,9 +983,9 @@
       "allExtractedData": "جميع البيانات المستخرجة",
       "skills": "المهارات",
       "experience": "الخبرة",
-      "education": "التعليم",
+      "education": "المؤهلات العلمية والشهادات وبرامج الجامعات",
       "profileAndBio": "الملف الشخصي والسيرة",
-      "languages": "اللغات",
+      "languages": "الكفاءات اللغوية الشفهية والمكتوبة المرصودة في السيرة الذاتية",
       "emptyExtractionTitle": "لا تتوفر بيانات مستخرجة",
       "emptyExtractionSubtitle": "في انتظار تفاصيل مخطط الاستخراج من الخادم.",
       "confirmAndVerify": "تحقق ومزامنة مع الملف الشخصي",
@@ -286,21 +1011,71 @@
       "current": "الحالية",
       "viewDocument": "عرض",
       "noHistoryTitle": "لا توجد سيرة ذاتية",
-      "noHistorySubtitle": "ارفع سيرتك الذاتية أعلاه للبدء في بناء ملفك المهني."
+      "noHistorySubtitle": "ارفع سيرتك الذاتية أعلاه للبدء في بناء ملفك المهني.",
+      "extractedBio": "الملخّص المهني المستخرج",
+      "sourceCvSummary": "المصدر: الملخّص التنفيذي للسيرة الذاتية",
+      "verifiedHighConfidence": "موثّق بثقة عالية",
+      "searchSkillsPlaceholder": "ابحث في المهارات المستخرجة (مثال: المبيعات، CRM، العمليات)…",
+      "noExperience": "لم يتم رصد خبرة عمل في السيرة الذاتية.",
+      "workExperience": "خبرة العمل",
+      "experienceDescription": "السجل الوظيفي والأدوار والمسؤوليات والإنجازات الرئيسية",
+      "currentRole": "الدور الحالي",
+      "technologies": "التقنيات:",
+      "noEducation": "لم يتم رصد مؤهلات تعليمية في السيرة الذاتية.",
+      "aiExtracted": "مستخرج بالذكاء الاصطناعي",
+      "aiExtractedDescription": "بيانات التواصل والملخّص المهني المستخرجة من رأس السيرة الذاتية",
+      "profileVerified": "تم توثيق الملف",
+      "confirmProfile": "تأكيد الملف",
+      "skillsDescription": "مهارات مرصودة بدرجات ثقة ذكية وإحالات إلى أدلة داخل المستند",
+      "noSkillsMatching": "لا توجد مهارات مطابقة لمعاييرك.",
+      "confirmSkill": "تأكيد المهارة",
+      "educationAcademics": "التعليم والمؤهلات",
+      "languagesProficiency": "اللغات وال:kفاءة",
+      "candidateProfileContact": "ملف المرشح وبيانات التواصل",
+      "skillsCompetencies": "المهارات والكفاءات المستخرجة",
+      "filterAll": "الكل ({{count}})",
+      "filterHigh": "ثقة عالية ({{count}})",
+      "filterModerate": "متوسطة ({{count}})",
+      "degree": "الشهادة",
+      "confirmItem": "تأكيد"
     },
     "notifications": {
       "title": "الإشعارات",
       "unread": "{{count}} غير مقروء",
-      "caughtUp": "أنت على اطلاع بكل جديد"
+      "caughtUp": "أنت على اطّلاع بكل شيء!",
+      "loading": "جارٍ تحميل الإشعارات",
+      "loadFailed": "تعذّر تحميل الإشعارات",
+      "empty": "لا توجد إشعارات بعد",
+      "markAllRead": "تعليم الكل كمقروء",
+      "marking": "جارٍ التعليم…",
+      "loadingShort": "جارٍ التحميل…"
     },
     "savedJobs": {
       "title": "الفرص المحفوظة",
       "description": "أدر الوظائف التي حفظتها وراجعها.",
-      "empty": "لم يتم العثور على وظائف محفوظة"
+      "empty": "لم يتم العثور على وظائف محفوظة",
+      "loading": "جارٍ تحميل الوظائف المحفوظة",
+      "loadFailed": "تعذّر تحميل الوظائف المحفوظة",
+      "candidateWorkspace": "مساحة المرشح",
+      "savedRoles": "الأدوار المحفوظة",
+      "highFit": "مطابقة عالية",
+      "overallMatchFit": "ملاءمة المطابقة الإجمالية",
+      "emptyDescription": "ستظهر فرصك المحفوظة هنا عندما تحفظ أي وظيفة.",
+      "saveJobAria": "حفظ الوظيفة",
+      "bookmarkedOpportunities": "الفرص المحفوظة",
+      "expiring": "تنتهي قريبًا",
+      "portfolioHealth": "حالة المحفظة",
+      "strongAffinity": "توافق قوي",
+      "gapOptimizer": "مُحسِّن فجوات المطابقة",
+      "targetPreferences": "التفضيلات المستهدفة",
+      "editPreferences": "تعديل التفضيلات",
+      "rescoring": "جارٍ إعادة تقييم المحفوظات…",
+      "crossValidating": "جارٍ التحقق من أدلة المستودعات مقابل متطلبات أنظمة التوظيف…"
     },
     "applicationStates": {
       "empty": "لا توجد طلبات بعد",
-      "loadFailed": "تعذر تحميل طلباتك"
+      "loadFailed": "تعذر تحميل طلباتك",
+      "emptyDescription": "بمجرد التقديم على وظيفة، ستظهر هنا مع حالتها وكل تحديث لاحق."
     },
     "jobDetails": {
       "notFound": "لم يتم العثور على إعلان الوظيفة",
@@ -309,7 +1084,59 @@
       "responsibilities": "المسؤوليات والمخرجات الأساسية",
       "requirements": "مصفوفة المتطلبات التقنية",
       "mandatoryStack": "التقنيات الأساسية المطلوبة",
-      "preferredSkills": "المهارات الإضافية والمفضلة"
+      "preferredSkills": "المهارات الإضافية والمفضلة",
+      "shareJob": "مشاركة الوظيفة",
+      "sourceUrl": "رابط المصدر:",
+      "scraped": "مستخرج من:",
+      "verification": "التوثيق:",
+      "engineeringOrgSize": "حجم الفريق الهندسي",
+      "interviewVelocity": "سرعة المقابلات",
+      "interviewRounds": "جولات المقابلة",
+      "hybridCadence": "وتيرة العمل الهجين:",
+      "asyncFirstPhilosophy": "فلسفة العمل اللامتزامن:",
+      "annualTeamSummits": "لقاءات الفريق السنوية:",
+      "renderBudget": "ميزانية الأداء",
+      "stackStandard": "معيار التقنيات",
+      "productSquads": "فرق المنتج",
+      "annualTechStipend": "بدل تقني سنوي",
+      "aiMatchAnalysis": "تحليل المطابقة الذكي",
+      "sourcedDirectly": "مصدره مباشرة من بوابة TechNova المهنية · موثّق منذ ساعتين",
+      "noMatchAnalysis": "لا يوجد تحليل مطابقة بعد",
+      "strongMatch": "مطابقة قوية",
+      "partialMatch": "مطابقة جزئية",
+      "applyWithProfile": "قدّم بملف MatchIn",
+      "askAiMentor": "اسأل المرشد الذكي",
+      "syncGithub": "مزامنة GitHub",
+      "profileIncomplete": "بيانات الملف غير مكتملة",
+      "syncGithubProfile": "مزامنة ملف GitHub",
+      "rerunLimited": "إعادة التشغيل ببيانات محدودة",
+      "matchPaused": "تم إيقاف حساب المطابقة",
+      "matchTimeout": "انتهت مهلة خادم التحليل أثناء تقييم ملفك.",
+      "applyAnyway": "قدّم على أي حال",
+      "originalJobSource": "مصدر الإعلان الأصلي",
+      "stayHere": "ابقَ هنا",
+      "prepareFor": "استعد لـ {{company}}",
+      "estimatedCompensation": "التعويض التقديري",
+      "hiringProcessInsights": "رؤى عملية التوظيف",
+      "browseSimilarRoles": "تصفّح وظائف مشابهة",
+      "viewSnapshotAnyway": "اعرض اللقطة على أي حال",
+      "freshPublishedAgo": "حديث · نُشر قبل {{count}} يوم",
+      "noMatchDescription": "شغّل محرّك الذكاء الاصطناعي لمقارنة ملفك الموثّق بمتطلبات {{company}} الأساسية.",
+      "analyzing": "جارٍ تقييم الالتزامات وعمق التقنيات…",
+      "matchBasis": "محسوب من ملف {{name}} الموثّق: مستودعات إنتاجية، إتقان React 19، TypeScript صارم، وخبرة في واجهات متعددة المستأجرين.",
+      "partialDataMissing": "تم التعرّف على React الأساسية، لكن بيانات التحقق من الواجهات المصغّرة والاختبارات الآلية مفقودة.",
+      "notFoundDescription": "ربما أُزيل هذا الإعلان من قِبل صاحب العمل، أو أن الرابط غير صحيح. آخر تحقق من المصدر {{when}}.",
+      "expiredDescription": "انتهت صلاحية هذا الإعلان أو لم يعد يقبل طلبات.",
+      "expiredNote": "آخر تحقق {{when}} · ربما أُغلق المصدر من قِبل {{company}}.",
+      "networkErrorDescription": "حدث خطأ في الشبكة أثناء جلب هذه الوظيفة. قد يكون اتصالك أو واجهة وظائفنا غير متاحة مؤقتًا.",
+      "errorCode": "رمز الخطأ: {{code}}",
+      "retrying": "جارٍ إعادة الاتصال بالوظيفة…",
+      "cultureAndFlexibility": "الثقافة والمرونة",
+      "applyNow": "قدّم الآن",
+      "analyze": "حلّل المطابقة",
+      "guidedPath": "ابدأ المسار الإرشادي",
+      "onlyMatched": "{{count}} فقط من {{total}} متطلبات",
+      "openOriginalPost": "فتح الإعلان الأصلي"
     },
     "applicationJobDetails": {
       "interview": "تفاصيل المقابلة",
@@ -320,11 +1147,32 @@
       "submitting": "جارٍ إرسال طلبك",
       "submitted": "تم إرسال الطلب بنجاح",
       "alreadyApplied": "تم التقديم مسبقًا",
-      "failed": "تعذر إرسال الطلب"
+      "failed": "تعذر إرسال الطلب",
+      "verifyingDescription": "نتحقق مما إذا كنت قدّمت طلبًا لهذا المنصب سابقًا، وما هي طرق التقديم المتاحة.",
+      "holdOn": "يُرجى الانتظار",
+      "keepOpenDescription": "لا تغلق هذه النافذة — لن يستغرق الأمر سوى لحظات.",
+      "viewMyApplications": "عرض طلباتي",
+      "viewApplication": "عرض الطلب",
+      "lastUpdated": "آخر تحديث: {{date}}",
+      "serverErrorDescription": "حدث خطأ في الاتصال بالخادم. لم تُفقد البيانات التي أدخلتها — يمكنك المحاولة مرة أخرى.",
+      "retrySubmission": "إعادة إرسال الطلب",
+      "summaryMethod": "الطريقة:",
+      "summarySource": "المصدر:",
+      "summaryTime": "الوقت:",
+      "successBody": "تم إرسال طلبك لوظيفة {{job}} في {{company}} بنجاح.",
+      "alreadyAppliedBody": "لقدّمت طلبًا لوظيفة {{job}} في {{company}} بتاريخ {{date}}."
     },
     "onboarding": {
       "complete": "أنت جاهز تمامًا",
-      "preferences": "التفضيلات التي اخترتها"
+      "preferences": "التفضيلات التي اخترتها",
+      "loading": "جارٍ تحميل الإعداد",
+      "completedDescription": "تم إعداد ملفك المهني الذكي بنجاح. نعمل الآن على معايرة الوظائف لك.",
+      "editChoices": "تعديل الاختيارات",
+      "goToDashboard": "الذهاب إلى لوحة التحكم",
+      "smartAccountSetup": "إعداد ذكي للحساب",
+      "stepOf": "الخطوة {{current}} من {{total}}",
+      "targetTitle": "المسمى المستهدف",
+      "location": "الموقع"
     },
     "applicationDetail": {
       "submittedInformation": "المعلومات المقدمة",
@@ -333,7 +1181,39 @@
       "notes": "ملاحظاتك",
       "insight": "تحليل الطلب بالذكاء الاصطناعي",
       "loadFailed": "تعذر تحميل هذا الطلب",
-      "notFound": "لم يتم العثور على الطلب"
+      "notFound": "لم يتم العثور على الطلب",
+      "bannerExpired": "انتهت صلاحية هذا الإعلان",
+      "bannerWithdrew": "لقد سحبت طلبك",
+      "bannerClosed": "أُغلق هذا الإعلان",
+      "dateAndTime": "التاريخ والوقت",
+      "notScheduled": "لم يُحدَّد بعد",
+      "videoCall": "مكالمة فيديو",
+      "toBeConfirmed": "بانتظار التأكيد",
+      "addNotePlaceholder": "أضف ملاحظة خاصة حول هذا الطلب…",
+      "openDetails": "فتح تفاصيل الطلب",
+      "underReview": "قيد المراجعة",
+      "prepareForInterview": "استعد لهذه المقابلة",
+      "takeHomeTask": "مهمة برمجية منزلية",
+      "pendingPreviousSteps": "بانتظار الخطوات السابقة",
+      "matchScore": "درجة المطابقة",
+      "appliedDate": "تاريخ التقديم",
+      "currentStatus": "الحالة الحالية",
+      "addNote": "إضافة ملاحظة",
+      "backToApplications": "العودة إلى الطلبات",
+      "errorState": "حدث خطأ لدينا. بياناتك آمنة — يُرجى المحاولة مرة أخرى.",
+      "listErrorState": "حدث خطأ لدينا. يُرجى المحاولة مرة أخرى.",
+      "noMatches": "لا توجد طلبات مطابقة لبحثك أو فلاترك.",
+      "clearFilters": "مسح الفلاتر",
+      "markAsRead": "تعليم كمقروء",
+      "reviewInsight": "راجع أساسيات تصميم الأنظمة — التوسّع، التخزين المؤقت، المفاضلات",
+      "practiceInsight": "تدرب على شرح مشروع ترحيل Next.js من البداية إلى النهاية",
+      "bannerExpiredSub": "لم يعد صاحب العمل يقبل أي نشاط جديد على هذا الإعلان. يبقى سجل طلباتك مرئيًا أدناه.",
+      "bannerWithdrewSub": "تم السحب في 10 سبتمبر 2026. ما زال بإمكانك عرض كل ما حدث قبل سحبك.",
+      "bannerClosedSub": "أغلق صاحب العمل هذا الدور. لن تصل أي تحديثات حالة أخرى لهذا الطلب.",
+      "submittedOn": "أُرسل في {{date}}",
+      "insightUnderReview": "اطّلع فريق التوظيف على طلبك ونقله إلى قيد المراجعة. هذا يعني عادةً أن ملفك اجتاز الفرز الأولي — لا يلزمك أي إجراء الآن.",
+      "insightPrepare": "غالبًا تبدأ مقابلات هذا الدور خلال أسبوع من الوصول إلى قيد المراجعة. استثمر الوقت لسد فجوة {{gap}} لتكون جاهزًا إذا حُدِّدت مقابلة.",
+      "notFoundDescription": "ربما أُزيل هذا الطلب، أو أن الرابط الذي اتبعته لم يعد صالحًا."
     },
     "profile": {
       "workExperience": "الخبرات العملية",
@@ -344,10 +1224,35 @@
       "skills": "المهارات وتقييم الذكاء الاصطناعي",
       "editPersonalInformation": "إضافة أو تعديل المعلومات الشخصية",
       "editCareerPreferences": "تعديل التفضيلات المهنية",
-      "addSkill": "إضافة مهارة"
+      "addSkill": "إضافة مهارة",
+      "addExperience": "إضافة خبرة",
+      "experienceTitle": "المسمى / الدور *",
+      "experienceCompany": "الشركة / الجهة *",
+      "experienceStart": "تاريخ البداية",
+      "experienceEnd": "تاريخ النهاية",
+      "addEducation": "إضافة تعليم",
+      "addProject": "إضافة مشروع",
+      "projectTitle": "عنوان المشروع *",
+      "projectDescription": "وصف مختصر للمشروع…",
+      "projectLink": "رابط المشروع",
+      "confirmDelete": "تأكيد الحذف",
+      "personalTitleRole": "المسمى / الدور",
+      "personalCompany": "الشركة / الجهة",
+      "targetJobTitle": "المسمى الوظيفي المستهدف",
+      "preferredWorkEnvironment": "بيئة العمل المفضلة",
+      "startYear": "سنة البداية",
+      "endYear": "سنة النهاية",
+      "degreeFieldOfStudy": "الشهادة / التخصص *",
+      "schoolInstitution": "الجامعة / الجهة *",
+      "skillName": "اسم المهارة *",
+      "personalTitleRoleRequired": "المسمى / الدور *",
+      "targetJobTitleRequired": "المسمى الوظيفي المستهدف *"
     },
     "aiChat": {
-      "emptyTitle": "اسأل مرشدك عن أي شيء"
+      "emptyTitle": "اسأل مرشدك عن أي شيء",
+      "newConversation": "محادثة جديدة",
+      "mentorTitle": "المرشد الذكي",
+      "emptyDescription": "مستند إلى ملفك وسيرتك الذاتية والوظائف المحفوظة ومسارك — ابدأ باقتراح أدناه أو اكتب سؤالك."
     },
     "roadmap": {
       "profileNeeded": "نحتاج إلى مزيد من المعلومات عن ملفك الشخصي أولًا",
@@ -360,7 +1265,52 @@
       "completedTasks": "المهام المكتملة",
       "milestones": "المحطات الرئيسية",
       "phaseSkills": "المهارات المشمولة في هذه المرحلة",
-      "phaseWeeklyTasks": "مهام هذا الأسبوع في المرحلة"
+      "phaseWeeklyTasks": "مهام هذا الأسبوع في المرحلة",
+      "noData": "لا تتوفر بيانات المسار",
+      "targetRole": "الدور المستهدف",
+      "currentBaseline": "الخط الأساس الحالي",
+      "overallProgress": "التقدّم الإجمالي",
+      "rankedDescription": "مرتّبة حسب التأثير في دورك المستهدف — يولّد محرك المسار الأسباب من متطلبات الوظيفة وملفك الشخصي.",
+      "tapHint": "اضغط على مربع الاختيار للتحديد — اضغط مرة أخرى للتراجع.",
+      "jobType": "نوع الوظيفة",
+      "workStyle": "نمط العمل",
+      "phasedRoadmap": "مسار على مراحل",
+      "completeProfileFirst": "أكمل ملفك الشخصي أولًا لتفعيل توليد المسار.",
+      "uploadCvForGaps": "ارفع سيرة ذاتية لتفعيل تحليل فجوات المهارات.",
+      "introDescription": "يقارن المسار مهاراتك الحالية بدور مستهدف — أكمل ملفك وارفع سيرة ذاتية لنقارنها بها.",
+      "uploadCv": "ارفع سيرة ذاتية",
+      "completeProfile": "أكمل الملف الشخصي",
+      "emptyDescription": "اختر دورًا مستهدفًا — أو وظيفة حفظتها — وسنقارنه بملفك الحالي لنولّد خطة على مراحل بمهام أسبوعية.",
+      "comparingDescription": "نقارن ملفك بمتطلبات {{role}} ونرتب فجوات المهارات — يستغرق هذا بضع ثوانٍ.",
+      "errorState": "حدث خطأ لدينا. لم يُحفظ شيء — يمكنك المحاولة مرة أخرى.",
+      "useSavedJob": "استخدم وظيفة محفوظة — {{job}} @ {{company}}",
+      "phaseSkillsDescription": "كل مهارة هنا تعالج فجوة ذات أولوية من مسارك — لا شيء في هذه المرحلة عمل بلا صلة.",
+      "targetSkill": "المهارة المستهدفة: {{skill}} ·",
+      "doneOn": "أُنجز في {{date}}",
+      "notStarted": "لم يبدأ",
+      "title": "المسار المهني",
+      "noGaps": "لم يتم التعرّف على فجوات مهارات ذات أولوية.",
+      "noPhases": "لا توجد مراحل مخططة بعد.",
+      "noWeeklyTasks": "لا توجد مهام أسبوعية بعد."
+    },
+    "jobs": {
+      "loading": "جارٍ تحميل الوظائف",
+      "loadFailed": "تعذّر تحميل الوظائف",
+      "noResults": "لا توجد وظائف مطابقة لمعاييرك",
+      "showing": "عرض {{count}} من {{total}} وظيفة",
+      "pageOf": "صفحة {{page}} من {{total}}",
+      "clearFilters": "مسح الفلاتر",
+      "updating": "جارٍ التحديث…"
+    },
+    "overview": {
+      "loadFailed": "تعذّر تحميل لوحة التحكم",
+      "personalInfo": "المعلومات الشخصية",
+      "careerPreferences": "التفضيلات المهنية"
     }
+  },
+  "layout": {
+    "searchPlaceholder": "ابحث عن الوظائف والمهارات...",
+    "logOut": "تسجيل الخروج",
+    "careerGuidance": "التوجيه المهني"
   }
 }

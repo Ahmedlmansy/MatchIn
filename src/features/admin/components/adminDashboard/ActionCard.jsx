@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,8 @@ import { itemVariants } from "../../shared/motionVariants";
  * every screen re-fetch).
  */
 export default function ActionCard({ icon: Icon, iconClass, title, description, href = "#" }) {
+  const { t } = useTranslation("dashboard");
+
   return (
     <motion.div variants={itemVariants} whileHover={{ y: -2 }} className="block text-inherit group">
       <Link to={href} className="block text-inherit">
@@ -25,7 +28,7 @@ export default function ActionCard({ icon: Icon, iconClass, title, description, 
             <div className="text-[12.5px] text-muted leading-snug mt-0.5">{description}</div>
           </div>
           <span className="mt-auto text-[12.5px] font-semibold text-primary inline-flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-            Open
+            {t("pages.admin.overview.sections.open")}
             <ArrowRight className="w-3.5 h-3.5" />
           </span>
         </Card>

@@ -19,14 +19,13 @@ export default function ApplicationNotFoundState({ onBack }) {
         {t("pages.applicationDetail.notFound")}
       </h2>
       <p className="text-[13.5px] text-muted max-w-sm mx-auto mb-7">
-        This application may have been removed, or the link you followed is no
-        longer valid.
+        {t("pages.applicationDetail.notFoundDescription")}
       </p>
       <button
         onClick={onBack}
         className="bg-primary text-white text-[13px] font-semibold px-6 h-11 rounded-full inline-flex items-center gap-2 shadow-sm hover:bg-[#0F2036] transition-colors"
       >
-        Back to Applications
+        {t("pages.applicationDetail.backToApplications")}
       </button>
     </motion.div>
   );

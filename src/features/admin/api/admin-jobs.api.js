@@ -15,6 +15,7 @@ import {
   toId,
   normalizePaginated,
 } from "./normalize";
+import { initialsOf } from "@/features/admin/shared/formatting/locale";
 
 const DAY_MS = 86_400_000;
 
@@ -24,28 +25,14 @@ export const daysSince = (isoDate) => {
   return Number.isNaN(timestamp) ? null : Math.max(0, (Date.now() - timestamp) / DAY_MS);
 };
 
-/** "Sep 15" / "Not published" — the compact form the job table shows. */
-function shortDate(isoDate, emptyLabel = "—") {
-  if (!isoDate) return emptyLabel;
-  const date = new Date(isoDate);
-  if (Number.isNaN(date.getTime())) return emptyLabel;
-  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(date);
-}
-
 /**
- * "Fresh · 3d ago" — mirrors the wording the freshness pill already expects.
- *
- * daysSince() returns *days*; this used to name the result `hours` and print it
- * with an "h", so a job published two days ago read "Fresh · 2h ago" while the
- * badge beside it coloured it amber for being stale.
+ * Note on display strings: this module used to derive `pubDate` and
+ * `freshness` here with Intl.DateTimeFormat("en-US") and hand the components a
+ * finished English string. That froze the locale in api/, which
+ * AUTH_LOGIC_CONVENTION.md §5 forbids, and made every date English regardless
+ * of the active language. Only raw values cross this boundary now;
+ * shared/formatting/locale.js formats them at render time.
  */
-function freshnessLabel(isoDate, status) {
-  if (!isoDate) return status === "draft" ? "Not published" : "—";
-  const days = Math.floor(daysSince(isoDate));
-  if (days < 1) return "Fresh · just now";
-  if (days <= 7) return `Fresh · ${days}d ago`;
-  return `Stale · ${days}d ago`;
-}
 
 // --- normalizers ------------------------------------------------------------
 
@@ -78,10 +65,7 @@ export function normalizeJob(raw) {
     source: toText(pick(raw, ["source", "job_source", "origin"], "internal")) ?? "internal",
     sourceLabel: toText(pick(raw, ["source_label", "sourceLabel", "source_name"])) ?? "Internal",
     sourceUrl: toText(pick(raw, ["source_url", "sourceUrl", "url", "external_url"])),
-    freshness: freshnessLabel(publishedAt, status),
     freshnessDays: daysSince(publishedAt) ?? 0,
-    pubDate: shortDate(publishedAt, "Not published"),
-    createdDate: shortDate(createdAt),
     // Raw timestamps last: some callers need the unformatted value.
     publishedAt,
     createdAt,
@@ -110,17 +94,9 @@ export function normalizeJobDetail(raw) {
   };
 }
 
-/** "Vercel" -> "V"; "Cloud Scale Systems" -> "CS". */
-export function initialsOf(name) {
-  if (!name) return "?";
-  return String(name)
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((word) => word[0])
-    .join("")
-    .toUpperCase();
-}
+/** "Vercel" -> "V"; "Cloud Scale Systems" -> "CS". Built in the shared
+ *  formatter so initials read the same everywhere in the admin surface. */
+export { initialsOf };
 
 // --- requests ---------------------------------------------------------------
 

@@ -2,6 +2,12 @@
 //
 // GET|POST /api/admin/users
 // GET|PATCH|DELETE /api/admin/users/{user}
+// PATCH        /api/admin/users/{user}/status
+//
+// Account state has its own sub-resource, so it gets its own request function.
+// The /status route expects the backend's is_active boolean, not the UI's
+// active/inactive/suspended labels. Edit and Change Role PATCH the user itself;
+// only Activate / Deactivate / Suspend touch /status.
 //
 // NOTE: the audit's endpoint inventory (§3) does not list these routes, but
 // its P1 plan (#18) names them as the target for User Management, and the
@@ -20,7 +26,7 @@ import {
   toId,
   normalizePaginated,
 } from "./normalize";
-import { initialsOf } from "./admin-jobs.api";
+import { initialsOf } from "@/features/admin/shared/formatting/locale";
 
 const DAY_MS = 86_400_000;
 
@@ -72,6 +78,8 @@ const normalizeUserStatus = (raw) => {
   if (raw === 1 || raw === 0) return raw === 1 ? "active" : "inactive";
 
   const value = String(toText(raw) ?? "active").toLowerCase();
+  if (["true", "1", "yes", "on"].includes(value)) return "active";
+  if (["false", "0", "no", "off"].includes(value)) return "inactive";
   if (value === "banned" || value === "blocked") return "suspended";
   return USER_STATUSES.includes(value) ? value : "inactive";
 };
@@ -79,39 +87,21 @@ const normalizeUserStatus = (raw) => {
 /** Whole days since an ISO timestamp; null when the date is absent. */
 const daysSince = (iso) => {
   const time = iso ? new Date(iso).getTime() : NaN;
-  return Number.isNaN(time) ? null : Math.max(0, Math.floor((Date.now() - time) / DAY_MS));
+  return Number.isNaN(time)
+    ? null
+    : Math.max(0, Math.floor((Date.now() - time) / DAY_MS));
 };
-
-const dateLabel = (iso) => {
-  if (!iso) return "—";
-  const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) return "—";
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(date);
-};
-
-/** "4 days ago" / "1 hr ago" / "Just now" — the muted line under a date. */
-function relativeLabel(iso) {
-  if (!iso) return "Never";
-  const days = daysSince(iso);
-  if (days === null) return "—";
-  if (days === 0) {
-    const hours = Math.floor((Date.now() - new Date(iso).getTime()) / 3_600_000);
-    if (hours <= 0) return "Just now";
-    if (hours === 1) return "1 hr ago";
-    return `${hours} hrs ago`;
-  }
-  if (days === 1) return "Yesterday";
-  return `${days} days ago`;
-}
 
 /**
  * User row -> the shape <UserTable /> renders.
- * The table shows pre-formatted "4 days ago" strings, so those are derived
- * here rather than re-derived in three different filter/sort comparators.
+ *
+ * Timestamps stay raw. They used to be paired with pre-formatted
+ * `createdLabel` / `createdAgo` strings baked in here with
+ * Intl.DateTimeFormat("en-US"), which froze every date to English and put a
+ * hardcoded locale inside api/ — AUTH_LOGIC_CONVENTION.md §5 says no i18n
+ * here. The components now call shared/formatting/locale.js at render time,
+ * and the *DaysAgo fields stay because the sort and filter comparators need a
+ * number, not a label.
  */
 export function normalizeUser(raw) {
   const id = toId(pick(raw, ["id", "user_id", "uuid"]));
@@ -119,8 +109,18 @@ export function normalizeUser(raw) {
     toText(pick(raw, ["full_name", "fullName", "name"])) ??
     toText(pick(raw, ["first_name"])) ??
     "Unnamed user";
+  const rawStatus = ["status", "state", "is_active"]
+    .map((key) => raw?.[key])
+    .find(
+      (value) =>
+        value !== undefined && value !== null && toText(value) !== null,
+    );
   const createdAt = pick(raw, ["created_at", "createdAt"]);
-  const lastActivityAt = pick(raw, ["last_activity_at", "lastActivityAt", "last_activity"]);
+  const lastActivityAt = pick(raw, [
+    "last_activity_at",
+    "lastActivityAt",
+    "last_activity",
+  ]);
 
   return {
     id,
@@ -128,16 +128,12 @@ export function normalizeUser(raw) {
     initials: initialsOf(name),
     email: toText(pick(raw, ["email"])) ?? "—",
     role: normalizeRole(pick(raw, ["role", "user_type", "account_type"])),
-    status: normalizeUserStatus(pick(raw, ["status", "state", "is_active"])),
+    status: normalizeUserStatus(rawStatus),
     phone: toText(pick(raw, ["phone", "phone_number"])),
     location: toText(pick(raw, ["location", "city", "country"])),
     createdAt,
     lastActivityAt,
-    createdLabel: dateLabel(createdAt),
-    createdAgo: relativeLabel(createdAt),
     createdDaysAgo: daysSince(createdAt) ?? Number.MAX_SAFE_INTEGER,
-    activityLabel: dateLabel(lastActivityAt),
-    activityAgo: relativeLabel(lastActivityAt),
     activityDaysAgo: daysSince(lastActivityAt) ?? Number.MAX_SAFE_INTEGER,
   };
 }
@@ -152,32 +148,35 @@ export function normalizeUserDetail(raw) {
 
   return {
     ...base,
-    authProvider: toText(pick(raw, ["auth_provider", "provider"])) ?? "Email / Password",
-    emailVerified: Boolean(pick(raw, ["email_verified", "emailVerified"], false)),
+    authProvider:
+      toText(pick(raw, ["auth_provider", "provider"])) ?? "Email / Password",
+    emailVerified: Boolean(
+      pick(raw, ["email_verified", "emailVerified"], false),
+    ),
     language: toText(pick(raw, ["language", "locale"])) ?? "English",
     jobTitle: toText(pick(raw, ["job_title", "jobTitle", "headline"])) ?? "—",
     experience: toText(pick(raw, ["experience_level", "experience"])) ?? "—",
     bio: toText(pick(raw, ["bio", "summary"])) ?? "",
-    skills: toList(pick(raw, ["skills", "candidate_skills"])).map((skill) =>
-      typeof skill === "string" ? skill : (skill?.name ?? ""),
-    ).filter(Boolean),
+    skills: toList(pick(raw, ["skills", "candidate_skills"]))
+      .map((skill) => (typeof skill === "string" ? skill : (skill?.name ?? "")))
+      .filter(Boolean),
     cv: normalizeCv(pick(raw, ["cv", "cv_document", "cv_documents"])),
     stats: normalizeUserStats(pick(raw, ["stats", "statistics"])),
     applications: toList(pick(raw, ["applications"])).map((item) => ({
       id: toId(pick(item, ["id"])),
       title: toText(pick(item, ["title", "job_title"])) ?? "—",
       company: toText(pick(item, ["company", "company_name"])) ?? "—",
-      appliedOn: toText(pick(item, ["applied_on", "applied_at", "created_at"])) ?? "—",
+      appliedOn:
+        toText(pick(item, ["applied_on", "applied_at", "created_at"])) ?? "—",
       status: toText(pick(item, ["status"]), "submitted") ?? "submitted",
     })),
     savedJobs: normalizeSavedJobs(pick(raw, ["saved_jobs", "savedJobs"])),
+    // Raw timestamps; CompanyDates-style components format them per locale.
     dates: {
-      created: { date: base.createdLabel, sub: base.createdAgo },
-      lastActivity: { date: base.activityLabel, sub: base.activityAgo },
-      lastLogin: {
-        date: dateLabel(pick(raw, ["last_login_at", "lastLoginAt"])),
-        sub: toText(pick(raw, ["last_login_ip", "lastLoginIp"])),
-      },
+      created: base.createdAt,
+      lastActivity: base.lastActivityAt,
+      lastLogin: pick(raw, ["last_login_at", "lastLoginAt"]),
+      lastLoginIp: toText(pick(raw, ["last_login_ip", "lastLoginIp"])),
     },
   };
 }
@@ -185,14 +184,26 @@ export function normalizeUserDetail(raw) {
 function normalizeCv(raw) {
   const document = Array.isArray(raw) ? raw[0] : raw;
   if (!document) {
-    return { uploaded: false, fileName: null, fileSize: null, uploadedAt: null, lastParsed: null };
+    return {
+      uploaded: false,
+      fileName: null,
+      fileSize: null,
+      uploadedAt: null,
+      lastParsed: null,
+    };
   }
   return {
     uploaded: true,
-    fileName: toText(pick(document, ["file_name", "fileName", "name", "original_name"])),
+    fileName: toText(
+      pick(document, ["file_name", "fileName", "name", "original_name"]),
+    ),
     fileSize: toText(pick(document, ["file_size", "fileSize", "size"])),
-    uploadedAt: toText(pick(document, ["uploaded_at", "uploadedAt", "created_at"])),
-    lastParsed: toText(pick(document, ["last_parsed", "lastParsed", "parsed_at"])),
+    uploadedAt: toText(
+      pick(document, ["uploaded_at", "uploadedAt", "created_at"]),
+    ),
+    lastParsed: toText(
+      pick(document, ["last_parsed", "lastParsed", "parsed_at"]),
+    ),
   };
 }
 
@@ -201,7 +212,9 @@ function normalizeUserStats(raw) {
   return {
     applications: {
       value: toNumber(pick(source, ["applications", "applications_count"])),
-      sub: toText(pick(source, ["applications_in_review", "applications_sub"])) ?? "",
+      sub:
+        toText(pick(source, ["applications_in_review", "applications_sub"])) ??
+        "",
     },
     savedJobs: {
       value: toNumber(pick(source, ["saved_jobs", "saved_jobs_count"])),
@@ -255,7 +268,10 @@ const USER_FIELD_ALIASES = {
 /** Renames the aliased keys and passes everything else through untouched. */
 const toUserPayload = (payload = {}) =>
   Object.fromEntries(
-    Object.entries(payload).map(([key, value]) => [USER_FIELD_ALIASES[key] ?? key, value]),
+    Object.entries(payload).map(([key, value]) => [
+      USER_FIELD_ALIASES[key] ?? key,
+      value,
+    ]),
   );
 
 // --- requests ---------------------------------------------------------------
@@ -279,19 +295,34 @@ export const createAdminUserRequest = async (payload) => {
   return normalizeUser(unwrap(response));
 };
 
-/** PATCH /api/admin/users/{user} — partial update (profile fields, role). */
+/**
+ * PATCH /api/admin/users/{user} — partial update of the user's own fields.
+ *
+ * Backs the Edit form (fullName, email, role, phone, jobTitle, experience, bio)
+ * and the Change Role dialog, which is the same call with one field set.
+ * Deliberately NOT used for account state: see setAdminUserStatusRequest.
+ */
 export const updateAdminUserRequest = async ({ id, ...payload }) => {
-  const response = await api.patch(`/api/admin/users/${id}`, toUserPayload(payload));
+  const response = await api.patch(
+    `/api/admin/users/${id}`,
+    toUserPayload(payload),
+  );
   return normalizeUser(unwrap(response));
 };
 
 /**
- * PATCH /api/admin/users/{user} with a status field.
- * Activate / Deactivate / Suspend are the same operation with a different
- * status, so they share one request function.
+ * PATCH /api/admin/users/{user}/status — account state only.
+ *
+ * The UI uses three labels, while the backend validates `is_active` as a
+ * boolean. Suspended and inactive both map to false; the server's response is
+ * normalized back into the UI status shape.
  */
-export const setAdminUserStatusRequest = async ({ id, status }) =>
-  updateAdminUserRequest({ id, status });
+export const setAdminUserStatusRequest = async ({ id, status }) => {
+  const response = await api.patch(`/api/admin/users/${id}/status`, {
+    is_active: status === "active",
+  });
+  return normalizeUser(unwrap(response));
+};
 
 /** DELETE /api/admin/users/{user} */
 export const deleteAdminUserRequest = async (userId) => {

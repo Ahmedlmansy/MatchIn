@@ -5,6 +5,7 @@
 
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { useLocalizedPath } from "@/utils/routes";
 import {
@@ -28,19 +29,30 @@ import { ErrorState, EmptyState } from "@/features/admin/shared";
 export default function AdminDashboard() {
   const navigate = useNavigate();
   const localizedPath = useLocalizedPath();
-  const { data, isPending, isError, error, refetch, isFetching } = useAdminDashboardQuery();
+  const { t } = useTranslation("dashboard");
+  const { data, isPending, isError, error, refetch, isFetching } =
+    useAdminDashboardQuery();
 
   // Domain data -> the exact props the cards/lists render (icons, Tailwind
   // classes, title/meta segments). See adminDashboardViewModel.js.
-  const overviewStats = useMemo(() => buildOverviewStats(data?.stats), [data?.stats]);
-  const recentActivity = useMemo(() => buildRecentActivity(data?.recentActivity), [data?.recentActivity]);
-  const auditLogs = useMemo(() => buildAuditLogs(data?.auditLogs), [data?.auditLogs]);
+  const overviewStats = buildOverviewStats(data?.stats);
+  const recentActivity = buildRecentActivity(data?.recentActivity);
+  const auditLogs = buildAuditLogs(data?.auditLogs);
 
-  // The quick-action hrefs are language-agnostic in the constants module, so
-  // they get localized once here rather than in every action card.
+  // The quick-action hrefs are language-agnostic in the constants module, and
+  // their copy lives under pages.admin.overview.quickActions, so both are
+  // resolved once here rather than in every action card.
   const quickActions = useMemo(
-    () => QUICK_ACTIONS.map((action) => ({ ...action, href: localizedPath(action.href) })),
-    [localizedPath],
+    () =>
+      QUICK_ACTIONS.map((action) => ({
+        ...action,
+        href: localizedPath(action.href),
+        title: t(`pages.admin.overview.quickActions.${action.id}.title`),
+        description: t(
+          `pages.admin.overview.quickActions.${action.id}.description`,
+        ),
+      })),
+    [localizedPath, t],
   );
 
   if (isPending) {
@@ -52,8 +64,10 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-background px-4 py-8 md:px-7 md:py-12 font-sans antialiased">
         <div className="max-w-7xl mx-auto">
           <ErrorState
-            title="Couldn't load the dashboard"
-            description={error?.message || "Something went wrong on our end. Please try again."}
+            title={t("pages.admin.overview.loadFailed.title")}
+            description={
+              error?.message || t("pages.admin.overview.loadFailed.description")
+            }
             onRetry={() => refetch()}
           />
         </div>
@@ -62,7 +76,9 @@ export default function AdminDashboard() {
   }
 
   const hasContent =
-    overviewStats.length > 0 || recentActivity.length > 0 || auditLogs.length > 0;
+    overviewStats.length > 0 ||
+    recentActivity.length > 0 ||
+    auditLogs.length > 0;
 
   return (
     <div className="min-h-screen bg-background text-[#222831] px-4 py-8 md:px-7 md:py-12 font-sans antialiased">
@@ -71,13 +87,15 @@ export default function AdminDashboard() {
         <DashboardHeader
           onRefresh={() => refetch()}
           isRefreshing={isFetching}
-          onNewCompany={() => navigate(localizedPath("/dashboard/company-management"))}
+          onNewCompany={() =>
+            navigate(localizedPath("/dashboard/company-management"))
+          }
         />
 
         {!hasContent ? (
           <EmptyState
-            title="Nothing to show yet"
-            description="Once companies, jobs and applications start coming in, they'll appear here."
+            title={t("pages.admin.overview.empty.title")}
+            description={t("pages.admin.overview.empty.description")}
           />
         ) : (
           <>

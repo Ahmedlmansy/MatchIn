@@ -1,4 +1,6 @@
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { translateAdminValue } from "./formatting/locale";
 
 /**
  * Canonical status -> visual token map for admin job/listing statuses.
@@ -17,6 +19,13 @@ const STATUS_DOTS = {
   closed: "bg-muted",
 };
 
+const STATUS_LABEL_KEYS = {
+  active: "ui.adminEnums.jobStatus.active",
+  draft: "ui.adminEnums.jobStatus.draft",
+  expired: "ui.adminEnums.jobStatus.expired",
+  closed: "ui.adminEnums.jobStatus.closed",
+};
+
 /**
  * StatusBadge
  * Pill-style status indicator with an optional leading dot.
@@ -30,11 +39,16 @@ export default function StatusBadge({
   withDot = true,
   className,
 }) {
+  const { t } = useTranslation("common");
+
   const resolvedVariant =
     variant ?? STATUS_VARIANTS[status] ?? STATUS_VARIANTS.draft;
   const resolvedDot = dotColor ?? STATUS_DOTS[status] ?? "bg-muted";
-  const text =
-    label ?? (status ? status.charAt(0).toUpperCase() + status.slice(1) : "");
+  const text = label
+    ? translateAdminValue(label)
+    : STATUS_LABEL_KEYS[status]
+      ? t(STATUS_LABEL_KEYS[status])
+      : translateAdminValue(status);
 
   return (
     <span

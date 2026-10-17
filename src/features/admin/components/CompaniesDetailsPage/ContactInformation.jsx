@@ -66,7 +66,9 @@ export default function ContactInformation({ contact }) {
     <Section title={t("pages.admin.companyDetails.contactInformation")}>
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 max-[560px]:grid-cols-1">
         {fields.length === 0 ? (
-          <p className="col-span-2 text-[14.5px] text-muted">No contact details yet.</p>
+          <p className="col-span-2 text-[14.5px] text-muted">
+            {t("pages.admin.companyDetails.noContacts")}
+          </p>
         ) : (
           fields.map((field) => (
             <Field key={field.label} label={field.label} value={field.value} />

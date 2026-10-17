@@ -1,9 +1,18 @@
 // src/features/candidate/hooks/useJobsQuery.js
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+// useJobDetailsQuery and useSavedJobsQuery below call four more of these.
+// They were missing here and only re-exported from the bottom of this file —
+// which creates no local binding — so both queries threw a ReferenceError the
+// moment they ran. The re-export below serves outside consumers and does not
+// bring anything into this module's scope.
 import {
   fetchJobsRequest,
+  fetchJobDetailsRequest,
+  fetchSavedJobsRequest,
   normalizeJobsResponse,
+  normalizeJobDetails,
+  normalizeSavedJobsResponse,
 } from "@/features/candidate/api/jobs.api";
 import { candidateKeys } from "@/features/candidate/constants/candidate.query-keys";
 import { normalizeApiError } from "@/features/auth/hooks/useApiMutation";

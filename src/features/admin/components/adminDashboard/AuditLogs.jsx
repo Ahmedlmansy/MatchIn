@@ -1,13 +1,16 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import ListItem from "./ListItem";
 
 
 export default function AuditLogs({
   items = [],
-  title = "Recent Audit Logs",
+  title,
   viewAllHref = "#",
 }) {
+  const { t } = useTranslation(["common", "dashboard"]);
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 16 }}
@@ -17,13 +20,13 @@ export default function AuditLogs({
     >
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-base font-semibold tracking-tight text-[#222831]">
-          {title}
+          {title ?? t("dashboard:pages.admin.overview.sections.auditLogs")}
         </h2>
         <a
           href={viewAllHref}
           className="text-[13px] font-semibold text-primary hover:underline inline-flex items-center gap-1"
         >
-          View all
+          {t("ui.adminActivity.viewAll")}
           <ArrowRight className="w-3.5 h-3.5" />
         </a>
       </div>

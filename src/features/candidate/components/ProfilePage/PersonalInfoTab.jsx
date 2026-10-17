@@ -6,6 +6,7 @@ import TabSaveActions from "./TabSaveActions";
 
 export default function PersonalInfoTab() {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -55,7 +56,7 @@ export default function PersonalInfoTab() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="bg-[#FAF8F5]/80 border border-gray-100/60 p-4 rounded-2xl space-y-1">
           <span className="text-xs font-medium text-slate-400 block">
-            Title / Role
+            {t("pages.profile.personalTitleRole")}
           </span>
           <p className="text-sm font-bold text-slate-900">
             {userInfo.titleRole}
@@ -64,7 +65,7 @@ export default function PersonalInfoTab() {
 
         <div className="bg-[#FAF8F5]/80 border border-gray-100/60 p-4 rounded-2xl space-y-1">
           <span className="text-xs font-medium text-slate-400 block">
-            Company / Institution
+            {t("pages.profile.personalCompany")}
           </span>
           <p className="text-sm font-bold text-slate-900">
             {userInfo.company || "—"}
@@ -76,7 +77,7 @@ export default function PersonalInfoTab() {
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
         title={t("pages.profile.editPersonalInformation")}
-        confirmLabel="Save"
+        confirmLabel={tCommon("actions.save")}
         isLoading={isSaving}
         loadingLabel="Saving..."
         onConfirm={handleSaveData}
@@ -84,7 +85,7 @@ export default function PersonalInfoTab() {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              Title / Role *
+              {t("pages.profile.personalTitleRoleRequired")}
             </label>
             <input
               type="text"
@@ -98,7 +99,7 @@ export default function PersonalInfoTab() {
 
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              Company / Institution
+              {t("pages.profile.personalCompany")}
             </label>
             <input
               type="text"

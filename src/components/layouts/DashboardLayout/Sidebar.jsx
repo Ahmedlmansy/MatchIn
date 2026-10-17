@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PanelLeftClose, PanelLeftOpen, Sparkles, LogOut } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen, Sparkles, LogOut, X } from "lucide-react";
 import LogoNavy from "@/assets/logo/MatchIn_logo.svg";
 import LogoText from "@/assets/logo/logo_text.svg";
 import { cn } from "@/lib/utils";
@@ -48,11 +48,17 @@ function NavItem({ icon: Icon, label, labelKey, href, end, collapsed, onNavigate
 /**
  * Sidebar
  * ---------------------------------------------------------------------------
- * Fixed, collapsible sidebar. State (collapsed / mobile drawer) lives in
- * DashboardLayout and is passed down as props so the layout stays the single
- * source of truth for the shell's responsive behavior. Nav items themselves
- * come from the dashboard route config (see NAV_ITEMS above), not a
- * hand-maintained list.
+ * Fixed sidebar that is only docked on large screens (>= `lg` / 1024px). On
+ * tablet and phone it renders as an off-canvas drawer opened from the Topbar
+ * burger button.
+ *
+ * Because the drawer shares this markup with the docked sidebar, the
+ * collapse affordance is desktop-only (`hidden lg:flex`) and the drawer gets a
+ * plain close button (`lg:hidden`) instead — a drawer has nothing to expand
+ * into. State (collapsed / mobile drawer) lives in DashboardLayout and is
+ * passed down as props so the layout stays the single source of truth for the
+ * shell's responsive behavior. Nav items themselves come from the dashboard
+ * route config, not a hand-maintained list.
  */
 export default function Sidebar({
   collapsed,
@@ -61,7 +67,7 @@ export default function Sidebar({
   onCloseMobile,
   role,
 }) {
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation(["dashboard", "common"]);
   const localizedPath = useLocalizedPath();
   const routes =
     isAdminRole(role) ? adminDashboardRoutes : candidateDashboardRoutes;
@@ -73,26 +79,29 @@ export default function Sidebar({
       {mobileOpen && (
         <div
           onClick={onCloseMobile}
-          className="fixed inset-0 z-40 bg-primary/40 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-primary/40 backdrop-blur-sm lg:hidden"
         />
       )}
 
       <aside
         className={cn(
-          "fixed inset-y-0 start-0 z-50 h-screen p-0 transition-all duration-300 md:p-4",
-          collapsed ? "w-24" : "w-72",
-          mobileOpen ? "block" : "hidden md:block",
+          // No `h-screen` here: `inset-y-0` already pins the height to the
+          // viewport, and an explicit `100vh` would re-resolve on every resize
+          // tick. Combined with `transition-all` that restarted a 300ms
+          // animation on each tick, so the sidebar lagged behind the window.
+          "fixed inset-y-0 start-0 z-50 p-0 duration-300 lg:p-4",
+          "transition-[width,padding]",
+          collapsed ? "lg:w-24" : "w-72",
+          mobileOpen ? "block" : "hidden lg:block",
         )}
       >
-        <div className="flex h-full flex-col justify-between rounded-none border border-border/80 bg-surface/90 p-4 shadow-sm backdrop-blur-md transition-all duration-300 md:rounded-2xl">
+        <div className="flex h-full flex-col justify-between rounded-none border border-border/80 bg-surface/90 p-4 shadow-sm backdrop-blur-md duration-300 lg:rounded-2xl transition-[border-radius]">
           <div>
             {/* Logo & Brand */}
             <div
               className={cn(
-                "mb-4 border-b border-border/50 pb-5",
-                collapsed
-                  ? "flex flex-col items-center gap-2"
-                  : "flex items-center gap-2",
+                "mb-4 flex items-center gap-2 border-b border-border/50 pb-5",
+                collapsed && "lg:flex-col lg:items-center lg:gap-2",
               )}
             >
               <NavLink
@@ -115,12 +124,15 @@ export default function Sidebar({
                     </div>
 
                     <span className="mt-1 text-center text-[10px] font-medium tracking-wide text-muted">
-                      Career Guidance
+                      {t("layout.careerGuidance")}
                     </span>
                   </div>
                 )}
               </NavLink>
 
+              {/* Collapse only makes sense for the docked sidebar on large
+                  screens — below `lg` this row renders as a drawer close button
+                  instead, since a drawer has nothing to expand into. */}
               <button
                 type="button"
                 onClick={onToggleCollapse}
@@ -134,15 +146,23 @@ export default function Sidebar({
                     ? t("actions.expandSidebar")
                     : t("actions.collapseSidebar")
                 }
-                className={cn(
-                  "flex shrink-0 items-center justify-center rounded-lg p-1.5 text-muted transition-colors hover:text-primary",
-                )}
+                className="hidden shrink-0 items-center justify-center rounded-lg p-1.5 text-muted transition-colors hover:text-primary lg:flex"
               >
                 {collapsed ? (
                   <PanelLeftOpen className="h-5 w-5" />
                 ) : (
                   <PanelLeftClose className="h-5 w-5" />
                 )}
+              </button>
+
+              <button
+                type="button"
+                onClick={onCloseMobile}
+                aria-label={t("actions.closeMenu")}
+                title={t("actions.closeMenu")}
+                className="flex shrink-0 items-center justify-center rounded-lg p-1.5 text-muted transition-colors hover:text-primary lg:hidden"
+              >
+                <X className="h-5 w-5" />
               </button>
             </div>
 
@@ -185,7 +205,7 @@ export default function Sidebar({
               {/* Tooltip shown only in collapsed mode, on hover */}
               {collapsed && (
                 <span className="pointer-events-none absolute start-[70px] z-[100] whitespace-nowrap rounded-lg bg-red-600 px-2.5 py-1 text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-                  Logout
+          {t("layout.logOut")}
                 </span>
               )}
             </button>

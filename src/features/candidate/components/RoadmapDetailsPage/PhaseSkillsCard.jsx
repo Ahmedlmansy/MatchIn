@@ -17,8 +17,7 @@ export default function PhaseSkillsCard({ skills = PHASE_SKILLS }) {
         {t("pages.roadmap.phaseSkills")}
       </h2>
       <p className="mb-4 text-[12px] text-muted">
-        Every skill here addresses a priority gap from your roadmap — nothing in this phase is
-        unlinked busywork.
+        {t("pages.roadmap.phaseSkillsDescription")}
       </p>
 
       <div className="space-y-2">

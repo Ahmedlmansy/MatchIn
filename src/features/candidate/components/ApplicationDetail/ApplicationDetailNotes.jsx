@@ -9,6 +9,7 @@ export default function ApplicationDetailNotes({
   setNoteText,
   handleSaveNote,
 }) {
+  const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("dashboard");
   return (
     <div className="bg-white border border-border rounded-2xl p-6 shadow-sm">
@@ -20,7 +21,7 @@ export default function ApplicationDetailNotes({
           className="text-[12px] font-semibold text-primary flex items-center gap-1 hover:underline"
         >
           <Plus className="h-3.5 w-3.5" />
-          Add note
+          {t("pages.applicationDetail.addNote")}
         </button>
       </div>
 
@@ -30,7 +31,7 @@ export default function ApplicationDetailNotes({
             rows={2}
             value={noteText}
             onChange={(e) => setNoteText(e.target.value)}
-            placeholder="Add a private note about this application…"
+            placeholder={t(`pages.applicationDetail.addNotePlaceholder`)}
             className="w-full border border-border rounded-xl p-3 text-[13px] outline-none focus:border-primary resize-none"
           />
           <div className="flex justify-end gap-2 mt-2">
@@ -39,14 +40,14 @@ export default function ApplicationDetailNotes({
               onClick={() => setShowNoteForm(false)}
               className="h-8 px-3 rounded-full text-[12px] font-semibold text-[#44474E] hover:bg-background"
             >
-              Cancel
+              {tCommon("actions.cancel")}
             </button>
             <button
               type="button"
               onClick={handleSaveNote}
               className="h-8 px-4 rounded-full bg-primary text-white text-[12px] font-semibold hover:bg-[#0F2036]"
             >
-              Save
+                {tCommon("actions.save")}
             </button>
           </div>
         </div>
@@ -64,7 +65,7 @@ export default function ApplicationDetailNotes({
                 type="button"
                 className="text-[11px] font-semibold text-primary hover:underline"
               >
-                Edit
+                {tCommon("actions.edit")}
               </button>
             </div>
           </div>

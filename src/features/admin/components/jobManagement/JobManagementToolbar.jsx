@@ -1,4 +1,5 @@
 import { FilterX } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   SearchInput,
   SortDropdown,
@@ -11,6 +12,8 @@ import {
  *
  * Options are passed in rather than imported so the page owns which filter set
  * is active (and the toolbar stays reusable if a second job list appears).
+ * Options travel as `{ id | value, labelKey }` and are resolved by the pill /
+ * dropdown components against the `common` namespace.
  */
 export default function JobManagementToolbar({
   filters,
@@ -20,6 +23,8 @@ export default function JobManagementToolbar({
   sourceOptions,
   sortOptions,
 }) {
+  const { t } = useTranslation("dashboard");
+
   return (
     <div className="space-y-4">
       {/* Search + Sort Bar */}
@@ -27,7 +32,7 @@ export default function JobManagementToolbar({
         <SearchInput
           value={filters.search}
           onChange={onFilterChange("search")}
-          placeholder="Search by job title or company..."
+          placeholder={t("pages.admin.jobList.toolbar.searchPlaceholder")}
         />
         <SortDropdown
           value={filters.sort}
@@ -60,7 +65,7 @@ export default function JobManagementToolbar({
           className="shrink-0 inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-border bg-white text-[12px] font-semibold text-[#44474E] hover:bg-background transition-colors"
         >
           <FilterX className="w-3.5 h-3.5 text-muted" />
-          Clear Filters
+          {t("pages.admin.jobList.toolbar.clearFilters")}
         </button>
       </div>
     </div>

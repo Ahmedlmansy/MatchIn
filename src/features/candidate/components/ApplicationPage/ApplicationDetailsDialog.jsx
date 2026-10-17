@@ -1,8 +1,11 @@
+import { useTranslation } from "react-i18next";
 import { Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 export default function ApplicationDetailsDialog({ app, onClose, onToast }) {
+  const { t: tCommon } = useTranslation("common");
+  const { t } = useTranslation("dashboard");
   return (
     <Dialog open={Boolean(app)} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="bg-white border-border rounded-3xl w-[calc(100%-2rem)] max-h-[calc(100vh-2rem)] overflow-y-auto max-w-lg p-4 sm:p-6 shadow-xl">
@@ -25,7 +28,7 @@ export default function ApplicationDetailsDialog({ app, onClose, onToast }) {
             <div className="grid grid-cols-2 gap-3 mb-6 bg-background p-3.5 rounded-2xl border border-border">
               <div>
                 <span className="text-[11px] font-medium text-muted block">
-                  Match Score
+                  {t("pages.applicationDetail.matchScore")}
                 </span>
                 <span className="text-[15px] font-bold text-success">
                   {app.matchScore}% Match
@@ -33,7 +36,7 @@ export default function ApplicationDetailsDialog({ app, onClose, onToast }) {
               </div>
               <div>
                 <span className="text-[11px] font-medium text-muted block">
-                  Applied Date
+                  {t("pages.applicationDetail.appliedDate")}
                 </span>
                 <span className="text-[13.5px] font-semibold text-[#1B1C1A]">
                   {app.appliedDate}
@@ -41,7 +44,7 @@ export default function ApplicationDetailsDialog({ app, onClose, onToast }) {
               </div>
               <div className="col-span-2 pt-2 border-t border-border">
                 <span className="text-[11px] font-medium text-muted block">
-                  Current Status
+                  {t("pages.applicationDetail.currentStatus")}
                 </span>
                 <span className="text-[13px] font-semibold text-primary capitalize">
                   {app.status.replace("-", " ")}
@@ -63,7 +66,7 @@ export default function ApplicationDetailsDialog({ app, onClose, onToast }) {
                 onClick={onClose}
                 className="w-full sm:w-auto px-5 border-border text-[13px] font-semibold h-10 rounded-full hover:bg-background transition-colors text-[#44474E]"
               >
-                Close
+          {tCommon("actions.close")}
               </Button>
             </div>
           </>

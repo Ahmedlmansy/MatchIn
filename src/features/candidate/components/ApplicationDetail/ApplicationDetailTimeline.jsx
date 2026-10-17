@@ -9,7 +9,7 @@ export default function ApplicationDetailTimeline({
   return (
     <div className="bg-white border border-border rounded-2xl p-6 mb-5 shadow-sm">
       <h2 className="font-display font-bold text-[15px] mb-5">
-        {t("pages.applicationDetail.timeline")}
+        {t("pages.applicationDetail.underReview")}
       </h2>
 
       {!isBannerState ? (
@@ -33,7 +33,7 @@ export default function ApplicationDetailTimeline({
               <Check className="h-4 w-4" />
             </div>
             <div className="pt-1">
-              <div className="text-[13px] font-semibold">Under Review</div>
+              <div className="text-[13px] font-semibold">{t("pages.applicationDetail.underReview")}</div>
               <div className="text-[12px] text-muted mt-0.5">
                 Aug 27, 2026 · 3:40 PM
               </div>
@@ -46,10 +46,10 @@ export default function ApplicationDetailTimeline({
             </div>
             <div className="pt-1">
               <div className="text-[13px] font-semibold text-muted">
-                Interview
+              {t("pages.applicationJobDetails.interview")}
               </div>
               <div className="text-[12px] text-muted mt-0.5">
-                Not yet scheduled
+                {t("pages.applicationDetail.notScheduled")}
               </div>
             </div>
           </div>
@@ -60,10 +60,10 @@ export default function ApplicationDetailTimeline({
             </div>
             <div className="pt-1">
               <div className="text-[13px] font-semibold text-muted">
-                Assessment
+              {t("pages.applicationJobDetails.assessment")}
               </div>
               <div className="text-[12px] text-muted mt-0.5">
-                Pending previous steps
+                {t("pages.applicationDetail.pendingPreviousSteps")}
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function ApplicationDetailTimeline({
             <div className="pt-1">
               <div className="text-[13px] font-semibold text-muted">Offer</div>
               <div className="text-[12px] text-muted mt-0.5">
-                Pending previous steps
+                {t("pages.applicationDetail.pendingPreviousSteps")}
               </div>
             </div>
           </div>

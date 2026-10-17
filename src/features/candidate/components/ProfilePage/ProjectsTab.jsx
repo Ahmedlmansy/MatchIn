@@ -23,6 +23,7 @@ const DEFAULT_PROJECTS = [
 
 export default function ProjectsTab({ initialProjects = DEFAULT_PROJECTS }) {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const [projects, setProjects] = useState(initialProjects);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -114,7 +115,7 @@ export default function ProjectsTab({ initialProjects = DEFAULT_PROJECTS }) {
           className="inline-flex items-center gap-2 bg-[#1E325C] hover:bg-[#162545] text-white px-4 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm active:scale-95 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Project</span>
+          <span>{t(`pages.profile.addProject`)}</span>
         </button>
       </div>
 
@@ -147,15 +148,15 @@ export default function ProjectsTab({ initialProjects = DEFAULT_PROJECTS }) {
       <TabSaveActions
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={editingId ? "Edit Project" : "Add Project"}
-        confirmLabel="Save"
+        title={editingId ? "Edit Project" : t("pages.profile.addProject")}
+        confirmLabel={tCommon("actions.save")}
         isLoading={isSaving}
         loadingLabel="Saving..."
         onConfirm={handleSave}
       >
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">Project Title *</label>
+            <label className="text-xs font-bold text-gray-700 block">{t(`pages.profile.projectTitle`)}</label>
             <input
               type="text"
               name="title"
@@ -173,13 +174,13 @@ export default function ProjectsTab({ initialProjects = DEFAULT_PROJECTS }) {
               rows={3}
               value={formData.description}
               onChange={handleChange}
-              placeholder="Brief description of the project..."
+              placeholder={t("pages.profile.projectDescription")}
               className="w-full px-4 py-3 bg-[#FAF8F5] border border-gray-200/80 rounded-2xl text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#1E325C]/20 transition-all resize-none"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">Project Link / URL</label>
+            <label className="text-xs font-bold text-gray-700 block">{t(`pages.profile.projectLink`)}</label>
             <input
               type="text"
               name="link"

@@ -3,13 +3,13 @@ import { ArrowRight } from "lucide-react";
 import ListItem from "./ListItem";
 import { useTranslation } from "react-i18next";
 
-
 export default function RecentActivity({
   items = [],
-  title = "Recent Activity",
+  title,
   viewAllHref = "#",
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   return (
     <motion.section
       initial={{ opacity: 0, y: 16 }}
@@ -19,13 +19,13 @@ export default function RecentActivity({
     >
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-base font-semibold tracking-tight text-[#222831]">
-          {title}
+          {title ?? t("pages.admin.overview.sections.recentActivity")}
         </h2>
         <a
           href={viewAllHref}
           className="text-[13px] font-semibold text-primary hover:underline inline-flex items-center gap-1"
         >
-          {t("ui.adminActivity.viewAll")}
+          {tCommon("ui.adminActivity.viewAll")}
           <ArrowRight className="w-3.5 h-3.5" />
         </a>
       </div>

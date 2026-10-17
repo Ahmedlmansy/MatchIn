@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React from "react";
 import { Pencil, Trash2 } from "lucide-react";
 
@@ -11,6 +12,8 @@ export default function ItemCard({
   onDelete,
   children,
 }) {
+  const { t: tCommon } = useTranslation("common");
+
   return (
     <div className="w-full bg-[#F8FAFC]/60 hover:bg-[#F8FAFC] transition-colors p-4 rounded-xl border border-slate-200/80 flex items-start justify-between gap-4">
       <div className="space-y-1 flex-1">
@@ -59,7 +62,7 @@ export default function ItemCard({
             type="button"
             onClick={onDelete}
             className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-            title="Delete"
+            title={tCommon("actions.delete")}
           >
             <Trash2 className="w-4 h-4" />
           </button>

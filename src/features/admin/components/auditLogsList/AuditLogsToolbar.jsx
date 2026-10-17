@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Search, X } from "lucide-react";
 import { FilterSelect } from "@/features/admin/shared";
 
@@ -15,33 +16,37 @@ export default function AuditLogsToolbar({
   options,
   sortOptions,
 }) {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
+  const chip = (name, value) => t(`pages.admin.auditLogs.toolbar.chips.${name}`, { label: value });
+
   const activeChips = [];
 
   if (filters.search) {
     activeChips.push({
       key: "search",
-      label: `Search: ${filters.search}`,
+      label: chip("search", filters.search),
       onRemove: () => onFilterChange("search")(""),
     });
   }
   if (filters.action) {
     activeChips.push({
       key: "action",
-      label: `Action: ${filters.action}`,
+      label: chip("action", filters.action),
       onRemove: () => onFilterChange("action")(""),
     });
   }
   if (filters.entity) {
     activeChips.push({
       key: "entity",
-      label: `Entity: ${filters.entity}`,
+      label: chip("entity", filters.entity),
       onRemove: () => onFilterChange("entity")(""),
     });
   }
   if (filters.actor) {
     activeChips.push({
       key: "actor",
-      label: `Actor: ${filters.actor}`,
+      label: chip("actor", filters.actor),
       onRemove: () => onFilterChange("actor")(""),
     });
   }
@@ -55,7 +60,7 @@ export default function AuditLogsToolbar({
             type="search"
             value={filters.search}
             onChange={(event) => onFilterChange("search")(event.target.value)}
-            placeholder="Search by actor, action, entity ID, or IP…"
+            placeholder={t(`pages.admin.auditLogs.toolbar.searchPlaceholder`)}
             className="w-full h-10.5 ps-10 pe-3.5 border border-border rounded-xl text-sm bg-white outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-muted"
           />
         </div>
@@ -64,28 +69,28 @@ export default function AuditLogsToolbar({
           value={filters.action}
           onChange={onFilterChange("action")}
           options={options.action}
-          ariaLabel="Filter by action"
+          ariaLabel={t(`pages.admin.auditLogs.toolbar.actionAria`)}
         />
         <FilterSelect
           size="sm"
           value={filters.entity}
           onChange={onFilterChange("entity")}
           options={options.entity}
-          ariaLabel="Filter by entity"
+          ariaLabel={t(`pages.admin.auditLogs.toolbar.entityAria`)}
         />
         <FilterSelect
           size="sm"
           value={filters.actor}
           onChange={onFilterChange("actor")}
           options={options.actor}
-          ariaLabel="Filter by actor"
+          ariaLabel={t(`pages.admin.auditLogs.toolbar.actorAria`)}
         />
         <FilterSelect
           size="sm"
           value={filters.sort}
           onChange={onFilterChange("sort")}
           options={sortOptions}
-          ariaLabel="Sort audit logs"
+          ariaLabel={t(`pages.admin.auditLogs.toolbar.sortAria`)}
         />
       </div>
 
@@ -100,7 +105,7 @@ export default function AuditLogsToolbar({
               {filter.label}
               <button
                 type="button"
-                aria-label={`Remove filter ${filter.label}`}
+                aria-label={tCommon("ui.adminFilters.removeChip", { label: filter.label })}
                 onClick={filter.onRemove}
                 className="hover:opacity-75"
               >
@@ -113,7 +118,7 @@ export default function AuditLogsToolbar({
             onClick={onClearFilters}
             className="text-xs font-semibold text-muted hover:text-[#222831] hover:underline px-1"
           >
-            Clear all
+            {t("pages.admin.auditLogs.filters.clearAll")}
           </button>
         </div>
       )}

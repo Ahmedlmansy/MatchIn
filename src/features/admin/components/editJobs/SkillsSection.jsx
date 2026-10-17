@@ -81,7 +81,7 @@ function SkillField({
   onKeyDown,
   onRemove,
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("dashboard");
 
   return (
     <div className="space-y-2">
@@ -103,7 +103,7 @@ function SkillField({
             <button
               type="button"
               onClick={onRemove(skill)}
-              aria-label={`Remove ${skill}`}
+              aria-label={t("ui.editJob.removeSkill", { skill })}
               className="hover:text-[#DC2626] transition-colors cursor-pointer"
             >
               <X className="h-3.5 w-3.5 text-[#09090B]" />

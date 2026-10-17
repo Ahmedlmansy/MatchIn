@@ -1,6 +1,14 @@
+import { useTranslation } from "react-i18next";
 import { Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/features/admin/shared";
+import {
+  formatDateTime,
+  relativeShortLabel,
+  translateAdminAuditAction,
+  translateAdminEntity,
+  translateAdminValue,
+} from "@/features/admin/shared/formatting/locale";
 
 /**
  * AuditLogRow
@@ -9,6 +17,8 @@ import { Badge } from "@/features/admin/shared";
  * Clicking the row (or the eye button) opens the detail preview.
  */
 export default function AuditLogRow({ log, onSelect }) {
+  const { t } = useTranslation("dashboard");
+
   return (
     <tr
       onClick={() => onSelect?.(log)}
@@ -16,8 +26,12 @@ export default function AuditLogRow({ log, onSelect }) {
     >
       {/* Timestamp */}
       <td className="py-3.5 px-4">
-        <div className="font-medium text-[#222831]">{log.time}</div>
-        <div className="text-xs text-muted">{log.relative}</div>
+        <div className="font-medium text-[#222831]">
+          {log.createdAt ? formatDateTime(log.createdAt) : log.time}
+        </div>
+        <div className="text-xs text-muted">
+          {relativeShortLabel(log.createdAt) ?? log.relative}
+        </div>
       </td>
 
       {/* Actor */}
@@ -33,28 +47,35 @@ export default function AuditLogRow({ log, onSelect }) {
           </div>
           <div>
             <div className="font-semibold text-[#222831]">{log.actor}</div>
-            <div className="text-xs text-muted">{log.role}</div>
+            <div className="text-xs text-muted">
+              {translateAdminValue(log.role)}
+            </div>
           </div>
         </div>
       </td>
 
       {/* Action */}
       <td className="py-3.5 px-4">
-        <Badge type={log.actionType} text={log.action} />
+        <Badge
+          type={log.actionType}
+          text={translateAdminAuditAction(log.action, log.actionType)}
+        />
       </td>
 
       {/* Entity */}
       <td className="py-3.5 px-4">
-        <div className="font-semibold text-[#222831]">{log.entity}</div>
+        <div className="font-semibold text-[#222831]">
+          {translateAdminEntity(log.entity)}
+        </div>
         <div className="text-xs font-mono text-muted">{log.entityId}</div>
       </td>
 
       {/* Previous / New */}
       <td className="py-3.5 px-4 font-mono text-xs text-muted line-through">
-        {log.prev}
+        {translateAdminValue(log.prev)}
       </td>
       <td className="py-3.5 px-4 font-mono text-xs text-success font-semibold">
-        {log.newValue}
+        {translateAdminValue(log.newValue)}
       </td>
 
       {/* IP / Meta */}
@@ -64,7 +85,8 @@ export default function AuditLogRow({ log, onSelect }) {
       <td className="py-3.5 px-4 text-end">
         <button
           type="button"
-          title="Preview log"
+          title={t("pages.admin.auditLogs.table.preview")}
+          aria-label={t("pages.admin.auditLogs.table.preview")}
           onClick={(e) => {
             e.stopPropagation();
             onSelect?.(log);

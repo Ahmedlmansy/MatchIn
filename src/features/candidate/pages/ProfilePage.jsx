@@ -1,3 +1,5 @@
+import i18n from "@/components/shared/i18n";
+const t = (key) => i18n.t(key);
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import ProfileHeader from "../components/ProfilePage/ProfileHeader";
@@ -11,14 +13,14 @@ import ProjectsTab from "../components/ProfilePage/ProjectsTab";
 import CareerPreferencesTab from "../components/ProfilePage/PreferencesTab";
 
 const TABS = [
-  { id: "personal-info", label: "Personal Info", Component: PersonalInfoTab },
+  { id: "personal-info", label: t("pages.overview.personalInfo"), Component: PersonalInfoTab },
   { id: "skills", label: "Skills", Component: SkillsTab },
   { id: "experience", label: "Experience", Component: ExperienceTab },
   { id: "education", label: "Education", Component: EducationTab },
   { id: "projects", label: "Projects", Component: ProjectsTab },
   {
     id: "career-preferences",
-    label: "Career Preferences",
+    label: t("pages.overview.careerPreferences"),
     Component: CareerPreferencesTab,
   },
 ];

@@ -9,6 +9,11 @@ import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
 import {
+  formatDayMonth,
+  freshnessLabel,
+  translateAdminValue,
+} from "@/features/admin/shared/formatting/locale";
+import {
   ArrowLeft,
   SearchX,
   AlertTriangle,
@@ -41,18 +46,54 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { ErrorState } from "@/features/admin/shared";
-import { useAdminJobQuery, useUpdateAdminJobMutation } from "@/features/admin/hooks";
+import {
+  useAdminJobQuery,
+  useUpdateAdminJobMutation,
+} from "@/features/admin/hooks";
 import { JOB_STATUS_OPTIONS } from "@/features/admin/constants/admin.filters";
 import JobCard from "@/features/admin/components/JobDetailsPage/JobCard";
 
-const LOCATION_OPTIONS = ["Remote", "Hybrid", "Onsite"];
-const TYPE_OPTIONS = ["Full-time", "Part-time", "Contract", "Internship"];
-const LEVEL_OPTIONS = ["Entry level", "Mid level", "Senior level", "Lead / Principal"];
+/**
+ * Picker options carry `value` (the API enum) and `labelKey` separately.
+ *
+ * These used to be display-cased English strings used as *both* the rendered
+ * label and the submitted value, with the wire value recovered via
+ * `.toLowerCase()`. That is exactly the shape that silently posts a translated
+ * label to the server once a translation exists, so the two are split here.
+ */
+const LOCATION_OPTIONS = [
+  { value: "Remote", labelKey: "ui.jobPickers.location.remote" },
+  { value: "Hybrid", labelKey: "ui.jobPickers.location.hybrid" },
+  { value: "Onsite", labelKey: "ui.jobPickers.location.onsite" },
+];
+const TYPE_OPTIONS = [
+  { value: "Full-time", labelKey: "ui.jobPickers.type.fullTime" },
+  { value: "Part-time", labelKey: "ui.jobPickers.type.partTime" },
+  { value: "Contract", labelKey: "ui.jobPickers.type.contract" },
+  { value: "Internship", labelKey: "ui.jobPickers.type.internship" },
+];
+const LEVEL_OPTIONS = [
+  { value: "Entry level", labelKey: "ui.jobPickers.level.entry" },
+  { value: "Mid level", labelKey: "ui.jobPickers.level.mid" },
+  { value: "Senior level", labelKey: "ui.jobPickers.level.senior" },
+  { value: "Lead / Principal", labelKey: "ui.jobPickers.level.lead" },
+];
 
+// Keyed by the API enum (lowercase), not by a display-cased string.
 const STATUS_STYLES = {
-  Active: "bg-success/10 text-success",
-  Draft: "bg-muted/12 text-muted",
-  Closed: "bg-error/10 text-error",
+  active: "bg-success/10 text-success",
+  draft: "bg-muted/12 text-muted",
+  closed: "bg-error/10 text-error",
+  expired: "bg-error/10 text-error",
+  suspended: "bg-warning/10 text-warning",
+};
+
+const STATUS_LABEL_KEYS = {
+  active: "ui.adminEnums.jobStatus.active",
+  draft: "ui.adminEnums.jobStatus.draft",
+  closed: "ui.adminEnums.jobStatus.closed",
+  expired: "ui.adminEnums.jobStatus.expired",
+  suspended: "ui.adminEnums.jobStatus.suspended",
 };
 
 /** Joins a list of strings into the comma-separated text an <Input> holds. */
@@ -82,20 +123,31 @@ const toPayload = (form) => ({
   employment_type: form.type,
   experience_level: form.level,
   description: form.description,
-  responsibilities: form.responsibilities.split("\n").map((s) => s.trim()).filter(Boolean),
+  responsibilities: form.responsibilities
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean),
   required_skills: fromCsv(form.requiredSkills),
   preferred_skills: fromCsv(form.preferredSkills),
 });
 
 export function JobDetailsPage() {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const localizedPath = useLocalizedPath();
   const { jobId } = useParams();
 
   const jobsPath = localizedPath("/dashboard/job-management");
 
-  const { data: job, isPending, isError, error, refetch } = useAdminJobQuery(jobId);
-  const { mutate: updateJob, isPending: isSaving } = useUpdateAdminJobMutation(jobId);
+  const {
+    data: job,
+    isPending,
+    isError,
+    error,
+    refetch,
+  } = useAdminJobQuery(jobId);
+  const { mutate: updateJob, isPending: isSaving } =
+    useUpdateAdminJobMutation(jobId);
 
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState(null);
@@ -113,7 +165,8 @@ export function JobDetailsPage() {
     setTitleError(false);
   };
 
-  const setField = (name, value) => setForm((prev) => ({ ...prev, [name]: value }));
+  const setField = (name, value) =>
+    setForm((prev) => ({ ...prev, [name]: value }));
 
   const handleSave = () => {
     if (!form.title.trim()) {
@@ -131,8 +184,8 @@ export function JobDetailsPage() {
     });
   };
 
-  const handleUpdateStatus = (option) => {
-    updateJob({ status: option.toLowerCase() }, { onSettled: () => setStatusMenuOpen(null) });
+  const handleUpdateStatus = (value) => {
+    updateJob({ status: value }, { onSettled: () => setStatusMenuOpen(null) });
   };
 
   // One flag for both status dropdowns, so they can never be open at once.
@@ -176,18 +229,27 @@ export function JobDetailsPage() {
               <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-background">
                 <SearchX className="h-7 w-7 text-muted" />
               </div>
-              <h2 className="mb-2 text-xl font-bold text-ink">{t("pages.admin.jobNotFound")}</h2>
+              <h2 className="mb-2 text-xl font-bold text-ink">
+                {t("pages.admin.jobNotFound")}
+              </h2>
               <p className="mx-auto mb-7 max-w-sm text-[13.5px] text-muted">
-                This job may have been deleted, or the link you followed is no longer valid.
+                {t("pages.admin.jobDetails.notFoundDescription")}
               </p>
-              <Button asChild className="h-11 gap-2 rounded-full bg-primary px-6 text-primary-foreground hover:bg-primary/90">
-                <Link to={jobsPath}>Return to Jobs</Link>
+              <Button
+                asChild
+                className="h-11 gap-2 rounded-full bg-primary px-6 text-primary-foreground hover:bg-primary/90"
+              >
+                <Link to={jobsPath}>
+                  {t("pages.admin.jobDetails.returnToJobs")}
+                </Link>
               </Button>
             </JobCard>
           ) : (
             <ErrorState
               title={t("pages.admin.jobDetails.loadFailed")}
-              description={error?.message || "Something went wrong on our end. Please try again."}
+              description={
+                error?.message || tCommon("ui.adminShared.errorDescription")
+              }
               onRetry={() => refetch()}
             />
           )}
@@ -197,7 +259,12 @@ export function JobDetailsPage() {
   }
 
   const isStale = job.freshnessDays >= 30;
-  const statusLabel = job.status.charAt(0).toUpperCase() + job.status.slice(1);
+  // Localized label, raw enum value. The enum is what STATUS_STYLES and the
+  // status menu compare against; the label is only ever rendered.
+  const statusKey = `pages.admin.jobDetails`;
+  const statusLabel = STATUS_LABEL_KEYS[job.status]
+    ? tCommon(STATUS_LABEL_KEYS[job.status])
+    : job.status;
   const companyPath = job.companyId
     ? localizedPath(`/dashboard/company-management/${job.companyId}`)
     : null;
@@ -209,26 +276,36 @@ export function JobDetailsPage() {
         {isStale && !isEditing && (
           <Banner tone="warning" icon={Clock}>
             <div className="text-[13.5px] font-bold">
-              This listing is stale — last published {Math.floor(job.freshnessDays)} days ago
+              {t("pages.admin.jobDetails.staleTitle", {
+                days: Math.floor(job.freshnessDays),
+              })}
             </div>
             <div className="mt-0.5 text-[12.5px] opacity-85">
-              Consider updating its status or reaching out to the source before candidates keep
-              seeing it.
+              {t("pages.admin.jobDetails.staleDescription")}
             </div>
           </Banner>
         )}
 
         {/* Success banner */}
         {updateJob.isSuccess && !isEditing && !isError && (
-          <Banner tone="success" icon={CheckCircle2} dismissible onDismiss={() => updateJob.reset()}>
-            <div className="flex-1 text-[13.5px] font-semibold">Changes saved successfully.</div>
+          <Banner
+            tone="success"
+            icon={CheckCircle2}
+            dismissible
+            onDismiss={() => updateJob.reset()}
+          >
+            <div className="flex-1 text-[13.5px] font-semibold">
+              {t("pages.admin.jobDetails.savedSuccessfully")}
+            </div>
           </Banner>
         )}
 
         {/* Error banner */}
         {updateJob.error && (
           <Banner tone="error" icon={AlertTriangle}>
-            <div className="flex-1 text-[13.5px] font-semibold">{updateJob.error.message}</div>
+            <div className="flex-1 text-[13.5px] font-semibold">
+              {updateJob.error.message}
+            </div>
           </Banner>
         )}
 
@@ -236,7 +313,7 @@ export function JobDetailsPage() {
         {isEditing && titleError && (
           <Banner tone="error" icon={AlertTriangle}>
             <div className="flex-1 text-[13.5px] font-semibold">
-              Please fix the highlighted fields before saving.
+              {t("pages.admin.jobDetails.fixFields")}
             </div>
           </Banner>
         )}
@@ -262,12 +339,14 @@ export function JobDetailsPage() {
                     )}
                   />
                   {titleError && (
-                    <p className="mb-1 text-[11.5px] font-semibold text-error">Job title is required.</p>
+                    <p className="mb-1 text-[11.5px] font-semibold text-error">
+                      {t("pages.admin.jobDetails.titleRequired")}
+                    </p>
                   )}
                 </>
               ) : (
                 <h1 className="mb-1 font-display text-[21px] font-extrabold leading-tight text-ink">
-                  {job.title}
+                  {translateAdminValue(job.title)}
                 </h1>
               )}
 
@@ -280,7 +359,9 @@ export function JobDetailsPage() {
                   <ExternalLink className="h-3.5 w-3.5" />
                 </Link>
               ) : (
-                <span className="mt-1 block text-[13px] text-muted">{job.company}</span>
+                <span className="mt-1 block text-[13px] text-muted">
+                  {job.company}
+                </span>
               )}
 
               <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted">
@@ -306,15 +387,15 @@ export function JobDetailsPage() {
                   <>
                     <span className="flex items-center gap-1">
                       <MapPin className="h-3.5 w-3.5" />
-                      {job.location}
+                      {translateAdminValue(job.location)}
                     </span>
                     <span className="flex items-center gap-1">
                       <Briefcase className="h-3.5 w-3.5" />
-                      {job.type}
+                      {translateAdminValue(job.type)}
                     </span>
                     <span className="flex items-center gap-1">
                       <Award className="h-3.5 w-3.5" />
-                      {job.level}
+                      {translateAdminValue(job.level)}
                     </span>
                   </>
                 )}
@@ -325,7 +406,7 @@ export function JobDetailsPage() {
               <span
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold",
-                  STATUS_STYLES[statusLabel] ?? STATUS_STYLES.Draft,
+                  STATUS_STYLES[job.status] ?? STATUS_STYLES.draft,
                 )}
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-current" />
@@ -338,15 +419,17 @@ export function JobDetailsPage() {
           <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-border pt-4">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-semibold text-ink/80">
               <Calendar className="h-3.5 w-3.5" />
-              Published {job.pubDate}
+              {t("pages.admin.jobDetails.published", {
+                date: formatDayMonth(job.publishedAt),
+              })}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-1 text-[11px] font-semibold text-success">
-              ● {job.freshness}
+              ● {freshnessLabel(job.publishedAt, job.status)}
             </span>
             {isEditing && (
               <span className="ms-1 flex items-center gap-1 text-[11px] text-muted">
                 <Lock className="h-3.5 w-3.5" />
-                Preserved from source — not editable
+                {t("pages.admin.jobDetails.preservedNote")}
               </span>
             )}
           </div>
@@ -359,8 +442,12 @@ export function JobDetailsPage() {
                 disabled={isSaving}
                 className="h-10 gap-1.5 rounded-full bg-primary px-5 text-[12.5px] font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-70"
               >
-                {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-                Save Changes
+                {isSaving ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Save className="h-4 w-4" />
+                )}
+                {t("pages.admin.jobDetails.saveChanges")}
               </Button>
               <Button
                 variant="outline"
@@ -368,11 +455,12 @@ export function JobDetailsPage() {
                 disabled={isSaving}
                 className="h-10 rounded-full border-border px-4 text-[12.5px] font-semibold text-ink"
               >
-                Cancel
+                {t("pages.admin.jobDetails.cancel")}
               </Button>
               {isSaving && (
                 <span className="flex items-center gap-2 text-[13px] font-medium text-ink/80">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Saving changes…
+                  <Loader2 className="h-4 w-4 animate-spin" />{" "}
+                  {t("pages.admin.jobDetails.saving")}
                 </span>
               )}
             </div>
@@ -383,7 +471,7 @@ export function JobDetailsPage() {
                 className="h-10 gap-1.5 rounded-full bg-primary px-4 text-[12.5px] font-semibold text-primary-foreground hover:bg-primary/90"
               >
                 <PencilLine className="h-4 w-4" />
-                Edit Job
+                {t("pages.admin.jobDetails.editJob")}
               </Button>
 
               {companyPath && (
@@ -394,7 +482,7 @@ export function JobDetailsPage() {
                 >
                   <Link to={companyPath}>
                     <Building2 className="h-4 w-4" />
-                    View Company
+                    {t("pages.admin.jobDetails.viewCompany")}
                   </Link>
                 </Button>
               )}
@@ -407,12 +495,12 @@ export function JobDetailsPage() {
                   className="h-10 gap-1.5 rounded-full border-border px-4 text-[12.5px] font-semibold text-ink"
                 >
                   <RefreshCw className="h-4 w-4" />
-                  Update Status
+                  {t("pages.admin.jobDetails.updateStatus")}
                 </Button>
                 {statusMenuOpen && (
                   <StatusMenu
                     options={JOB_STATUS_OPTIONS}
-                    current={statusLabel}
+                    current={job.status}
                     isSaving={isSaving}
                     onSelect={handleUpdateStatus}
                   />
@@ -427,7 +515,7 @@ export function JobDetailsPage() {
                   className="flex h-10 items-center gap-1.5 rounded-full border border-border px-4 text-[12.5px] font-semibold text-ink hover:bg-background"
                 >
                   <ExternalLink className="h-4 w-4" />
-                  Open Source
+                  {t("pages.admin.jobDetails.openSource")}
                 </a>
               )}
 
@@ -438,7 +526,7 @@ export function JobDetailsPage() {
               >
                 <Link to={jobsPath}>
                   <ArrowLeft className="h-4 w-4" />
-                  Return to Jobs
+                  {t("pages.admin.jobDetails.returnToJobs")}
                 </Link>
               </Button>
             </div>
@@ -456,7 +544,9 @@ export function JobDetailsPage() {
               className="resize-none rounded-xl border-border text-[13px]"
             />
           ) : (
-            <p className="text-[13px] leading-relaxed text-ink/80">{job.description || "—"}</p>
+            <p className="text-[13px] leading-relaxed text-ink/80">
+              {job.description || "—"}
+            </p>
           )}
         </JobCard>
 
@@ -467,18 +557,27 @@ export function JobDetailsPage() {
             <>
               <Textarea
                 value={form.responsibilities}
-                onChange={(event) => setField("responsibilities", event.target.value)}
+                onChange={(event) =>
+                  setField("responsibilities", event.target.value)
+                }
                 rows={4}
                 className="resize-none rounded-xl border-border text-[13px]"
               />
-              <p className="mt-1.5 text-[11px] text-muted">One item per line.</p>
+              <p className="mt-1.5 text-[11px] text-muted">
+                {t("ui.editJob.onePerLine")}
+              </p>
             </>
           ) : job.responsibilities.length === 0 ? (
-            <p className="text-[13px] text-muted">No responsibilities listed.</p>
+            <p className="text-[13px] text-muted">
+              {t("pages.admin.jobDetails.noResponsibilities")}
+            </p>
           ) : (
             <ul className="space-y-1.5">
               {job.responsibilities.map((item, index) => (
-                <li key={index} className="flex items-start gap-2 text-[13px] text-ink/80">
+                <li
+                  key={index}
+                  className="flex items-start gap-2 text-[13px] text-ink/80"
+                >
                   <ChevronRight className="mt-0.5 h-[15px] w-[15px] shrink-0 text-primary" />
                   {item}
                 </li>
@@ -494,10 +593,14 @@ export function JobDetailsPage() {
             <>
               <Input
                 value={form.requiredSkills}
-                onChange={(event) => setField("requiredSkills", event.target.value)}
+                onChange={(event) =>
+                  setField("requiredSkills", event.target.value)
+                }
                 className="h-11 rounded-xl border-border text-[13px]"
               />
-              <p className="mt-1.5 text-[11px] text-muted">Comma-separated.</p>
+              <p className="mt-1.5 text-[11px] text-muted">
+                {t("ui.editJob.commaSeparated")}
+              </p>
             </>
           ) : (
             <SkillChips skills={job.requiredSkills} tone="primary" />
@@ -511,10 +614,14 @@ export function JobDetailsPage() {
             <>
               <Input
                 value={form.preferredSkills}
-                onChange={(event) => setField("preferredSkills", event.target.value)}
+                onChange={(event) =>
+                  setField("preferredSkills", event.target.value)
+                }
                 className="h-11 rounded-xl border-border text-[13px]"
               />
-              <p className="mt-1.5 text-[11px] text-muted">Comma-separated.</p>
+              <p className="mt-1.5 text-[11px] text-muted">
+                {t("ui.editJob.commaSeparated")}
+              </p>
             </>
           ) : (
             <SkillChips skills={job.preferredSkills} tone="neutral" />
@@ -525,29 +632,34 @@ export function JobDetailsPage() {
         <JobCard>
           <div className="mb-4 flex items-center gap-2">
             <CardTitle>{t("pages.admin.jobDetails.sourceAndMethod")}</CardTitle>
-            <Lock className="h-[15px] w-[15px] text-muted" title="Preserved — not editable" />
+            <Lock
+              className="h-[15px] w-[15px] text-muted"
+              title={t("pages.admin.jobDetails.preservedTitle")}
+            />
           </div>
           <div className="grid gap-3 text-[13px] sm:grid-cols-2">
-            <Row label="Source">
+            <Row label={t("pages.admin.jobDetails.rows.source")}>
               <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
-                {job.sourceLabel}
+                {translateAdminValue(job.sourceLabel)}
               </span>
             </Row>
-            <Row label="Application method">
-              <span className="font-medium text-ink">{job.applicationMethod}</span>
+            <Row label={t("pages.admin.jobDetails.rows.applicationMethod")}>
+              <span className="font-medium text-ink">
+                {translateAdminValue(job.applicationMethod)}
+              </span>
             </Row>
-            <Row label="Posted by">
+            <Row label={t("pages.admin.jobDetails.rows.postedBy")}>
               <span className="font-medium text-ink">{job.postedBy}</span>
             </Row>
             {job.sourceUrl && (
-              <Row label="Original listing">
+              <Row label={t("pages.admin.jobDetails.rows.originalListing")}>
                 <a
                   href={job.sourceUrl}
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-1 font-medium text-primary"
                 >
-                  Open Source
+                  {t("pages.admin.jobDetails.openSource")}
                   <ExternalLink className="h-[13px] w-[13px]" />
                 </a>
               </Row>
@@ -563,13 +675,19 @@ export function JobDetailsPage() {
               <span
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold",
-                  STATUS_STYLES[statusLabel] ?? STATUS_STYLES.Draft,
+                  STATUS_STYLES[job.status] ?? STATUS_STYLES.draft,
                 )}
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-current" />
                 {statusLabel}
               </span>
-              <p className="mt-2 text-xs text-muted">{STATUS_HINTS[job.status] ?? ""}</p>
+              <p className="mt-2 text-xs text-muted">
+                {STATUS_HINT_KEYS[job.status]
+                  ? t(
+                      `${statusKey}.statusHints.${STATUS_HINT_KEYS[job.status]}`,
+                    )
+                  : ""}
+              </p>
             </div>
           </div>
         </JobCard>
@@ -578,15 +696,20 @@ export function JobDetailsPage() {
   );
 }
 
-const STATUS_HINTS = {
-  active: "Visible to candidates in search and recommendations.",
-  draft: "Not visible to candidates yet.",
-  closed: "No longer accepting applications.",
+/** Suffix under pages.admin.jobDetails.statusHints; blank when unmapped. */
+const STATUS_HINT_KEYS = {
+  active: "active",
+  draft: "draft",
+  closed: "closed",
+  expired: "expired",
+  suspended: "suspended",
 };
 
 function CardTitle({ children }) {
   return (
-    <h2 className="mb-3 font-display text-[15px] font-bold text-ink">{children}</h2>
+    <h2 className="mb-3 font-display text-[15px] font-bold text-ink">
+      {children}
+    </h2>
   );
 }
 
@@ -600,7 +723,14 @@ function Row({ label, children }) {
 }
 
 function SkillChips({ skills, tone }) {
-  if (skills.length === 0) return <p className="text-[13px] text-muted">None listed.</p>;
+  const { t } = useTranslation("dashboard");
+
+  if (skills.length === 0)
+    return (
+      <p className="text-[13px] text-muted">
+        {t("pages.admin.jobDetails.noneListed")}
+      </p>
+    );
 
   return (
     <div className="flex flex-wrap gap-2">
@@ -609,7 +739,9 @@ function SkillChips({ skills, tone }) {
           key={skill}
           className={cn(
             "rounded-full px-2.5 py-1 text-xs font-medium",
-            tone === "primary" ? "bg-primary/10 text-primary" : "border border-border text-ink/80",
+            tone === "primary"
+              ? "bg-primary/10 text-primary"
+              : "border border-border text-ink/80",
           )}
         >
           {skill}
@@ -619,7 +751,12 @@ function SkillChips({ skills, tone }) {
   );
 }
 
+/**
+ * `options` is `{ value, labelKey }`. The value is what lands in the form and
+ * what gets submitted; the key is only what a person reads.
+ */
 function Picker({ value, onValueChange, options }) {
+  const { t } = useTranslation("common");
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className="h-8 w-auto rounded-lg border-border px-2 text-xs">
@@ -627,8 +764,8 @@ function Picker({ value, onValueChange, options }) {
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
-          <SelectItem key={option} value={option}>
-            {option}
+          <SelectItem key={option.value} value={option.value}>
+            {t(option.labelKey)}
           </SelectItem>
         ))}
       </SelectContent>
@@ -637,21 +774,24 @@ function Picker({ value, onValueChange, options }) {
 }
 
 function StatusMenu({ options, current, isSaving, onSelect }) {
+  const { t } = useTranslation("dashboard");
   return (
     <div className="absolute start-0 top-11 z-10 w-40 rounded-xl border border-border bg-surface p-1.5 shadow-md">
       {options.map((option) => (
         <button
-          key={option}
+          key={option.value}
           type="button"
           disabled={isSaving}
-          onClick={() => onSelect(option)}
+          onClick={() => onSelect(option.value)}
           className={cn(
             "flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-start text-[12.5px] font-medium text-ink hover:bg-background disabled:opacity-50",
-            current === option && "font-bold text-primary",
+            current === option.value && "font-bold text-primary",
           )}
         >
-          {option}
-          {isSaving && current !== option && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+          {t(option.labelKey)}
+          {isSaving && current !== option.value && (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          )}
         </button>
       ))}
     </div>
@@ -664,9 +804,21 @@ const BANNER_TONES = {
   error: "border-error/25 bg-error/10 text-error",
 };
 
-function Banner({ tone, icon: Icon, dismissible = false, onDismiss, children }) {
+function Banner({
+  tone,
+  icon: Icon,
+  dismissible = false,
+  onDismiss,
+  children,
+}) {
+  const { t } = useTranslation("dashboard");
   return (
-    <div className={cn("mb-5 flex items-start gap-3 rounded-2xl border px-5 py-4 shadow-sm", BANNER_TONES[tone])}>
+    <div
+      className={cn(
+        "mb-5 flex items-start gap-3 rounded-2xl border px-5 py-4 shadow-sm",
+        BANNER_TONES[tone],
+      )}
+    >
       <Icon className="mt-0.5 h-5 w-5 shrink-0" />
       {children}
       {dismissible && (
@@ -675,7 +827,7 @@ function Banner({ tone, icon: Icon, dismissible = false, onDismiss, children }) 
           onClick={onDismiss}
           className="text-xs font-semibold opacity-70 hover:opacity-100"
         >
-          Dismiss
+          {t("pages.admin.jobDetails.dismiss")}
         </button>
       )}
     </div>

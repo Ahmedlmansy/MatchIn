@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import { EmptySavedJobs } from "../components/SavedJobs/SavedJobsStates";
@@ -11,6 +12,8 @@ import { useApplyJobMutation, useBatchApplyJobsMutation } from "@/features/candi
 import { useSaveJobMutation } from "@/features/candidate/hooks/useJobMutations";
 
 export default function SavedJobsDashboard() {
+  const { t: tCommon } = useTranslation("common");
+  const { t } = useTranslation("dashboard");
   const [selectedIds, setSelectedIds] = useState([]);
   const [expandedJobId, setExpandedJobId] = useState(null);
   const [editingNoteId, setEditingNoteId] = useState(null);
@@ -106,20 +109,20 @@ export default function SavedJobsDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-7">
           <div className="lg:col-span-8 space-y-4">
             {isLoading ? (
-              <div className="space-y-4" aria-label="Loading saved jobs">
+              <div className="space-y-4" aria-label={t("pages.savedJobs.loading")}>
                 {[1, 2, 3].map((skeleton) => (
                   <JobCardSkeleton key={skeleton} />
                 ))}
               </div>
             ) : isError ? (
               <div className="text-center py-12 rounded-2xl border border-border bg-surface">
-                <p className="text-muted mb-4">Failed to load saved jobs</p>
+                <p className="text-muted mb-4">{t("pages.savedJobs.loadFailed")}</p>
                 <p className="text-xs text-muted mb-4">{error?.message ?? "Unknown error"}</p>
                 <button
                   onClick={() => refetch()}
                   className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90"
                 >
-                  Retry
+                  {tCommon("actions.retry")}
                 </button>
               </div>
             ) : jobs.length ? (

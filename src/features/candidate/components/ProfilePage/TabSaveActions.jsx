@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React from "react";
 import { X, Loader2 } from "lucide-react";
 
@@ -14,6 +15,7 @@ export default function TabSaveActions({
   loadingLabel = "Saving...",
   variant = "primary",
 }) {
+  const { t } = useTranslation("dashboard");
   if (!isOpen) return null;
 
   const buttonVariantStyles = {
@@ -45,7 +47,7 @@ export default function TabSaveActions({
         {description && (
           <div className="text-center space-y-3 my-4">
             <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
-              Confirm Delete
+              {t("pages.profile.confirmDelete")}
             </h2>
             <p className="text-sm font-medium text-gray-500 max-w-xs mx-auto leading-relaxed">
               {description}

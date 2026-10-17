@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Languages, CheckCircle2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +10,7 @@ export default function CvLanguagesCard({
   languages = [],
   onConfirmLanguage,
 }) {
+  const { t } = useTranslation("dashboard");
   if (!languages || languages.length === 0) return null;
 
   return (
@@ -27,14 +29,14 @@ export default function CvLanguagesCard({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-bold text-primary">
-                Languages & Proficiency
+                {t("pages.cvManagement.languagesProficiency")}
               </h3>
               <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-0 text-[11px] font-semibold">
                 {languages.length} Language{languages.length > 1 ? "s" : ""}
               </Badge>
             </div>
             <p className="text-xs text-muted">
-              Spoken and written language competencies detected in CV
+              {t("pages.cvManagement.languages")}
             </p>
           </div>
         </div>
@@ -76,7 +78,7 @@ export default function CvLanguagesCard({
                   }
                   className="h-7 rounded-lg border-border text-[11px] font-bold text-primary hover:bg-primary hover:text-white"
                 >
-                  Confirm
+        {t("pages.cvManagement.confirmItem")}
                 </Button>
               )}
             </div>

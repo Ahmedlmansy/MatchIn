@@ -3,6 +3,7 @@
 // The admin overview read. Wrapped in the shared useAdminQuery so the error
 // contract matches every other admin screen.
 
+import { useTranslation } from "react-i18next";
 import { useAdminQuery } from "./useAdminQuery";
 import { adminKeys } from "@/features/admin/constants/admin.query-keys";
 import {
@@ -23,11 +24,16 @@ import {
  *
  * @returns { data: { stats, recentActivity, auditLogs }, isPending, isError, error, refetch }
  */
-export const useAdminDashboardQuery = (options = {}) =>
-  useAdminQuery({
-    queryKey: adminKeys.dashboard(),
-    queryFn: async () => normalizeAdminDashboard(await fetchAdminDashboardRequest()),
+export const useAdminDashboardQuery = (options = {}) => {
+  const { i18n } = useTranslation();
+  const locale = i18n.resolvedLanguage?.startsWith("ar") ? "ar" : "en";
+
+  return useAdminQuery({
+    queryKey: adminKeys.dashboard(locale),
+    queryFn: async () =>
+      normalizeAdminDashboard(await fetchAdminDashboardRequest()),
     name: "dashboard.summary",
     staleTime: 60_000,
     ...options,
   });
+};

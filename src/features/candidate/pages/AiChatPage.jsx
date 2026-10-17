@@ -64,7 +64,7 @@ let nextId = 100;
  * }} props
  */
 export default function AiChat({ showMissingContext = false, className }) {
-  const { t, i18n } = useTranslation("common");
+  const { t, i18n } = useTranslation(["dashboard", "common"]);
   const { conversationId } = useParams();
   const [messages, setMessages] = useState(() => createDemoMessages(t));
   const [inputValue, setInputValue] = useState("");
@@ -145,7 +145,7 @@ export default function AiChat({ showMissingContext = false, className }) {
       setActiveConversationId(conversations[0].id);
     } else if (!activeConversationId && !conversationsLoading && conversations?.length === 0) {
       // Create a new conversation
-      createConversationMutation.mutate({ title: "New Conversation" });
+      createConversationMutation.mutate({ title: t("pages.aiChat.newConversation") });
     }
   }, [conversations, conversationsLoading, activeConversationId, createConversationMutation]);
 
@@ -222,7 +222,7 @@ export default function AiChat({ showMissingContext = false, className }) {
   );
 
   const handleNewConversation = useCallback(() => {
-    createConversationMutation.mutate({ title: "New Conversation" });
+    createConversationMutation.mutate({ title: t("pages.aiChat.newConversation") });
     setMessages([]);
     setIsDemoMode(false);
   }, [createConversationMutation]);

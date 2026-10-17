@@ -12,7 +12,8 @@
     "companymanagement": "Company Management",
     "usermanagement": "User Management",
     "auditLogs": "Audit Logs",
-    "cms": "Home Page CMS"
+    "cms": "Home Page CMS",
+    "authCms": "Auth CMS"
   },
   "actions": {
     "collapseSidebar": "Collapse Sidebar",
@@ -97,9 +98,69 @@
   },
   "pages": {
     "admin": {
+      "title": "Audit Logs",
       "overview": {
         "title": "Admin Dashboard",
-        "subtitle": "Platform overview & operational snapshot"
+        "subtitle": "Platform overview & operational snapshot",
+        "loadFailed": {
+          "title": "Couldn't load the dashboard",
+          "description": "Something went wrong on our end. Please try again."
+        },
+        "empty": {
+          "title": "Nothing to show yet",
+          "description": "Once companies, jobs and applications start coming in, they'll appear here."
+        },
+        "stats": {
+          "companies": "Companies",
+          "pendingCompanies": "Pending Companies",
+          "jobs": "Jobs",
+          "applications": "Applications",
+          "users": "Users"
+        },
+        "statSubs": {
+          "companies": "{{active}} active · {{inactive}} inactive",
+          "submittedToday": "{{count}} submitted today",
+          "jobs": "{{open}} open · {{closed}} closed",
+          "applications": "{{count}} this week",
+          "users": "Candidates + Recruiters"
+        },
+        "badges": {
+          "approved": "Approved",
+          "pending": "Pending",
+          "suspended": "Suspended",
+          "user": "User",
+          "job": "Job",
+          "auth": "Auth",
+          "delete": "Delete",
+          "permission": "Permission",
+          "status": "Status",
+          "config": "Config"
+        },
+        "by": "by {{name}}",
+        "sections": {
+          "quickActions": "Quick Actions",
+          "recentActivity": "Recent Activity",
+          "auditLogs": "Audit Logs",
+          "open": "Open"
+        },
+        "quickActions": {
+          "manage-companies": {
+            "title": "Manage Companies",
+            "description": "View, edit & suspend company accounts"
+          },
+          "review-pending": {
+            "title": "Review Pending",
+            "description": "Approve or reject new company requests"
+          },
+          "manage-jobs": {
+            "title": "Manage Jobs",
+            "description": "Moderate listings & featured positions"
+          },
+          "audit-logs": {
+            "title": "View Audit Logs",
+            "description": "Track admin actions & system events"
+          }
+        }
       },
       "jobManagement": {
         "title": "Job Management",
@@ -110,7 +171,71 @@
         "subtitle": "View, verify, and manage companies registered on the platform"
       },
       "userManagement": "User Management",
-      "auditLogs": "Audit Logs",
+      "auditLogs": {
+        "title": "Audit Logs",
+        "loadFailed": {
+          "title": "Couldn't load audit logs",
+          "description": "Something went wrong while fetching the audit log list."
+        },
+        "notFound": "Audit log not found",
+        "subtitle": "Complete record of administrative actions across the platform",
+        "readOnly": "Read-only",
+        "readOnlyBody": "This is an immutable record. Audit logs cannot be edited or deleted. They exist for full administrative traceability.",
+        "records_zero": "No records",
+        "records_one": "{{count}} record",
+        "records_two": "{{count}} records",
+        "records_few": "{{count}} records",
+        "records_many": "{{count}} records",
+        "records_other": "{{count}} records",
+        "pagesLabel": "Audit log results pages",
+        "export": "Export",
+        "refresh": "Refresh",
+        "filters": {
+          "allActions": "All Actions",
+          "allEntities": "All Entities",
+          "allActors": "All Actors",
+          "clearAll": "Clear all"
+        },
+        "toolbar": {
+          "searchPlaceholder": "Search by actor, action, entity ID, or IP…",
+          "actionAria": "Filter by action",
+          "entityAria": "Filter by entity",
+          "actorAria": "Filter by actor",
+          "sortAria": "Sort audit logs",
+          "chips": {
+            "search": "Search: {{label}}",
+            "action": "Action: {{label}}",
+            "entity": "Entity: {{label}}",
+            "actor": "Actor: {{label}}"
+          }
+        },
+        "table": {
+          "timestamp": "Timestamp",
+          "actor": "Actor",
+          "action": "Action",
+          "entity": "Entity",
+          "previous": "Previous",
+          "new": "New",
+          "ip": "IP / Meta",
+          "id": "ID",
+          "entityId": "Entity ID",
+          "role": "Role",
+          "empty": "No audit logs match your current filters.",
+          "preview": "Preview log",
+          "showing_zero": "No logs",
+          "showing_one": "Showing {{from}}–{{to}} of {{total}} log",
+          "showing_two": "Showing {{from}}–{{to}} of {{total}} logs",
+          "showing_few": "Showing {{from}}–{{to}} of {{total}} logs",
+          "showing_many": "Showing {{from}}–{{to}} of {{total}} logs",
+          "showing_other": "Showing {{from}}–{{to}} of {{total}} logs",
+          "pageOf": "Page {{page}} of {{total}}"
+        },
+        "drawer": {
+          "close": "Close log details",
+          "valueChange": "Value Change",
+          "timeZone": "EEST"
+        }
+      },
       "companies": "Companies",
       "companyManagement": "Company Management",
       "auditLogDetails": "Audit Log Details",
@@ -127,13 +252,90 @@
         "savedJobs": "Saved Jobs Summary",
         "roleStatus": "Role & Status",
         "dates": "Dates",
-        "quickLinks": "Quick Links"
+        "quickLinks": "Quick Links",
+        "dateLabels": {
+          "created": "Created",
+          "lastActivity": "Last Activity",
+          "lastLogin": "Last Login"
+        },
+        "fields": {
+          "email": "Email",
+          "phone": "Phone",
+          "location": "Location",
+          "accountStatus": "Account Status",
+          "authProvider": "Auth Provider",
+          "emailVerified": "Email Verified",
+          "language": "Language",
+          "jobTitle": "Job Title",
+          "experience": "Experience",
+          "bio": "Bio",
+          "skills": "Skills",
+          "status": "Status",
+          "lastParsed": "Last parsed",
+          "file": "File",
+          "uploaded": "Uploaded",
+          "fullName": "Full Name",
+          "userId": "User ID",
+          "role": "Role"
+        },
+        "actions": {
+          "deleteUser": "Delete User",
+          "deleteConfirm": "Delete {{name}}? This can't be undone.",
+          "saveChanges": "Save Changes",
+          "saving": "Saving…",
+          "suspend": "Suspend",
+          "activate": "Activate",
+          "backToUsers": "Back to Users",
+          "viewAll": "View all →"
+        },
+        "empty": {
+          "applications": "No applications yet.",
+          "skills": "No skills added yet."
+        },
+        "stats": {
+          "applications": "Applications",
+          "savedJobs": "Saved Jobs",
+          "cvStatus": "CV Status",
+          "profile": "Profile"
+        },
+        "lastSaved": "Last saved",
+        "loadingUser": "Loading user…",
+        "hints": {
+          "identity": "Identity & contact"
+        },
+        "experienceOptions": {
+          "lessThanYear": "Less than 1 year",
+          "oneToTwo": "1–2 years",
+          "threeToFive": "3–5 years",
+          "sixToTen": "6–10 years",
+          "tenPlus": "10+ years"
+        }
       },
       "auditDetails": {
         "actor": "Admin / Actor",
         "entity": "Entity",
         "changes": "What Changed",
-        "relatedEntities": "Related Entities"
+        "relatedEntities": "Related Entities",
+        "loadFailed": "Couldn't load this audit log",
+        "by": "by {{name}}",
+        "readOnly": "Read-only",
+        "returnToLogs": "Return to Audit Logs",
+        "hints": {
+          "actor": "Who performed this action",
+          "entity": "What was affected",
+          "changes": "Previous value → New value",
+          "related": "Jump to linked records"
+        },
+        "fields": {
+          "entityType": "Entity Type",
+          "entityId": "Entity ID",
+          "entityTitle": "Entity Title"
+        },
+        "viewRelated": {
+          "job": "View Related Job",
+          "company": "View Related Company"
+        },
+        "dismiss": "Dismiss"
       },
       "jobManagementStates": {
         "empty": "No jobs on the platform yet",
@@ -155,6 +357,7 @@
         "contactInformation": "Contact Information",
         "coreProfileDetails": "Core profile details",
         "jobs": "Jobs",
+        "jobsEmpty": "No jobs posted yet.",
         "activity": "Activity",
         "dates": "Dates",
         "quickLinks": "Quick Links",
@@ -212,7 +415,12 @@
           "jobs": "View Company Jobs",
           "activity": "View Activity",
           "auditLogs": "Audit Logs"
-        }
+        },
+        "loadFailed": {
+          "title": "Couldn't load this company",
+          "description": "The company may have been deleted or merged."
+        },
+        "noContacts": "No contact details yet."
       },
       "jobDetails": {
         "loadFailed": "Couldn't load this job",
@@ -221,8 +429,525 @@
         "requiredSkills": "Required skills",
         "preferredSkills": "Preferred skills",
         "sourceAndMethod": "Source & application method",
-        "status": "Job status"
-      }
+        "status": "Job status",
+        "notFoundDescription": "This job may have been deleted, or the link you followed is no longer valid.",
+        "returnToJobs": "Return to Jobs",
+        "staleTitle": "This listing is stale — last published {{days}} ago",
+        "staleDescription": "Consider updating its status or reaching out to the source before candidates keep seeing it.",
+        "savedSuccessfully": "Changes saved successfully.",
+        "fixFields": "Please fix the highlighted fields before saving.",
+        "titleRequired": "Job title is required.",
+        "published": "Published {{date}}",
+        "preservedNote": "Preserved from source — not editable",
+        "preservedTitle": "Preserved — not editable",
+        "saveChanges": "Save Changes",
+        "saving": "Saving changes…",
+        "cancel": "Cancel",
+        "editJob": "Edit Job",
+        "viewCompany": "View Company",
+        "updateStatus": "Update Status",
+        "openSource": "Open Source",
+        "noResponsibilities": "No responsibilities listed.",
+        "noneListed": "None listed.",
+        "dismiss": "Dismiss",
+        "rows": {
+          "source": "Source",
+          "applicationMethod": "Application method",
+          "postedBy": "Posted by",
+          "originalListing": "Original listing"
+        },
+        "statusHints": {
+          "active": "Visible to candidates in search and recommendations.",
+          "draft": "Not visible to candidates yet.",
+          "closed": "No longer accepting applications.",
+          "expired": "No longer accepting applications.",
+          "suspended": "Temporarily hidden from candidates."
+        }
+      },
+      "companyList": {
+        "addCompany": "Add Company",
+        "export": "Export",
+        "refresh": "Refresh",
+        "searchPlaceholder": "Search by company name, email, or ID…",
+        "sortBy": "Sort by",
+        "columns": {
+          "company": "Company",
+          "verification": "Verification",
+          "contact": "Contact",
+          "created": "Created",
+          "lastUpdated": "Last Updated",
+          "actions": "Actions"
+        },
+        "noMatches": "No companies match these filters.",
+        "resultsCount_zero": "No companies",
+        "resultsCount_one": "{{start}}–{{end}} of {{total}} company",
+        "resultsCount_two": "{{start}}–{{end}} of {{total}} companies",
+        "resultsCount_few": "{{start}}–{{end}} of {{total}} companies",
+        "resultsCount_many": "{{start}}–{{end}} of {{total}} companies",
+        "resultsCount_other": "{{start}}–{{end}} of {{total}} companies",
+        "pagesLabel": "Company results pages",
+        "actions": {
+          "verify": "Verify",
+          "reject": "Reject",
+          "manage": "Manage",
+          "view": "View company",
+          "viewAria": "View {{name}}"
+        },
+        "stats": {
+          "total": "Total Companies",
+          "verified": "Verified",
+          "pending": "Pending Review",
+          "notVerified": "Not Verified"
+        },
+        "legend": {
+          "verified": "Approved & active",
+          "pending": "Awaiting admin review",
+          "notVerified": "Incomplete or rejected"
+        },
+        "loadFailed": {
+          "title": "Couldn't load companies",
+          "description": "Something went wrong while fetching the company list."
+        },
+        "form": {
+          "title": "Add Company",
+          "subtitle": "Create a new company record.",
+          "submit": "Add Company",
+          "fields": {
+            "name": "Company Name",
+            "industry": "Industry",
+            "website": "Website",
+            "location": "Location",
+            "description": "Description"
+          },
+          "placeholders": {
+            "name": "Acronym Corp",
+            "industry": "Cloud Software",
+            "website": "https://acronym.example.com",
+            "location": "Dubai, UAE",
+            "description": "What the company does."
+          }
+        },
+        "resultsCount": "Showing {{start}}–{{end}} of {{count}} companies"
+      },
+      "userList": {
+        "subtitle": "Search, view, and manage all platform users",
+        "addUser": "Add User",
+        "export": "Export",
+        "searchPlaceholder": "Search by name, email, or user ID…",
+        "noResultsHint": "Try adjusting your search or filters.",
+        "emptyHint": "Once people sign up, they'll show up here.",
+        "clearFilters": "Clear filters",
+        "sortBy": "Sort by",
+        "pagesLabel": "User results pages",
+        "loadFailed": "Something went wrong while fetching the users list.",
+        "resultsCount_zero": "No users",
+        "resultsCount_one": "{{start}}–{{end}} of {{total}} user",
+        "resultsCount_two": "{{start}}–{{end}} of {{total}} users",
+        "resultsCount_few": "{{start}}–{{end}} of {{total}} users",
+        "resultsCount_many": "{{start}}–{{end}} of {{total}} users",
+        "resultsCount_other": "{{start}}–{{end}} of {{total}} users",
+        "stats": {
+          "total": "Total Users",
+          "active": "Active",
+          "inactiveOrSuspended": "Inactive / Suspended",
+          "admins": "Admins"
+        },
+        "columns": {
+          "user": "User",
+          "email": "Email",
+          "role": "Role",
+          "status": "Status",
+          "created": "Created",
+          "lastActivity": "Last Activity",
+          "actions": "Actions"
+        },
+        "rowActions": {
+          "view": "View user",
+          "edit": "Edit user",
+          "changeRole": "Change role",
+          "activate": "Activate user",
+          "deactivate": "Deactivate",
+          "delete": "Delete user"
+        },
+        "form": {
+          "fullName": "Full Name",
+          "email": "Email",
+          "role": "Role",
+          "changeRoleSubtitle": "Choose a new role for {{name}}.",
+          "changeRoleSubmit": "Confirm",
+          "add": "Create a new account on the platform.",
+          "edit": "Update {{name}}'s details.",
+          "editSubmit": "Save Changes",
+          "activateSub": "{{name}} will regain full access to their account.",
+          "deactivateSub": "{{name}} will lose access until reactivated.",
+          "deleteTitle": "Delete user",
+          "deleteSub": "This permanently removes {{name}}'s account. This can't be undone.",
+          "deleting": "Deleting…",
+          "activating": "Activating…",
+          "deactivating": "Deactivating…",
+          "saving": "Saving…"
+        }
+      },
+      "jobList": {
+        "loadFailed": {
+          "title": "Couldn't load jobs",
+          "description": "Something went wrong while fetching the job list."
+        },
+        "emptyDescription": "Jobs will appear here once companies post internally or external sources start syncing listings.",
+        "noMatches": "No jobs match your search or filters.",
+        "clearFilters": "Clear filters",
+        "pagesLabel": "Job results pages",
+        "resultsCount_zero": "No jobs",
+        "resultsCount_one": "{{start}}–{{end}} of {{total}} job",
+        "resultsCount_two": "{{start}}–{{end}} of {{total}} jobs",
+        "resultsCount_few": "{{start}}–{{end}} of {{total}} jobs",
+        "resultsCount_many": "{{start}}–{{end}} of {{total}} jobs",
+        "resultsCount_other": "{{start}}–{{end}} of {{total}} jobs",
+        "toolbar": {
+          "searchPlaceholder": "Search by job title or company...",
+          "clearFilters": "Clear Filters"
+        },
+        "columns": {
+          "jobCompany": "Job / Company",
+          "locationMode": "Location & Mode",
+          "status": "Status",
+          "sourceFreshness": "Source & Freshness",
+          "dates": "Dates",
+          "actions": "Actions"
+        },
+        "row": {
+          "published": "Pub",
+          "created": "Created",
+          "view": "View job",
+          "edit": "Edit job"
+        },
+        "menu": {
+          "actionsFor": "Actions for {{title}}",
+          "openCompany": "Open Company",
+          "setStatus": "Set status"
+        },
+        "resultsCount": "Showing {{start}}–{{end}} of {{count}} jobs"
+      },
+      "cmsEditor": {
+        "searchPlaceholder": "Search sections and content…",
+        "saveBrowserOnly": "Saved in this browser only — not published to the live site.",
+        "saveFailed": "Save failed: {{message}}",
+        "draftSaved": "Draft saved in this browser. Preview it with cms_preview=draft.",
+        "draftRestored": "Restored your unsaved draft.",
+        "resetConfirm": "Reset everything to the default content?",
+        "defaultsRestored": "Defaults restored — press Save to keep them.",
+        "languagesTitle": "Which languages to show",
+        "langOnly": "{{name}} only",
+        "expandAll": "Expand all",
+        "collapseAll": "Collapse all",
+        "groups": {
+          "top": "Header & top of the page",
+          "main": "Main content",
+          "bottom": "Bottom of the page",
+          "settings": "Page settings"
+        },
+        "sections": {
+          "sections": {
+            "label": "Sections & Global",
+            "description": "Browser tab title, shared images, and section visibility/order."
+          },
+          "navbar": {
+            "label": "Navbar",
+            "description": "Logo, brand name, menu links and top-right buttons."
+          },
+          "hero": {
+            "label": "Hero",
+            "description": "Top banner: badge, headline, search box and popular chips."
+          },
+          "stats": {
+            "label": "Stats",
+            "description": "Animated counters under the hero search box."
+          },
+          "jobs": {
+            "label": "Latest jobs",
+            "description": "Filter pills and job cards."
+          },
+          "philosophy": {
+            "label": "Philosophy",
+            "description": "Two-column story block with tiles and candidate card."
+          },
+          "features": {
+            "label": "Features grid",
+            "description": "Category cards for career paths."
+          },
+          "mentor": {
+            "label": "AI Mentor card",
+            "description": "Dark AI Career Mentor banner."
+          },
+          "why": {
+            "label": "Why SkillMatch",
+            "description": "Benefits and video card."
+          },
+          "howItWorks": {
+            "label": "How it works",
+            "description": "Optional step-by-step section (hidden by default)."
+          },
+          "testimonials": {
+            "label": "Testimonials",
+            "description": "Optional customer quotes (hidden by default)."
+          },
+          "blocks": {
+            "label": "Custom blocks",
+            "description": "Add free-form sections: text, image and a button."
+          },
+          "cta": {
+            "label": "CTA banner",
+            "description": "Final call-to-action above the footer."
+          },
+          "footer": {
+            "label": "Footer",
+            "description": "Description, newsletter, link columns and legal links."
+          }
+        },
+        "list": {
+          "add": "Add",
+          "search": "Search…",
+          "empty": "Nothing here yet — press “+ Add”.",
+          "untitled": "(untitled)",
+          "hidden": "Hidden",
+          "live": "Live",
+          "moveUp": "Move up",
+          "moveDown": "Move down",
+          "toggleVisible": "Show / hide",
+          "delete": "Delete",
+          "confirmDelete": "Delete this item?"
+        },
+        "layout": {
+          "title": "Page layout",
+          "section": "Section",
+          "show": "Show",
+          "order": "Order"
+        },
+        "fields": {
+          "browserTabTitle": "Browser tab title",
+          "philosophyImage": "Philosophy section image URL",
+          "whyImage": "Why-SkillMatch image URL",
+          "brandName": "Brand name",
+          "logoUrl": "Logo image URL",
+          "signInLabel": "Sign-in label",
+          "signInUrl": "Sign-in URL",
+          "buttonLabel": "Button label",
+          "buttonUrl": "Button URL",
+          "navLinks": "Nav links",
+          "popularChips": "Popular chips",
+          "counters": "Counters",
+          "badge": "Badge",
+          "headline": "Headline",
+          "highlightedWord": "Highlighted word",
+          "subtitle": "Subtitle",
+          "backgroundImage": "Background image URL",
+          "searchPlaceholder": "Search placeholder",
+          "defaultLocation": "Default location",
+          "searchButtonLabel": "Search button label",
+          "popularLabel": "\"Popular\" label",
+          "scrollCue": "Scroll cue text",
+          "number": "Number",
+          "suffix": "Suffix (K+, %, ×)",
+          "decimals": "Decimals (0/1)",
+          "label": "Label",
+          "linkUrl": "Link URL",
+          "href": "Link URL",
+          "applyLabel": "Apply button label",
+          "benefits": "Benefits",
+          "body": "Body text",
+          "button": "Button",
+          "candidate": "Candidate card",
+          "checks": "Checklist items",
+          "chips": "Chips",
+          "columns": "Link columns",
+          "company": "Company",
+          "copyright": "Copyright text",
+          "description": "Description",
+          "features": "Features",
+          "filters": "Filters",
+          "fit": "Fit score",
+          "icon": "Icon",
+          "items": "Items",
+          "legal": "Legal links",
+          "link": "Link",
+          "livePill": "Live label",
+          "location": "Location",
+          "match": "Match score",
+          "more": "More link",
+          "name": "Name",
+          "newsletterButton": "Newsletter button",
+          "newsletterPlaceholder": "Newsletter placeholder",
+          "newsletterTitle": "Newsletter title",
+          "note": "Note",
+          "points": "Key points",
+          "posted": "Posted label",
+          "primary": "Primary button",
+          "role": "Role",
+          "salary": "Salary",
+          "secondary": "Secondary button",
+          "security": "Security card",
+          "skills": "Skills",
+          "steps": "Steps",
+          "tag": "Tag",
+          "tag1": "Tag 1",
+          "tag2": "Tag 2",
+          "text": "Text",
+          "tiles": "Tiles",
+          "title": "Title",
+          "unit": "Unit",
+          "updatedText": "Updated label",
+          "videoHref": "Video URL",
+          "videoLabel": "Video label",
+          "customField": "Custom field: {{field}}",
+          "noFields": "No editable fields for “{{section}}”."
+        }
+      },
+      "authSettings": {
+        "title": "Login & Register CMS",
+        "subtitle": "Manage authentication page content and side-panel images in English and Arabic.",
+        "searchPlaceholder": "Search sections and content...",
+        "languagesTitle": "Languages to show",
+        "expandAll": "Expand all",
+        "collapseAll": "Collapse all",
+        "resetDefaults": "Reset defaults",
+        "saveDraft": "Save draft",
+        "saveChanges": "Save changes",
+        "unsaved": "● Unsaved changes",
+        "loadFailed": "Could not load saved auth settings. Default values are shown.",
+        "restored": "Restored your previously saved auth settings.",
+        "draftSaved": "Draft saved in this browser.",
+        "draftSavedDetail": "Saved in this browser only — the live login and register screens are unchanged.",
+        "saveFailed": "Save failed: {{message}}",
+        "resetConfirm": "Reset auth settings to their defaults?",
+        "defaultsRestored": "Defaults restored — save to keep them.",
+        "noMatches": "No matching fields found.",
+        "uploadError": {
+          "notImage": "Please select an image file.",
+          "tooLarge": "Image must be 2 MB or smaller.",
+          "unreadable": "Could not read the selected image."
+        },
+        "upload": "Upload image (max 2 MB)",
+        "urlLabel": "{{label}} URL",
+        "previewLabel": "{{label}} preview",
+        "sidePanelImage": "{{page}} side-panel image",
+        "sections": {
+          "shared": {
+            "label": "Shared side panel",
+            "description": "Translated copy shown alongside both authentication forms."
+          },
+          "login": {
+            "label": "Login page",
+            "description": "Login form, social sign-in, and footer copy."
+          },
+          "register": {
+            "label": "Register page",
+            "description": "Account creation, email verification, CV upload, and profile copy."
+          }
+        },
+        "tabs": {
+          "loginLabel": "Login page",
+          "loginSub": "Sign-in content",
+          "registerLabel": "Register page",
+          "registerSub": "Account and onboarding"
+        },
+        "fields": {
+          "shared": {
+            "badge": "Side panel badge",
+            "title": "Side panel title",
+            "description": "Side panel description"
+          },
+          "login": {
+            "welcome": "Welcome heading",
+            "subtitle": "Welcome description",
+            "remember": "Remember-me label",
+            "forgot": "Forgot-password link",
+            "submit": "Sign-in button",
+            "or": "Social sign-in separator",
+            "google": "Google button",
+            "terms": "Terms notice",
+            "termsLink": "Terms link",
+            "privacyLink": "Privacy link",
+            "noAccount": "No-account prompt",
+            "create": "Create-account link"
+          },
+          "register": {
+            "step": "Step indicator",
+            "createTitle": "Create-account heading",
+            "createDescription": "Create-account description",
+            "agree": "Terms agreement text",
+            "terms": "Terms link",
+            "privacy": "Privacy link",
+            "submit": "Create-account button",
+            "submitting": "Submitting button",
+            "haveAccount": "Existing-account prompt",
+            "signIn": "Sign-in link",
+            "verifyTitle": "Email-verification heading",
+            "verifyDescription": "Email-verification description",
+            "yourEmail": "Email fallback",
+            "resendIn": "Resend countdown label",
+            "resend": "Resend-code link",
+            "back": "Back button",
+            "verify": "Verify button",
+            "uploadTitle": "CV-upload heading",
+            "uploadDescription": "CV-upload description",
+            "uploadLabel": "CV-upload label",
+            "uploadHelp": "CV-upload help",
+            "drop": "CV drop prompt",
+            "browse": "Browse link",
+            "fileLimit": "CV file limit",
+            "reading": "CV-reading status",
+            "ready": "CV-ready status",
+            "remove": "Remove-CV button",
+            "browseJobs": "Browse-jobs button",
+            "completeProfile": "Complete-profile button",
+            "profileReading": "Profile-analysis heading",
+            "profileTitle": "Profile heading",
+            "profileReadingDescription": "Profile-analysis description",
+            "profileDescription": "Profile description",
+            "analyzing": "Analysis status ({{file}})",
+            "yourProfile": "Profile-name fallback",
+            "cvAnalyzed": "Analysis-complete status",
+            "extracting": "Extraction status",
+            "extracted": "Extraction-complete status",
+            "skillsSummary": "Skills summary ({{found}}, {{matched}})",
+            "matchedSkills": "Matched-skills heading",
+            "growth": "Growth-skills heading",
+            "profile": "Profile-details heading",
+            "jobTitle": "Target-job-title label",
+            "jobTitlePlaceholder": "Target-job-title placeholder",
+            "location": "Location label",
+            "locationPlaceholder": "Location placeholder",
+            "experience": "Experience label",
+            "select": "Experience selector placeholder",
+            "bio": "Professional-summary label",
+            "optional": "Optional label",
+            "bioPlaceholder": "Professional-summary placeholder",
+            "dashboard": "Finish-profile button"
+          }
+        }
+      },
+      "admin": {
+        "userDetails": {
+          "fields": {
+            "file": "File",
+            "uploaded": "Uploaded",
+            "fullName": "Full Name",
+            "userId": "User ID",
+            "role": "Role"
+          }
+        }
+      },
+      "returnToAuditLogs": "Return to Audit Logs",
+      "fieldLevelChanges": "Field-level changes",
+      "logDetails": "Log Details · #{{id}}",
+      "newCompany": "New Company",
+      "editUser": "Edit User",
+      "backToUsers": "Back to Users",
+      "resetDefaults": "Reset defaults",
+      "saveDraft": "Save draft",
+      "auditLogsImmutable": "Audit logs are immutable read-only records. They cannot be edited or deleted.",
+      "accountStatus": "Account",
+      "lastActivity": "Last activity · {{value}}"
     },
     "applicationTracker": {
       "title": "Application Tracker",
@@ -258,9 +983,9 @@
       "allExtractedData": "All Extracted Data",
       "skills": "Skills",
       "experience": "Experience",
-      "education": "Education",
+      "education": "Academic credentials, degrees, and university programs",
       "profileAndBio": "Profile & Bio",
-      "languages": "Languages",
+      "languages": "Spoken and written language competencies detected in CV",
       "emptyExtractionTitle": "No Extracted Data Available",
       "emptyExtractionSubtitle": "Waiting for extraction schema details from backend.",
       "confirmAndVerify": "Verify & Sync with Profile",
@@ -286,21 +1011,71 @@
       "current": "Current",
       "viewDocument": "View",
       "noHistoryTitle": "No CV Documents Found",
-      "noHistorySubtitle": "Upload your resume above to start building your career profile."
+      "noHistorySubtitle": "Upload your resume above to start building your career profile.",
+      "extractedBio": "Extracted Professional Bio & Summary",
+      "sourceCvSummary": "Source: CV Executive Summary",
+      "verifiedHighConfidence": "Verified with High Confidence",
+      "searchSkillsPlaceholder": "Search extracted skills (e.g. Sales, CRM, Operations)...",
+      "noExperience": "No work experience detected in CV.",
+      "workExperience": "Work Experience",
+      "experienceDescription": "Employment history, roles, responsibilities, and key achievements",
+      "currentRole": "Current Role",
+      "technologies": "Technologies:",
+      "noEducation": "No education records detected in CV.",
+      "aiExtracted": "AI Extracted",
+      "aiExtractedDescription": "Personal contact details and professional summary parsed from the CV header",
+      "profileVerified": "Profile Verified",
+      "confirmProfile": "Confirm Profile",
+      "skillsDescription": "Skills identified with AI confidence scores and document evidence citations",
+      "noSkillsMatching": "No skills matching your criteria.",
+      "confirmSkill": "Confirm Skill",
+      "educationAcademics": "Education & Academics",
+      "languagesProficiency": "Languages & Proficiency",
+      "candidateProfileContact": "Candidate Profile & Contact",
+      "skillsCompetencies": "Extracted Skills & Competencies",
+      "filterAll": "All ({{count}})",
+      "filterHigh": "High Confidence ({{count}})",
+      "filterModerate": "Moderate ({{count}})",
+      "degree": "Degree",
+      "confirmItem": "Confirm"
     },
     "notifications": {
       "title": "Notifications",
       "unread": "{{count}} unread",
-      "caughtUp": "You're all caught up"
+      "caughtUp": "You're all caught up!",
+      "loading": "Loading notifications",
+      "loadFailed": "Failed to load notifications",
+      "empty": "No notifications yet",
+      "markAllRead": "Mark all as read",
+      "marking": "Marking...",
+      "loadingShort": "Loading..."
     },
     "savedJobs": {
       "title": "Saved Opportunities",
       "description": "Manage and review the positions you've saved.",
-      "empty": "No Saved Roles Found"
+      "empty": "No Saved Roles Found",
+      "loading": "Loading saved jobs",
+      "loadFailed": "Failed to load saved jobs",
+      "candidateWorkspace": "Candidate Workspace",
+      "savedRoles": "Saved Roles",
+      "highFit": "High Fit",
+      "overallMatchFit": "Overall Match Fit",
+      "emptyDescription": "Your saved opportunities will appear here when you bookmark a role.",
+      "saveJobAria": "Save job",
+      "bookmarkedOpportunities": "Bookmarked Opportunities",
+      "expiring": "Expiring",
+      "portfolioHealth": "Portfolio Health",
+      "strongAffinity": "Strong Affinity",
+      "gapOptimizer": "AI Match Gap Optimizer",
+      "targetPreferences": "Target Preferences",
+      "editPreferences": "Edit Preferences",
+      "rescoring": "Re-scoring bookmarks...",
+      "crossValidating": "Cross-validating repo evidence against ATS requirements..."
     },
     "applicationStates": {
       "empty": "No applications yet",
-      "loadFailed": "Couldn't load your applications"
+      "loadFailed": "Couldn't load your applications",
+      "emptyDescription": "Once you apply to a role, it'll show up here with its status and every update along the way."
     },
     "jobDetails": {
       "notFound": "Job Post Not Found",
@@ -309,7 +1084,59 @@
       "responsibilities": "Core Responsibilities & Deliverables",
       "requirements": "Technical Requirements Matrix",
       "mandatoryStack": "Mandatory Core Stack",
-      "preferredSkills": "Complementary & Preferred Skills"
+      "preferredSkills": "Complementary & Preferred Skills",
+      "shareJob": "Share job",
+      "sourceUrl": "Source URL:",
+      "scraped": "Scraped:",
+      "verification": "Verification:",
+      "engineeringOrgSize": "Engineering Org Size",
+      "interviewVelocity": "Interview Velocity",
+      "interviewRounds": "Interview Rounds",
+      "hybridCadence": "Hybrid Cadence:",
+      "asyncFirstPhilosophy": "Async-First Philosophy:",
+      "annualTeamSummits": "Annual Team Summits:",
+      "renderBudget": "Render Budget",
+      "stackStandard": "Stack Standard",
+      "productSquads": "Product Squads",
+      "annualTechStipend": "Annual Tech Stipend",
+      "aiMatchAnalysis": "AI Match Analysis",
+      "sourcedDirectly": "Sourced directly from TechNova Career Portal · Verified 2h ago",
+      "noMatchAnalysis": "No Match Analysis Yet",
+      "strongMatch": "Strong Match",
+      "partialMatch": "Partial Match",
+      "applyWithProfile": "Apply with MatchIn Profile",
+      "askAiMentor": "Ask AI Mentor",
+      "syncGithub": "Sync GitHub",
+      "profileIncomplete": "Profile Data Incomplete",
+      "syncGithubProfile": "Sync GitHub Profile",
+      "rerunLimited": "Re-run with Limited Data",
+      "matchPaused": "Match Calculation Paused",
+      "matchTimeout": "The vector embedding endpoint timed out while scoring your profile.",
+      "applyAnyway": "Apply Anyway",
+      "originalJobSource": "Original Job Source",
+      "stayHere": "Stay Here",
+      "prepareFor": "Prepare for {{company}}",
+      "estimatedCompensation": "Estimated Compensation",
+      "hiringProcessInsights": "Hiring Process Insights",
+      "browseSimilarRoles": "Browse Similar Roles",
+      "viewSnapshotAnyway": "View Snapshot Anyway",
+      "freshPublishedAgo": "Fresh · Published {{count}} days ago",
+      "noMatchDescription": "Run the AI engine to compare your verified profile against {{company}}'s core requirements.",
+      "analyzing": "Evaluating profile commits & stack depth...",
+      "matchBasis": "Calculated from {{name}}'s verified profile: production repositories, React 19 mastery, strict TypeScript, and multi-tenant UI architecture experience.",
+      "partialDataMissing": "Core React identified, but micro-frontend and automated testing verification data are missing.",
+      "notFoundDescription": "This job posting may have been removed by the employer, or the link is incorrect. The source listing was last verified {{when}}.",
+      "expiredDescription": "This job post has expired or is no longer accepting applications.",
+      "expiredNote": "Last verified {{when}} · Source listing may have been closed by {{company}}.",
+      "networkErrorDescription": "A network error occurred while fetching this role. Your connection or our job API may be temporarily unavailable.",
+      "errorCode": "Error code: {{code}}",
+      "retrying": "Retrying job connection...",
+      "cultureAndFlexibility": "Culture & Flexibility",
+      "applyNow": "Apply Now",
+      "analyze": "Analyze Match",
+      "guidedPath": "Start Guided Path",
+      "onlyMatched": "Only {{count}} of {{total}} requirements",
+      "openOriginalPost": "Open Original Post"
     },
     "applicationJobDetails": {
       "interview": "Interview details",
@@ -320,11 +1147,32 @@
       "submitting": "Submitting Your Application",
       "submitted": "Application Submitted!",
       "alreadyApplied": "Already Applied",
-      "failed": "Submission Failed"
+      "failed": "Submission Failed",
+      "verifyingDescription": "We are verifying if you have previously applied for this position and available submission routes.",
+      "holdOn": "Please wait",
+      "keepOpenDescription": "Please do not close this window — this will only take a moment.",
+      "viewMyApplications": "View My Applications",
+      "viewApplication": "View Application",
+      "lastUpdated": "Last updated: {{date}}",
+      "serverErrorDescription": "A server connection error occurred. Your entered information was not lost — you can try submitting again.",
+      "retrySubmission": "Retry Submission",
+      "summaryMethod": "Method:",
+      "summarySource": "Source:",
+      "summaryTime": "Time:",
+      "successBody": "Your application for {{job}} at {{company}} has been successfully sent.",
+      "alreadyAppliedBody": "You submitted an application for {{job}} at {{company}} on {{date}}."
     },
     "onboarding": {
       "complete": "You're All Set!",
-      "preferences": "Your Selected Preferences"
+      "preferences": "Your Selected Preferences",
+      "loading": "Loading onboarding",
+      "completedDescription": "Your AI career profile has been successfully configured. We are now calibrating jobs for you.",
+      "editChoices": "Edit Choices",
+      "goToDashboard": "Go to Dashboard",
+      "smartAccountSetup": "Smart Account Setup",
+      "stepOf": "Step {{current}} of {{total}}",
+      "targetTitle": "Target Title",
+      "location": "Location"
     },
     "applicationDetail": {
       "submittedInformation": "Submitted information",
@@ -333,7 +1181,39 @@
       "notes": "Your notes",
       "insight": "AI Application Insight",
       "loadFailed": "Couldn't load this application",
-      "notFound": "Application not found"
+      "notFound": "Application not found",
+      "bannerExpired": "This job posting has expired",
+      "bannerWithdrew": "You withdrew this application",
+      "bannerClosed": "This job posting has been closed",
+      "dateAndTime": "Date & time",
+      "notScheduled": "Not yet scheduled",
+      "videoCall": "Video call",
+      "toBeConfirmed": "To be confirmed",
+      "addNotePlaceholder": "Add a private note about this application…",
+      "openDetails": "Open Application Details",
+      "underReview": "Under Review",
+      "prepareForInterview": "Prepare for this interview",
+      "takeHomeTask": "Take-home coding task",
+      "pendingPreviousSteps": "Pending previous steps",
+      "matchScore": "Match Score",
+      "appliedDate": "Applied Date",
+      "currentStatus": "Current Status",
+      "addNote": "Add note",
+      "backToApplications": "Back to Applications",
+      "errorState": "Something went wrong on our end. Your data is safe — please try again.",
+      "listErrorState": "Something went wrong on our end. Please try again.",
+      "noMatches": "No applications match your search or filter settings.",
+      "clearFilters": "Clear filters",
+      "markAsRead": "Mark as read",
+      "reviewInsight": "Review system design fundamentals — scaling, caching, trade-offs",
+      "practiceInsight": "Practice explaining your Next.js migration project end-to-end",
+      "bannerExpiredSub": "The employer is no longer accepting new activity on this listing. Your application history stays visible below.",
+      "bannerWithdrewSub": "Withdrawn on Sep 10, 2026. You can still view everything that happened before you withdrew.",
+      "bannerClosedSub": "The employer closed this role. No further status updates will come through for this application.",
+      "submittedOn": "Submitted {{date}}",
+      "insightUnderReview": "Your application has been viewed by the hiring team and moved to Under Review. This typically means your profile passed the initial screening — no action is required from you right now.",
+      "insightPrepare": "Interviews for this role often start within a week of reaching Under Review. Use the time to close your {{gap}} gap so you're ready if one is scheduled.",
+      "notFoundDescription": "This application may have been removed, or the link you followed is no longer valid."
     },
     "profile": {
       "workExperience": "Work Experience",
@@ -344,10 +1224,35 @@
       "skills": "Skills & AI Evaluation",
       "editPersonalInformation": "Add / Edit Personal Information",
       "editCareerPreferences": "Edit Career Preferences",
-      "addSkill": "Add Skill"
+      "addSkill": "Add Skill",
+      "addExperience": "Add Experience",
+      "experienceTitle": "Title / Role *",
+      "experienceCompany": "Company / Institution *",
+      "experienceStart": "Start Date",
+      "experienceEnd": "End Date",
+      "addEducation": "Add Education",
+      "addProject": "Add Project",
+      "projectTitle": "Project Title *",
+      "projectDescription": "Brief description of the project...",
+      "projectLink": "Project Link / URL",
+      "confirmDelete": "Confirm Delete",
+      "personalTitleRole": "Title / Role",
+      "personalCompany": "Company / Institution",
+      "targetJobTitle": "Target Job Title",
+      "preferredWorkEnvironment": "Preferred Work Environment",
+      "startYear": "Start Year",
+      "endYear": "End Year",
+      "degreeFieldOfStudy": "Degree / Field of Study *",
+      "schoolInstitution": "School / Institution *",
+      "skillName": "Skill Name *",
+      "personalTitleRoleRequired": "Title / Role *",
+      "targetJobTitleRequired": "Target Job Title *"
     },
     "aiChat": {
-      "emptyTitle": "Ask your Mentor anything"
+      "emptyTitle": "Ask your Mentor anything",
+      "newConversation": "New Conversation",
+      "mentorTitle": "AI Mentor",
+      "emptyDescription": "Grounded in your profile, CV, saved jobs, and roadmap — start with a suggestion below or type your own."
     },
     "roadmap": {
       "profileNeeded": "We need a bit more profile info first",
@@ -360,7 +1265,52 @@
       "completedTasks": "Completed tasks",
       "milestones": "Milestones",
       "phaseSkills": "Skills covered in this phase",
-      "phaseWeeklyTasks": "This phase's weekly actions"
+      "phaseWeeklyTasks": "This phase's weekly actions",
+      "noData": "No roadmap data available",
+      "targetRole": "Target Role",
+      "currentBaseline": "Current Baseline",
+      "overallProgress": "Overall Progress",
+      "rankedDescription": "Ranked by impact on your target role — reasons are generated by the roadmap engine from job requirements and your profile.",
+      "tapHint": "Tap a checkbox to mark complete — tap again to undo.",
+      "jobType": "Job Type",
+      "workStyle": "Work Style",
+      "phasedRoadmap": "Phased roadmap",
+      "completeProfileFirst": "Complete your profile first to enable roadmap generation.",
+      "uploadCvForGaps": "Upload a CV to enable skill gap analysis.",
+      "introDescription": "A roadmap compares your current skills to a target role — complete your profile and upload a CV so we have something to compare against.",
+      "uploadCv": "Upload CV",
+      "completeProfile": "Complete profile",
+      "emptyDescription": "Pick a target role — or a job you've saved — and we'll compare it against your current profile to generate a phased plan with weekly tasks.",
+      "comparingDescription": "Comparing your profile against {{role}} requirements and prioritizing skill gaps — this takes a few seconds.",
+      "errorState": "Something went wrong on our end. Nothing was saved — you can try again.",
+      "useSavedJob": "Use a saved job — {{job}} @ {{company}}",
+      "phaseSkillsDescription": "Every skill here addresses a priority gap from your roadmap — nothing in this phase is unlinked busywork.",
+      "targetSkill": "Target skill: {{skill}} ·",
+      "doneOn": "Done {{date}}",
+      "notStarted": "Not started",
+      "title": "Career Roadmap",
+      "noGaps": "No priority skill gaps identified.",
+      "noPhases": "No phases planned yet.",
+      "noWeeklyTasks": "No weekly tasks yet."
+    },
+    "jobs": {
+      "loading": "Loading jobs",
+      "loadFailed": "Failed to load jobs",
+      "noResults": "No jobs found matching your criteria",
+      "showing": "Showing {{count}} of {{total}} jobs",
+      "pageOf": "Page {{page}} of {{total}}",
+      "clearFilters": "Clear Filters",
+      "updating": "Updating..."
+    },
+    "overview": {
+      "loadFailed": "Failed to load dashboard",
+      "personalInfo": "Personal Info",
+      "careerPreferences": "Career Preferences"
     }
+  },
+  "layout": {
+    "searchPlaceholder": "Search roles, skills...",
+    "logOut": "Log out",
+    "careerGuidance": "Career Guidance"
   }
 }

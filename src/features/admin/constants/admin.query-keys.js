@@ -18,13 +18,22 @@ import { pruneParams } from "@/features/admin/api/normalize";
 export const adminKeys = {
   all: ["admin"],
 
-  dashboard: () => [...adminKeys.all, "dashboard"],
+  dashboard: (locale) => [
+    ...adminKeys.all,
+    "dashboard",
+    ...(locale ? [locale] : []),
+  ],
 
   jobs: (filters) => [...adminKeys.all, "jobs", "list", pruneParams(filters)],
   job: (id) => [...adminKeys.all, "jobs", "detail", String(id)],
   jobsRoot: () => [...adminKeys.all, "jobs"],
 
-  companies: (filters) => [...adminKeys.all, "companies", "list", pruneParams(filters)],
+  companies: (filters) => [
+    ...adminKeys.all,
+    "companies",
+    "list",
+    pruneParams(filters),
+  ],
   company: (id) => [...adminKeys.all, "companies", "detail", String(id)],
   companiesRoot: () => [...adminKeys.all, "companies"],
 
@@ -32,7 +41,12 @@ export const adminKeys = {
   user: (id) => [...adminKeys.all, "users", "detail", String(id)],
   usersRoot: () => [...adminKeys.all, "users"],
 
-  auditLogs: (filters) => [...adminKeys.all, "audit-logs", "list", pruneParams(filters)],
+  auditLogs: (filters) => [
+    ...adminKeys.all,
+    "audit-logs",
+    "list",
+    pruneParams(filters),
+  ],
   auditLog: (id) => [...adminKeys.all, "audit-logs", "detail", String(id)],
   auditLogsRoot: () => [...adminKeys.all, "audit-logs"],
 };

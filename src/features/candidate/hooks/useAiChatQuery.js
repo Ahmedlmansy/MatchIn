@@ -96,7 +96,10 @@ export const useCreateConversationMutation = (options = {}) => {
  */
 export const useSendMessageMutation = (options = {}) => {
   const queryClient = useQueryClient();
-  const _role = useSelector(selectUserRole);
+  // Named `_role` to silence the unused-var warning, but onMutate still read
+  // `role` — so the guard below threw a ReferenceError before it could check
+  // anything, and the optimistic update never ran. One name, as intended.
+  const role = useSelector(selectUserRole);
 
   return useMutation({
     mutationFn: async ({ conversationId, content, context }) => {

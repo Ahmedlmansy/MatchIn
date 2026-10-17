@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown,
@@ -78,10 +79,7 @@ const DEFAULTS = {
     privacy: translated("Privacy Policy", "سياسة الخصوصية"),
     submitting: translated("Creating account…", "جارٍ إنشاء الحساب…"),
     submit: translated("Create account", "إنشاء الحساب"),
-    haveAccount: translated(
-      "Already have an account?",
-      "لديك حساب بالفعل؟",
-    ),
+    haveAccount: translated("Already have an account?", "لديك حساب بالفعل؟"),
     signIn: translated("Sign in", "تسجيل الدخول"),
     verifyTitle: translated("Verify your email", "تأكيد بريدك الإلكتروني"),
     verifyDescription: translated(
@@ -105,7 +103,10 @@ const DEFAULTS = {
     ),
     drop: translated("Drop your CV here, or", "أفلت سيرتك هنا، أو"),
     browse: translated("browse", "تصفح"),
-    fileLimit: translated("PDF or DOCX, up to 10MB", "PDF أو DOCX، بحد أقصى 10MB"),
+    fileLimit: translated(
+      "PDF or DOCX, up to 10MB",
+      "PDF أو DOCX، بحد أقصى 10MB",
+    ),
     reading: translated("Reading…", "جارٍ القراءة…"),
     ready: translated("Ready", "جاهز"),
     remove: translated("Remove", "إزالة"),
@@ -124,8 +125,14 @@ const DEFAULTS = {
     analyzing: translated("Analyzing {{file}}", "تحليل {{file}}"),
     yourProfile: translated("your profile", "ملفك الشخصي"),
     cvAnalyzed: translated("CV analyzed", "تم تحليل السيرة الذاتية"),
-    extracting: translated("Extracting your skills and experience…", "جارٍ استخراج مهاراتك وخبراتك…"),
-    extracted: translated("Your profile is ready to review.", "ملفك الشخصي جاهز للمراجعة."),
+    extracting: translated(
+      "Extracting your skills and experience…",
+      "جارٍ استخراج مهاراتك وخبراتك…",
+    ),
+    extracted: translated(
+      "Your profile is ready to review.",
+      "ملفك الشخصي جاهز للمراجعة.",
+    ),
     skillsSummary: translated(
       "{{found}} skills found · {{matched}} matched",
       "تم العثور على {{found}} مهارة · تطابقت {{matched}}",
@@ -152,79 +159,256 @@ const DEFAULTS = {
   },
 };
 
+// Labels are translation keys, not copy: this editor's own chrome. The
+// DEFAULTS block above is the content being edited and stays literal.
 const FIELD_SECTIONS = {
   shared: [
-    { key: "badge", label: "Side panel badge" },
-    { key: "title", label: "Side panel title" },
-    { key: "description", label: "Side panel description", multiline: true },
+    { key: "badge", labelKey: "pages.admin.authSettings.fields.shared.badge" },
+    { key: "title", labelKey: "pages.admin.authSettings.fields.shared.title" },
+    {
+      key: "description",
+      labelKey: "pages.admin.authSettings.fields.shared.description",
+      multiline: true,
+    },
   ],
   login: [
-    { key: "welcome", label: "Welcome heading" },
-    { key: "subtitle", label: "Welcome description" },
-    { key: "remember", label: "Remember-me label" },
-    { key: "forgot", label: "Forgot-password link" },
-    { key: "submit", label: "Sign-in button" },
-    { key: "or", label: "Social sign-in separator" },
-    { key: "google", label: "Google button" },
-    { key: "terms", label: "Terms notice" },
-    { key: "termsLink", label: "Terms link" },
-    { key: "privacyLink", label: "Privacy link" },
-    { key: "noAccount", label: "No-account prompt" },
-    { key: "create", label: "Create-account link" },
+    {
+      key: "welcome",
+      labelKey: "pages.admin.authSettings.fields.login.welcome",
+    },
+    {
+      key: "subtitle",
+      labelKey: "pages.admin.authSettings.fields.login.subtitle",
+    },
+    {
+      key: "remember",
+      labelKey: "pages.admin.authSettings.fields.login.remember",
+    },
+    { key: "forgot", labelKey: "pages.admin.authSettings.fields.login.forgot" },
+    { key: "submit", labelKey: "pages.admin.authSettings.fields.login.submit" },
+    { key: "or", labelKey: "pages.admin.authSettings.fields.login.or" },
+    { key: "google", labelKey: "pages.admin.authSettings.fields.login.google" },
+    { key: "terms", labelKey: "pages.admin.authSettings.fields.login.terms" },
+    {
+      key: "termsLink",
+      labelKey: "pages.admin.authSettings.fields.login.termsLink",
+    },
+    {
+      key: "privacyLink",
+      labelKey: "pages.admin.authSettings.fields.login.privacyLink",
+    },
+    {
+      key: "noAccount",
+      labelKey: "pages.admin.authSettings.fields.login.noAccount",
+    },
+    { key: "create", labelKey: "pages.admin.authSettings.fields.login.create" },
   ],
   register: [
-    { key: "step", label: "Step indicator" },
-    { key: "createTitle", label: "Create-account heading" },
-    { key: "createDescription", label: "Create-account description", multiline: true },
-    { key: "agree", label: "Terms agreement text" },
-    { key: "terms", label: "Terms link" },
-    { key: "privacy", label: "Privacy link" },
-    { key: "submit", label: "Create-account button" },
-    { key: "submitting", label: "Submitting button" },
-    { key: "haveAccount", label: "Existing-account prompt" },
-    { key: "signIn", label: "Sign-in link" },
-    { key: "verifyTitle", label: "Email-verification heading" },
-    { key: "verifyDescription", label: "Email-verification description", multiline: true },
-    { key: "yourEmail", label: "Email fallback" },
-    { key: "resendIn", label: "Resend countdown label" },
-    { key: "resend", label: "Resend-code link" },
-    { key: "back", label: "Back button" },
-    { key: "verify", label: "Verify button" },
-    { key: "uploadTitle", label: "CV-upload heading" },
-    { key: "uploadDescription", label: "CV-upload description", multiline: true },
-    { key: "uploadLabel", label: "CV-upload label" },
-    { key: "uploadHelp", label: "CV-upload help", multiline: true },
-    { key: "drop", label: "CV drop prompt" },
-    { key: "browse", label: "Browse link" },
-    { key: "fileLimit", label: "CV file limit" },
-    { key: "reading", label: "CV-reading status" },
-    { key: "ready", label: "CV-ready status" },
-    { key: "remove", label: "Remove-CV button" },
-    { key: "browseJobs", label: "Browse-jobs button" },
-    { key: "completeProfile", label: "Complete-profile button" },
-    { key: "profileReading", label: "Profile-analysis heading" },
-    { key: "profileTitle", label: "Profile heading" },
-    { key: "profileReadingDescription", label: "Profile-analysis description", multiline: true },
-    { key: "profileDescription", label: "Profile description", multiline: true },
-    { key: "analyzing", label: "Analysis status ({{file}})", multiline: true },
-    { key: "yourProfile", label: "Profile-name fallback" },
-    { key: "cvAnalyzed", label: "Analysis-complete status" },
-    { key: "extracting", label: "Extraction status" },
-    { key: "extracted", label: "Extraction-complete status" },
-    { key: "skillsSummary", label: "Skills summary ({{found}}, {{matched}})" },
-    { key: "matchedSkills", label: "Matched-skills heading" },
-    { key: "growth", label: "Growth-skills heading" },
-    { key: "profile", label: "Profile-details heading" },
-    { key: "jobTitle", label: "Target-job-title label" },
-    { key: "jobTitlePlaceholder", label: "Target-job-title placeholder" },
-    { key: "location", label: "Location label" },
-    { key: "locationPlaceholder", label: "Location placeholder" },
-    { key: "experience", label: "Experience label" },
-    { key: "select", label: "Experience selector placeholder" },
-    { key: "bio", label: "Professional-summary label" },
-    { key: "optional", label: "Optional label" },
-    { key: "bioPlaceholder", label: "Professional-summary placeholder", multiline: true },
-    { key: "dashboard", label: "Finish-profile button" },
+    { key: "step", labelKey: "pages.admin.authSettings.fields.register.step" },
+    {
+      key: "createTitle",
+      labelKey: "pages.admin.authSettings.fields.register.createTitle",
+    },
+    {
+      key: "createDescription",
+      labelKey: "pages.admin.authSettings.fields.register.createDescription",
+      multiline: true,
+    },
+    {
+      key: "agree",
+      labelKey: "pages.admin.authSettings.fields.register.agree",
+    },
+    {
+      key: "terms",
+      labelKey: "pages.admin.authSettings.fields.register.terms",
+    },
+    {
+      key: "privacy",
+      labelKey: "pages.admin.authSettings.fields.register.privacy",
+    },
+    {
+      key: "submit",
+      labelKey: "pages.admin.authSettings.fields.register.submit",
+    },
+    {
+      key: "submitting",
+      labelKey: "pages.admin.authSettings.fields.register.submitting",
+    },
+    {
+      key: "haveAccount",
+      labelKey: "pages.admin.authSettings.fields.register.haveAccount",
+    },
+    {
+      key: "signIn",
+      labelKey: "pages.admin.authSettings.fields.register.signIn",
+    },
+    {
+      key: "verifyTitle",
+      labelKey: "pages.admin.authSettings.fields.register.verifyTitle",
+    },
+    {
+      key: "verifyDescription",
+      labelKey: "pages.admin.authSettings.fields.register.verifyDescription",
+      multiline: true,
+    },
+    {
+      key: "yourEmail",
+      labelKey: "pages.admin.authSettings.fields.register.yourEmail",
+    },
+    {
+      key: "resendIn",
+      labelKey: "pages.admin.authSettings.fields.register.resendIn",
+    },
+    {
+      key: "resend",
+      labelKey: "pages.admin.authSettings.fields.register.resend",
+    },
+    { key: "back", labelKey: "pages.admin.authSettings.fields.register.back" },
+    {
+      key: "verify",
+      labelKey: "pages.admin.authSettings.fields.register.verify",
+    },
+    {
+      key: "uploadTitle",
+      labelKey: "pages.admin.authSettings.fields.register.uploadTitle",
+    },
+    {
+      key: "uploadDescription",
+      labelKey: "pages.admin.authSettings.fields.register.uploadDescription",
+      multiline: true,
+    },
+    {
+      key: "uploadLabel",
+      labelKey: "pages.admin.authSettings.fields.register.uploadLabel",
+    },
+    {
+      key: "uploadHelp",
+      labelKey: "pages.admin.authSettings.fields.register.uploadHelp",
+      multiline: true,
+    },
+    { key: "drop", labelKey: "pages.admin.authSettings.fields.register.drop" },
+    {
+      key: "browse",
+      labelKey: "pages.admin.authSettings.fields.register.browse",
+    },
+    {
+      key: "fileLimit",
+      labelKey: "pages.admin.authSettings.fields.register.fileLimit",
+    },
+    {
+      key: "reading",
+      labelKey: "pages.admin.authSettings.fields.register.reading",
+    },
+    {
+      key: "ready",
+      labelKey: "pages.admin.authSettings.fields.register.ready",
+    },
+    {
+      key: "remove",
+      labelKey: "pages.admin.authSettings.fields.register.remove",
+    },
+    {
+      key: "browseJobs",
+      labelKey: "pages.admin.authSettings.fields.register.browseJobs",
+    },
+    {
+      key: "completeProfile",
+      labelKey: "pages.admin.authSettings.fields.register.completeProfile",
+    },
+    {
+      key: "profileReading",
+      labelKey: "pages.admin.authSettings.fields.register.profileReading",
+    },
+    {
+      key: "profileTitle",
+      labelKey: "pages.admin.authSettings.fields.register.profileTitle",
+    },
+    {
+      key: "profileReadingDescription",
+      labelKey:
+        "pages.admin.authSettings.fields.register.profileReadingDescription",
+      multiline: true,
+    },
+    {
+      key: "profileDescription",
+      labelKey: "pages.admin.authSettings.fields.register.profileDescription",
+      multiline: true,
+    },
+    {
+      key: "analyzing",
+      labelKey: "pages.admin.authSettings.fields.register.analyzing",
+      multiline: true,
+    },
+    {
+      key: "yourProfile",
+      labelKey: "pages.admin.authSettings.fields.register.yourProfile",
+    },
+    {
+      key: "cvAnalyzed",
+      labelKey: "pages.admin.authSettings.fields.register.cvAnalyzed",
+    },
+    {
+      key: "extracting",
+      labelKey: "pages.admin.authSettings.fields.register.extracting",
+    },
+    {
+      key: "extracted",
+      labelKey: "pages.admin.authSettings.fields.register.extracted",
+    },
+    {
+      key: "skillsSummary",
+      labelKey: "pages.admin.authSettings.fields.register.skillsSummary",
+    },
+    {
+      key: "matchedSkills",
+      labelKey: "pages.admin.authSettings.fields.register.matchedSkills",
+    },
+    {
+      key: "growth",
+      labelKey: "pages.admin.authSettings.fields.register.growth",
+    },
+    {
+      key: "profile",
+      labelKey: "pages.admin.authSettings.fields.register.profile",
+    },
+    {
+      key: "jobTitle",
+      labelKey: "pages.admin.authSettings.fields.register.jobTitle",
+    },
+    {
+      key: "jobTitlePlaceholder",
+      labelKey: "pages.admin.authSettings.fields.register.jobTitlePlaceholder",
+    },
+    {
+      key: "location",
+      labelKey: "pages.admin.authSettings.fields.register.location",
+    },
+    {
+      key: "locationPlaceholder",
+      labelKey: "pages.admin.authSettings.fields.register.locationPlaceholder",
+    },
+    {
+      key: "experience",
+      labelKey: "pages.admin.authSettings.fields.register.experience",
+    },
+    {
+      key: "select",
+      labelKey: "pages.admin.authSettings.fields.register.select",
+    },
+    { key: "bio", labelKey: "pages.admin.authSettings.fields.register.bio" },
+    {
+      key: "optional",
+      labelKey: "pages.admin.authSettings.fields.register.optional",
+    },
+    {
+      key: "bioPlaceholder",
+      labelKey: "pages.admin.authSettings.fields.register.bioPlaceholder",
+      multiline: true,
+    },
+    {
+      key: "dashboard",
+      labelKey: "pages.admin.authSettings.fields.register.dashboard",
+    },
   ],
 };
 
@@ -263,7 +447,9 @@ function SettingCard({ title, description, open, onToggle, children }) {
         </span>
         <span className="min-w-0 flex-1">
           <b className="block text-[15px] text-ink">{title}</b>
-          <span className="block truncate text-xs text-muted">{description}</span>
+          <span className="block truncate text-xs text-muted">
+            {description}
+          </span>
         </span>
         <ChevronDown
           className={cn("h-5 w-5 text-muted transition", open && "rotate-180")}
@@ -289,29 +475,32 @@ function SettingCard({ title, description, open, onToggle, children }) {
 }
 
 function ImageField({ label, value, onChange, onError }) {
+  const { t } = useTranslation("dashboard");
+
   const handleFile = (event) => {
     const file = event.target.files?.[0];
     event.target.value = "";
     if (!file) return;
     if (!file.type.startsWith("image/")) {
-      onError("Please select an image file.");
+      onError(t("pages.admin.authSettings.uploadError.notImage"));
       return;
     }
     if (file.size > MAX_IMAGE_SIZE) {
-      onError("Image must be 2 MB or smaller.");
+      onError(t("pages.admin.authSettings.uploadError.tooLarge"));
       return;
     }
 
     const reader = new FileReader();
     reader.onload = () => onChange(reader.result);
-    reader.onerror = () => onError("Could not read the selected image.");
+    reader.onerror = () =>
+      onError(t("pages.admin.authSettings.uploadError.unreadable"));
     reader.readAsDataURL(file);
   };
 
   return (
     <div className="space-y-2 sm:col-span-2">
       <PlainField
-        label={`${label} URL`}
+        label={t("pages.admin.authSettings.urlLabel", { label })}
         value={value}
         onChange={onChange}
         type="url"
@@ -320,7 +509,7 @@ function ImageField({ label, value, onChange, onError }) {
         {value ? (
           <img
             src={value}
-            alt={`${label} preview`}
+            alt={t("pages.admin.authSettings.previewLabel", { label })}
             className="h-16 w-24 rounded-lg border border-border object-cover"
           />
         ) : (
@@ -330,7 +519,7 @@ function ImageField({ label, value, onChange, onError }) {
         )}
         <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-xs font-semibold text-ink hover:bg-background">
           <Upload className="h-4 w-4" />
-          Upload image (max 2 MB)
+          {t("pages.admin.authSettings.upload")}
           <input
             type="file"
             accept="image/*"
@@ -344,11 +533,17 @@ function ImageField({ label, value, onChange, onError }) {
 }
 
 export default function AuthSettings() {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const [bootState] = useState(() => {
     try {
       const raw = localStorage.getItem(DRAFT_KEY);
       return raw
-        ? { state: mergeDefaults(JSON.parse(raw)), restored: true, loadError: false }
+        ? {
+            state: mergeDefaults(JSON.parse(raw)),
+            restored: true,
+            loadError: false,
+          }
         : { state: clone(DEFAULTS), restored: false, loadError: false };
     } catch {
       return { state: clone(DEFAULTS), restored: false, loadError: true };
@@ -413,9 +608,7 @@ export default function AuthSettings() {
     shared: FIELD_SECTIONS.shared.filter((field) =>
       matchesQuery("side", field),
     ),
-    login: FIELD_SECTIONS.login.filter((field) =>
-      matchesQuery("login", field),
-    ),
+    login: FIELD_SECTIONS.login.filter((field) => matchesQuery("login", field)),
     register: FIELD_SECTIONS.register.filter((field) =>
       matchesQuery("register", field),
     ),
@@ -425,7 +618,7 @@ export default function AuthSettings() {
     fields.map((field) => (
       <I18nField
         key={field.key}
-        label={field.label}
+        label={t(field.labelKey)}
         value={state[section][field.key]}
         onChange={(value) => patch(section, field.key, value)}
         multiline={field.multiline}
@@ -450,27 +643,34 @@ export default function AuthSettings() {
       setDirty(false);
       toast(
         asDraft
-          ? "Draft saved in this browser."
-          : "Saved in this browser only — the live login and register screens are unchanged.",
+          ? t("pages.admin.authSettings.draftSaved")
+          : t("pages.admin.authSettings.draftSavedDetail"),
         "warn",
       );
     } catch (error) {
-      toast(`Save failed: ${error.message}`, "err");
+      toast(
+        t("pages.admin.authSettings.saveFailed", { message: error.message }),
+        "err",
+      );
     } finally {
       setSaving(false);
     }
   };
 
   const reset = () => {
-    if (!window.confirm("Reset auth settings to their defaults?")) return;
+    if (!window.confirm(t("pages.admin.authSettings.resetConfirm"))) return;
     setState(clone(DEFAULTS));
     setDirty(true);
-    toast("Defaults restored — save to keep them.", "warn");
+    toast(t("pages.admin.authSettings.defaultsRestored"), "warn");
   };
 
   const renderImage = (section) => (
     <ImageField
-      label={`${section === "login" ? "Login" : "Register"} side-panel image`}
+      label={t("pages.admin.authSettings.sidePanelImage", {
+        page: t(
+          `pages.admin.authSettings.tabs.${section === "login" ? "loginLabel" : "registerLabel"}`,
+        ),
+      })}
       value={state[section].image}
       onChange={(value) => patch(section, "image", value)}
       onError={(message) => toast(message, "err")}
@@ -484,7 +684,7 @@ export default function AuthSettings() {
     if (!showShared && !showPage) {
       return (
         <p className="rounded-xl border border-border bg-surface p-5 text-sm text-muted">
-          No matching fields found.
+          {t("pages.admin.authSettings.noMatches")}
         </p>
       );
     }
@@ -493,8 +693,10 @@ export default function AuthSettings() {
       <div className="space-y-3">
         {showShared && (
           <SettingCard
-            title="Shared side panel"
-            description="Translated copy shown alongside both authentication forms."
+            title={t("pages.admin.authSettings.sections.shared.label")}
+            description={t(
+              "pages.admin.authSettings.sections.shared.description",
+            )}
             open={openSections.has("shared") || !!query}
             onToggle={() => toggleSection("shared")}
           >
@@ -503,12 +705,10 @@ export default function AuthSettings() {
         )}
         {showPage && (
           <SettingCard
-            title={section === "login" ? "Login page" : "Register page"}
-            description={
-              section === "login"
-                ? "Login form, social sign-in, and footer copy."
-                : "Account creation, email verification, CV upload, and profile copy."
-            }
+            title={t(`pages.admin.authSettings.sections.${section}.label`)}
+            description={t(
+              `pages.admin.authSettings.sections.${section}.description`,
+            )}
             open={openSections.has(section) || !!query}
             onToggle={() => toggleSection(section)}
           >
@@ -529,23 +729,22 @@ export default function AuthSettings() {
           transition={{ duration: 0.4, ease: EASE }}
         >
           <h1 className="text-2xl font-bold text-primary">
-            Login & Register CMS
+            {t("pages.admin.authSettings.title")}
           </h1>
           <p className="mt-1 text-sm text-muted">
-            Manage authentication page content and side-panel images in English
-            and Arabic.
+            {t("pages.admin.authSettings.subtitle")}
           </p>
           {bootState.loadError && (
             <p
               role="alert"
               className="mt-3 rounded-lg border border-error/30 bg-error/10 px-3 py-2 text-sm text-error"
             >
-              Could not load saved auth settings. Default values are shown.
+              {t("pages.admin.authSettings.loadFailed")}
             </p>
           )}
           {bootState.restored && (
             <p className="mt-3 text-xs text-warning">
-              Restored your previously saved auth settings.
+              {t("pages.admin.authSettings.restored")}
             </p>
           )}
 
@@ -555,7 +754,7 @@ export default function AuthSettings() {
               <Input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search sections and content..."
+                placeholder={t("pages.admin.authSettings.searchPlaceholder")}
                 className="pl-9"
               />
             </div>
@@ -563,12 +762,17 @@ export default function AuthSettings() {
               value={viewLang}
               onChange={(event) => setViewLang(event.target.value)}
               className="rounded-lg border border-border bg-surface px-3 py-2 text-sm"
-              aria-label="Languages to show"
+              aria-label={t("pages.admin.authSettings.languagesTitle")}
             >
-              <option value="both">EN + عربي</option>
-              {LANGS.map(([code, name]) => (
+              <option value="both">
+                {tCommon("ui.adminEnums.languages.en")} +{" "}
+                {tCommon("ui.adminEnums.languages.ar")}
+              </option>
+              {LANGS.map(([code]) => (
                 <option key={code} value={code}>
-                  {name} only
+                  {t("pages.admin.cmsEditor.langOnly", {
+                    name: tCommon(`ui.adminEnums.languages.${code}`),
+                  })}
                 </option>
               ))}
             </select>
@@ -581,7 +785,7 @@ export default function AuthSettings() {
                 setOpenSections(new Set(["shared", "login", "register"]))
               }
             >
-              Expand all
+              {t("pages.admin.authSettings.expandAll")}
             </Button>
             <Button
               type="button"
@@ -590,7 +794,7 @@ export default function AuthSettings() {
               className="border-border"
               onClick={() => setOpenSections(new Set())}
             >
-              Collapse all
+              {t("pages.admin.authSettings.collapseAll")}
             </Button>
           </div>
         </motion.div>
@@ -606,15 +810,23 @@ export default function AuthSettings() {
                 value="login"
                 className="h-auto min-w-40 flex-col items-start gap-1 rounded-xl px-3 py-2 text-start text-muted after:hidden data-[state=active]:scale-[1.02] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
               >
-                <span className="text-sm font-semibold">Login page</span>
-                <span className="text-[10px] opacity-75">Sign-in content</span>
+                <span className="text-sm font-semibold">
+                  {t("pages.admin.authSettings.tabs.loginLabel")}
+                </span>
+                <span className="text-[10px] opacity-75">
+                  {t("pages.admin.authSettings.tabs.loginSub")}
+                </span>
               </TabsTrigger>
               <TabsTrigger
                 value="register"
                 className="h-auto min-w-40 flex-col items-start gap-1 rounded-xl px-3 py-2 text-start text-muted after:hidden data-[state=active]:scale-[1.02] data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm"
               >
-                <span className="text-sm font-semibold">Register page</span>
-                <span className="text-[10px] opacity-75">Account and onboarding</span>
+                <span className="text-sm font-semibold">
+                  {t("pages.admin.authSettings.tabs.registerLabel")}
+                </span>
+                <span className="text-[10px] opacity-75">
+                  {t("pages.admin.authSettings.tabs.registerSub")}
+                </span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -634,7 +846,7 @@ export default function AuthSettings() {
               !dirty && "invisible",
             )}
           >
-            ● Unsaved changes
+            {t("pages.admin.authSettings.unsaved")}
           </span>
           <Button
             type="button"
@@ -644,7 +856,7 @@ export default function AuthSettings() {
             className="ml-auto gap-1 border-border text-error hover:bg-background"
           >
             <RotateCcw className="h-4 w-4" />
-            Reset defaults
+            {t("pages.admin.authSettings.resetDefaults")}
           </Button>
           <Button
             type="button"
@@ -655,7 +867,7 @@ export default function AuthSettings() {
             className="gap-1 border-border"
           >
             <Save className="h-4 w-4" />
-            Save draft
+            {t("pages.admin.authSettings.saveDraft")}
           </Button>
           <Button
             type="button"
@@ -669,7 +881,7 @@ export default function AuthSettings() {
             ) : (
               <Upload className="h-4 w-4" />
             )}
-            Save changes
+            {t("pages.admin.authSettings.saveChanges")}
           </Button>
         </div>
       </main>

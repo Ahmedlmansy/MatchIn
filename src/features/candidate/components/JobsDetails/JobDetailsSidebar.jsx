@@ -1,38 +1,40 @@
+import { useTranslation } from "react-i18next";
 export default function JobDetailsSidebar() {
+  const { t } = useTranslation("dashboard");
   return (
     <>
       <div className="bg-surface border border-border rounded-2xl p-6 shadow-xs">
         <h4 className="font-dm-sans text-lg font-bold text-primary mb-4">
-          Hiring Process Insights
+          {t("pages.jobDetails.hiringProcessInsights")}
         </h4>
         <div className="space-y-3 text-xs">
           <InsightRow
-            label="Engineering Org Size"
+            label={t(`pages.jobDetails.engineeringOrgSize`)}
             value="45 frontend & full-stack"
           />
           <InsightRow
-            label="Interview Velocity"
+            label={t(`pages.jobDetails.interviewVelocity`)}
             value="Initial screen in ~3 days"
           />
-          <InsightRow label="Interview Rounds" value="3 Focused Rounds" />
+          <InsightRow label={t(`pages.jobDetails.interviewRounds`)} value="3 Focused Rounds" />
         </div>
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-6 shadow-xs">
         <h4 className="font-dm-sans text-lg font-bold text-primary mb-3">
-          Culture & Flexibility
+          {t("pages.jobDetails.cultureAndFlexibility")}
         </h4>
         <ul className="text-xs text-muted space-y-2.5">
           <CultureItem>
-            <strong>Hybrid Cadence:</strong> 2 days collaborative in Cairo Tech
+            <strong>{t(`pages.jobDetails.hybridCadence`)}</strong> 2 days collaborative in Cairo Tech
             Center (Maadi), 3 days high-focus remote.
           </CultureItem>
           <CultureItem>
-            <strong>Async-First Philosophy:</strong> Written RFCs and clear
+            <strong>{t(`pages.jobDetails.asyncFirstPhilosophy`)}</strong> Written RFCs and clear
             documentation take precedence over impromptu meetings.
           </CultureItem>
           <CultureItem>
-            <strong>Annual Team Summits:</strong> All-expenses-paid regional
+            <strong>{t(`pages.jobDetails.annualTeamSummits`)}</strong> All-expenses-paid regional
             offsites focused on hackathons and cross-team cohesion.
           </CultureItem>
         </ul>

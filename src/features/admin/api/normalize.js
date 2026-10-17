@@ -18,7 +18,8 @@
  * NOT for paginated lists — see normalizePaginated() for why reaching through
  * `data.data` destroys the paginator metadata.
  */
-export const unwrap = (response) => response?.data?.data ?? response?.data ?? response;
+export const unwrap = (response) =>
+  response?.data?.data ?? response?.data ?? response;
 
 /**
  * First non-null value among `keys`.
@@ -35,7 +36,8 @@ export function pick(source, keys, fallback = undefined) {
 
 /** Coerces to a finite number; tolerates "1,234" and "" from serializers. */
 export function toNumber(value, fallback = 0) {
-  const parsed = typeof value === "string" ? Number(value.replace(/,/g, "")) : Number(value);
+  const parsed =
+    typeof value === "string" ? Number(value.replace(/,/g, "")) : Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
@@ -92,8 +94,14 @@ export function normalizePaginated(payload, { perPage = 15 } = {}) {
   if (body && Array.isArray(body.data)) {
     const meta = body.meta ?? {};
     const total = toNumber(pick(meta, ["total"]), body.data.length);
-    const page = toNumber(pick(meta, ["current_page", "currentPage", "page"]), 1);
-    const size = toNumber(pick(meta, ["per_page", "perPage", "page_size"]), perPage);
+    const page = toNumber(
+      pick(meta, ["current_page", "currentPage", "page"]),
+      1,
+    );
+    const size = toNumber(
+      pick(meta, ["per_page", "perPage", "page_size"]),
+      perPage,
+    );
     return {
       items: body.data,
       total,
@@ -152,4 +160,10 @@ export function filtersToUrlParams(filters = {}) {
     params.set(key, String(value));
   }
   return params;
+}
+
+/** A page number from a list URL, constrained to a positive integer. */
+export function pageFromUrlParams(params, fallback = 1) {
+  const value = Number(params.get("page"));
+  return Number.isSafeInteger(value) && value > 0 ? value : fallback;
 }

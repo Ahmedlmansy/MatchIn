@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -15,6 +16,7 @@ const ease = [0.16, 1, 0.3, 1];
 
 export default function CvSkillsCard({ skills = [], onConfirmSkill }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const { t } = useTranslation("dashboard");
   const [filterType, setFilterType] = useState("all"); // 'all', 'high', 'moderate'
 
   const filteredSkills = skills.filter((skill) => {
@@ -50,14 +52,14 @@ export default function CvSkillsCard({ skills = [], onConfirmSkill }) {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-bold text-primary">
-                Extracted Skills & Competencies
+                {t("pages.cvManagement.skillsCompetencies")}
               </h3>
               <Badge className="bg-accent/15 text-ink hover:bg-accent/15 border-0 text-[11px] font-semibold">
                 {skills.length} Skills
               </Badge>
             </div>
             <p className="text-xs text-muted">
-              Skills identified with AI confidence scores and document evidence citations
+              {t("pages.cvManagement.skillsDescription")}
             </p>
           </div>
         </div>
@@ -73,7 +75,7 @@ export default function CvSkillsCard({ skills = [], onConfirmSkill }) {
                 : "bg-background text-muted hover:text-ink"
             }`}
           >
-            All ({skills.length})
+            {t("pages.cvManagement.filterAll", { count: skills.length })}
           </button>
           <button
             type="button"
@@ -84,7 +86,7 @@ export default function CvSkillsCard({ skills = [], onConfirmSkill }) {
                 : "bg-background text-muted hover:text-ink"
             }`}
           >
-            High Confidence ({highConfCount})
+            {t("pages.cvManagement.filterHigh", { count: highConfCount })}
           </button>
           <button
             type="button"
@@ -95,7 +97,7 @@ export default function CvSkillsCard({ skills = [], onConfirmSkill }) {
                 : "bg-background text-muted hover:text-ink"
             }`}
           >
-            Moderate ({moderateConfCount})
+            {t("pages.cvManagement.filterModerate", { count: moderateConfCount })}
           </button>
         </div>
       </div>
@@ -107,7 +109,7 @@ export default function CvSkillsCard({ skills = [], onConfirmSkill }) {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search extracted skills (e.g. Sales, CRM, Operations)..."
+          placeholder={t("pages.cvManagement.searchSkillsPlaceholder")}
           className="w-full rounded-xl border border-border/80 bg-background/80 py-2 ps-9 pe-4 text-xs font-medium text-ink placeholder:text-muted focus:border-primary focus:bg-surface focus:outline-none transition-all"
         />
       </div>
@@ -116,7 +118,7 @@ export default function CvSkillsCard({ skills = [], onConfirmSkill }) {
       <div className="space-y-2.5">
         {filteredSkills.length === 0 ? (
           <div className="rounded-xl border border-dashed border-border py-8 text-center text-xs text-muted">
-            No skills matching your criteria.
+            {t("pages.cvManagement.noSkillsMatching")}
           </div>
         ) : (
           <AnimatePresence mode="popLayout">
@@ -139,6 +141,7 @@ export default function CvSkillsCard({ skills = [], onConfirmSkill }) {
 }
 
 function SkillCardItem({ skill, index, onConfirm }) {
+  const { t } = useTranslation("dashboard");
   const [showAllEvidence, setShowAllEvidence] = useState(false);
 
   // Confidence normalization (e.g. 0.95 -> 95%, 95 -> 95%)
@@ -275,7 +278,7 @@ function SkillCardItem({ skill, index, onConfirm }) {
           {skill.confirmed ? (
             <span className="flex items-center gap-1 text-xs font-bold text-success">
               <CheckCircle2 className="h-4 w-4" />
-              Confirmed
+        {t("pages.cvManagement.confirmed")}
             </span>
           ) : (
             <Button
@@ -284,7 +287,7 @@ function SkillCardItem({ skill, index, onConfirm }) {
               onClick={onConfirm}
               className="rounded-lg bg-success px-3 py-1 text-xs font-bold text-success-foreground hover:bg-success/90"
             >
-              Confirm Skill
+              {t("pages.cvManagement.confirmSkill")}
             </Button>
           )}
         </div>

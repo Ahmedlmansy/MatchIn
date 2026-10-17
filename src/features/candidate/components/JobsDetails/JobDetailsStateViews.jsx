@@ -24,8 +24,7 @@ export default function JobDetailsStateViews({ pageState, onStateChange }) {
             {t("pages.jobDetails.notFound")}
           </h2>
           <p className="text-sm text-muted max-w-md mx-auto mb-7">
-            This job posting may have been removed by the employer, or the link
-            is incorrect. The source listing was last verified 2 hours ago.
+            {t("pages.jobDetails.notFoundDescription", { when: "2 hours ago" })}
           </p>
           <div className="flex items-center justify-center gap-3">
             <Button
@@ -40,7 +39,7 @@ export default function JobDetailsStateViews({ pageState, onStateChange }) {
               onClick={() => onStateChange("retry")}
               className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90"
             >
-              Browse Similar Roles
+              {t("pages.jobDetails.browseSimilarRoles")}
             </Button>
           </div>
         </motion.div>
@@ -57,11 +56,9 @@ export default function JobDetailsStateViews({ pageState, onStateChange }) {
             <CircleAlert className="h-5 w-5 shrink-0" />
             <div>
               <strong className="block text-sm mb-0.5">
-                This job post has expired or is no longer accepting
-                applications.
+                {t("pages.jobDetails.expiredDescription")}
               </strong>
-              Last verified 2 hours ago · Source listing may have been closed by
-              TechNova Labs.
+              {t("pages.jobDetails.expiredNote", { when: "2 hours ago", company: "TechNova Labs" })}
             </div>
           </div>
           <Button
@@ -69,7 +66,7 @@ export default function JobDetailsStateViews({ pageState, onStateChange }) {
             onClick={() => onStateChange("loaded")}
             className="shrink-0 px-4 py-2 rounded-lg bg-surface border border-secondary/20 text-xs font-bold hover:bg-background"
           >
-            View Snapshot Anyway
+            {t("pages.jobDetails.viewSnapshotAnyway")}
           </Button>
         </motion.div>
       )}
@@ -88,11 +85,10 @@ export default function JobDetailsStateViews({ pageState, onStateChange }) {
             {t("pages.jobDetails.loadFailed")}
           </h2>
           <p className="text-sm text-muted max-w-md mx-auto mb-2">
-            A network error occurred while fetching this role. Your connection
-            or our job API may be temporarily unavailable.
+            {t("pages.jobDetails.networkErrorDescription")}
           </p>
           <p className="text-[11px] text-error font-bold mb-7">
-            Error code: ERR_JOB_FETCH_TIMEOUT
+            {t("pages.jobDetails.errorCode", { code: "ERR_JOB_FETCH_TIMEOUT" })}
           </p>
           <Button
             variant="ghost"
@@ -113,7 +109,7 @@ export default function JobDetailsStateViews({ pageState, onStateChange }) {
         >
           <div className="w-10 h-10 border-[3px] border-border border-t-primary rounded-full animate-spin mx-auto"></div>
           <p className="text-sm font-semibold text-primary">
-            Retrying job connection...
+            {t("pages.jobDetails.retrying")}
           </p>
         </motion.div>
       )}

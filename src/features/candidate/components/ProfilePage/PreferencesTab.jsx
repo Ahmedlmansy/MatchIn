@@ -6,6 +6,7 @@ import TabSaveActions from "./TabSaveActions";
 
 export default function CareerPreferencesTab() {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -55,7 +56,7 @@ export default function CareerPreferencesTab() {
         {/* Target Job Title */}
         <div className="bg-[#FAF8F5]/80 border border-gray-100/60 p-4 rounded-2xl space-y-1">
           <span className="text-xs font-medium text-slate-400 block">
-            Target Job Title
+            {t("pages.profile.targetJobTitle")}
           </span>
           <p className="text-sm font-bold text-slate-900">
             {preferences.targetJobTitle || "—"}
@@ -64,7 +65,7 @@ export default function CareerPreferencesTab() {
 
         <div className="bg-[#FAF8F5]/80 border border-gray-100/60 p-4 rounded-2xl space-y-1">
           <span className="text-xs font-medium text-slate-400 block">
-            Preferred Work Environment
+            {t("pages.profile.preferredWorkEnvironment")}
           </span>
           <p className="text-sm font-bold text-slate-900">
             {preferences.preferredWorkEnv || "—"}
@@ -76,7 +77,7 @@ export default function CareerPreferencesTab() {
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
         title={t("pages.profile.editCareerPreferences")}
-        confirmLabel="Save"
+        confirmLabel={tCommon("actions.save")}
         isLoading={isSaving}
         loadingLabel="Saving..."
         onConfirm={handleSaveData}
@@ -84,7 +85,7 @@ export default function CareerPreferencesTab() {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              Target Job Title *
+              {t("pages.profile.targetJobTitleRequired")}
             </label>
             <input
               type="text"
@@ -98,7 +99,7 @@ export default function CareerPreferencesTab() {
 
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              Preferred Work Environment
+              {t("pages.profile.preferredWorkEnvironment")}
             </label>
             <div className="relative">
               <select

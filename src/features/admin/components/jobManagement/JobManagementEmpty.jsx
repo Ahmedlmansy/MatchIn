@@ -12,7 +12,7 @@ export default function JobManagementEmpty() {
     <EmptyState
       icon={<BriefcaseBusiness className="w-7 h-7" />}
       title={t("pages.admin.jobManagementStates.empty")}
-      description="Jobs will appear here once companies post internally or external sources start syncing listings."
+      description={t("pages.admin.jobList.emptyDescription")}
     />
   );
 }

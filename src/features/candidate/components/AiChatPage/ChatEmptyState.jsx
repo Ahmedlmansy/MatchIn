@@ -35,8 +35,7 @@ export default function ChatEmptyState() {
       </h2>
 
       <p className="max-w-xs text-[13px] leading-relaxed text-muted">
-        Grounded in your profile, CV, saved jobs, and roadmap — start with a
-        suggestion below or type your own.
+        {t("pages.aiChat.emptyDescription")}
       </p>
     </motion.div>
   );
