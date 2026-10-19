@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import {
   User,
@@ -48,6 +49,8 @@ export default function CvProfileCard({
   confirmed,
   onConfirm,
 }) {
+  const { t } = useTranslation("dashboard");
+
   if (!user && !profile) return null;
 
   const initials = user?.name
@@ -75,14 +78,14 @@ export default function CvProfileCard({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-bold text-primary">
-                Candidate Profile & Contact
+                {t("pages.cvManagement.candidateProfileContact")}
               </h3>
               <Badge className="bg-primary/10 text-primary hover:bg-primary/10 border-0 text-[11px] font-semibold">
-                AI Extracted
+                {t("pages.cvManagement.aiExtracted")}
               </Badge>
             </div>
             <p className="text-xs text-muted">
-              Personal contact details and professional summary parsed from the CV header
+              {t("pages.cvManagement.aiExtractedDescription")}
             </p>
           </div>
         </div>
@@ -92,7 +95,7 @@ export default function CvProfileCard({
             {confirmed ? (
               <span className="flex items-center gap-1.5 text-xs font-bold text-success">
                 <CheckCircle2 className="h-4 w-4" />
-                Profile Verified
+                {t("pages.cvManagement.profileVerified")}
               </span>
             ) : (
               <Button
@@ -101,7 +104,7 @@ export default function CvProfileCard({
                 onClick={onConfirm}
                 className="rounded-lg bg-success px-3.5 py-1.5 text-xs font-bold text-success-foreground hover:bg-success/90"
               >
-                Confirm Profile
+                {t("pages.cvManagement.confirmProfile")}
               </Button>
             )}
           </div>
@@ -195,7 +198,7 @@ export default function CvProfileCard({
           <div className="space-y-2">
             <div className="flex items-center gap-1.5 text-xs font-bold text-primary">
               <Sparkles className="h-3.5 w-3.5 text-accent" />
-              <span>Extracted Professional Bio & Summary</span>
+              <span>{t("pages.cvManagement.extractedBio")}</span>
             </div>
             <p className="text-xs leading-relaxed text-ink/90 whitespace-pre-line">
               {profile?.bio || "No professional summary extracted."}
@@ -203,8 +206,8 @@ export default function CvProfileCard({
           </div>
 
           <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 text-[11px] text-muted">
-            <span>Source: CV Executive Summary</span>
-            <span className="font-semibold text-success">Verified with High Confidence</span>
+            <span>{t("pages.cvManagement.sourceCvSummary")}</span>
+            <span className="font-semibold text-success">{t("pages.cvManagement.verifiedHighConfidence")}</span>
           </div>
         </div>
       </div>

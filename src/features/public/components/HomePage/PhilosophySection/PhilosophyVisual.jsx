@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { BadgeCheck, Zap, Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -5,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 const COMPETENCIES = ["Distributed Systems", "Go & Rust"];
 
 export default function PhilosophyVisual() {
+  const { t } = useTranslation(["dashboard", "common"]);
   return (
     // pb-28 reserves room for the floating candidate card below, which sits
     // at -bottom-4 (i.e. partly outside the image frame). Without this the
@@ -21,7 +23,7 @@ export default function PhilosophyVisual() {
       >
         <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
           <img
-            alt="MatchIn Verified Evaluation Workspace"
+            alt={t("public.philosophy.evaluationWorkspace")}
             src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1800&h=600&fit=crop&auto=format"
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -42,7 +44,7 @@ export default function PhilosophyVisual() {
           <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
         </span>
         <span className="font-headline-sm text-[12px] font-semibold tracking-wide text-primary">
-          Live Evaluation Engine
+          {t("public.philosophy.liveEngine")}
         </span>
       </motion.div>
 
@@ -66,7 +68,7 @@ export default function PhilosophyVisual() {
                 <BadgeCheck className="h-[15px] w-[15px] fill-success text-surface" />
               </span>
               <span className="font-body-sm text-[11px] text-muted">
-                Staff Systems Architect
+                {t("public.philosophy.staffArchitect")}
               </span>
             </div>
           </div>

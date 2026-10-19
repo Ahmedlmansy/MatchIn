@@ -10,6 +10,7 @@ import { useApplyJobMutation } from "@/features/candidate/hooks/useJobMutations"
 import { useSaveJobMutation } from "@/features/candidate/hooks/useJobMutations";
 
 export default function JobsPage() {
+  const { t: tCommon } = useTranslation("common");
   const { t } = useTranslation("dashboard");
   const [view, setView] = useState("none");
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -109,32 +110,32 @@ export default function JobsPage() {
             </h2>
             <div className="flex items-center gap-3 text-xs text-muted">
               <span>
-                Showing {jobs.length} of {meta.total} jobs
+                {t("pages.jobs.showing", { count: jobs.length, total: meta.total })}
               </span>
               {isFetching && !isLoading && (
                 <span className="flex items-center gap-1">
                   <span className="h-3 w-3 animate-pulse rounded-full bg-primary" />
-                  Updating...
+                  {t("pages.jobs.updating")}
                 </span>
               )}
             </div>
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" aria-label="Loading jobs">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3" aria-label={t("pages.jobs.loading")}>
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <JobCardSkeleton key={i} index={i} />
               ))}
             </div>
           ) : isError ? (
             <div className="text-center py-12 rounded-2xl border border-border bg-surface">
-              <p className="text-muted mb-4">Failed to load jobs</p>
+              <p className="text-muted mb-4">{t("pages.jobs.loadFailed")}</p>
               <p className="text-xs text-muted mb-4">{error?.message ?? "Unknown error"}</p>
               <button
                 onClick={() => refetch()}
                 className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90"
               >
-                Retry
+                  {tCommon("actions.retry")}
               </button>
             </div>
           ) : jobs.length > 0 ? (
@@ -158,24 +159,24 @@ export default function JobsPage() {
                     disabled={meta.page <= 1}
                     className="px-3 py-1.5 rounded-lg border border-border bg-background text-sm font-medium text-muted hover:bg-border disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Previous
+                  {tCommon("ui.pagination.previous")}
                   </button>
                   <span className="px-3 py-1.5 text-sm font-medium text-primary">
-                    Page {meta.page} of {meta.totalPages}
+                    {t("pages.jobs.pageOf", { page: meta.page, total: meta.totalPages })}
                   </span>
                   <button
                     onClick={() => handlePageChange(meta.page + 1)}
                     disabled={meta.page >= meta.totalPages}
                     className="px-3 py-1.5 rounded-lg border border-border bg-background text-sm font-medium text-muted hover:bg-border disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Next
+                  {tCommon("ui.pagination.next")}
                   </button>
                 </div>
               )}
             </>
           ) : (
             <div className="text-center py-12 rounded-2xl border border-border bg-surface">
-              <p className="text-muted">No jobs found matching your criteria</p>
+              <p className="text-muted">{t("pages.jobs.noResults")}</p>
               <button
                 onClick={() => setFilterState({
                   search: "",
@@ -188,7 +189,7 @@ export default function JobsPage() {
                 })}
                 className="mt-3 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90"
               >
-                Clear Filters
+                {t("pages.jobs.clearFilters")}
               </button>
             </div>
           )}

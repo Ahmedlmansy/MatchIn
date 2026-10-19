@@ -1,11 +1,24 @@
+import { useTranslation } from "react-i18next";
 import { Info, MinusCircle, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { translateAdminValue } from "@/features/admin/shared/formatting/locale";
 
 /** Pretty-print objects, pass primitives through as-is. */
+const localizeValues = (value) => {
+  if (Array.isArray(value)) return value.map(localizeValues);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [key, localizeValues(item)]),
+    );
+  }
+  return typeof value === "string" ? translateAdminValue(value) : value;
+};
+
 function formatValue(value) {
+  const localized = localizeValues(value);
   return typeof value === "object" && value !== null
-    ? JSON.stringify(value, null, 2)
-    : `"${value}"`;
+    ? JSON.stringify(localized, null, 2)
+    : `"${localized}"`;
 }
 
 /**
@@ -29,6 +42,7 @@ export default function DiffViewer({
   stacked = false,
   className,
 }) {
+  const { t } = useTranslation("dashboard");
   const gridClass = stacked
     ? "grid grid-cols-1 gap-3.5"
     : "grid grid-cols-1 sm:grid-cols-2 gap-3.5";
@@ -50,13 +64,13 @@ export default function DiffViewer({
         >
           <div className="p-3 bg-error/10 border border-error/20 rounded-lg text-error">
             <div className="font-sans text-[10px] font-bold uppercase opacity-80 mb-1">
-              {previousLabel ?? "Previous"}
+              {previousLabel ?? t("pages.admin.auditLogs.table.previous")}
             </div>
             {field}: {formatValue(previous)}
           </div>
           <div className="p-3 bg-success/10 border border-success/20 rounded-lg text-success">
             <div className="font-sans text-[10px] font-bold uppercase opacity-80 mb-1">
-              {nextLabel ?? "New"}
+              {nextLabel ?? t("pages.admin.auditLogs.table.new")}
             </div>
             {field}: {formatValue(next)}
           </div>
@@ -79,7 +93,7 @@ export default function DiffViewer({
         <div className="border border-error/20 rounded-xl overflow-hidden">
           <div className="p-2.5 px-3.5 bg-error/10 text-error text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
             <MinusCircle className="w-3.5 h-3.5" />
-            {previousLabel ?? "Previous Data"}
+            {previousLabel ?? t("pages.admin.auditLogs.table.previous")}
           </div>
           <pre className="p-3.5 bg-error/5 text-[#8a3a37] font-mono text-xs leading-relaxed overflow-x-auto whitespace-pre-wrap">
             {formatValue(previous)}
@@ -88,7 +102,7 @@ export default function DiffViewer({
         <div className="border border-success/25 rounded-xl overflow-hidden">
           <div className="p-2.5 px-3.5 bg-success/10 text-success text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
             <PlusCircle className="w-3.5 h-3.5" />
-            {nextLabel ?? "New Data"}
+            {nextLabel ?? t("pages.admin.auditLogs.table.new")}
           </div>
           <pre className="p-3.5 bg-success/5 text-[#3a5c44] font-mono text-xs leading-relaxed overflow-x-auto whitespace-pre-wrap">
             {formatValue(next)}
@@ -100,7 +114,7 @@ export default function DiffViewer({
       {changes.length > 0 && (
         <div className="mt-5 pt-4 border-t border-border">
           <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted mb-3">
-            Field-level changes
+            {t("pages.admin.auditDetails.hints.changes")}
           </h3>
           <div className="space-y-2 text-xs sm:text-sm">
             {changes.map((change) => (

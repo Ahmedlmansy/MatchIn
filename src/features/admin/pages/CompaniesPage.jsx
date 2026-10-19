@@ -2,17 +2,27 @@
 //
 // Admin company list. Reads through useAdminCompaniesQuery; verification
 // actions go through useUpdateAdminCompanyMutation, which invalidates the list
-// and the overview counters on success.
+// and the overview counters on success. Creation goes through
+// useCreateAdminCompanyMutation, which invalidates the same keys — so the new
+// row appears without a manual refetch.
 
 import { useEffect, useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import { useAdminCompaniesQuery, useUpdateAdminCompanyMutation } from "@/features/admin/hooks";
+import {
+  useAdminCompaniesQuery,
+  useCreateAdminCompanyMutation,
+  useUpdateAdminCompanyMutation,
+} from "@/features/admin/hooks";
 import { ErrorState, ResultsPagination } from "@/features/admin/shared";
 import { filtersToUrlParams } from "@/features/admin/api/normalize";
+import { translateAdminValue } from "@/features/admin/shared/formatting/locale";
+import { companyFiltersFromParams } from "@/features/admin/shared/listFilterParams";
 import {
-  COMPANY_DATE_FILTER_OPTIONS,
-  COMPANY_SORT_OPTIONS,
-  COMPANY_STATUS_FILTER_OPTIONS,
+  COMPANY_DATE_FILTER_KEYS,
+  COMPANY_SORT_FILTER_KEYS,
+  COMPANY_STATUS_FILTER_KEYS,
 } from "@/features/admin/constants/admin.filters";
 import CompaniesPageHeader from "../components/companies/CompaniesPageHeader";
 import CompaniesResultsBar from "../components/companies/CompaniesResultsBar";
@@ -20,6 +30,10 @@ import CompaniesTable from "../components/companies/CompaniesTable";
 import CompaniesToolbar from "../components/companies/CompaniesToolbar";
 import CompanyStatsStrip from "../components/companies/CompanyStatsStrip";
 import CompanyStatusLegend from "../components/companies/CompanyStatusLegend";
+import {
+  CompanyDialog,
+  CompanyFormBody,
+} from "../components/companies/CompanyDialogs";
 
 const DEFAULT_FILTERS = {
   search: "",
@@ -30,49 +44,43 @@ const DEFAULT_FILTERS = {
 };
 
 /**
- * The dashboard's "Review Pending" action links to this list as
- * `?status=pending`. Seed the filters from the URL so that link lands on the
- * filtered list it advertises instead of on everything — values outside the
- * known option sets are ignored rather than pushed into the query.
+ * CSV headers are localized — an admin exporting from an Arabic session was
+ * previously handed a file with English column names. The *values* stay raw:
+ * dates are exported as the ISO timestamp the server sent rather than through
+ * Intl, so a spreadsheet parses them as dates rather than as prose.
  */
-function filtersFromParams(params) {
-  const pickFrom = (key, allowed) => {
-    const value = params.get(key);
-    return value && allowed.includes(value) ? value : null;
-  };
-
-  return {
-    ...DEFAULT_FILTERS,
-    search: params.get("search") ?? DEFAULT_FILTERS.search,
-    status:
-      pickFrom(
-        "status",
-        COMPANY_STATUS_FILTER_OPTIONS.map((option) => option.value),
-      ) ?? DEFAULT_FILTERS.status,
-  };
-}
-
-const CSV_COLUMNS = [
-  ["Company ID", "id"],
-  ["Company", "name"],
-  ["Status", "status"],
-  ["Email", "email"],
-  ["Phone", "phone"],
-  ["Created", "createdAt"],
-  ["Last updated", "updatedAt"],
-];
-
-function downloadCompaniesCsv(companies) {
+function downloadCompaniesCsv(companies, t) {
   if (companies.length === 0) return;
   const escape = (value) => `"${String(value ?? "").replaceAll('"', '""')}"`;
+  const column = (key) => t(`pages.admin.companyList.columns.${key}`);
+  const headers = [
+    column("company"),
+    column("verification"),
+    column("contact"),
+    column("created"),
+    column("lastUpdated"),
+  ];
+
   const csv = [
-    CSV_COLUMNS.map(([label]) => escape(label)).join(","),
+    ["id", ...headers].map(escape).join(","),
     ...companies.map((company) =>
-      CSV_COLUMNS.map(([, key]) => escape(company[key])).join(","),
+      [
+        company.id,
+        company.name,
+        translateAdminValue(company.status),
+        company.email,
+        company.phone,
+        company.createdAt,
+        company.updatedAt,
+      ]
+        .map(escape)
+        .join(","),
     ),
   ].join("\r\n");
 
-  const url = URL.createObjectURL(new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }));
+  const url = URL.createObjectURL(
+    new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }),
+  );
   const link = document.createElement("a");
   link.href = url;
   link.download = "companies.csv";
@@ -81,8 +89,12 @@ function downloadCompaniesCsv(companies) {
 }
 
 export default function CompaniesPage() {
+  const { t } = useTranslation("dashboard");
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filters, setFilters] = useState(() => filtersFromParams(searchParams));
+  const [filters, setFilters] = useState(() =>
+    companyFiltersFromParams(searchParams, DEFAULT_FILTERS),
+  );
+  const [isAddOpen, setIsAddOpen] = useState(false);
 
   // Keep the URL in step with the filters — see the same effect in JobManagement.
   useEffect(() => {
@@ -94,12 +106,21 @@ export default function CompaniesPage() {
   const setFilter = (key) => (value) =>
     setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
 
-  const { data, isPending, isError, error, refetch, isFetching } = useAdminCompaniesQuery(filters);
+  const { data, isPending, isError, error, refetch, isFetching } =
+    useAdminCompaniesQuery(filters);
   const {
     mutate: setStatus,
     isPending: isUpdating,
     error: statusError,
   } = useUpdateAdminCompanyMutation();
+  const createCompany = useCreateAdminCompanyMutation();
+
+  // Drop any error from a previous attempt when the dialog closes, otherwise
+  // reopening it shows a stale failure for a form that is now empty.
+  const closeAddDialog = () => {
+    createCompany.reset();
+    setIsAddOpen(false);
+  };
 
   const companies = data?.items ?? [];
   const total = data?.total ?? 0;
@@ -109,16 +130,22 @@ export default function CompaniesPage() {
   const end = start + companies.length - 1;
 
   const refresh = () => {
-    setFilters(DEFAULT_FILTERS);
-    refetch();
+    const hasActiveFilters = Object.entries(DEFAULT_FILTERS).some(
+      ([key, value]) => filters[key] !== value,
+    );
+
+    if (hasActiveFilters) setFilters(DEFAULT_FILTERS);
+    else refetch();
   };
 
   const renderContent = () => {
     if (isPending || !isError) return null;
     return (
       <ErrorState
-        title="Couldn't load companies"
-        description={error?.message || "Something went wrong while fetching the company list."}
+        title={t("pages.admin.companyList.loadFailed.title")}
+        description={
+          error?.message || t("pages.admin.companyList.loadFailed.description")
+        }
         onRetry={() => refetch()}
       />
     );
@@ -128,10 +155,29 @@ export default function CompaniesPage() {
     <main className="min-h-screen bg-background px-4 py-6 text-ink antialiased sm:px-7 sm:py-8">
       <div className="mx-auto max-w-7xl">
         <CompaniesPageHeader
-          onExport={() => downloadCompaniesCsv(companies)}
+          onAdd={() => setIsAddOpen(true)}
+          onExport={() => downloadCompaniesCsv(companies, t)}
           onRefresh={refresh}
           isRefreshing={isFetching && !isPending}
         />
+
+        <AnimatePresence>
+          {isAddOpen && (
+            <CompanyDialog onClose={closeAddDialog}>
+              <CompanyFormBody
+                busy={createCompany.isPending}
+                error={createCompany.error?.message}
+                onCancel={closeAddDialog}
+                onSubmit={(form) =>
+                  createCompany.mutate(form, { onSuccess: closeAddDialog })
+                }
+                title={t("pages.admin.companyList.form.title")}
+                subtitle={t("pages.admin.companyList.form.subtitle")}
+                submitLabel={t("pages.admin.companyList.form.submit")}
+              />
+            </CompanyDialog>
+          )}
+        </AnimatePresence>
 
         {renderContent()}
 
@@ -156,8 +202,8 @@ export default function CompaniesPage() {
               onStatusFilterChange={setFilter("status")}
               onDateFilterChange={setFilter("date")}
               onClearFilters={() => setFilters(DEFAULT_FILTERS)}
-              statusOptions={COMPANY_STATUS_FILTER_OPTIONS}
-              dateOptions={COMPANY_DATE_FILTER_OPTIONS}
+              statusOptions={COMPANY_STATUS_FILTER_KEYS}
+              dateOptions={COMPANY_DATE_FILTER_KEYS}
             />
 
             {!isPending && (
@@ -167,7 +213,7 @@ export default function CompaniesPage() {
                 end={end}
                 sort={filters.sort}
                 onSortChange={setFilter("sort")}
-                sortOptions={COMPANY_SORT_OPTIONS}
+                sortOptions={COMPANY_SORT_FILTER_KEYS}
               />
             )}
 
@@ -182,9 +228,20 @@ export default function CompaniesPage() {
               <ResultsPagination
                 page={page}
                 pageCount={pageCount}
-                onPageChange={(next) => setFilters((prev) => ({ ...prev, page: next }))}
-                label="Company results pages"
-                summary={total > 0 ? `Showing ${start}–${end} of ${total} companies` : null}
+                onPageChange={(next) =>
+                  setFilters((prev) => ({ ...prev, page: next }))
+                }
+                label={t("pages.admin.companyList.pagesLabel")}
+                summary={
+                  total > 0
+                    ? t("pages.admin.companyList.resultsCount", {
+                        count: total,
+                        start,
+                        end,
+                        total,
+                      })
+                    : null
+                }
               />
             </section>
 

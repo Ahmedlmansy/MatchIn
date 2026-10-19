@@ -7,6 +7,7 @@ import { useUpdateCareerPreferencesMutation } from "@/features/candidate/hooks/u
 
 export default function CareerPreferencesTab({ profile }) {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -117,7 +118,7 @@ export default function CareerPreferencesTab({ profile }) {
 
         <div className="bg-[#FAF8F5]/80 border border-gray-100/60 p-4 rounded-2xl space-y-1">
           <span className="text-xs font-medium text-slate-400 block">
-            {t("pages.profile.preferredWorkEnv")}
+            {t("pages.profile.preferredWorkEnvironment")}
           </span>
           <p className="text-sm font-bold text-slate-900">
             {preferences.preferredWorkEnv || "—"}
@@ -129,7 +130,7 @@ export default function CareerPreferencesTab({ profile }) {
         isOpen={isEditing}
         onClose={() => setIsEditing(false)}
         title={t("pages.profile.editCareerPreferences")}
-        confirmLabel={t("common.save")}
+        confirmLabel={tCommon("actions.save")}
         isLoading={isSaving}
         loadingLabel={t("common.saving")}
         onConfirm={handleSaveData}
@@ -137,7 +138,7 @@ export default function CareerPreferencesTab({ profile }) {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              {t("pages.profile.targetJobTitle")} *
+              {t("pages.profile.targetJobTitleRequired")}
             </label>
             <input
               type="text"
@@ -151,7 +152,7 @@ export default function CareerPreferencesTab({ profile }) {
 
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              {t("pages.profile.preferredWorkEnv")}
+              {t("pages.profile.preferredWorkEnvironment")}
             </label>
             <div className="relative">
               <select

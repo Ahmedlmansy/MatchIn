@@ -1,3 +1,5 @@
+import i18n from "@/components/shared/i18n";
+const t = (key) => i18n.t(key);
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";

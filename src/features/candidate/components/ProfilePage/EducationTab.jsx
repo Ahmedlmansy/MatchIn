@@ -17,6 +17,7 @@ const DEFAULT_EDUCATION = [
 
 export default function EducationTab({ profile }) {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const { data: profileData, isLoading } = useProfileQuery();
 
   const currentProfile = profile || profileData;
@@ -127,6 +128,7 @@ export default function EducationTab({ profile }) {
         </div>
       </div>
     );
+  }
 
   return (
     <div className="space-y-6">
@@ -159,8 +161,8 @@ export default function EducationTab({ profile }) {
       <TabSaveActions
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={editingId ? t("pages.profile.editEducation") : t("pages.profile.addEducation")}
-        confirmLabel={t("common.save")}
+        title={editingId ? "Edit Education" : t("pages.profile.addEducation")}
+        confirmLabel={tCommon("actions.save")}
         isLoading={isSaving}
         loadingLabel={t("common.saving")}
         onConfirm={handleSave}
@@ -168,7 +170,7 @@ export default function EducationTab({ profile }) {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              {t("pages.profile.degree")} *
+              {t("pages.profile.degreeFieldOfStudy")}
             </label>
             <input
               type="text"
@@ -182,7 +184,7 @@ export default function EducationTab({ profile }) {
 
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              {t("pages.profile.institution")} *
+              {t("pages.profile.schoolInstitution")}
             </label>
             <input
               type="text"
@@ -235,12 +237,11 @@ export default function EducationTab({ profile }) {
             : "Are you sure you want to delete this education item?"
         }
         variant="danger"
-        confirmLabel={t("common.delete")}
+        confirmLabel={tCommon("actions.delete")}
         isLoading={isDeleting}
         loadingLabel={t("common.deleting")}
         onConfirm={handleConfirmDelete}
       />
     </div>
   );
-}
 }

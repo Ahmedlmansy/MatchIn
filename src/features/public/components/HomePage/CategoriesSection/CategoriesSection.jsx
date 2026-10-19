@@ -22,14 +22,14 @@ export default function CategoriesSection() {
   return (
     <section
       id="categories"
-      className="mx-auto w-full scroll-mt-20 max-w-[1280px] px-6 py-16 md:px-10 lg:px-16 lg:py-24"
+      className="mx-auto w-full scroll-mt-20 max-w-[1280px] px-6 py-14 md:px-10 md:py-16 lg:px-16 lg:py-24"
     >
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        className="mx-auto mb-12 flex max-w-2xl flex-col items-center gap-2 text-center"
+        className="mx-auto mb-10 flex max-w-2xl flex-col items-center gap-2 text-center md:mb-12"
       >
         <Badge
           variant="outline"
@@ -40,7 +40,7 @@ export default function CategoriesSection() {
         <h2 className="font-headline-xl text-[34px] font-bold tracking-tight text-ink sm:text-[42px]">
           {t("home.categories.title")}
         </h2>
-        <p className="font-body-lg text-muted">{t("home.categories.description")}</p>
+        <p className="hidden font-body-lg text-muted md:block">{t("home.categories.description")}</p>
 
         <CarouselNav onPrev={scrollPrev} onNext={scrollNext} className="mt-2" />
       </motion.div>

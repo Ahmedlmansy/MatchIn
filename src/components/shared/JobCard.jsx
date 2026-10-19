@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { BadgeCheck, Globe, MapPin, Zap, Bookmark, BookmarkCheck } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +10,7 @@ import { useLocalizedPath } from "@/utils/routes";
 const LOCATION_ICONS = { globe: Globe, pin: MapPin };
 
 export default function JobCard({ job, index = 0, onApply, onSave }) {
+  const { t: tCommon } = useTranslation("common");
   const localizedPath = useLocalizedPath();
   const LocationIcon = LOCATION_ICONS[job.locationIcon] ?? Globe;
   const isBookmarked = job.isBookmarked ?? false;
@@ -121,7 +123,7 @@ export default function JobCard({ job, index = 0, onApply, onSave }) {
               }}
               className="rounded-lg bg-primary px-4 py-1.5 font-headline-sm text-[12px] font-semibold text-primary-foreground hover:bg-primary/90"
             >
-              Quick Apply
+              {tCommon("ui.jobCard.quickApply")}
             </Button>
           </div>
         </div>

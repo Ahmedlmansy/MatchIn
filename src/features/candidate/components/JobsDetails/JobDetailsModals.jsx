@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import Modal from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, X } from "lucide-react";
@@ -23,12 +24,13 @@ export default function JobDetailsModals({
 }
 
 function SourceModal({ onClose }) {
+  const { t } = useTranslation("dashboard");
   return (
     <Modal onClose={onClose} maxWidth="max-w-[440px]" className="p-7">
       <div className="flex items-start justify-between mb-4">
         <div>
           <div className="text-[11px] font-bold text-secondary mb-1">
-            Original Job Source
+            {t("pages.jobDetails.originalJobSource")}
           </div>
           <h2 className="font-dm-sans font-bold text-xl text-primary">
             TechNova Career Portal
@@ -37,10 +39,10 @@ function SourceModal({ onClose }) {
         <CloseButton onClick={onClose} />
       </div>
       <div className="border border-border rounded-xl p-4 text-xs space-y-2.5 bg-background/50 mb-5">
-        <DetailRow label="Source URL:" value="careers.technova.io/tn-882" />
-        <DetailRow label="Scraped:" value="2 hours ago" />
+        <DetailRow label={t(`pages.jobDetails.sourceUrl`)} value="careers.technova.io/tn-882" />
+        <DetailRow label={t(`pages.jobDetails.scraped`)} value="2 hours ago" />
         <DetailRow
-          label="Verification:"
+          label={t(`pages.jobDetails.verification`)}
           value="Verified Direct Employer"
           valueClassName="text-success"
         />
@@ -51,14 +53,14 @@ function SourceModal({ onClose }) {
           className="flex-1 h-10 rounded-xl border border-border text-xs font-bold text-muted hover:bg-background"
           onClick={onClose}
         >
-          Stay Here
+          {t("pages.jobDetails.stayHere")}
         </Button>
         <Button
           variant="ghost"
           className="flex-1 h-10 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90"
           onClick={onClose}
         >
-          Open Original Post <ArrowUpRight className="h-4 w-4" />
+          {t("pages.jobDetails.openOriginalPost")} <ArrowUpRight className="h-4 w-4" />
         </Button>
       </div>
     </Modal>
@@ -66,6 +68,7 @@ function SourceModal({ onClose }) {
 }
 
 function MentorModal({ messages, onClose, onAskQuestion }) {
+  const { t } = useTranslation("dashboard");
   const questions = [
     "What will the technical interview focus on?",
     "How do I justify the Testing gap?",
@@ -81,10 +84,10 @@ function MentorModal({ messages, onClose, onAskQuestion }) {
       <div className="flex items-start justify-between p-5 border-b border-border">
         <div>
           <div className="text-[11px] font-bold text-secondary mb-1">
-            AI Mentor
+            {t("pages.aiChat.mentorTitle")}
           </div>
           <h2 className="font-dm-sans font-bold text-xl text-primary">
-            Prepare for TechNova Labs
+            {t("pages.jobDetails.prepareFor", { company: "TechNova Labs" })}
           </h2>
         </div>
         <CloseButton onClick={onClose} />
@@ -121,12 +124,13 @@ function MentorModal({ messages, onClose, onAskQuestion }) {
 }
 
 function CloseButton({ onClick }) {
+  const { t: tCommon } = useTranslation("common");
   return (
     <Button
       variant="ghost"
       onClick={onClick}
       className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-background text-muted"
-      aria-label="Close"
+      aria-label={tCommon("actions.close")}
     >
       <X className="h-4 w-4" />
     </Button>

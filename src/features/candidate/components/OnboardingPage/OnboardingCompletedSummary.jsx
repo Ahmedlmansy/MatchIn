@@ -5,10 +5,10 @@ import Status from "@/components/shared/Status";
 import { useLocalizedPath } from "@/utils/routes";
 
 const SUMMARY_FIELDS = [
-  { key: "jobTitle", label: "Target Title" },
-  { key: "jobType", label: "Job Type" },
-  { key: "workStyle", label: "Work Style" },
-  { key: "location", label: "Location" },
+  { key: "jobTitle", labelKey: "pages.onboarding.targetTitle" },
+  { key: "jobType", labelKey: "pages.roadmap.jobType" },
+  { key: "workStyle", labelKey: "pages.roadmap.workStyle" },
+  { key: "location", labelKey: "pages.onboarding.location" },
 ];
 
 export default function OnboardingCompletedSummary({ formData, onEdit }) {
@@ -21,9 +21,9 @@ export default function OnboardingCompletedSummary({ formData, onEdit }) {
       icon={<Check className="h-6 w-6" />}
       iconClassName="bg-success text-success-foreground"
       title={t("pages.onboarding.complete")}
-      subtitle="Your AI career profile has been successfully configured. We are now calibrating jobs for you."
-      secondaryButton={{ label: "Edit Choices", onClick: onEdit }}
-      primaryButton={{ label: "Go to Dashboard", onClick: () => navigate(localizedPath("/dashboard")) }}
+      subtitle={t("pages.onboarding.completedDescription")}
+      secondaryButton={{ label: t("pages.onboarding.editChoices"), onClick: onEdit }}
+      primaryButton={{ label: t("pages.onboarding.goToDashboard"), onClick: () => navigate(localizedPath("/dashboard")) }}
     >
       <div className="mb-5 rounded-2xl border border-border bg-background p-4 text-start">
         <div className="mb-3 flex items-center gap-2 text-[12px] font-bold text-ink">
@@ -33,7 +33,7 @@ export default function OnboardingCompletedSummary({ formData, onEdit }) {
         <div className="grid grid-cols-2 gap-4">
           {SUMMARY_FIELDS.map((field) => (
             <div key={field.key}>
-              <div className="text-[11px] text-muted">{field.label}</div>
+              <div className="text-[11px] text-muted">{t(field.labelKey)}</div>
               <div className="text-[13px] font-semibold text-ink">
                 {formData[field.key] || "—"}
               </div>

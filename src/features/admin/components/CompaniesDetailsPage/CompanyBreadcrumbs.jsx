@@ -10,10 +10,11 @@ import { ChevronRight } from "lucide-react";
  */
 export default function CompanyBreadcrumbs({ companyId, backTo }) {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
 
   return (
     <nav
-      aria-label="Breadcrumb"
+      aria-label={tCommon("ui.a11y.breadcrumb")}
       className="mb-3.5 flex flex-wrap items-center gap-1.5 text-[13px] text-muted"
     >
       <Link to={backTo} className="transition-colors hover:text-primary">

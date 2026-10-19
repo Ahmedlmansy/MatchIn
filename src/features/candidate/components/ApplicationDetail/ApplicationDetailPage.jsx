@@ -94,12 +94,12 @@ export default function ApplicationDetailPage() {
                     </h2>
                     <div className="grid sm:grid-cols-2 gap-3 text-[13px] mb-4">
                       <div className="flex justify-between border-b border-border pb-2">
-                        <span className="text-muted">Date &amp; time</span>
-                        <span className="font-medium">Not yet scheduled</span>
+                        <span className="text-muted">{t(`pages.applicationDetail.dateAndTime`)}</span>
+                        <span className="font-medium">{t(`pages.applicationDetail.notScheduled`)}</span>
                       </div>
                       <div className="flex justify-between border-b border-border pb-2">
                         <span className="text-muted">Format</span>
-                        <span className="font-medium">Video call</span>
+                        <span className="font-medium">{t(`pages.applicationDetail.videoCall`)}</span>
                       </div>
                       <div className="flex justify-between border-b border-border pb-2">
                         <span className="text-muted">Round</span>
@@ -107,7 +107,7 @@ export default function ApplicationDetailPage() {
                       </div>
                       <div className="flex justify-between border-b border-border pb-2">
                         <span className="text-muted">Interviewer</span>
-                        <span className="font-medium">To be confirmed</span>
+                        <span className="font-medium">{t(`pages.applicationDetail.toBeConfirmed`)}</span>
                       </div>
                     </div>
                     <a
@@ -117,7 +117,7 @@ export default function ApplicationDetailPage() {
                       <span className="material-symbols-outlined text-[16px]">
                         mic
                       </span>
-                      Prepare for this interview
+                      {t("pages.applicationDetail.prepareForInterview")}
                       <span className="text-[9px] font-bold bg-warning/15 rounded-full px-1.5 py-0.5">
                         PHASE 2
                       </span>
@@ -132,7 +132,7 @@ export default function ApplicationDetailPage() {
                       <div className="flex justify-between border-b border-border pb-2">
                         <span className="text-muted">Type</span>
                         <span className="font-medium">
-                          Take-home coding task
+                          {t("pages.applicationDetail.takeHomeTask")}
                         </span>
                       </div>
                       <div className="flex justify-between border-b border-border pb-2">

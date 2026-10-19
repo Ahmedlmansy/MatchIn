@@ -61,6 +61,7 @@ export default function JobDetailsContent({
   onRetry,
   onToast,
 }) {
+  const { t } = useTranslation("dashboard");
   return (
     <motion.div
       initial="hidden"
@@ -152,17 +153,17 @@ function OverviewSection() {
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Metric
-          label="Render Budget"
+          label={t(`pages.jobDetails.renderBudget`)}
           value="< 90ms"
           detail="Target interaction latency"
         />
         <Metric
-          label="Stack Standard"
+          label={t(`pages.jobDetails.stackStandard`)}
           value="React 19 + Vite"
           detail="Modern atomic design token system"
         />
         <Metric
-          label="Product Squads"
+          label={t(`pages.jobDetails.productSquads`)}
           value="4 Squads"
           detail="Direct sync with UX Designers"
         />
@@ -245,6 +246,7 @@ function MatchCard({
   onRetry,
   onToast,
 }) {
+  const { t } = useTranslation("dashboard");
   const status = {
     success: [
       "High Confidence (94%)",
@@ -270,7 +272,7 @@ function MatchCard({
       <div className="flex items-center justify-between mb-3 pt-1">
         <span className="inline-flex items-center gap-1.5 text-xs font-bold text-primary uppercase tracking-wider">
           <span className="w-2 h-2 rounded-full bg-secondary" />
-          AI Match Analysis
+          {t("pages.jobDetails.aiMatchAnalysis")}
         </span>
         <span
           className={`text-xs font-semibold px-2.5 py-0.5 rounded-md border ${status[1]}`}
@@ -279,7 +281,7 @@ function MatchCard({
         </span>
       </div>
       <div className="flex items-center gap-1.5 text-[11px] text-muted mb-4 pb-2.5 border-b border-border">
-        Sourced directly from TechNova Career Portal · Verified 2h ago
+        {t("pages.jobDetails.sourcedDirectly")}
       </div>
       {matchState === "not_analyzed" && <EmptyMatch onAnalyze={onAnalyze} />}
       {matchState === "analyzing" && <AnalyzingMatch />}
@@ -307,32 +309,35 @@ function MatchCard({
 }
 
 function EmptyMatch({ onAnalyze }) {
+  const { t } = useTranslation("dashboard");
+
   return (
     <div className="text-center py-6">
       <Compass className="mx-auto mb-4 h-8 w-8 text-secondary" />
       <h3 className="font-dm-sans text-xl font-bold text-primary mb-1.5">
-        No Match Analysis Yet
+        {t("pages.jobDetails.noMatchAnalysis")}
       </h3>
       <p className="text-xs text-muted leading-relaxed mb-5">
-        Run the AI engine to compare your verified profile against TechNova's
-        core requirements.
+        {t("pages.jobDetails.noMatchDescription", { company: "TechNova" })}
       </p>
       <Button
         variant="ghost"
         onClick={onAnalyze}
         className="px-5 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/90"
       >
-        Analyze Match <Rocket className="h-4 w-4" />
+        {t("pages.jobDetails.analyze")} <Rocket className="h-4 w-4" />
       </Button>
     </div>
   );
 }
 function AnalyzingMatch() {
+  const { t } = useTranslation("dashboard");
+
   return (
     <div className="space-y-3 py-2">
       <div className="flex items-center gap-2 text-[11px] text-muted">
         <div className="w-3.5 h-3.5 border-2 border-border border-t-secondary rounded-full animate-spin" />
-        Evaluating profile commits & stack depth...
+        {t("pages.jobDetails.analyzing")}
       </div>
       <div className="h-3 w-full animate-pulse rounded-lg bg-border" />
       <div className="h-3 w-5/6 animate-pulse rounded-lg bg-border" />
@@ -348,11 +353,12 @@ function SuccessMatch({
   onOpenMentor,
   onToast,
 }) {
+  const { t } = useTranslation("dashboard");
   return (
     <>
       <div className="flex items-baseline justify-between mb-2">
         <h3 className="font-dm-sans text-2xl font-bold text-primary">
-          Strong Match
+          {t("pages.jobDetails.strongMatch")}
         </h3>
         <span className="text-sm font-bold text-secondary">7 of 9 Matched</span>
       </div>
@@ -367,9 +373,7 @@ function SuccessMatch({
         />
       </div>
       <div className="bg-background border border-border rounded-xl p-3 mb-4 text-xs text-muted">
-        Calculated from Alex's verified profile: production repositories, React
-        19 mastery, strict TypeScript, and multi-tenant UI architecture
-        experience.
+        {t("pages.jobDetails.matchBasis", { name: "Alex" })}
       </div>
       <Button
         variant="ghost"
@@ -377,7 +381,7 @@ function SuccessMatch({
         disabled={isExpired}
         className="w-full bg-primary text-primary-foreground font-bold py-3.5 rounded-xl text-sm mb-3"
       >
-        Apply with MatchIn Profile
+        {t("pages.jobDetails.applyWithProfile")}
       </Button>
       <div className="grid grid-cols-2 gap-2 text-xs">
         <Button
@@ -398,7 +402,7 @@ function SuccessMatch({
           onClick={onOpenMentor}
           className="py-2.5 px-3 rounded-xl border border-border bg-background text-primary font-semibold"
         >
-          Ask AI Mentor
+          {t("pages.jobDetails.askAiMentor")}
         </Button>
       </div>
       <Button
@@ -408,20 +412,20 @@ function SuccessMatch({
         }
         className="w-full mt-3 text-xs bg-primary text-primary-foreground"
       >
-        Start Guided Path <Rocket className="h-4 w-4" />
+        {t("pages.jobDetails.guidedPath")} <Rocket className="h-4 w-4" />
       </Button>
     </>
   );
 }
 function LowConfidenceMatch({ onSync, onOpenMentor }) {
+  const { t } = useTranslation("dashboard");
   return (
     <>
       <h3 className="font-dm-sans text-2xl font-bold text-primary mb-2">
-        Partial Match
+        {t("pages.jobDetails.partialMatch")}
       </h3>
       <div className="bg-warning/10 border border-warning/20 rounded-xl p-3 mb-4 text-xs text-muted">
-        Core React identified, but micro-frontend and automated testing
-        verification data are missing.
+        {t("pages.jobDetails.partialDataMissing")}
       </div>
       <div className="flex flex-wrap gap-1.5 mb-4">
         {["Jest Testing", "CI/CD Pipelines", "WebGL"].map((item) => (
@@ -439,28 +443,29 @@ function LowConfidenceMatch({ onSync, onOpenMentor }) {
           onClick={onSync}
           className="py-2.5 rounded-xl border border-border bg-background text-primary font-semibold"
         >
-          Sync GitHub
+          {t("pages.jobDetails.syncGithub")}
         </Button>
         <Button
           variant="ghost"
           onClick={onOpenMentor}
           className="py-2.5 rounded-xl border border-border bg-background text-primary font-semibold"
         >
-          Ask AI Mentor
+          {t("pages.jobDetails.askAiMentor")}
         </Button>
       </div>
     </>
   );
 }
 function MissingContextMatch({ onSync, onAnalyze }) {
+  const { t } = useTranslation("dashboard");
   return (
     <div className="text-center py-4">
       <UserRound className="mx-auto mb-4 h-8 w-8 text-secondary" />
       <h3 className="font-dm-sans text-xl font-bold text-primary mb-1.5">
-        Profile Data Incomplete
+        {t("pages.jobDetails.profileIncomplete")}
       </h3>
       <p className="text-xs text-muted mb-4">
-        Only <strong className="text-primary">2 of 9 requirements</strong> could
+        {t("pages.jobDetails.onlyMatched", { count: 2 })} <strong className="text-primary">2 of 9 requirements</strong> could
         be matched.
       </p>
       <Button
@@ -468,27 +473,28 @@ function MissingContextMatch({ onSync, onAnalyze }) {
         onClick={onSync}
         className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-xl text-xs mb-2"
       >
-        Sync GitHub Profile
+        {t("pages.jobDetails.syncGithubProfile")}
       </Button>
       <Button
         variant="ghost"
         onClick={onAnalyze}
         className="w-full py-2.5 rounded-xl border border-border bg-background text-primary font-semibold text-xs"
       >
-        Re-run with Limited Data
+        {t("pages.jobDetails.rerunLimited")}
       </Button>
     </div>
   );
 }
 function FailureMatch({ onApply, onRetry }) {
+  const { t } = useTranslation("dashboard");
   return (
     <div className="text-center py-6">
       <CircleAlert className="mx-auto mb-4 h-8 w-8 text-error" />
       <h3 className="font-dm-sans text-xl font-bold text-primary mb-1.5">
-        Match Calculation Paused
+        {t("pages.jobDetails.matchPaused")}
       </h3>
       <p className="text-xs text-muted mb-6">
-        The vector embedding endpoint timed out while scoring your profile.
+        {t("pages.jobDetails.matchTimeout")}
       </p>
       <div className="grid grid-cols-2 gap-2">
         <Button
@@ -496,7 +502,7 @@ function FailureMatch({ onApply, onRetry }) {
           onClick={onApply}
           className="py-2.5 rounded-xl border border-border bg-background text-primary font-semibold"
         >
-          Apply Anyway
+          {t("pages.jobDetails.applyAnyway")}
         </Button>
         <Button
           variant="ghost"

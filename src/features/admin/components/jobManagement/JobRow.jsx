@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { ExternalLink, Eye, PencilLine } from "lucide-react";
 import {
@@ -8,6 +9,11 @@ import {
   FreshnessBadge,
   rowVariants,
 } from "@/features/admin/shared";
+import {
+  formatDayMonth,
+  freshnessLabel,
+  translateAdminValue,
+} from "@/features/admin/shared/formatting/locale";
 import JobActionMenu from "./JobActionMenu";
 
 /**
@@ -29,6 +35,8 @@ export default function JobRow({
   isUpdating,
 }) {
   const isClosed = job.status === "expired" || job.status === "closed";
+  const { t } = useTranslation("dashboard");
+  const key = "pages.admin.jobList.row";
 
   return (
     <motion.div
@@ -49,7 +57,7 @@ export default function JobRow({
                 : "text-[#1B1C1A]"
             }`}
           >
-            {job.title}
+            {translateAdminValue(job.title)}
           </div>
           {companyHref ? (
             <Link
@@ -66,8 +74,10 @@ export default function JobRow({
 
       {/* Location & Mode */}
       <div className="lg:col-span-2 text-[12.5px] text-[#44474E]">
-        <div>{job.location}</div>
-        <div className="text-muted text-[11.5px]">{job.type}</div>
+        <div>{translateAdminValue(job.location)}</div>
+        <div className="text-muted text-[11.5px]">
+          {translateAdminValue(job.type)}
+        </div>
       </div>
 
       {/* Status Badge */}
@@ -78,13 +88,21 @@ export default function JobRow({
       {/* Source & Freshness */}
       <div className="lg:col-span-2 flex flex-col gap-1">
         <SourceBadge source={job.source} label={job.sourceLabel} />
-        <FreshnessBadge label={job.freshness} days={job.freshnessDays} status={job.status} />
+        <FreshnessBadge
+          label={freshnessLabel(job.publishedAt, job.status)}
+          days={job.freshnessDays}
+          status={job.status}
+        />
       </div>
 
       {/* Dates */}
       <div className="lg:col-span-1 text-[11px] text-muted">
-        <div>Pub: {job.pubDate}</div>
-        <div>Created: {job.createdDate}</div>
+        <div>
+          {t(`${key}.published`)}: {formatDayMonth(job.publishedAt)}
+        </div>
+        <div>
+          {t(`${key}.created`)}: {formatDayMonth(job.createdAt)}
+        </div>
       </div>
 
       {/* Actions */}
@@ -93,7 +111,8 @@ export default function JobRow({
           type="button"
           onClick={onView}
           className="w-8 h-8 rounded-full flex items-center justify-center text-primary hover:bg-primary/10 transition-colors"
-          title="View job"
+          title={t(`${key}.view`)}
+          aria-label={t(`${key}.view`)}
         >
           <Eye className="w-4 h-4" />
         </button>
@@ -103,7 +122,8 @@ export default function JobRow({
             type="button"
             onClick={onEdit}
             className="w-8 h-8 rounded-full flex items-center justify-center text-[#44474E] hover:bg-background transition-colors"
-            title="Edit job"
+            title={t(`${key}.edit`)}
+            aria-label={t(`${key}.edit`)}
           >
             <PencilLine className="w-4 h-4" />
           </button>

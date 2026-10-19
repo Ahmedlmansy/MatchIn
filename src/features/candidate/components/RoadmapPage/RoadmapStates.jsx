@@ -19,11 +19,11 @@ export function EmptyProfileState({ onUploadCv, onCompleteProfile }) {
       </div>
       <h2 className="mb-2 font-display text-[19px] font-bold text-ink">{t("pages.roadmap.profileNeeded")}</h2>
       <p className="mx-auto mb-6 max-w-sm text-[13px] text-muted">
-        A roadmap compares your current skills to a target role — complete your profile and upload a CV so we have something to compare against.
+        {t("pages.roadmap.introDescription")}
       </p>
       <div className="flex justify-center gap-3">
-        <Button variant="outline" onClick={onUploadCv} className="h-10 px-5 text-[13px]">Upload CV</Button>
-        <Button onClick={onCompleteProfile} className="h-10 px-5 text-[13px]">Complete profile</Button>
+        <Button variant="outline" onClick={onUploadCv} className="h-10 px-5 text-[13px]">{t("pages.roadmap.uploadCv")}</Button>
+        <Button onClick={onCompleteProfile} className="h-10 px-5 text-[13px]">{t("pages.roadmap.completeProfile")}</Button>
       </div>
     </motion.div>
   );
@@ -36,19 +36,24 @@ export function NoRoadmapState({ onGenerate, hasCV, hasProfile }) {
       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
       className="rounded-2xl border border-border bg-surface p-8 shadow-sm"
     >
-      <div className="mb-2 text-[11px] font-semibold text-secondary uppercase tracking-wide">Career Roadmap</div>
+      <div className="mb-2 text-[11px] font-semibold text-secondary uppercase tracking-wide">{t("pages.roadmap.title")}</div>
       <h1 className="mb-2 font-display text-[24px] font-bold text-ink">{t("pages.roadmap.buildPath")}</h1>
       <p className="mb-7 max-w-lg text-[13px] text-muted">
-        Pick a target role — or a job you've saved — and we'll compare it against your current profile to generate a phased plan with weekly tasks.
+        {t("pages.roadmap.emptyDescription")}
       </p>
 
       <div className="mb-6">
-        <label className="mb-2 block text-[12px] font-semibold text-muted">Target role</label>
+        <label className="mb-2 block text-[12px] font-semibold text-muted">{t(`pages.roadmap.targetRole`)}</label>
         <select className="h-11 w-full rounded-[10px] border border-border bg-transparent px-3 text-[13px] outline-none transition-colors focus:border-primary sm:w-96">
           <option>Senior Frontend Engineer</option>
           <option>Frontend Architect</option>
           <option>Full-Stack Engineer</option>
-          <option value="job">Use a saved job — Senior Frontend Engineer @ Vercel</option>
+          <option value="job">
+            {t("pages.roadmap.useSavedJob", {
+              job: "Senior Frontend Engineer",
+              company: "Vercel",
+            })}
+          </option>
         </select>
       </div>
 
@@ -61,17 +66,17 @@ export function NoRoadmapState({ onGenerate, hasCV, hasProfile }) {
           <LineChart className="size-4" /> Skill gap analysis {hasCV ? "✓" : ""}
         </span>
         <ArrowRight className="size-3.5 text-border" />
-        <span className="flex items-center gap-1.5"><Map className="size-4 text-primary" /> Phased roadmap</span>
+        <span className="flex items-center gap-1.5"><Map className="size-4 text-primary" /> {t(`pages.roadmap.phasedRoadmap`)}</span>
       </div>
 
       <Button onClick={() => onGenerate("Senior Frontend Engineer")} className="h-11 gap-2 px-6 text-[14px]" disabled={!hasProfile || !hasCV}>
         <Sparkles className="size-4" /> Generate Roadmap
       </Button>
       {!hasProfile && (
-        <p className="mt-3 text-xs text-muted">Complete your profile first to enable roadmap generation.</p>
+        <p className="mt-3 text-xs text-muted">{t(`pages.roadmap.completeProfileFirst`)}</p>
       )}
       {!hasCV && hasProfile && (
-        <p className="mt-3 text-xs text-muted">Upload a CV to enable skill gap analysis.</p>
+        <p className="mt-3 text-xs text-muted">{t(`pages.roadmap.uploadCvForGaps`)}</p>
       )}
     </motion.div>
   );
@@ -89,7 +94,7 @@ export function GeneratingState() {
       </motion.div>
       <h2 className="mb-2 font-display text-[17px] font-bold text-ink">{t("pages.roadmap.generating")}</h2>
       <p className="mx-auto max-w-sm text-[13px] text-muted">
-        Comparing your profile against Senior Frontend Engineer requirements and prioritizing skill gaps — this takes a few seconds.
+        {t("pages.roadmap.comparingDescription", { role: "Senior Frontend Engineer" })}
       </p>
     </motion.div>
   );
@@ -107,7 +112,7 @@ export function ErrorState({ onRetry }) {
       </div>
       <h2 className="mb-2 font-display text-[19px] font-bold text-ink">{t("pages.roadmap.generationFailed")}</h2>
       <p className="mx-auto mb-6 max-w-sm text-[13px] text-muted">
-        Something went wrong on our end. Nothing was saved — you can try again.
+        {t("pages.roadmap.errorState")}
       </p>
       <Button onClick={onRetry} className="h-10 gap-2 px-5 text-[13px]">
         <RotateCcw className="size-4" /> Try again

@@ -18,8 +18,9 @@ const INITIAL_FORM_DATA = ONBOARDING_STEP_FIELDS.reduce(
 );
 
 function OnboardingSkeleton() {
+  const { t } = useTranslation("dashboard");
   return (
-    <div className="mx-auto w-full max-w-[480px] rounded-3xl border border-border bg-surface p-6 shadow-sm" aria-label="Loading onboarding">
+    <div className="mx-auto w-full max-w-[480px] rounded-3xl border border-border bg-surface p-6 shadow-sm" aria-label={t("pages.onboarding.loading")}>
       <div className="mb-8">
         <div className="mb-3 h-4 w-32 animate-pulse rounded bg-[#EFEDE8]" />
         <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-background">
@@ -81,7 +82,7 @@ function OnboardingError({ message, onRetry }) {
 }
 
 export default function OnboardingPage() {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation("dashboard");
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
   const [submitError, setSubmitError] = useState("");

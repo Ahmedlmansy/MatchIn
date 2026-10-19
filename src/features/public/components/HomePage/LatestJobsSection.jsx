@@ -39,21 +39,25 @@ export default function LatestJobsSection() {
   return (
     <section
       id="jobs"
-      className="mx-auto w-full max-w-[1280px] scroll-mt-20 px-6 py-16 md:px-10 lg:px-16 lg:py-24"
+      className="mx-auto w-full max-w-[1280px] scroll-mt-20 px-6 py-14 md:px-10 md:py-16 lg:px-16 lg:py-24"
     >
-      {/* Header */}
-      <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div className="flex max-w-2xl flex-col gap-2">
+      {/* Header — centred on phones, split left/right from md up. The
+          supporting copy is dropped below `md`: it is three lines on a 360px
+          screen and pushed the tabs + carousel a full fold down. */}
+      <div className="mb-8 flex flex-col items-center gap-4 text-center md:mb-10 md:flex-row md:items-end md:justify-between md:text-start">
+        <div className="flex w-full max-w-2xl flex-col gap-2 text-center md:w-auto md:text-start">
           <Badge
             variant="outline"
-            className="w-fit self-start rounded-full border-border bg-surface px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary"
+            className="w-fit self-center rounded-full border-border bg-surface px-4 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary md:self-start"
           >
             {t("home.jobs.badge")}
           </Badge>
           <h2 className="font-headline-xl text-[32px] font-bold tracking-tight text-ink sm:text-[40px]">
             {t("home.jobs.title")}
           </h2>
-          <p className="font-body-lg text-muted">{t("home.jobs.description")}</p>
+          <p className="hidden font-body-lg text-muted md:block">
+            {t("home.jobs.description")}
+          </p>
         </div>
 
         <div className="flex items-center gap-4">

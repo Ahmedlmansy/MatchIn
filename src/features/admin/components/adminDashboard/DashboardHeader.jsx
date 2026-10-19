@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { RotateCw, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-
 export default function DashboardHeader({
   title,
   subtitle,
@@ -12,6 +11,7 @@ export default function DashboardHeader({
   isRefreshing = false,
 }) {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const headerTitle = title ?? t("pages.admin.overview.title");
   const headerSubtitle = subtitle ?? t("pages.admin.overview.subtitle");
 
@@ -23,7 +23,9 @@ export default function DashboardHeader({
       className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
     >
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-[#222831]">{headerTitle}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-[#222831]">
+          {headerTitle}
+        </h1>
         <p className="text-sm text-muted mt-1">{headerSubtitle}</p>
       </div>
       <div className="flex items-center gap-2.5 flex-wrap">
@@ -33,15 +35,17 @@ export default function DashboardHeader({
           disabled={isRefreshing}
           className="h-10 px-4 rounded-xl text-[13.5px] font-semibold bg-white text-[#222831] border border-border hover:bg-[#f5f2ec] hover:border-[#d9d4cb] transition-all shadow-sm disabled:opacity-60"
         >
-          <RotateCw className={`w-4 h-4 shrink-0 ${isRefreshing ? "animate-spin" : ""}`} />
-          Refresh
+          <RotateCw
+            className={`w-4 h-4 shrink-0 ${isRefreshing ? "animate-spin" : ""}`}
+          />
+          {tCommon("ui.adminShared.refresh")}
         </Button>
         <Button
           onClick={onNewCompany}
           className="h-10 px-4 rounded-xl text-[13.5px] font-semibold bg-primary text-white hover:bg-[#182a4a] transition-all shadow-sm"
         >
           <Plus className="w-4 h-4 shrink-0" />
-          New Company
+          {t("pages.admin.newCompany")}
         </Button>
       </div>
     </motion.header>

@@ -1,13 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import {
-  Loader2,
-  Upload,
-  RotateCcw,
-  Save,
-  Search,
-} from "lucide-react";
+import { Loader2, Upload, RotateCcw, Save, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -49,7 +43,11 @@ const DEFAULTS = {
     signIn: { label: { en: "Sign In", ar: "" }, href: "/sign-in" },
     cta: { label: { en: "Post a Job", ar: "" }, href: "/post-a-job" },
     links: [
-      { label: { en: "Explore Jobs", ar: "" }, href: "/explore-jobs", visible: true },
+      {
+        label: { en: "Explore Jobs", ar: "" },
+        href: "/explore-jobs",
+        visible: true,
+      },
       { label: { en: "Employers", ar: "" }, href: "/employers", visible: true },
       { label: { en: "AI Mentor", ar: "" }, href: "/ai-mentor", visible: true },
       { label: { en: "Pricing", ar: "" }, href: "/pricing", visible: true },
@@ -79,10 +77,34 @@ const DEFAULTS = {
   },
   stats: {
     items: [
-      { value: 180, suffix: "K+", label: { en: "Active Job Seekers", ar: "" }, decimals: 0, visible: true },
-      { value: 4200, suffix: "+", label: { en: "Partner Companies", ar: "" }, decimals: 0, visible: true },
-      { value: 93, suffix: "%", label: { en: "Match Accuracy", ar: "" }, decimals: 0, visible: true },
-      { value: 2.4, suffix: "×", label: { en: "Faster Hiring", ar: "" }, decimals: 1, visible: true },
+      {
+        value: 180,
+        suffix: "K+",
+        label: { en: "Active Job Seekers", ar: "" },
+        decimals: 0,
+        visible: true,
+      },
+      {
+        value: 4200,
+        suffix: "+",
+        label: { en: "Partner Companies", ar: "" },
+        decimals: 0,
+        visible: true,
+      },
+      {
+        value: 93,
+        suffix: "%",
+        label: { en: "Match Accuracy", ar: "" },
+        decimals: 0,
+        visible: true,
+      },
+      {
+        value: 2.4,
+        suffix: "×",
+        label: { en: "Faster Hiring", ar: "" },
+        decimals: 1,
+        visible: true,
+      },
     ],
   },
   jobs: {
@@ -93,7 +115,10 @@ const DEFAULTS = {
       ar: "",
     },
     updatedText: { en: "Updated 12 mins ago", ar: "" },
-    more: { label: { en: "Explore All 12,000+ Open Positions", ar: "" }, href: "/explore-jobs" },
+    more: {
+      label: { en: "Explore All 12,000+ Open Positions", ar: "" },
+      href: "/explore-jobs",
+    },
     filters: [
       { label: { en: "All Roles", ar: "" }, visible: true },
       { label: { en: "Frontend", ar: "" }, visible: true },
@@ -123,7 +148,10 @@ const DEFAULTS = {
       en: "SkillMatch eliminates inflated resumes and keyword-stuffed applicant pipelines.",
       ar: "",
     },
-    button: { label: { en: "Discover the Matching Engine", ar: "" }, href: "#" },
+    button: {
+      label: { en: "Discover the Matching Engine", ar: "" },
+      href: "#",
+    },
     link: { label: { en: "Read our methodology", ar: "" }, href: "#" },
     candidate: {
       visible: true,
@@ -143,7 +171,10 @@ const DEFAULTS = {
       },
     ],
     points: [
-      { text: { en: "Neural match accuracy across verified skills", ar: "" }, visible: true },
+      {
+        text: { en: "Neural match accuracy across verified skills", ar: "" },
+        visible: true,
+      },
     ],
   },
   features: {
@@ -172,7 +203,10 @@ const DEFAULTS = {
       ar: "",
     },
     button: { label: { en: "Talk to AI Mentor", ar: "" }, href: "/ai-mentor" },
-    note: { en: "Available 24/7 • Instant Feedback • Free Plan Included", ar: "" },
+    note: {
+      en: "Available 24/7 • Instant Feedback • Free Plan Included",
+      ar: "",
+    },
     chips: [
       { text: { en: "Mock Interviews", ar: "" }, visible: true },
       { text: { en: "Resume Gap Analysis", ar: "" }, visible: true },
@@ -190,13 +224,19 @@ const DEFAULTS = {
     videoHref: "",
     security: {
       title: { en: "Enterprise-Grade Security", ar: "" },
-      subtitle: { en: "SOC2 Type II Certified & End-to-End Encryption", ar: "" },
+      subtitle: {
+        en: "SOC2 Type II Certified & End-to-End Encryption",
+        ar: "",
+      },
     },
     benefits: [
       {
         icon: "verified",
         title: { en: "Verified Jobs", ar: "" },
-        description: { en: "Every role is reviewed for quality and trust.", ar: "" },
+        description: {
+          en: "Every role is reviewed for quality and trust.",
+          ar: "",
+        },
         visible: true,
       },
     ],
@@ -210,14 +250,20 @@ const DEFAULTS = {
         number: 1,
         icon: "upload_file",
         title: { en: "Upload your CV", ar: "" },
-        description: { en: "Our AI reads it once and maps every skill.", ar: "" },
+        description: {
+          en: "Our AI reads it once and maps every skill.",
+          ar: "",
+        },
         visible: true,
       },
       {
         number: 2,
         icon: "bolt",
         title: { en: "Get matched", ar: "" },
-        description: { en: "Curated roles ranked by verified skill fit.", ar: "" },
+        description: {
+          en: "Curated roles ranked by verified skill fit.",
+          ar: "",
+        },
         visible: true,
       },
       {
@@ -263,8 +309,16 @@ const DEFAULTS = {
       {
         title: { en: "Platform", ar: "" },
         links: [
-          { label: { en: "Job Search Engine", ar: "" }, href: "#", visible: true },
-          { label: { en: "AI Career Copilot", ar: "" }, href: "#", visible: true },
+          {
+            label: { en: "Job Search Engine", ar: "" },
+            href: "#",
+            visible: true,
+          },
+          {
+            label: { en: "AI Career Copilot", ar: "" },
+            href: "#",
+            visible: true,
+          },
         ],
       },
     ],
@@ -277,15 +331,15 @@ const DEFAULTS = {
 
 const SECTION_META = [
   {
-    group: "Page settings",
+    groupKey: "settings",
     keys: ["sections"],
   },
   {
-    group: "Top of the page",
+    groupKey: "top",
     keys: ["navbar", "hero", "stats"],
   },
   {
-    group: "Main content",
+    groupKey: "main",
     keys: [
       "jobs",
       "philosophy",
@@ -298,80 +352,52 @@ const SECTION_META = [
     ],
   },
   {
-    group: "Bottom of the page",
+    groupKey: "bottom",
     keys: ["cta", "footer"],
   },
 ];
 
 const SECTION_INFO = {
   sections: {
-    label: "Sections & Global",
-    description: "Browser tab title, shared images, and section visibility/order.",
     sectionKey: null,
   },
   navbar: {
-    label: "Navbar",
-    description: "Logo, brand name, menu links and top-right buttons.",
     sectionKey: "navbar",
   },
   hero: {
-    label: "Hero",
-    description: "Top banner: badge, headline, search box and popular chips.",
     sectionKey: "hero",
   },
   stats: {
-    label: "Stats",
-    description: "Animated counters under the hero search box.",
     sectionKey: "stats",
   },
   jobs: {
-    label: "Latest jobs",
-    description: "Filter pills and job cards.",
     sectionKey: "jobs",
   },
   philosophy: {
-    label: "Philosophy",
-    description: "Two-column story block with tiles and candidate card.",
     sectionKey: "philosophy",
   },
   features: {
-    label: "Features grid",
-    description: "Category cards for career paths.",
     sectionKey: "features",
   },
   mentor: {
-    label: "AI Mentor card",
-    description: "Dark AI Career Mentor banner.",
     sectionKey: "mentor",
   },
   why: {
-    label: "Why SkillMatch",
-    description: "Benefits and video card.",
     sectionKey: "why",
   },
   howItWorks: {
-    label: "How it works",
-    description: "Optional step-by-step section (hidden by default).",
     sectionKey: "howItWorks",
   },
   testimonials: {
-    label: "Testimonials",
-    description: "Optional customer quotes (hidden by default).",
     sectionKey: "testimonials",
   },
   blocks: {
-    label: "Custom blocks",
-    description: "Add free-form sections: text, image and a button.",
     sectionKey: null,
   },
   cta: {
-    label: "CTA banner",
-    description: "Final call-to-action above the footer.",
     sectionKey: "cta",
   },
   footer: {
-    label: "Footer",
-    description: "Description, newsletter, link columns and legal links.",
     sectionKey: "footer",
   },
 };
@@ -393,9 +419,9 @@ function isI18n(v) {
   return v && typeof v === "object" && ("en" in v || "ar" in v);
 }
 
-
 export default function CmsHomePage() {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const [state, setState] = useState(() => clone(DEFAULTS));
   const [dirty, setDirty] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -417,9 +443,13 @@ export default function CmsHomePage() {
       const raw = localStorage.getItem(DRAFT_KEY);
       if (raw) {
         const draft = JSON.parse(raw);
-        setState({ ...clone(DEFAULTS), ...draft, sections: { ...DEFAULTS.sections, ...draft.sections } });
+        setState({
+          ...clone(DEFAULTS),
+          ...draft,
+          sections: { ...DEFAULTS.sections, ...draft.sections },
+        });
         setDirty(true);
-        toast("Restored your unsaved draft", "warn");
+        toast(t("pages.admin.cmsEditor.draftRestored"), "warn");
       }
     } catch {
       /* ignore */
@@ -495,11 +525,17 @@ export default function CmsHomePage() {
     setSaving(true);
     await new Promise((r) => setTimeout(r, 700));
     try {
-      localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...state, updatedAt: new Date().toISOString() }));
+      localStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({ ...state, updatedAt: new Date().toISOString() }),
+      );
       setDirty(false);
-      toast("Saved in this browser only — not published to the live site.", "warn");
+      toast(t("pages.admin.cmsEditor.saveBrowserOnly"), "warn");
     } catch (err) {
-      toast("Save failed: " + err.message, "err");
+      toast(
+        t("pages.admin.cmsEditor.saveFailed", { message: err.message }),
+        "err",
+      );
     } finally {
       setSaving(false);
     }
@@ -507,14 +543,14 @@ export default function CmsHomePage() {
 
   const doDraft = () => {
     localStorage.setItem(DRAFT_KEY, JSON.stringify(state));
-    toast("Draft saved in this browser (preview with cms_preview=draft)", "warn");
+    toast(t("pages.admin.cmsEditor.draftSaved"), "warn");
   };
 
   const doReset = () => {
-    if (!window.confirm("Reset everything to the default content?")) return;
+    if (!window.confirm(t("pages.admin.cmsEditor.resetConfirm"))) return;
     setState(clone(DEFAULTS));
     markDirty();
-    toast("Defaults restored — press Save to keep them", "warn");
+    toast(t("pages.admin.cmsEditor.defaultsRestored"), "warn");
   };
 
   const matchesQuery = (key) => {
@@ -528,8 +564,31 @@ export default function CmsHomePage() {
     return blob.toLowerCase().includes(q);
   };
 
-  const sectionTabs = SECTION_META.flatMap(({ group, keys }) =>
-    keys.filter(matchesQuery).map((id) => ({ id, group })),
+  // SECTION_INFO and SECTION_META are structural (ids and section keys only);
+  // their display copy lives under pages.admin.cmsEditor.sections / .groups and
+  // is resolved here so the cards below stay dumb.
+  const localizedSectionInfo = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(SECTION_INFO).map(([id, info]) => [
+          id,
+          {
+            ...info,
+            label: t(`pages.admin.cmsEditor.sections.${id}.label`),
+            description: t(`pages.admin.cmsEditor.sections.${id}.description`),
+          },
+        ]),
+      ),
+    [t],
+  );
+
+  const groupLabel = (groupKey) =>
+    t(`pages.admin.cmsEditor.groups.${groupKey}`);
+
+  const sectionTabs = SECTION_META.flatMap(({ groupKey, keys }) =>
+    keys
+      .filter(matchesQuery)
+      .map((id) => ({ id, group: groupLabel(groupKey) })),
   );
 
   const selectedTab = sectionTabs.some(({ id }) => id === activeTab)
@@ -554,7 +613,7 @@ export default function CmsHomePage() {
         className="ml-auto gap-1 border-border text-error hover:bg-background"
       >
         <RotateCcw className="h-4 w-4" />
-        Reset defaults
+        {t("pages.admin.authSettings.resetDefaults")}
       </Button>
       <Button
         type="button"
@@ -564,7 +623,7 @@ export default function CmsHomePage() {
         className="gap-1 border-border"
       >
         <Save className="h-4 w-4" />
-        Save draft
+        {t("pages.admin.authSettings.saveDraft")}
       </Button>
       <Button
         type="button"
@@ -603,7 +662,7 @@ export default function CmsHomePage() {
               <Input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search sections and content…"
+                placeholder={t("pages.admin.cmsEditor.searchPlaceholder")}
                 className="pl-9"
               />
             </div>
@@ -611,12 +670,17 @@ export default function CmsHomePage() {
               value={viewLang}
               onChange={(e) => setViewLang(e.target.value)}
               className="rounded-lg border border-border bg-surface px-3 py-2 text-sm"
-              title="Which languages to show"
+              title={t("pages.admin.cmsEditor.languagesTitle")}
             >
-              <option value="both">EN + عربي</option>
-              {LANGS.map(([c, n]) => (
+              <option value="both">
+                {tCommon("ui.adminEnums.languages.en")} +{" "}
+                {tCommon("ui.adminEnums.languages.ar")}
+              </option>
+              {LANGS.map(([c]) => (
                 <option key={c} value={c}>
-                  {n} only
+                  {t("pages.admin.cmsEditor.langOnly", {
+                    name: tCommon(`ui.adminEnums.languages.${c}`),
+                  })}
                 </option>
               ))}
             </select>
@@ -627,7 +691,7 @@ export default function CmsHomePage() {
               className="ml-auto border-border"
               onClick={() => expandAll(true)}
             >
-              Expand all
+              {t("pages.admin.cmsEditor.expandAll")}
             </Button>
             <Button
               type="button"
@@ -636,7 +700,7 @@ export default function CmsHomePage() {
               className="border-border"
               onClick={() => expandAll(false)}
             >
-              Collapse all
+              {t("pages.admin.cmsEditor.collapseAll")}
             </Button>
           </div>
         </motion.div>
@@ -714,7 +778,7 @@ export default function CmsHomePage() {
                 isI18n={isI18n}
                 tx={tx}
                 clone={clone}
-                sectionInfo={SECTION_INFO}
+                sectionInfo={localizedSectionInfo}
                 ease={ease}
                 onPatchSection={(patch) => patchSection(id, patch)}
                 onPatchRoot={patchRoot}

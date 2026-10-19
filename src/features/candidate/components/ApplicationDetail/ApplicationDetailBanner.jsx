@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Ban, CalendarClock, XCircle } from "lucide-react";
 
 const bannerIcons = {
@@ -7,22 +8,17 @@ const bannerIcons = {
   closed: Ban,
 };
 
+// Keys, not resolved text: this object is built at module scope, so calling
+// t() here would resolve the title once for the language active at import time
+// and never update on a locale switch.
 const bannerStates = {
-  expired: {
-    title: "This job posting has expired",
-    sub: "The employer is no longer accepting new activity on this listing. Your application history stays visible below.",
-  },
-  withdrawn: {
-    title: "You withdrew this application",
-    sub: "Withdrawn on Sep 10, 2026. You can still view everything that happened before you withdrew.",
-  },
-  closed: {
-    title: "This job posting has been closed",
-    sub: "The employer closed this role. No further status updates will come through for this application.",
-  },
+  expired: { titleKey: "bannerExpired", subKey: "bannerExpiredSub" },
+  withdrawn: { titleKey: "bannerWithdrew", subKey: "bannerWithdrewSub" },
+  closed: { titleKey: "bannerClosed", subKey: "bannerClosedSub" },
 };
 
 export default function ApplicationDetailBanner({ viewState }) {
+  const { t } = useTranslation("dashboard");
   if (!["expired", "withdrawn", "closed"].includes(viewState)) return null;
 
   const BannerIcon = bannerIcons[viewState];
@@ -36,10 +32,10 @@ export default function ApplicationDetailBanner({ viewState }) {
       <BannerIcon className="h-5 w-5 shrink-0 mt-0.5" />
       <div>
         <div className="text-[13.5px] font-semibold">
-          {bannerStates[viewState].title}
+          {t(`pages.applicationDetail.${bannerStates[viewState].titleKey}`)}
         </div>
         <div className="text-[12.5px] mt-0.5 opacity-80">
-          {bannerStates[viewState].sub}
+          {t(`pages.applicationDetail.${bannerStates[viewState].subKey}`)}
         </div>
       </div>
     </motion.div>

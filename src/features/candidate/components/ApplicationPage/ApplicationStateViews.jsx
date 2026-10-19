@@ -23,8 +23,7 @@ export default function ApplicationStateViews({ viewState, onLoaded }) {
           {t("pages.applicationStates.empty")}
         </h2>
         <p className="text-[13.5px] text-muted max-w-sm mx-auto mb-7 leading-relaxed">
-          Once you apply to a role, it'll show up here with its status and every
-          update along the way.
+          {t("pages.applicationStates.emptyDescription")}
         </p>
         <Button
           onClick={onLoaded}
@@ -50,7 +49,7 @@ export default function ApplicationStateViews({ viewState, onLoaded }) {
         {t("pages.applicationStates.loadFailed")}
       </h2>
       <p className="text-[13.5px] text-muted max-w-sm mx-auto mb-7 leading-relaxed">
-        Something went wrong on our end. Please try again.
+        {t("pages.applicationDetail.listErrorState")}
       </p>
       <Button
         onClick={onLoaded}

@@ -40,6 +40,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useLocalizedPath } from "@/utils/routes";
+import { translateAdminValue } from "@/features/admin/shared/formatting/locale";
 import {
   useAdminUsersQuery,
   useCreateAdminUserMutation,
@@ -52,48 +53,97 @@ import {
   ResultsPagination,
   RoleBadge,
   UserStatusBadge,
-  ROLE_LABELS,
-  STATUS_LABELS,
+  ROLE_LABEL_KEYS,
+  USER_STATUS_LABEL_KEYS,
+  enumLabel,
 } from "@/features/admin/shared";
 import {
-  USER_ROLE_OPTIONS,
-  USER_SORT_OPTIONS,
-  USER_STATUS_OPTIONS,
+  USER_ROLE_FILTER_KEYS,
+  USER_SORT_FILTER_KEYS,
+  USER_STATUS_FILTER_KEYS,
 } from "@/features/admin/constants/admin.filters";
-import { TableHead, UserTable } from "@/features/admin/components/UserManagementPage/UserTable";
+import {
+  TableHead,
+  UserTable,
+} from "@/features/admin/components/UserManagementPage/UserTable";
 import {
   UserFormBody,
   ChangeRoleBody,
 } from "@/features/admin/components/UserManagementPage/UserDialogs";
 
-const DEFAULT_FILTERS = { search: "", role: "all", status: "all", sort: "newest", page: 1 };
+const DEFAULT_FILTERS = {
+  search: "",
+  role: "all",
+  status: "all",
+  sort: "newest",
+  page: 1,
+};
 
 const STAT_CARDS = [
-  { key: "total", label: "Total Users", icon: UsersIcon, iconClass: "bg-primary/10 text-primary" },
-  { key: "active", label: "Active", icon: CheckCircle2, iconClass: "bg-success/12 text-success" },
-  { key: "inactiveOrSuspended", label: "Inactive / Suspended", icon: Ban, iconClass: "bg-muted/12 text-muted" },
-  { key: "admins", label: "Admins", icon: ShieldCheck, iconClass: "bg-secondary/12 text-secondary" },
+  {
+    key: "total",
+    labelKey: "total",
+    icon: UsersIcon,
+    iconClass: "bg-primary/10 text-primary",
+  },
+  {
+    key: "active",
+    labelKey: "active",
+    icon: CheckCircle2,
+    iconClass: "bg-success/12 text-success",
+  },
+  {
+    key: "inactiveOrSuspended",
+    labelKey: "inactiveOrSuspended",
+    icon: Ban,
+    iconClass: "bg-muted/12 text-muted",
+  },
+  {
+    key: "admins",
+    labelKey: "admins",
+    icon: ShieldCheck,
+    iconClass: "bg-secondary/12 text-secondary",
+  },
 ];
 
-const EXPORT_COLUMNS = [
-  ["User ID", "id"],
-  ["Name", "fullName"],
-  ["Email", "email"],
-  ["Role", "role"],
-  ["Status", "status"],
-  ["Created", "createdLabel"],
-  ["Last activity", "activityLabel"],
+/**
+ * CSV header labels are localized; the *values* stay raw. Dates are emitted as
+ * the ISO timestamp the server sent rather than through Intl, so a spreadsheet
+ * parses the Created / Last activity columns as dates instead of prose.
+ */
+const EXPORT_KEYS = [
+  "id",
+  "fullName",
+  "email",
+  "role",
+  "status",
+  "createdAt",
+  "lastActivityAt",
 ];
 
-function downloadCsv(rows, filename, columns) {
+function downloadCsv(rows, filename, headers) {
   if (rows.length === 0) return;
   const escape = (value) => `"${String(value ?? "").replaceAll('"', '""')}"`;
   const csv = [
-    columns.map(([label]) => escape(label)).join(","),
-    ...rows.map((row) => columns.map(([, key]) => escape(row[key])).join(",")),
+    headers.map((label) => escape(label)).join(","),
+    ...rows.map((row) =>
+      headers
+        .map((_, index) => {
+          const key = EXPORT_KEYS[index];
+          const value = row[key];
+          return escape(
+            key === "role" || key === "status"
+              ? translateAdminValue(value)
+              : value,
+          );
+        })
+        .join(","),
+    ),
   ].join("\r\n");
 
-  const url = URL.createObjectURL(new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }));
+  const url = URL.createObjectURL(
+    new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }),
+  );
   const link = document.createElement("a");
   link.href = url;
   link.download = filename;
@@ -105,15 +155,19 @@ export function UserManagementPage() {
   const navigate = useNavigate();
   const localizedPath = useLocalizedPath();
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
+  const key = "pages.admin.userList";
 
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [modal, setModal] = useState(null); // { type, user }
 
   // Any filter change resets to page 1 so the user is never stranded on a page
   // the new result set doesn't have.
-  const setFilter = (key) => (value) => setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
+  const setFilter = (key) => (value) =>
+    setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
 
-  const { data, isPending, isError, error, refetch, isFetching } = useAdminUsersQuery(filters);
+  const { data, isPending, isError, error, refetch, isFetching } =
+    useAdminUsersQuery(filters);
   const createUser = useCreateAdminUserMutation();
 
   const users = data?.items ?? [];
@@ -125,7 +179,9 @@ export function UserManagementPage() {
   const lastRow = firstRow + users.length - 1;
 
   const hasActiveFilters =
-    Boolean(filters.search) || filters.role !== "all" || filters.status !== "all";
+    Boolean(filters.search) ||
+    filters.role !== "all" ||
+    filters.status !== "all";
   const clearFilters = () => setFilters(DEFAULT_FILTERS);
 
   // Counts derive from the loaded rows, so the strip can never disagree with
@@ -133,7 +189,8 @@ export function UserManagementPage() {
   const stats = {
     total,
     active: users.filter((user) => user.status === "active").length,
-    inactiveOrSuspended: users.filter((user) => user.status !== "active").length,
+    inactiveOrSuspended: users.filter((user) => user.status !== "active")
+      .length,
     admins: users.filter((user) => user.role === "admin").length,
   };
 
@@ -146,14 +203,18 @@ export function UserManagementPage() {
             key={card.key}
             className="flex items-center gap-3.5 rounded-2xl border border-border bg-surface p-4 shadow-[0_2px_8px_rgba(0,0,0,0.03)]"
           >
-            <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${card.iconClass}`}>
+            <div
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${card.iconClass}`}
+            >
               <Icon className="h-5 w-5" />
             </div>
             <div>
               <div className="text-[22px] font-bold leading-tight tracking-tight text-ink">
                 {stats[card.key]}
               </div>
-              <div className="mt-0.5 text-[12.5px] font-medium text-muted">{card.label}</div>
+              <div className="mt-0.5 text-[12.5px] font-medium text-muted">
+                {t(`${key}.stats.${card.labelKey}`)}
+              </div>
             </div>
           </div>
         );
@@ -166,7 +227,7 @@ export function UserManagementPage() {
       return (
         <ErrorState
           title={t("pages.admin.userManagementStates.loadFailed")}
-          description={error?.message || "Something went wrong while fetching the users list."}
+          description={error?.message || t(`${key}.loadFailed`)}
           onRetry={() => refetch()}
         />
       );
@@ -191,16 +252,22 @@ export function UserManagementPage() {
           icon={<SearchX className="h-6 w-6" />}
           iconClassName="bg-muted/12 text-muted"
           title={t("pages.admin.userManagementStates.noResults")}
-          subtitle="Try adjusting your search or filters."
-          primaryButton={{ label: "Clear filters", onClick: clearFilters }}
+          subtitle={t(`${key}.noResultsHint`)}
+          primaryButton={{
+            label: t(`${key}.clearFilters`),
+            onClick: clearFilters,
+          }}
         />
       ) : (
         <Status
           icon={<UsersIcon className="h-6 w-6" />}
           iconClassName="bg-primary/10 text-primary"
           title={t("pages.admin.userManagementStates.empty")}
-          subtitle="Once people sign up, they'll show up here."
-          primaryButton={{ label: "Add User", onClick: () => setModal({ type: "add" }) }}
+          subtitle={t(`${key}.emptyHint`)}
+          primaryButton={{
+            label: t(`${key}.addUser`),
+            onClick: () => setModal({ type: "add" }),
+          }}
         />
       );
     }
@@ -212,7 +279,9 @@ export function UserManagementPage() {
             <TableHead />
             <UserTable
               users={users}
-              onView={(user) => navigate(localizedPath(`/dashboard/user-management/${user.id}`))}
+              onView={(user) =>
+                navigate(localizedPath(`/dashboard/user-management/${user.id}`))
+              }
               onEdit={(user) => setModal({ type: "edit", user })}
               onChangeRole={(user) => setModal({ type: "changeRole", user })}
               onActivate={(user) => setModal({ type: "activate", user })}
@@ -225,10 +294,19 @@ export function UserManagementPage() {
         <ResultsPagination
           page={page}
           pageCount={pageCount}
-          onPageChange={(next) => setFilters((prev) => ({ ...prev, page: next }))}
-          label="User results pages"
+          onPageChange={(next) =>
+            setFilters((prev) => ({ ...prev, page: next }))
+          }
+          label={t(`${key}.pagesLabel`)}
           summary={
-            total > 0 ? `Showing ${firstRow}–${lastRow} of ${total} users` : null
+            total > 0
+              ? t(`${key}.resultsCount`, {
+                  count: total,
+                  start: firstRow,
+                  end: lastRow,
+                  total,
+                })
+              : null
           }
         />
       </>
@@ -247,24 +325,34 @@ export function UserManagementPage() {
             <h1 className="text-[22px] font-bold tracking-tight text-ink">
               {t("pages.admin.userManagement")}
             </h1>
-            <p className="mt-1 text-sm text-muted">Search, view, and manage all platform users</p>
+            <p className="mt-1 text-sm text-muted">{t(`${key}.subtitle`)}</p>
           </div>
           <div className="flex flex-wrap gap-2.5">
             <Button
               variant="outline"
               disabled={users.length === 0}
-              onClick={() => downloadCsv(users, "users.csv", EXPORT_COLUMNS)}
+              onClick={() =>
+                downloadCsv(users, "users.csv", [
+                  "id",
+                  t(`${key}.columns.user`),
+                  t(`${key}.columns.email`),
+                  t(`${key}.columns.role`),
+                  t(`${key}.columns.status`),
+                  t(`${key}.columns.created`),
+                  t(`${key}.columns.lastActivity`),
+                ])
+              }
               className="h-10 gap-2 rounded-xl border-border text-ink"
             >
               <Download className="h-4 w-4" />
-              Export
+              {t(`${key}.export`)}
             </Button>
             <Button
               onClick={() => setModal({ type: "add" })}
               className="h-10 gap-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="h-4 w-4" />
-              Add User
+              {t(`${key}.addUser`)}
             </Button>
           </div>
         </div>
@@ -279,7 +367,7 @@ export function UserManagementPage() {
               <Input
                 value={filters.search}
                 onChange={(event) => setFilter("search")(event.target.value)}
-                placeholder="Search by name, email, or user ID…"
+                placeholder={t(`${key}.searchPlaceholder`)}
                 className="h-[42px] rounded-xl border-border ps-10"
               />
             </div>
@@ -287,29 +375,42 @@ export function UserManagementPage() {
             <FilterSelectField
               value={filters.role}
               onValueChange={setFilter("role")}
-              options={USER_ROLE_OPTIONS}
+              options={USER_ROLE_FILTER_KEYS}
             />
             <FilterSelectField
               value={filters.status}
               onValueChange={setFilter("status")}
-              options={USER_STATUS_OPTIONS}
+              options={USER_STATUS_FILTER_KEYS}
             />
           </div>
 
           {hasActiveFilters && (
             <div className="flex flex-wrap items-center gap-2">
               {filters.search && (
-                <FilterChip label={`Search: ${filters.search}`} onRemove={() => setFilter("search")("")} />
+                <FilterChip
+                  label={tCommon("ui.adminFilters.searchChip", {
+                    label: filters.search,
+                  })}
+                  onRemove={() => setFilter("search")("")}
+                />
               )}
               {filters.role !== "all" && (
                 <FilterChip
-                  label={`Role: ${ROLE_LABELS[filters.role] ?? filters.role}`}
+                  label={tCommon("ui.adminFilters.roleChip", {
+                    label: enumLabel(tCommon, ROLE_LABEL_KEYS, filters.role),
+                  })}
                   onRemove={() => setFilter("role")("all")}
                 />
               )}
               {filters.status !== "all" && (
                 <FilterChip
-                  label={`Status: ${STATUS_LABELS[filters.status] ?? filters.status}`}
+                  label={tCommon("ui.adminFilters.statusChip", {
+                    label: enumLabel(
+                      tCommon,
+                      USER_STATUS_LABEL_KEYS,
+                      filters.status,
+                    ),
+                  })}
                   onRemove={() => setFilter("status")("all")}
                 />
               )}
@@ -318,7 +419,7 @@ export function UserManagementPage() {
                 onClick={clearFilters}
                 className="text-[12.5px] font-semibold text-muted hover:text-ink hover:underline"
               >
-                Clear all
+                {tCommon("ui.adminFilters.clearAll")}
               </button>
             </div>
           )}
@@ -328,19 +429,23 @@ export function UserManagementPage() {
         {!isPending && !isError && (
           <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
             <div className="text-[13.5px] text-muted">
-              Showing <strong className="font-semibold text-ink">{firstRow}–{lastRow}</strong> of{" "}
-              <strong className="font-semibold text-ink">{total}</strong> users
+              {t(`${key}.resultsCount`, {
+                count: total,
+                start: firstRow,
+                end: lastRow,
+                total,
+              })}
             </div>
             <div className="flex items-center gap-2 text-[13px] text-muted">
-              <span>Sort by</span>
+              <span>{t(`${key}.sortBy`)}</span>
               <Select value={filters.sort} onValueChange={setFilter("sort")}>
                 <SelectTrigger className="h-[34px] min-w-[160px] rounded-lg border-border text-[13px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {USER_SORT_OPTIONS.map((option) => (
+                  {USER_SORT_FILTER_KEYS.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
-                      {option.label}
+                      {tCommon(option.labelKey)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -377,10 +482,12 @@ export function UserManagementPage() {
               busy={createUser.isPending}
               error={createUser.error?.message}
               onCancel={() => setModal(null)}
-              onSubmit={(form) => createUser.mutate(form, { onSuccess: () => setModal(null) })}
+              onSubmit={(form) =>
+                createUser.mutate(form, { onSuccess: () => setModal(null) })
+              }
               title={t("pages.admin.userManagementStates.addUser")}
-              subtitle="Create a new account on the platform."
-              submitLabel="Add User"
+              subtitle={t(`pages.admin.userList.form.add`)}
+              submitLabel={t("pages.admin.userList.addUser")}
             />
           </Modal>
         )}
@@ -389,7 +496,9 @@ export function UserManagementPage() {
           <EditUserDialog
             user={modal.user}
             title={t("pages.admin.userManagementStates.editUser")}
-            subtitle={`Update ${modal.user.fullName}'s details.`}
+            subtitle={t(`pages.admin.userList.form.edit`, {
+              name: modal.user.fullName,
+            })}
             onClose={() => setModal(null)}
           />
         )}
@@ -403,9 +512,11 @@ export function UserManagementPage() {
             user={modal.user}
             status="active"
             title={t("pages.admin.userManagementStates.activateUser")}
-            subtitle={`${modal.user.fullName} will regain full access to their account.`}
-            confirmLabel="Activate"
-            busyLabel="Activating…"
+            subtitle={t(`pages.admin.userList.form.activateSub`, {
+              name: modal.user.fullName,
+            })}
+            confirmLabel={t("pages.admin.userList.rowActions.activate")}
+            busyLabel={t(`pages.admin.userList.form.activating`)}
             icon={<Power className="h-6 w-6" />}
             iconClassName="bg-success/10 text-success"
             onClose={() => setModal(null)}
@@ -417,9 +528,11 @@ export function UserManagementPage() {
             user={modal.user}
             status="inactive"
             title={t("pages.admin.userManagementStates.deactivateUser")}
-            subtitle={`${modal.user.fullName} will lose access until reactivated.`}
-            confirmLabel="Deactivate"
-            busyLabel="Deactivating…"
+            subtitle={t(`pages.admin.userList.form.deactivateSub`, {
+              name: modal.user.fullName,
+            })}
+            confirmLabel={t("pages.admin.userList.rowActions.deactivate")}
+            busyLabel={t(`pages.admin.userList.form.deactivating`)}
             icon={<Ban className="h-6 w-6" />}
             iconClassName="bg-error/10 text-error"
             onClose={() => setModal(null)}
@@ -460,6 +573,7 @@ function SetStatusDialog({
   iconClassName,
   onClose,
 }) {
+  const { t: tCommon } = useTranslation("common");
   const { mutate, isPending, error } = useSetAdminUserStatusMutation(user.id);
 
   return (
@@ -469,7 +583,11 @@ function SetStatusDialog({
         iconClassName={iconClassName}
         title={title}
         subtitle={error?.message ?? subtitle}
-        secondaryButton={{ label: "Cancel", onClick: onClose, disabled: isPending }}
+        secondaryButton={{
+          label: tCommon("ui.adminShared.cancel"),
+          onClick: onClose,
+          disabled: isPending,
+        }}
         primaryButton={{
           label: isPending ? busyLabel : confirmLabel,
           onClick: () => mutate(status, { onSuccess: onClose }),
@@ -481,6 +599,7 @@ function SetStatusDialog({
 }
 
 function EditUserDialog({ user, title, subtitle, onClose }) {
+  const { t } = useTranslation("dashboard");
   const { mutate, isPending, error } = useUpdateAdminUserMutation(user.id);
 
   return (
@@ -492,8 +611,12 @@ function EditUserDialog({ user, title, subtitle, onClose }) {
         onSubmit={(form) => mutate(form, { onSuccess: onClose })}
         title={title}
         subtitle={subtitle}
-        submitLabel="Save Changes"
-        initialValues={{ fullName: user.fullName, email: user.email, role: user.role }}
+        submitLabel={t(`pages.admin.userList.form.editSubmit`)}
+        initialValues={{
+          fullName: user.fullName,
+          email: user.email,
+          role: user.role,
+        }}
       />
     </Modal>
   );
@@ -516,18 +639,29 @@ function ChangeRoleDialog({ user, onClose }) {
 }
 
 function DeleteUserDialog({ user, onClose }) {
+  const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const { mutate, isPending, error } = useDeleteAdminUserMutation(user.id);
+  const key = "pages.admin.userList.form";
 
   return (
     <Modal onClose={onClose} maxWidth="max-w-[400px]">
       <Status
         icon={<Trash2 className="h-6 w-6" />}
         iconClassName="bg-error/10 text-error"
-        title="Delete user"
-        subtitle={error ? error.message : `This permanently removes ${user.fullName}'s account. This can't be undone.`}
-        secondaryButton={{ label: "Cancel", onClick: onClose, disabled: isPending }}
+        title={t(`${key}.deleteTitle`)}
+        subtitle={
+          error ? error.message : t(`${key}.deleteSub`, { name: user.fullName })
+        }
+        secondaryButton={{
+          label: tCommon("ui.adminShared.cancel"),
+          onClick: onClose,
+          disabled: isPending,
+        }}
         primaryButton={{
-          label: isPending ? "Deleting…" : "Delete User",
+          label: isPending
+            ? t(`${key}.deleting`)
+            : t(`pages.admin.userList.rowActions.delete`),
           onClick: () => mutate(undefined, { onSuccess: onClose }),
           disabled: isPending,
         }}
@@ -537,6 +671,8 @@ function DeleteUserDialog({ user, onClose }) {
 }
 
 function FilterSelectField({ value, onValueChange, options }) {
+  const { t: tCommon } = useTranslation("common");
+
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className="h-[42px] min-w-[140px] rounded-xl border-border">
@@ -545,7 +681,7 @@ function FilterSelectField({ value, onValueChange, options }) {
       <SelectContent>
         {options.map((option) => (
           <SelectItem key={option.value} value={option.value}>
-            {option.label}
+            {tCommon(option.labelKey)}
           </SelectItem>
         ))}
       </SelectContent>

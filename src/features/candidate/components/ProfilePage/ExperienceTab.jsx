@@ -18,13 +18,14 @@ const DEFAULT_EXPERIENCES = [
 
 export default function ExperienceTab({ profile }) {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const { data: profileData, isLoading } = useProfileQuery();
 
   const currentProfile = profile || profileData;
   const [experiences, setExperiences] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [editingId, setEditingId] = useState(null); 
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     company: "",
@@ -83,7 +84,7 @@ export default function ExperienceTab({ profile }) {
       if (editingId) {
         setExperiences((prev) =>
           prev.map((item) =>
-            item.id === editingId ? { ...item, ...formData } : item
+            item.id === editingId ? { ...item, ...formData } : item,
           )
         );
       } else {
@@ -160,15 +161,15 @@ export default function ExperienceTab({ profile }) {
       <TabSaveActions
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        title={editingId ? t("pages.profile.editExperience") : t("pages.profile.addExperience")}
-        confirmLabel={t("common.save")}
+        title={editingId ? "Edit Work Experience" : t("pages.profile.addExperience")}
+        confirmLabel={tCommon("actions.save")}
         isLoading={isSaving}
         loadingLabel={t("common.saving")}
         onConfirm={handleSave}
       >
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">Title / Role *</label>
+            <label className="text-xs font-bold text-gray-700 block">{t(`pages.profile.experienceTitle`)}</label>
             <input
               type="text"
               name="title"
@@ -180,7 +181,7 @@ export default function ExperienceTab({ profile }) {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">Company / Institution *</label>
+            <label className="text-xs font-bold text-gray-700 block">{t(`pages.profile.experienceCompany`)}</label>
             <input
               type="text"
               name="company"
@@ -193,7 +194,7 @@ export default function ExperienceTab({ profile }) {
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700 block">Start Date</label>
+              <label className="text-xs font-bold text-gray-700 block">{t(`pages.profile.experienceStart`)}</label>
               <input
                 type="text"
                 name="startDate"
@@ -205,7 +206,7 @@ export default function ExperienceTab({ profile }) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-gray-700 block">End Date</label>
+              <label className="text-xs font-bold text-gray-700 block">{t(`pages.profile.experienceEnd`)}</label>
               <input
                 type="text"
                 name="endDate"
@@ -228,7 +229,7 @@ export default function ExperienceTab({ profile }) {
             : "Are you sure you want to delete this item?"
         }
         variant="danger"
-        confirmLabel={t("common.delete")}
+        confirmLabel={tCommon("actions.delete")}
         isLoading={isDeleting}
         loadingLabel={t("common.deleting")}
         onConfirm={handleConfirmDelete}

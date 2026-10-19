@@ -9,9 +9,21 @@ import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
 import { Briefcase, Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PageHeader, Badge, ReadOnlyBanner, ErrorState } from "@/features/admin/shared";
+import {
+  PageHeader,
+  Badge,
+  ReadOnlyBanner,
+  ErrorState,
+} from "@/features/admin/shared";
 import { useAdminAuditLogQuery } from "@/features/admin/hooks";
 import { entityKindOf } from "@/features/admin/api/admin-audit-logs.api";
+import {
+  formatDateTime,
+  relativeShortLabel,
+  translateAdminAuditAction,
+  translateAdminEntity,
+  translateAdminValue,
+} from "@/features/admin/shared/formatting/locale";
 import {
   DetailCard,
   DiffViewer,
@@ -35,7 +47,12 @@ export default function AuditLogDetails() {
   const { auditId } = useParams();
 
   const auditLogsPath = localizedPath("/dashboard/audit-logs");
-  const { data: log, isPending, isError, error } = useAdminAuditLogQuery(auditId);
+  const {
+    data: log,
+    isPending,
+    isError,
+    error,
+  } = useAdminAuditLogQuery(auditId);
 
   const returnToLogs = () => navigate(auditLogsPath);
 
@@ -46,7 +63,11 @@ export default function AuditLogDetails() {
       <div className="min-h-screen bg-background px-4 py-10 sm:px-7">
         <div className="mx-auto max-w-4xl">
           <ErrorState
-            title={error?.status === 404 ? "Audit log not found" : "Couldn't load this audit log"}
+            title={
+              error?.status === 404
+                ? t(`pages.admin.auditLogs.notFound`)
+                : t(`pages.admin.auditDetails.loadFailed`)
+            }
             description={error?.message}
             onRetry={returnToLogs}
           />
@@ -68,8 +89,11 @@ export default function AuditLogDetails() {
       <PageHeader
         breadcrumbs={
           <nav className="flex items-center gap-1.5 text-xs sm:text-sm text-muted mb-3 flex-wrap">
-            <Link to={auditLogsPath} className="hover:text-primary transition-colors">
-              {t("pages.admin.auditLogs")}
+            <Link
+              to={auditLogsPath}
+              className="hover:text-primary transition-colors"
+            >
+              {t("pages.admin.auditLogs.title")}
             </Link>
             <span className="opacity-60">/</span>
             <span className="font-medium text-[#222831]">{log.id}</span>
@@ -77,7 +101,9 @@ export default function AuditLogDetails() {
         }
         title={t("pages.admin.auditLogDetails")}
         subtitle={
-          <span className="text-xs sm:text-sm font-mono text-muted">#{log.id}</span>
+          <span className="text-xs sm:text-sm font-mono text-muted">
+            #{log.id}
+          </span>
         }
         actions={
           <button
@@ -85,33 +111,41 @@ export default function AuditLogDetails() {
             onClick={returnToLogs}
             className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-xs sm:text-sm font-semibold border border-transparent hover:bg-black/5 text-muted hover:text-[#222831] transition-colors"
           >
-            Return to Audit Logs
+            {t("pages.admin.returnToAuditLogs")}
           </button>
         }
       />
 
-      <ReadOnlyBanner>
-        This is an immutable record. Audit logs cannot be edited or deleted.
-        They exist for full administrative traceability.
-      </ReadOnlyBanner>
+      <ReadOnlyBanner>{t(`pages.admin.auditLogs.readOnlyBody`)}</ReadOnlyBanner>
 
       {/* Status Strip */}
       <div className="flex flex-wrap items-center gap-3.5 p-3.5 px-4 bg-white border border-border rounded-2xl mb-5 shadow-sm">
-        <Badge type={log.actionType} text={log.action} className="h-8 px-3.5 text-xs sm:text-sm font-bold" />
+        <Badge
+          type={log.actionType}
+          text={translateAdminAuditAction(log.action, log.actionType)}
+          className="h-8 px-3.5 text-xs sm:text-sm font-bold"
+        />
         <div className="flex items-center gap-2 text-xs sm:text-sm text-muted flex-wrap">
+          <span>{t(`pages.admin.auditDetails.by`, { name: log.actor })}</span>
+          <span className="w-1 h-1 rounded-full bg-border" />
           <span>
-            by <strong className="text-[#222831] font-semibold">{log.actor}</strong>
+            {log.createdAt ? formatDateTime(log.createdAt) : log.time}
           </span>
           <span className="w-1 h-1 rounded-full bg-border" />
-          <span>{log.time}</span>
-          <span className="w-1 h-1 rounded-full bg-border" />
-          <span>{log.relative}</span>
+          <span>{relativeShortLabel(log.createdAt) ?? log.relative}</span>
         </div>
-        <Badge type="readonly" text="Read-only" className="ms-auto" />
+        <Badge
+          type="readonly"
+          text={t(`pages.admin.auditDetails.readOnly`)}
+          className="ms-auto"
+        />
       </div>
 
       {/* Card 1: Actor */}
-      <DetailCard title={t("pages.admin.auditDetails.actor")} hint="Who performed this action">
+      <DetailCard
+        title={t("pages.admin.auditDetails.actor")}
+        hint={t(`pages.admin.auditDetails.hints.actor`)}
+      >
         <div className="flex items-center gap-3">
           <div
             className={cn(
@@ -122,8 +156,12 @@ export default function AuditLogDetails() {
             {log.initials}
           </div>
           <div>
-            <div className="font-bold text-base text-[#222831]">{log.actor}</div>
-            <div className="text-xs sm:text-sm text-muted">{log.role}</div>
+            <div className="font-bold text-base text-[#222831]">
+              {log.actor}
+            </div>
+            <div className="text-xs sm:text-sm text-muted">
+              {translateAdminValue(log.role)}
+            </div>
           </div>
         </div>
       </DetailCard>
@@ -131,21 +169,29 @@ export default function AuditLogDetails() {
       {/* Card 2: Entity */}
       <DetailCard
         title={t("pages.admin.auditDetails.entity")}
-        hint="What was affected"
+        hint={t(`pages.admin.auditDetails.hints.entity`)}
         delay={0.05}
         bodyClassName="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs sm:text-sm"
       >
         <div>
-          <FieldLabel>Entity Type</FieldLabel>
-          <div className="font-semibold text-[#222831]">{log.entity}</div>
+          <FieldLabel>
+            {t(`pages.admin.auditDetails.fields.entityType`)}
+          </FieldLabel>
+          <div className="font-semibold text-[#222831]">
+            {translateAdminEntity(log.entity)}
+          </div>
         </div>
         <div>
-          <FieldLabel>Entity ID</FieldLabel>
+          <FieldLabel>
+            {t(`pages.admin.auditDetails.fields.entityId`)}
+          </FieldLabel>
           <div className="font-mono text-[#222831]">{log.entityId}</div>
         </div>
         {log.entityTitle && (
           <div className="sm:col-span-2">
-            <FieldLabel>Entity Title</FieldLabel>
+            <FieldLabel>
+              {t(`pages.admin.auditDetails.fields.entityTitle`)}
+            </FieldLabel>
             <div className="font-bold text-primary">{log.entityTitle}</div>
           </div>
         )}
@@ -154,7 +200,7 @@ export default function AuditLogDetails() {
       {/* Card 3: What Changed */}
       <DetailCard
         title={t("pages.admin.auditDetails.changes")}
-        hint="Previous value → New value"
+        hint={t("pages.admin.auditDetails.hints.changes")}
         delay={0.1}
       >
         <DiffViewer
@@ -168,7 +214,7 @@ export default function AuditLogDetails() {
       {relatedEntities.length > 0 && (
         <DetailCard
           title={t("pages.admin.auditDetails.relatedEntities")}
-          hint="Jump to linked records"
+          hint={t(`pages.admin.auditDetails.hints.related`)}
           delay={0.15}
           bodyClassName="grid grid-cols-1 sm:grid-cols-2 gap-3.5"
         >
@@ -185,7 +231,7 @@ export default function AuditLogDetails() {
           onClick={returnToLogs}
           className="inline-flex items-center gap-2 h-10 px-4 rounded-xl text-xs sm:text-sm font-semibold hover:bg-black/5 text-muted hover:text-[#222831] transition-colors"
         >
-          Return to Audit Logs
+          {t("pages.admin.returnToAuditLogs")}
         </button>
         <div className="flex gap-2.5 flex-wrap">
           {/* One link, for the screen this record's subject actually lives on.
@@ -198,10 +244,14 @@ export default function AuditLogDetails() {
               to={
                 entityKind === "job"
                   ? localizedPath(`/dashboard/job-management/${log.entityId}`)
-                  : localizedPath(`/dashboard/company-management/${log.entityId}`)
+                  : localizedPath(
+                      `/dashboard/company-management/${log.entityId}`,
+                    )
               }
               icon={entityKind === "job" ? Briefcase : Building2}
-              label={entityKind === "job" ? "View Related Job" : "View Related Company"}
+              label={t(
+                `pages.admin.auditDetails.viewRelated.${entityKind === "job" ? "job" : "company"}`,
+              )}
               primary
             />
           ) : null}

@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { ONBOARDING_STEP_FIELDS } from "@/features/candidate/shared/onboardingstepfields";
 
 export default function StepperHeader({ currentStep }) {
+  const { t } = useTranslation("dashboard");
   const percent = Math.round(
     (currentStep / ONBOARDING_STEP_FIELDS.length) * 100,
   );
@@ -10,10 +12,10 @@ export default function StepperHeader({ currentStep }) {
       <div className="mb-3 flex items-center justify-between">
         <span className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-ink">
           <span className="h-1.5 w-1.5 rounded-full bg-error" />
-          Smart Account Setup
+          {t("pages.onboarding.smartAccountSetup")}
         </span>
         <span className="text-[12px] text-muted">
-          Step {currentStep} of {ONBOARDING_STEP_FIELDS.length}{" "}
+          {t("pages.onboarding.stepOf", { current: currentStep, total: ONBOARDING_STEP_FIELDS.length })}{" "}
           <strong className="font-bold text-primary">{percent}%</strong>
         </span>
       </div>

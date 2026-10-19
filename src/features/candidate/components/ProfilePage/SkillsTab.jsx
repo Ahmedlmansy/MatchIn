@@ -23,9 +23,10 @@ const DEFAULT_SKILLS = [
 export default function SkillsTab({ profile }) {
   const { t } = useTranslation("dashboard");
   const { data: profileData, isLoading } = useProfileQuery();
+  const { t: tCommon } = useTranslation("common");
+  const [skills, setSkills] = useState(initialSkills);
 
   const currentProfile = profile || profileData;
-  const [skills, setSkills] = useState([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [newSkill, setNewSkill] = useState({
@@ -152,7 +153,7 @@ export default function SkillsTab({ profile }) {
         isOpen={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         title={t("pages.profile.addSkill")}
-        confirmLabel={t("common.save")}
+        confirmLabel={tCommon("actions.save")}
         isLoading={isAdding}
         loadingLabel={t("common.saving")}
         onConfirm={handleConfirmAdd}
@@ -160,7 +161,7 @@ export default function SkillsTab({ profile }) {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-gray-700 block">
-              Skill Name *
+              {t("pages.profile.skillName")}
             </label>
             <input
               type="text"

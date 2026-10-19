@@ -85,7 +85,7 @@ export default function JobCard({
   onAction,
   onSave,
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation(["dashboard", "common"]);
   
   // Transform job data if it's in API format
   const isApiFormat = job.matchPercent !== undefined || job.initial !== undefined;
@@ -298,7 +298,7 @@ export default function JobCard({
               size="icon"
               onClick={() => onSave(displayJob)}
               className="h-8 w-8 rounded-full border-border text-muted hover:text-primary"
-              aria-label="Save job"
+              aria-label={t("pages.savedJobs.saveJobAria")}
             >
               {displayJob.isBookmarked ? (
                 <svg className="h-4.5 w-4.5 fill-current" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>

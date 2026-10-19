@@ -10,14 +10,22 @@ import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { FilterX } from "lucide-react";
 import { useLocalizedPath } from "@/utils/routes";
-import { useAdminJobsQuery, useUpdateAdminJobMutation } from "@/features/admin/hooks";
-import { ErrorState, ResultsPagination, containerVariants } from "@/features/admin/shared";
+import {
+  useAdminJobsQuery,
+  useUpdateAdminJobMutation,
+} from "@/features/admin/hooks";
+import {
+  ErrorState,
+  ResultsPagination,
+  containerVariants,
+} from "@/features/admin/shared";
 import { filtersToUrlParams } from "@/features/admin/api/normalize";
+import { jobFiltersFromParams } from "@/features/admin/shared/listFilterParams";
 import {
   JOB_COLUMNS,
-  JOB_SORT_OPTIONS,
-  JOB_STATUS_FILTERS,
-  JOB_SOURCE_FILTERS,
+  JOB_SORT_KEYS,
+  JOB_STATUS_FILTER_KEYS,
+  JOB_SOURCE_FILTER_KEYS,
 } from "@/features/admin/constants/admin.filters";
 import {
   JobManagementToolbar,
@@ -34,37 +42,6 @@ const DEFAULT_FILTERS = {
   page: 1,
 };
 
-/**
- * Deep links into this list arrive as query params — a company's detail page
- * sends ?search=… and the dashboard's "Review Pending" sends ?status=pending.
- * Nothing read them, so every one of those links landed on an unfiltered list
- * and looked broken. Seed the initial filters from the URL, ignoring anything
- * that isn't a key we know, so an unknown param can't blank the toolbar.
- */
-function filtersFromParams(params) {
-  // The job filter options are keyed by `id` (unlike every other admin filter
-  // list, which uses `value`) — see admin.filters.js.
-  const pickFrom = (key, allowed) => {
-    const value = params.get(key);
-    return value && allowed.includes(value) ? value : null;
-  };
-
-  return {
-    ...DEFAULT_FILTERS,
-    search: params.get("search") ?? DEFAULT_FILTERS.search,
-    status:
-      pickFrom(
-        "status",
-        JOB_STATUS_FILTERS.map((option) => option.id),
-      ) ?? DEFAULT_FILTERS.status,
-    source:
-      pickFrom(
-        "source",
-        JOB_SOURCE_FILTERS.map((option) => option.id),
-      ) ?? DEFAULT_FILTERS.source,
-  };
-}
-
 /** A filter other than the neutral "all"/"created-desc" is an active filter. */
 const hasActiveFilters = (filters) =>
   Boolean(filters.search) ||
@@ -73,13 +50,16 @@ const hasActiveFilters = (filters) =>
 
 export default function JobManagement() {
   const { t } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const navigate = useNavigate();
   const localizedPath = useLocalizedPath();
   const [searchParams, setSearchParams] = useSearchParams();
 
   // One filter object drives both the query key and the request params, so the
   // cache can never disagree with what the user is looking at.
-  const [filters, setFilters] = useState(() => filtersFromParams(searchParams));
+  const [filters, setFilters] = useState(() =>
+    jobFiltersFromParams(searchParams, DEFAULT_FILTERS),
+  );
   const [activeMenuId, setActiveMenuId] = useState(null);
 
   // Mirror the filters back into the URL. The page reads them from the URL on
@@ -97,7 +77,8 @@ export default function JobManagement() {
     setFilters((prev) => ({ ...prev, [key]: value, page: 1 }));
   const clearFilters = () => setFilters(DEFAULT_FILTERS);
 
-  const { data, isPending, isError, error, refetch } = useAdminJobsQuery(filters);
+  const { data, isPending, isError, error, refetch } =
+    useAdminJobsQuery(filters);
   const {
     mutate: updateJob,
     isPending: isUpdating,
@@ -108,10 +89,12 @@ export default function JobManagement() {
   const total = data?.total ?? 0;
   const page = data?.page ?? 1;
   const pageCount = data?.pageCount ?? 1;
-  const start = total === 0 ? 0 : (page - 1) * (data?.perPage ?? jobs.length) + 1;
+  const start =
+    total === 0 ? 0 : (page - 1) * (data?.perPage ?? jobs.length) + 1;
   const filtered = hasActiveFilters(filters);
 
-  const goToJob = (jobId) => navigate(localizedPath(`/dashboard/job-management/${jobId}`));
+  const goToJob = (jobId) =>
+    navigate(localizedPath(`/dashboard/job-management/${jobId}`));
 
   // "Edit" used to call goToJob too, so both row actions opened the same
   // inline-editing detail screen. That left EditJobs — a full-page editor with
@@ -132,8 +115,10 @@ export default function JobManagement() {
     if (isError) {
       return (
         <ErrorState
-          title="Couldn't load jobs"
-          description={error?.message || "Something went wrong while fetching the job list."}
+          title={t("pages.admin.jobList.loadFailed.title")}
+          description={
+            error?.message || t("pages.admin.jobList.loadFailed.description")
+          }
           onRetry={() => refetch()}
         />
       );
@@ -148,36 +133,36 @@ export default function JobManagement() {
 
     return (
       <div>
-        <JobManagementToolbar
-          filters={filters}
-          onFilterChange={setFilter}
-          onClearFilters={clearFilters}
-          statusOptions={JOB_STATUS_FILTERS}
-          sourceOptions={JOB_SOURCE_FILTERS}
-          sortOptions={JOB_SORT_OPTIONS}
-        />
-
         <div className="hidden lg:grid grid-cols-12 gap-3 px-4 py-2 mt-4 text-[10.5px] font-semibold text-muted uppercase tracking-wide">
           {JOB_COLUMNS.map((column) => (
-            <div key={column.label} className={column.className}>
-              {column.label}
+            <div key={column.labelKey} className={column.className}>
+              {tCommon(column.labelKey)}
             </div>
           ))}
         </div>
 
-        <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-3">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="space-y-3"
+        >
           <AnimatePresence mode="popLayout">
             {jobs.map((job) => (
               <JobRow
                 key={job.id}
                 job={job}
                 isMenuOpen={activeMenuId === job.id}
-                onToggleMenu={(open) => setActiveMenuId((open ? job.id : null))}
+                onToggleMenu={(open) => setActiveMenuId(open ? job.id : null)}
                 onView={() => goToJob(job.id)}
                 onEdit={() => goToJobEditor(job.id)}
                 onChangeStatus={(status) => handleChangeStatus(job, status)}
                 companyHref={
-                  job.companyId ? localizedPath(`/dashboard/company-management/${job.companyId}`) : null
+                  job.companyId
+                    ? localizedPath(
+                        `/dashboard/company-management/${job.companyId}`,
+                      )
+                    : null
                 }
                 isUpdating={isUpdating}
               />
@@ -194,9 +179,16 @@ export default function JobManagement() {
             <ResultsPagination
               page={page}
               pageCount={pageCount}
-              onPageChange={(next) => setFilters((prev) => ({ ...prev, page: next }))}
-              label="Job results pages"
-              summary={`Showing ${start}–${start + jobs.length - 1} of ${total} jobs`}
+              onPageChange={(next) =>
+                setFilters((prev) => ({ ...prev, page: next }))
+              }
+              label={t("pages.admin.jobList.pagesLabel")}
+              summary={t("pages.admin.jobList.resultsCount", {
+                count: total,
+                start,
+                end: start + jobs.length - 1,
+                total,
+              })}
             />
           </div>
         ) : null}
@@ -228,6 +220,17 @@ export default function JobManagement() {
           </p>
         ) : null}
 
+        {!isPending && !isError ? (
+          <JobManagementToolbar
+            filters={filters}
+            onFilterChange={setFilter}
+            onClearFilters={clearFilters}
+            statusOptions={JOB_STATUS_FILTER_KEYS}
+            sourceOptions={JOB_SOURCE_FILTER_KEYS}
+            sortOptions={JOB_SORT_KEYS}
+          />
+        ) : null}
+
         {renderRows()}
       </main>
     </div>
@@ -236,6 +239,8 @@ export default function JobManagement() {
 
 /** "Nothing matched, here are the filters to reset" card. */
 function NoMatches({ onClear }) {
+  const { t } = useTranslation("dashboard");
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.98 }}
@@ -243,13 +248,15 @@ function NoMatches({ onClear }) {
       className="py-16 text-center bg-white border border-border rounded-2xl mt-3 shadow-sm"
     >
       <FilterX className="w-8 h-8 text-muted mx-auto mb-2" />
-      <p className="text-[13.5px] text-muted">No jobs match your search or filters.</p>
+      <p className="text-[13.5px] text-muted">
+        {t("pages.admin.jobList.noMatches")}
+      </p>
       <button
         type="button"
         onClick={onClear}
         className="mt-3 text-[12.5px] font-semibold text-primary hover:underline"
       >
-        Clear filters
+        {t("pages.admin.jobList.clearFilters")}
       </button>
     </motion.div>
   );

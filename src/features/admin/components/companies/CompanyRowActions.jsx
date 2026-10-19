@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
 import { CheckCircle2, Eye, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,9 @@ import { Button } from "@/components/ui/button";
  * the real, localized company detail route.
  */
 export default function CompanyRowActions({ company, onVerify, onReject, isUpdating }) {
+  const { t } = useTranslation("dashboard");
   const localizedPath = useLocalizedPath();
+  const key = "pages.admin.companyList.actions";
 
   return (
     <div className="flex items-center justify-end gap-1.5">
@@ -20,7 +23,9 @@ export default function CompanyRowActions({ company, onVerify, onReject, isUpdat
           size="sm"
           className="h-8 rounded-lg border-border bg-surface text-[12.5px] font-semibold text-ink hover:bg-background"
         >
-          <Link to={localizedPath(`/dashboard/company-management/${company.id}`)}>Manage</Link>
+          <Link to={localizedPath(`/dashboard/company-management/${company.id}`)}>
+            {t(`${key}.manage`)}
+          </Link>
         </Button>
       ) : (
         <Button
@@ -35,7 +40,7 @@ export default function CompanyRowActions({ company, onVerify, onReject, isUpdat
           ) : (
             <CheckCircle2 className="h-[14px] w-[14px]" />
           )}
-          Verify
+          {t(`${key}.verify`)}
         </Button>
       )}
 
@@ -48,7 +53,7 @@ export default function CompanyRowActions({ company, onVerify, onReject, isUpdat
           onClick={() => onReject(company.id)}
           className="h-8 rounded-lg border-error/35 bg-transparent text-[12.5px] font-semibold text-error hover:border-error hover:bg-error/10 disabled:opacity-50"
         >
-          Reject
+          {t(`${key}.reject`)}
         </Button>
       )}
 
@@ -61,8 +66,8 @@ export default function CompanyRowActions({ company, onVerify, onReject, isUpdat
       >
         <Link
           to={localizedPath(`/dashboard/company-management/${company.id}`)}
-          title="View company"
-          aria-label={`View ${company.name}`}
+          title={t(`${key}.view`)}
+          aria-label={t(`${key}.viewAria`, { name: company.name })}
         >
           <Eye className="h-4 w-4" />
         </Link>

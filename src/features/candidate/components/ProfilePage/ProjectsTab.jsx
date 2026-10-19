@@ -181,7 +181,7 @@ export default function ProjectsTab({ profile }) {
       >
         <div className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">Project Title *</label>
+            <label className="text-xs font-bold text-gray-700 block">{t(`pages.profile.projectTitle`)}</label>
             <input
               type="text"
               name="title"
@@ -199,13 +199,13 @@ export default function ProjectsTab({ profile }) {
               rows={3}
               value={formData.description}
               onChange={handleChange}
-              placeholder="Brief description of the project..."
+              placeholder={t("pages.profile.projectDescription")}
               className="w-full px-4 py-3 bg-[#FAF8F5] border border-gray-200/80 rounded-2xl text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#1E325C]/20 transition-all resize-none"
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-bold text-gray-700 block">Project Link / URL</label>
+            <label className="text-xs font-bold text-gray-700 block">{t(`pages.profile.projectLink`)}</label>
             <input
               type="text"
               name="link"

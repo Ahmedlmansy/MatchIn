@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { NOTIFICATION_TYPE_STYLES } from "@/features/candidate/shared/notificationTypeStyles";
 
 export default function NotificationItem({ notification, onMarkAsRead, compact = false }) {
+  const { t } = useTranslation("dashboard");
   const style = NOTIFICATION_TYPE_STYLES[notification.type] ?? NOTIFICATION_TYPE_STYLES.job;
   const Icon = style.icon;
 
@@ -38,7 +40,7 @@ export default function NotificationItem({ notification, onMarkAsRead, compact =
           onClick={() => onMarkAsRead(notification.id)}
           className="h-auto shrink-0 self-start p-0 text-[11px] font-semibold text-primary hover:bg-transparent hover:text-primary/80"
         >
-          Mark as read
+          {t("pages.applicationDetail.markAsRead")}
         </Button>
       )}
     </div>

@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { translateAdminEntity } from "@/features/admin/shared/formatting/locale";
 
 /**
  * RelatedEntityCard
@@ -40,7 +41,7 @@ export default function RelatedEntityCard({
       </div>
       <div className="flex-1 min-w-0">
         <div className="text-[11px] font-bold uppercase tracking-wider text-muted">
-          {label}
+          {translateAdminEntity(label)}
         </div>
         <div className="text-sm font-bold text-[#222831] truncate">{title}</div>
         <div className="text-xs font-mono text-muted">{meta}</div>

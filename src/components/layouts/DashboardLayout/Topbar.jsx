@@ -10,11 +10,11 @@ import { useTranslation } from "react-i18next";
 import { useLocalizedPath } from "@/utils/routes";
 
 export default function Topbar({ onOpenMobileSidebar, userName, userRole }) {
+  const { t } = useTranslation("dashboard");
   const location = useLocation();
   const navigate = useNavigate();
   const { lang } = useParams();
   const localizedPath = useLocalizedPath();
-  const { t } = useTranslation("dashboard");
 
   const handleLanguageChange = (newLang) => {
     const segments = location.pathname.split("/");
@@ -35,7 +35,7 @@ export default function Topbar({ onOpenMobileSidebar, userName, userRole }) {
             variant="outline"
             size="icon"
             onClick={onOpenMobileSidebar}
-            className="rounded-xl border-border bg-surface p-2 text-muted md:hidden"
+            className="rounded-xl border-border bg-surface p-2 text-muted lg:hidden"
           >
             <Menu className="h-[22px] w-[22px]" />
           </Button>
@@ -50,7 +50,7 @@ export default function Topbar({ onOpenMobileSidebar, userName, userRole }) {
             <Search className="me-2 h-[18px] w-[18px] shrink-0 text-muted/70" />
             <Input
               type="text"
-              placeholder="Search roles, skills..."
+              placeholder={t("layout.searchPlaceholder")}
               className="h-auto w-full border-0 bg-transparent p-0 text-[13px] text-ink shadow-none placeholder:text-muted/70 focus-visible:ring-0"
             />
             <kbd className="rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[11px] text-muted">

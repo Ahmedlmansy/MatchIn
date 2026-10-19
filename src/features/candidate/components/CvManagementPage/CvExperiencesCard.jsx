@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Briefcase,
@@ -44,10 +45,11 @@ export default function CvExperiencesCard({
   experiences = [],
   onConfirmExperience,
 }) {
+  const { t } = useTranslation("dashboard");
   if (!experiences || experiences.length === 0) {
     return (
       <div className="rounded-2xl border border-border bg-surface p-5 text-center text-sm text-muted">
-        No work experience detected in CV.
+        {t("pages.cvManagement.noExperience")}
       </div>
     );
   }
@@ -68,14 +70,14 @@ export default function CvExperiencesCard({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-base font-bold text-primary">
-                Work Experience
+                {t("pages.cvManagement.workExperience")}
               </h3>
               <Badge className="bg-secondary/10 text-secondary hover:bg-secondary/10 border-0 text-[11px] font-semibold">
                 {experiences.length} Position{experiences.length > 1 ? "s" : ""}
               </Badge>
             </div>
             <p className="text-xs text-muted">
-              Employment history, roles, responsibilities, and key achievements
+              {t("pages.cvManagement.experienceDescription")}
             </p>
           </div>
         </div>
@@ -99,6 +101,7 @@ export default function CvExperiencesCard({
 }
 
 function ExperienceItem({ experience, index, onConfirm }) {
+  const { t } = useTranslation("dashboard");
   const [isExpanded, setIsExpanded] = useState(true);
 
   const startFormatted = formatYearMonth(experience.start_date);
@@ -126,7 +129,7 @@ function ExperienceItem({ experience, index, onConfirm }) {
             </h4>
             {experience.is_current && (
               <Badge className="bg-success/15 text-success hover:bg-success/15 border-0 text-[10px] font-bold px-2 py-0.5">
-                Current Role
+                {t("pages.cvManagement.currentRole")}
               </Badge>
             )}
             {experience.employment_type && (
@@ -152,7 +155,7 @@ function ExperienceItem({ experience, index, onConfirm }) {
           {experience.confirmed ? (
             <span className="flex items-center gap-1 text-xs font-bold text-success">
               <CheckCircle2 className="h-4 w-4" />
-              Confirmed
+        {t("pages.cvManagement.confirmed")}
             </span>
           ) : (
             <Button
@@ -161,7 +164,7 @@ function ExperienceItem({ experience, index, onConfirm }) {
               onClick={onConfirm}
               className="rounded-lg bg-success px-3 py-1 text-xs font-bold text-success-foreground hover:bg-success/90"
             >
-              Confirm
+        {t("pages.cvManagement.confirmItem")}
             </Button>
           )}
 
@@ -198,7 +201,7 @@ function ExperienceItem({ experience, index, onConfirm }) {
             {experience.technologies && experience.technologies.length > 0 && (
               <div className="mt-3 flex flex-wrap items-center gap-1.5">
                 <span className="text-[11px] font-semibold text-muted">
-                  Technologies:
+                  {t("pages.cvManagement.technologies")}
                 </span>
                 {experience.technologies.map((tech, i) => (
                   <span

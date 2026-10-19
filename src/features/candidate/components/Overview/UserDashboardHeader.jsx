@@ -14,7 +14,16 @@ function getGreeting(t) {
   return t("overview.greeting.evening");
 }
 
-export default function UserDashboardHeader({ userName = "Ahmed", profileQuery }) {
+/**
+ * `userName` is optional on purpose.
+ *
+ * This used to default to the literal "Ahmed", so any real user whose name the
+ * dashboard query had not resolved yet was greeted by name as Ahmed, and the
+ * loading state passed `t("overview.loading.user")` — a key that did not exist,
+ * so the header read "Good morning, overview.loading.user". Neither is right:
+ * when there is no name yet, omit it rather than invent one.
+ */
+export default function UserDashboardHeader({ userName, profileQuery }) {
   const localizedPath = useLocalizedPath();
   const { t } = useTranslation("dashboard");
   
@@ -125,6 +134,8 @@ export default function UserDashboardHeader({ userName = "Ahmed", profileQuery }
     );
   }
 
+  const greeting = getGreeting(t);
+
   return (
     <div>
       {/* Breadcrumb + greeting */}
@@ -137,7 +148,7 @@ export default function UserDashboardHeader({ userName = "Ahmed", profileQuery }
         <div className="flex flex-col">
           <DashboardBreadcrumb />
           <h1 className="font-serif text-[32px] font-bold tracking-tight text-primary sm:text-[36px]">
-            {getGreeting(t)}, {userName}
+            {userName ? `${greeting}, ${userName}` : greeting}
           </h1>
           <p className="mt-1 text-[13px] text-muted">
             {t("overview.subtitle")}
