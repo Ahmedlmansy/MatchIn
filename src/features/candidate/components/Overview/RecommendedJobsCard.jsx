@@ -9,6 +9,8 @@ import {
   Star,
   Bookmark,
   Hourglass,
+  RefreshCw,
+  AlertCircle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -60,12 +62,30 @@ const RECOMMENDED_JOBS = [
 
 export default function RecommendedJobsCard({
   jobs = RECOMMENDED_JOBS,
-  isLoading = false,
+  _isLoading = false,
   onApply,
   onBookmark,
+  jobsQuery,
 }) {
   const localizedPath = useLocalizedPath();
   const { t } = useTranslation("dashboard");
+  
+  // Use passed query or fall back to defaults
+  const queryLoading = jobsQuery?.isLoading ?? false;
+  const queryError = jobsQuery?.isError ?? false;
+  const queryRefetch = jobsQuery?.refetch;
+  
+  // Determine if we have actual data from the query
+  const hasQueryData = jobsQuery?.data !== undefined;
+  const displayJobs = hasQueryData ? jobs : RECOMMENDED_JOBS;
+  const isEmpty = displayJobs.length === 0;
+
+  const handleRetry = () => {
+    if (queryRefetch) {
+      queryRefetch();
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -98,16 +118,39 @@ export default function RecommendedJobsCard({
           </div>
 
           {/* Content / List or Placeholder */}
-          {isLoading ? (
+          {queryLoading ? (
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <Hourglass className="mb-2 h-7 w-7 text-muted/70 animate-pulse" />
               <p className="max-w-xs text-[13px] text-muted">
                 {t("overview.recommended.loading")}
               </p>
             </div>
+          ) : queryError ? (
+            <div className="text-center py-4">
+              <AlertCircle className="mx-auto mb-2 h-6 w-6 text-error" />
+              <p className="text-[12.5px] text-muted mb-3">
+                {t("overview.recommended.error")}
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRetry}
+                className="gap-1.5"
+              >
+                <RefreshCw className="h-3.5 w-3.5" />
+                {t("overview.recommended.retry")}
+              </Button>
+            </div>
+          ) : isEmpty ? (
+            <div className="text-center py-8 text-center">
+              <Hourglass className="mx-auto mb-2 h-7 w-7 text-muted/70" />
+              <p className="max-w-xs text-[13px] text-muted">
+                {t("overview.recommended.empty")}
+              </p>
+            </div>
           ) : (
             <div className="space-y-3">
-              {jobs.map((job, index) => {
+              {displayJobs.map((job, index) => {
                 const IconComponent = job.icon;
                 const isSuccess = job.matchTone === "success";
 
@@ -233,3 +276,5 @@ export default function RecommendedJobsCard({
     </motion.div>
   );
 }
+
+

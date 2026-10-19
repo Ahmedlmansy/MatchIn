@@ -1,10 +1,14 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Briefcase, BarChart3, CheckCircle2, Map } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { useConversationsQuery, useConversationQuery, useCreateConversationMutation, useSendMessageMutation } from "@/features/candidate/hooks/useAiChatQuery";
+import {
+  useConversationsQuery,
+  useConversationQuery,
+  useCreateConversationMutation,
+  useSendMessageMutation,
+} from "@/features/candidate/hooks/useAiChatQuery";
 
 import ChatHeader from "../components/AiChatPage/ChatHeader";
 import MissingContextBanner from "../components/AiChatPage/MissingContextBanner";
@@ -12,225 +16,162 @@ import ChatMessageList from "../components/AiChatPage/ChatMessageList";
 import SuggestedPrompts from "../components/AiChatPage/SuggestedPrompts";
 import ChatInput from "../components/AiChatPage/ChatInput";
 
-/* ─── Demo data (fallback when no backend) ─── */
-const createDemoMessages = (t) => [
-  {
-    id: 1,
-    role: "user",
-    content: t("ui.chat.demoQuestion"),
-  },
-  {
-    id: 2,
-    role: "assistant",
-    content: t("ui.chat.demoAnswer"),
-    sources: [
-      {
-        icon: Briefcase,
-        label: t("ui.chat.sourceJob"),
-        href: "#",
-      },
-      { icon: BarChart3, label: t("ui.chat.sourceSkillGap"), href: "#" },
-    ],
-  },
-  {
-    id: 3,
-    role: "user",
-    content: t("ui.chat.demoQuestionWeek"),
-  },
-  {
-    id: 4,
-    role: "assistant",
-    content: t("ui.chat.demoAnswerWeek"),
-    sources: [
-      {
-        icon: CheckCircle2,
-        label: t("ui.chat.sourceTask"),
-        href: "#",
-      },
-      { icon: Map, label: t("ui.chat.sourcePhase"), href: "#" },
-    ],
-  },
-];
+/* Backend sources only carry `type` + `url`; the UI needs an icon + href. */
+const SOURCE_ICONS = {
+  job: Briefcase,
+  skill: BarChart3,
+  task: CheckCircle2,
+  phase: Map,
+  roadmap: Map,
+};
 
-let nextId = 100;
+const withSourceIcons = (message) => ({
+  ...message,
+  sources: (message.sources ?? []).map((source) => ({
+    ...source,
+    icon: source.icon ?? SOURCE_ICONS[source.type] ?? Briefcase,
+    href: source.href ?? source.url ?? "#",
+  })),
+});
+
+const tempId = () =>
+  `temp-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
 /**
- * Main AI Chat panel.
- * Uses real backend API when available, falls back to demo mode.
+ * Main AI Chat panel — talks to the real /api/mentor/* backend only.
  *
- * @param {{
- *   showMissingContext?: boolean,
- *   className?: string,
- * }} props
+ * @param {{ showMissingContext?: boolean, className?: string }} props
  */
 export default function AiChat({ showMissingContext = false, className }) {
-  const { t, i18n } = useTranslation(["dashboard", "common"]);
   const { conversationId } = useParams();
-  const [messages, setMessages] = useState(() => createDemoMessages(t));
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [isDemoMode, setIsDemoMode] = useState(false);
-  const [activeConversationId, setActiveConversationId] = useState(conversationId ?? null);
+  const [activeConversationId, setActiveConversationId] = useState(
+    conversationId ?? null,
+  );
 
-  // Fetch conversations list
-  const { data: conversations, isLoading: conversationsLoading } = useConversationsQuery();
-  
-  // Fetch active conversation
-  const { data: conversation, isLoading: _conversationLoading, refetch: _refetchConversation } = useConversationQuery(activeConversationId, {
-    enabled: !!activeConversationId && !isDemoMode,
+  // Prevents the server-load effect from wiping optimistic messages mid-request
+  const sendingRef = useRef(false);
+  // Last text we tried to send (for Retry — avoids duplicating the user bubble)
+  const lastTextRef = useRef("");
+  // Auto-select the latest conversation only once, and never after "New chat"
+  const autoSelectedRef = useRef(Boolean(conversationId));
+
+  const { data: conversations, isLoading: conversationsLoading } =
+    useConversationsQuery();
+
+  const { data: conversation } = useConversationQuery(activeConversationId, {
+    enabled: !!activeConversationId,
   });
 
-  // Mutations
-  const createConversationMutation = useCreateConversationMutation({
-    onSuccess: (data) => {
-      if (data?.id) {
-        setActiveConversationId(data.id);
-        setIsDemoMode(false);
-      }
-    },
-    onError: () => {
-      setIsDemoMode(true);
-    },
-  });
+  const createConversationMutation = useCreateConversationMutation();
 
   const sendMessageMutation = useSendMessageMutation({
     onSuccess: (data) => {
-      // AI response is already added optimistically, just update with real data
       if (data) {
-        setMessages((prev) => {
-          // Replace the last assistant message (optimistic) with real one
-          const lastIdx = prev.findLastIndex((m) => m.role === "assistant");
-          if (lastIdx >= 0) {
-            const updated = [...prev];
-            updated[lastIdx] = data;
-            return updated;
-          }
-          return [...prev, data];
-        });
+        const reply = withSourceIcons(data);
+        setMessages((prev) => [...prev, reply]);
       }
+      sendingRef.current = false;
       setIsTyping(false);
     },
     onError: () => {
+      sendingRef.current = false;
       setHasError(true);
       setIsTyping(false);
     },
   });
 
-  // Load conversation messages when conversation changes
+  // Open the most recent conversation when the page loads without an id in the URL
   useEffect(() => {
+    if (autoSelectedRef.current || conversationsLoading) return;
+    if (Array.isArray(conversations) && conversations.length > 0) {
+      autoSelectedRef.current = true;
+      setActiveConversationId(conversations[0].id);
+    }
+  }, [conversations, conversationsLoading]);
+
+  // Load history from the server for the active conversation
+  useEffect(() => {
+    if (sendingRef.current) return;
     if (conversation?.messages) {
-      setMessages(conversation.messages);
-      setIsDemoMode(false);
+      setMessages(conversation.messages.map(withSourceIcons));
     }
   }, [conversation]);
 
-  // Handle language change for demo messages
-  useEffect(() => {
-    if (isDemoMode) {
-      const refreshDemoMessages = () => {
-        setMessages((previous) => [
-          ...createDemoMessages(i18n.t.bind(i18n)),
-          ...previous.filter((message) => message.id >= 100),
-        ]);
-      };
-      i18n.on("languageChanged", refreshDemoMessages);
-      return () => i18n.off("languageChanged", refreshDemoMessages);
-    }
-  }, [i18n, isDemoMode]);
+  const sendToServer = useCallback(
+    async (text, existingConversationId) => {
+      sendingRef.current = true;
+      setIsTyping(true);
+      setHasError(false);
+      lastTextRef.current = text;
 
-  // Initialize: if no conversationId in URL, try to use first conversation or create new
-  useEffect(() => {
-    if (!activeConversationId && conversations?.length > 0 && !conversationsLoading) {
-      setActiveConversationId(conversations[0].id);
-    } else if (!activeConversationId && !conversationsLoading && conversations?.length === 0) {
-      // Create a new conversation
-      createConversationMutation.mutate({ title: t("pages.aiChat.newConversation") });
-    }
-  }, [conversations, conversationsLoading, activeConversationId, createConversationMutation]);
+      try {
+        let convId = existingConversationId;
+
+        // Create the conversation lazily on the first message
+        if (!convId) {
+          const created = await createConversationMutation.mutateAsync({
+            title: text.slice(0, 60),
+          });
+          convId = created?.id ?? created?.data?.id;
+          if (!convId) throw new Error("Conversation was not created");
+          autoSelectedRef.current = true;
+          setActiveConversationId(convId);
+        }
+
+        sendMessageMutation.mutate({
+          conversationId: convId,
+          content: text,
+          message: text,
+        });
+      } catch {
+        sendingRef.current = false;
+        setHasError(true);
+        setIsTyping(false);
+      }
+    },
+    [createConversationMutation, sendMessageMutation],
+  );
 
   const handleSend = useCallback(
     (text) => {
-      if (!text.trim()) return;
+      const trimmed = text?.trim();
+      if (!trimmed || isTyping) return;
 
-      // Add user message optimistically
-      const userMsg = { id: nextId++, role: "user", content: text };
-      setMessages((prev) => [...prev, userMsg]);
+      setMessages((prev) => [
+        ...prev,
+        { id: tempId(), role: "user", content: trimmed, sources: [] },
+      ]);
       setInputValue("");
-      setIsTyping(true);
-      setHasError(false);
-
-      if (isDemoMode || !activeConversationId) {
-        // Demo mode - simulate AI response
-        setTimeout(() => {
-          setIsTyping(false);
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: nextId++,
-              role: "assistant",
-              content: t("ui.chat.responsePrefix", { question: text }),
-              sources: [
-                {
-                  icon: Briefcase,
-                  label: t("ui.chat.relatedJob"),
-                  href: "#",
-                },
-              ],
-            },
-          ]);
-        }, 2000);
-      } else {
-        // Real API mode
-        sendMessageMutation.mutate({ conversationId: activeConversationId, content: text });
-      }
+      sendToServer(trimmed, activeConversationId);
     },
-    [t, isDemoMode, activeConversationId, sendMessageMutation],
+    [isTyping, activeConversationId, sendToServer],
   );
 
   const handleRetry = useCallback(() => {
-    setHasError(false);
-    setIsTyping(true);
-    
-    // Get the last user message to retry
-    const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
-    
-    if (isDemoMode || !activeConversationId || !lastUserMsg) {
-      // Demo mode retry
-      setTimeout(() => {
-        setIsTyping(false);
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: nextId++,
-            role: "assistant",
-            content: t("ui.chat.retryResponse"),
-          },
-        ]);
-      }, 1500);
-    } else {
-      // Real API retry
-      sendMessageMutation.mutate({ conversationId: activeConversationId, content: lastUserMsg.content });
-    }
-  }, [t, isDemoMode, activeConversationId, messages, sendMessageMutation]);
+    if (!lastTextRef.current || isTyping) return;
+    // The user message is already in the list — just resend it
+    sendToServer(lastTextRef.current, activeConversationId);
+  }, [isTyping, activeConversationId, sendToServer]);
 
   const handlePromptSelect = useCallback(
-    (prompt) => {
-      handleSend(prompt);
-    },
+    (prompt) => handleSend(prompt),
     [handleSend],
   );
 
   const handleNewConversation = useCallback(() => {
-    createConversationMutation.mutate({ title: t("pages.aiChat.newConversation") });
+    autoSelectedRef.current = true; // don't jump back to the previous chat
+    sendingRef.current = false;
+    setActiveConversationId(null);
     setMessages([]);
-    setIsDemoMode(false);
-  }, [createConversationMutation]);
+    setHasError(false);
+    setIsTyping(false);
+  }, []);
 
   const showPrompts = messages.length === 0 && !isTyping;
-
-  // Determine if we should show missing context banner
-  const showMissingContextBanner = showMissingContext && isDemoMode;
 
   return (
     <motion.section
@@ -244,9 +185,13 @@ export default function AiChat({ showMissingContext = false, className }) {
         className,
       )}
     >
-      <ChatHeader onNewConversation={handleNewConversation} conversations={conversations} activeConversationId={activeConversationId} />
-      
-      <MissingContextBanner visible={showMissingContextBanner} />
+      <ChatHeader
+        onNewConversation={handleNewConversation}
+        conversations={conversations}
+        activeConversationId={activeConversationId}
+      />
+
+      <MissingContextBanner visible={showMissingContext} />
 
       <ChatMessageList
         messages={messages}
@@ -255,10 +200,7 @@ export default function AiChat({ showMissingContext = false, className }) {
         onRetry={handleRetry}
       />
 
-      <SuggestedPrompts
-        visible={showPrompts || (messages.length <= 2 && !isTyping)}
-        onSelect={handlePromptSelect}
-      />
+      <SuggestedPrompts visible={showPrompts} onSelect={handlePromptSelect} />
 
       <ChatInput
         value={inputValue}

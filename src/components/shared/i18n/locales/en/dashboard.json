@@ -87,13 +87,19 @@
     "savedJobsCard": {
       "title": "Saved jobs",
       "view": "View Saved Jobs",
-      "empty": "You haven't saved any jobs yet."
+      "empty": "You haven't saved any jobs yet.",
+      "loading": "Loading saved jobs...",
+      "error": "Failed to load saved jobs.",
+      "retry": "Retry"
     },
     "skillGaps": {
       "title": "Priority skill gaps",
       "openRoadmap": "Open Roadmap",
       "description": "Ranked by impact on your target role.",
-      "empty": "No skill gaps identified yet."
+      "empty": "No skill gaps identified yet.",
+      "loading": "Loading skill gaps...",
+      "error": "Failed to load skill gaps.",
+      "retry": "Retry"
     }
   },
   "pages": {

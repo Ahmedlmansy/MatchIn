@@ -1,20 +1,43 @@
 import { api } from "@/services/axios/axiosInstance";
 
+/**
+ * Normalize application item - handles company being either a string or an object
+ */
+const normalizeApplication = (item) => {
+  const companyName = typeof item.company === "string"
+    ? item.company
+    : item.company?.name ?? "Unknown Company";
+    
+  return {
+    ...item,
+    company: companyName,
+  };
+};
+
+/**
+ * Normalize applications response
+ */
+const normalizeApplicationsResponse = (response) => {
+  const rawData = response?.data?.data ?? response?.data ?? response;
+  
+  if (!rawData) return [];
+  
+  const applications = Array.isArray(rawData) 
+    ? rawData 
+    : rawData.items ?? rawData.applications ?? [];
+    
+  return applications.map(normalizeApplication);
+};
+
 export const fetchApplicationsRequest = async (params = {}) => {
   const response = await api.get("/applications", { params });
-  const rawData = response.data?.data ?? response.data;
-  
-  // التأكد من إرجاع مصفوفة دائماً لتجنب خطأ .filter
-  if (Array.isArray(rawData)) return rawData;
-  if (Array.isArray(rawData?.items)) return rawData.items;
-  if (Array.isArray(rawData?.applications)) return rawData.applications;
-  
-  return [];
+  return normalizeApplicationsResponse(response);
 };
 
 export const fetchApplicationDetailsRequest = async (applicationId) => {
   const response = await api.get(`/applications/${applicationId}`);
-  return response.data?.data ?? response.data;
+  const data = response.data?.data ?? response.data;
+  return normalizeApplication(data);
 };
 
 export const withdrawApplicationRequest = async (applicationId) => {

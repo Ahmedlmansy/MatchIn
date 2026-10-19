@@ -3,7 +3,8 @@ import { Route } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocalizedPath } from "@/utils/routes";
 import { useTranslation } from "react-i18next";
-
+import { RefreshCw, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function RoadmapCard({
   phaseTitle = "Phase 1: Foundations",
@@ -11,10 +12,23 @@ export default function RoadmapCard({
   tasksLeftLabel = "1 task left this week",
   isPartial = false,
   className,
+  roadmapQuery,
 }) {
   const localizedPath = useLocalizedPath();
   const { t } = useTranslation("dashboard");
+  
+  // Use passed query or fall back to defaults
+  const isLoading = roadmapQuery?.isLoading ?? false;
+  const isError = roadmapQuery?.isError ?? false;
+  const refetch = roadmapQuery?.refetch;
+  
   const clamped = Math.min(100, Math.max(0, progressPercent));
+
+  const handleRetry = () => {
+    if (refetch) {
+      refetch();
+    }
+  };
 
   return (
     <div
@@ -32,7 +46,34 @@ export default function RoadmapCard({
         </span>
       </div>
 
-      {isPartial ? (
+      {isLoading ? (
+        <div className="space-y-3" aria-label={t("overview.roadmap.loading")}>
+          {[1, 2].map((i) => (
+            <div key={i} className="animate-pulse space-y-2">
+              <div className="h-4 w-1/3 bg-primary-foreground/20 rounded" />
+              <div className="h-2 w-full bg-primary-foreground/15 rounded-full overflow-hidden">
+                <div className="h-full bg-primary-foreground w-1/4 rounded-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : isError ? (
+        <div className="text-center py-4">
+          <AlertCircle className="mx-auto mb-2 h-6 w-6 text-primary-foreground" />
+          <p className="text-[12.5px] text-primary-foreground/75 mb-3">
+            {t("overview.roadmap.error")}
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRetry}
+            className="gap-1.5 bg-surface px-4 py-2 text-primary-foreground"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            {t("overview.roadmap.retry")}
+          </Button>
+        </div>
+      ) : isPartial ? (
         <p className="text-[12.5px] leading-relaxed text-primary-foreground/75">
           {t("overview.roadmap.empty")}
         </p>

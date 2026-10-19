@@ -7,9 +7,11 @@ import {
   createConversationRequest,
   sendMessageRequest,
   deleteConversationRequest,
+  fetchContextPreviewRequest,
   normalizeConversationsResponse,
   normalizeConversationWithMessages,
   normalizeSendMessageResponse,
+  normalizeContextPreview,
 } from "@/features/candidate/api/aiChat.api";
 import { candidateKeys } from "@/features/candidate/constants/candidate.query-keys";
 import { normalizeApiError } from "@/features/auth/hooks/useApiMutation";
@@ -65,6 +67,29 @@ export const useConversationQuery = (conversationId, options = {}) => {
 };
 
 /**
+ * Context preview query.
+ */
+export const useContextPreviewQuery = (options = {}) => {
+  const role = useSelector(selectUserRole);
+
+  return useQuery({
+    queryKey: candidateKeys.aiChat.contextPreview(),
+    enabled: role === "candidate",
+    queryFn: async () => {
+      try {
+        const response = await fetchContextPreviewRequest();
+        return normalizeContextPreview(response);
+      } catch (error) {
+        throw normalizeApiError(error);
+      }
+    },
+    staleTime: 60_000,
+    retry: 1,
+    ...options,
+  });
+};
+
+/**
  * Create conversation mutation.
  */
 export const useCreateConversationMutation = (options = {}) => {
@@ -107,7 +132,7 @@ export const useSendMessageMutation = (options = {}) => {
       return normalizeSendMessageResponse(response);
     },
     onMutate: async ({ conversationId, content }) => {
-      if (role !== "candidate") return;
+      if (_role !== "candidate") return;
 
       await queryClient.cancelQueries({ queryKey: candidateKeys.aiChat.conversation(conversationId) });
 

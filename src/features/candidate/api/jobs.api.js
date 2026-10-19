@@ -51,41 +51,48 @@ export const applyToJobRequest = (jobId, payload) =>
 /**
  * Normalize job list item
  */
-export const normalizeJob = (item) => ({
-  id: item.id,
-  company: item.company,
-  initial: item.initial ?? item.company?.[0]?.toUpperCase() ?? "J",
-  logoClass: item.logoClass ?? "bg-primary/10 text-primary",
-  verified: item.verified ?? false,
-  location: item.location,
-  locationIcon: item.locationIcon ?? (item.location?.toLowerCase().includes("remote") ? "globe" : "pin"),
-  matchPercent: item.matchPercent ?? item.match_score ?? 0,
-  title: item.title,
-  salaryRange: item.salaryRange ?? item.salary_range,
-  tags: item.tags ?? item.skills ?? [],
-  postedAgo: item.postedAgo ?? item.posted_ago,
-  categories: item.categories ?? [],
-  // Extended fields for details
-  description: item.description,
-  responsibilities: item.responsibilities ?? [],
-  requirements: item.requirements ?? [],
-  preferredSkills: item.preferred_skills ?? item.preferredSkills ?? [],
-  experience: item.experience,
-  employmentType: item.employment_type ?? item.employmentType,
-  workStyle: item.work_style ?? item.workStyle,
-  source: item.source,
-  method: item.method,
-  deadline: item.deadline,
-  fitScore: item.fitScore ?? item.fit_score,
-  fitFraction: item.fitFraction ?? item.fit_fraction,
-  fitLabel: item.fitLabel ?? item.fit_label,
-  strength: item.strength,
-  gap: item.gap,
-  gapActionText: item.gap_action_text ?? item.gapActionText,
-  note: item.note,
-  status: item.status,
-  appliedText: item.applied_text ?? item.appliedText,
-});
+export const normalizeJob = (item) => {
+  // Handle company being either a string or an object with {id, name, logo_url, is_verified, is_active}
+  const companyName = typeof item.company === "string" 
+    ? item.company 
+    : item.company?.name ?? "Unknown Company";
+    
+  return {
+    id: item.id,
+    company: companyName,
+    initial: item.initial ?? companyName?.[0]?.toUpperCase() ?? "J",
+    logoClass: item.logoClass ?? "bg-primary/10 text-primary",
+    verified: item.verified ?? item.company?.is_verified ?? false,
+    location: item.location,
+    locationIcon: item.locationIcon ?? (item.location?.toLowerCase().includes("remote") ? "globe" : "pin"),
+    matchPercent: item.matchPercent ?? item.match_score ?? 0,
+    title: item.title,
+    salaryRange: item.salaryRange ?? item.salary_range,
+    tags: item.tags ?? item.skills ?? [],
+    postedAgo: item.postedAgo ?? item.posted_ago,
+    categories: item.categories ?? [],
+    // Extended fields for details
+    description: item.description,
+    responsibilities: item.responsibilities ?? [],
+    requirements: item.requirements ?? [],
+    preferredSkills: item.preferred_skills ?? item.preferredSkills ?? [],
+    experience: item.experience,
+    employmentType: item.employment_type ?? item.employmentType,
+    workStyle: item.work_style ?? item.workStyle,
+    source: item.source,
+    method: item.method,
+    deadline: item.deadline,
+    fitScore: item.fitScore ?? item.fit_score,
+    fitFraction: item.fitFraction ?? item.fit_fraction,
+    fitLabel: item.fitLabel ?? item.fit_label,
+    strength: item.strength,
+    gap: item.gap,
+    gapActionText: item.gap_action_text ?? item.gapActionText,
+    note: item.note,
+    status: item.status,
+    appliedText: item.applied_text ?? item.appliedText,
+  };
+};
 
 /**
  * Normalize job list response

@@ -10,6 +10,7 @@ import { selectUserRole } from "@/features/auth/store/auth.selectors";
 /**
  * Dashboard summary hook that aggregates data from multiple feature queries.
  * Uses existing queries to avoid duplicate API calls.
+ * Each query handles its own loading/error/empty states independently.
  */
 export const useDashboardSummaryQuery = (_options = {}) => {
   const role = useSelector(selectUserRole);
@@ -38,16 +39,6 @@ export const useDashboardSummaryQuery = (_options = {}) => {
 
   // Fetch profile (for user name in header)
   const profileQuery = useProfileQuery({ enabled, staleTime: 60_000 });
-
-  // Aggregate data
-  const isLoading = jobsQuery.isLoading || savedJobsQuery.isLoading || 
-    notificationsQuery.isLoading || roadmapQuery.isLoading || profileQuery.isLoading;
-
-  const isError = jobsQuery.isError || savedJobsQuery.isError || 
-    notificationsQuery.isError || roadmapQuery.isError || profileQuery.isError;
-
-  const error = jobsQuery.error || savedJobsQuery.error || 
-    notificationsQuery.error || roadmapQuery.error || profileQuery.error;
 
   // Transform data for overview components
   const recommendedJobs = jobsQuery.data?.jobs?.slice(0, 3).map((job) => ({
@@ -113,7 +104,7 @@ export const useDashboardSummaryQuery = (_options = {}) => {
   };
 
   return {
-    // Raw query results
+    // Raw query results for independent error handling
     jobsQuery,
     savedJobsQuery,
     notificationsQuery,
@@ -128,11 +119,6 @@ export const useDashboardSummaryQuery = (_options = {}) => {
     skillGaps,
     userName,
     competencyData,
-    
-    // Aggregate state
-    isLoading,
-    isError,
-    error,
     
     // Refetch all
     refetch: () => {

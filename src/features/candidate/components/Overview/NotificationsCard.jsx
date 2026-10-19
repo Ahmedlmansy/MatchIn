@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useLocalizedPath } from "@/utils/routes";
 import { useTranslation } from "react-i18next";
+import { RefreshCw, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 /**
  * @typedef {Object} NotificationItem
@@ -16,14 +18,32 @@ import { useTranslation } from "react-i18next";
  * @param {{
  *   notifications?: NotificationItem[],
  *   className?: string,
+ *   notificationsQuery?: ReturnType<import("@/features/candidate/hooks/useNotificationsQuery").useNotificationsQuery>,
  * }} props
  */
 export default function NotificationsCard({
   notifications = DEFAULT_NOTIFICATIONS,
   className,
+  notificationsQuery,
 }) {
   const localizedPath = useLocalizedPath();
   const { t } = useTranslation("dashboard");
+  
+  // Use passed query or fall back to defaults
+  const isLoading = notificationsQuery?.isLoading ?? false;
+  const isError = notificationsQuery?.isError ?? false;
+  const refetch = notificationsQuery?.refetch;
+  
+  // Determine if we have actual data from the query
+  const hasQueryData = notificationsQuery?.data !== undefined;
+  const displayNotifications = hasQueryData ? notifications : DEFAULT_NOTIFICATIONS;
+  const isEmpty = displayNotifications.length === 0;
+
+  const handleRetry = () => {
+    if (refetch) {
+      refetch();
+    }
+  };
 
   return (
     <div
@@ -42,11 +62,36 @@ export default function NotificationsCard({
         </Link>
       </div>
 
-      {notifications.length === 0 ? (
+      {isLoading ? (
+        <div className="space-y-3" aria-label={t("overview.notifications.loading")}>
+          {[1, 2].map((i) => (
+            <div key={i} className="animate-pulse flex items-start gap-2 text-[12.5px]">
+              <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-border" />
+              <div className="h-3 w-3/4 bg-border rounded" />
+            </div>
+          ))}
+        </div>
+      ) : isError ? (
+        <div className="text-center py-4">
+          <AlertCircle className="mx-auto mb-2 h-6 w-6 text-error" />
+          <p className="text-[12.5px] text-muted mb-3">
+            {t("overview.notifications.error")}
+          </p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRetry}
+            className="gap-1.5"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            {t("overview.notifications.retry")}
+          </Button>
+        </div>
+      ) : isEmpty ? (
         <p className="text-[12.5px] text-muted">{t("overview.notifications.empty")}</p>
       ) : (
         <div className="space-y-2.5">
-          {notifications.map((item) => (
+          {displayNotifications.map((item) => (
             <div
               key={item.id}
               className="flex items-start gap-2 text-[12.5px] leading-snug text-muted"
